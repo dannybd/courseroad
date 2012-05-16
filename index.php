@@ -29,7 +29,7 @@ if(isset($_GET['hash'])){
 	die();
 }
 require("connect.php"); //connect to database
-
+ 
 session_start();
 //loads class data from the database and serves up the JSON CourseRoad requires to load that class.
 if(isset($_GET['getclass'])){
