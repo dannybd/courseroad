@@ -297,6 +297,9 @@ div.WireIt-Wire-scissors{
 	display: none;
 }
 .WireIt-Wire{
+	position: absolute;
+	border: 0;
+	z-index: 0;
 	opacity: 0.7;
 }
 .WireIt-Wire-low{
