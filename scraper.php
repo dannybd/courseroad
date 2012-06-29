@@ -166,18 +166,24 @@ function parseReqs($str){
 id
 course
 title
+year
+reqstr
+reqs
 fall
-iap*
+iap
 spring
-summer*
+summer
 units
 unitload
-prereq
-coreq
 SCI
 HASS
 CI
-info
+REST
+LAB
+isGIR
+imgdata
+desc
+added
 //*/
 //echo "<table>";
 //print_r(parseReqs($_GET['p']));
@@ -188,7 +194,7 @@ $CI = array('Communication Intensive HASS', 'Communication Intensive Writing');
 $regex1 = "/<a name=\"(?'course'.*?)\">.*?<h3>.*? (?'title'.*?)\n*<br>.*?<\/h3>.*?(?'imgdata'<img.*?<br>).*?(\(Same .*?\n*<br>?)?.*?(?:Prereq: (?'prereq'.*?)\n*<br>?)?.*?(?:Units: (?'unitload'.*?)\n*<br>?)?.*?hr.gif.*?<br>(?'desc'.*?)\n*(?:<\/p><!--end-->|<a name)/s";
 $regex2 = "/alt=\"(.*?)\"/s";
 if($_GET['n']!=-1){
-	$course = $courses[$_GET['n']?$_GET['n']:21];
+	$course = $courses[isset($_GET['n'])?$_GET['n']:21];
 	$courses = array($course);
 }
 foreach($courses as $course){

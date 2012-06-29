@@ -26,60 +26,97 @@
 
 if(isset($_GET['hash'])){
 	header("Location: /index2.php#".$_GET['hash']);
+	die();
 }
-require("connect.php"); //connect to database
 
+require("connect.php"); //connect to database
 session_start();
-//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
-if(isset($_GET['getclass'])){
-	$class = mysql_real_escape_string($_GET['getclass']);
-	//echo $class;
-	$query = mysql_query("SELECT * FROM `catalog` WHERE `course`='$class' ORDER BY `id` DESC");
+
+//autocomplete business
+if(isset($_GET['term'])){
+	$term = mysql_real_escape_string($_GET['term']);
+	$temp = array();
+	$query = mysql_query("SELECT DISTINCT `subject_id` FROM `warehouse` WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6");
+	while($row = mysql_fetch_array($query)){
+		$temp[] = $row['subject_id'];
+	}
+	mysql_close($connect);
+	echo json_encode($temp);
+	die();
+}
+
+function pullClass($class, $year=false, $json=true, $classterm=0, $override=false){
+	$sql = "SELECT * FROM `warehouse` WHERE `subject_id`='$class' ".($year?"AND `year`='$year' ORDER BY `last_modified` DESC;":"ORDER BY `year` DESC, `last_modified` DESC;");
+	//echo $sql."\n";
+	$query = mysql_query($sql);
 	if(!$query) die("error");
 	if(mysql_num_rows($query)==0) die("noclass");
 	$row = mysql_fetch_assoc($query);
-	unset($row['added']);
-	$row['id'] = str_replace('.','_',$row['course']);
-	$row['permission'] = (strpos($row['prereq'],'Permission')!=false);
-	$row['prereq'] = str_replace('J"', '"', $row['prereq']);
-	$row['coreq'] = str_replace('J"', '"', $row['coreq']);
-	$row['prereq'] = json_decode($row['prereq']);
-	$row['coreq'] = json_decode($row['coreq']);
-	$reqs = "";
-	if($row['prereq']) $reqs .= "<span class='prereqs'>Prereqs: [X]</span>&nbsp;";
-	if($row['coreq']) $reqs .= "<span class='coreqs'>Coreqs: [X]</span>";
-	if($reqs=="") $reqs = "No reqs :D";
-	$row['imgdata'] = json_decode($row['imgdata']);
-	if($row['reqstr']){
-		$row['reqstr'] = "Prereqs: ".$row['reqstr']."<br>";
-		$row['reqstr'] = preg_replace("/<\/?a.*?>/s","",$row['reqstr']);
-	}
-	if($row['units']=="0") $row['units'] = "12";
+//	die();
+	unset($row['id']);
+	unset($row['design_units']);
+	unset($row['tuition_attr']);
+	unset($row['supervisor_attr']);
+	unset($row['hgn_code']);
+	unset($row['hgn_except']);
+	unset($row['last_modified']);
+	$row['id'] = str_replace('.','_',$row['subject_id']);
+	$row['divid'] = $row['id']."__".rand();
+	$row['permission'] = (strpos($row['reqs'],'Permission')!=false);
+	$row['reqs'] = json_decode($row['reqs']);
+	$reqs = $row['reqs']?"<span class='reqs'>Reqs: [X]</span>":"No reqs :D";
+	if($row['reqstr']) $row['reqstr'] = "Requisites: ".$row['reqstr']."<br>";
+	if($row['total_units']=="0") $row['total_units'] = "12";
 	$row['info'] = <<<EOD
-Additional info for <strong>{$row['course']}</strong>:<br>
-<strong>{$row['title']}</strong><br>
-<a href="http://student.mit.edu/catalog/search.cgi?search={$row['course']}" target="_blank">Course Catalog</a> &#149;
-<a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode={$row['course']}" target="_blank">Class Evalutions</a><br>
+Additional info for <strong>{$row['subject_id']}</strong>:<br>
+<strong>{$row['subject_title']}</strong><br>
+<a href="http://student.mit.edu/catalog/search.cgi?search={$row['subject_id']}" target="_blank">Course Catalog</a> &#149;
+<a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode={$row['subject_id']}" target="_blank">Class Evalutions</a><br>
 {$row['reqstr']}
-<p class='infounits'>{$row['unitload']} ({$row['units']} units)</p><br>
+<p class='infounits'>{$row['unitload']} ({$row['total_units']} units)</p><br>
 <p class='infoinfo'>{$row['desc']}</p>
 EOD;
+	$row['divclasses']  = "classdiv bubble";
+	$row['divclasses'] .= " ".$row['id'];
+	$row['joint_subjects'] = explode(', ', $row['joint_subjects']);
+	foreach($row['joint_subjects'] as &$subj) $subj = rtrim($subj, 'J');
+	if(!$row['joint_subjects'][0]) $row['joint_subjects'] = false;
+	$row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
+	foreach($row['equiv_subjects'] as &$subj) $subj = rtrim($subj, 'J');
+	if(!$row['equiv_subjects'][0]) $row['equiv_subjects'] = false;
+	if($row['joint_subjects']) $row['divclasses'] .= " ".implode(' ',$row['joint_subjects']);
+	if($row['gir']) $row['divclasses'] .= " GIR ".$row['gir'];
+	if($row['ci']) $row['divclasses'] .= " CI ".$row['ci'];
+	if($row['hass']) $row['divclasses'] .= " HASS ".$row['hass'];
+	$row['classterm'] = $classterm;
+	$row['override'] = $override;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
-<div id='{$row['id']}' class='classdiv bubble'>
+<div id='{$row['divid']}' class='{$row['divclasses']}'>
 	<div class='classdivlabel'>
-		<div class='classdivcourse'>{$row['course']}:&nbsp;</div>
-		<div class='classdivtitle' title='{$row['title']}'>{$row['title']}</div>
+		<div class='classdivcourse'>{$row['subject_id']}:&nbsp;</div>
+		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
 	</div>
 	<div class='classdivinfo'>
 		$reqs
 	</div>
 </div>
 EOD;
-	echo json_encode($row);
-	die();
+	//print_r($row);
+	//echo "\n\n\n";
+	return $json?json_encode($row):$row;
 }
 
+//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
+if(isset($_GET['getclass'])){
+	header("Content-type: text/javascript");
+	$class = mysql_real_escape_string($_GET['getclass']);
+	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
+	//echo $class;
+	echo pullClass($class, $year);
+	die();
+}
+	
 //For certification purposes.
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
 
@@ -102,26 +139,36 @@ if(isset($_POST['classes'])){
 			$_SESSION['trycert'] = true;
 		}
 	}
-	$sql = "INSERT INTO `roads` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
+	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
 	mysql_query($sql);
 	echo $trycert?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
 	die();
 }
 
 //Returns the desired hash's class and major data
-if(isset($_POST['hash'])){
-	$hash = mysql_real_escape_string(substr($_POST['hash'],1));
-	$sql = "SELECT `classes`,`major` FROM `roads` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
+if(isset($_POST['gethash'])){
+	header("Content-type: text/javascript");
+	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
+	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
 	$query = mysql_query($sql);
 	$classes = '';
 	$major = '';
 	while($row = mysql_fetch_array($query)){
-		$classes = stripslashes($row['classes']);
+		$classes = json_decode(stripslashes($row['classes']));
 		$major = stripslashes($row['major']);
 	}
-	echo json_encode(array($classes, $major));
+	if($classes=='') die();
+	$json = array();
+	foreach($classes as $class){ //id, classterm, override, [year]
+		$json[] = pullClass($class[0], $class[1], false, $class[2], ($class[3]==true));
+	}
+	$json[] = $major;
+	//print_r($json);
+	echo json_encode($json);
+	//echo json_encode(array($classes, $major));
 	die();
 }
+
 if(isset($_SESSION['trycert'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
@@ -129,18 +176,12 @@ if(isset($_SESSION['trycert'])){
 	header("Location: /#".$_SESSION['crhash']);
 	die();
 }
-function sortsaved($a, $b){
-    if($a[1]<$b[1]) return -1;
-    if($a[1]>$b[1]) return 1;
-    if($a[0]<$b[0]) return -1;
-    if($a[0]>$b[0]) return 1;
-    return 0;
-}
+
 //Returns the desired table of saved roads when the user is logged in
 if(isset($_GET['savedroads'])){
 	if(!isset($_SESSION['athena'])) die();
 	$hash = mysql_real_escape_string($_SESSION['athena']);
-	$sql = "SELECT * FROM `roads` WHERE `hash` LIKE '$hash/%' ORDER BY `added` DESC";
+	$sql = "SELECT * FROM `roads2` WHERE `hash` LIKE '$hash/%' ORDER BY `added` DESC";
 	$query = mysql_query($sql);
 	echo "<table>\n";
 	echo "<tr>";
@@ -151,7 +192,7 @@ if(isset($_GET['savedroads'])){
 	echo "<th>Delete?</th>";
 	echo "</tr>\n";
 	echo "<tr>";
-	$numrows = mysql_query("SELECT COUNT(*) FROM `roads` WHERE `hash` LIKE '$hash/%' AND `public`='1'");
+	$numrows = mysql_query("SELECT COUNT(*) FROM `roads2` WHERE `hash` LIKE '$hash/%' AND `public`='1'");
 	$numrows = mysql_fetch_array($numrows);
 	$numrows = $numrows[0];
 	echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"null\" ".($numrows?"":"checked=\"true\" ")."/></td>";
@@ -164,11 +205,9 @@ if(isset($_GET['savedroads'])){
 		echo "<td><a href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
 		echo "<td>".stripslashes($row['major'])."</td>";
 		$classes = json_decode(stripslashes($row['classes']), true);
-		usort($classes, "sortsaved");
-		//print_r($classes);
 		$classes2 = array();
 		foreach($classes as &$class2){
-			if($class2[2]) $class2[0] .= "*";
+			if($class2[3]) $class2[0] .= "*";
 			$classes2[] = $class2[0];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
@@ -178,14 +217,15 @@ if(isset($_GET['savedroads'])){
 	echo "</table>";
 	die();
 }
-//Runs when the user sets one fo their roads to be their public road
+
+//Runs when the user sets one of their roads to be their public road
 if(isset($_GET['choosesavedroad'])){
 	$hash = mysql_real_escape_string($_GET['choosesavedroad']);
 	if(!isset($_SESSION['athena'])) die();
 	$hasharray = explode('/', $hash);
 	if(($_SESSION['athena']!=$hasharray[0]) and ($hash!="null")) die();
-	mysql_query("UPDATE `roads` SET `public`='0' WHERE `hash` LIKE '{$_SESSION['athena']}/%'");
-	if($hash!="null") mysql_query("UPDATE `roads` SET `public`='1' WHERE `hash`='$hash'");
+	mysql_query("UPDATE `roads2` SET `public`='0' WHERE `hash` LIKE '{$_SESSION['athena']}/%'");
+	if($hash!="null") mysql_query("UPDATE `roads2` SET `public`='1' WHERE `hash`='$hash'");
 	echo "ok";
 	die();
 }
@@ -195,7 +235,7 @@ if(isset($_GET['deleteroad'])){
 	if(!isset($_SESSION['athena'])) die();
 	$hasharray = explode('/', $hash);
 	if(($_SESSION['athena']!=$hasharray[0]) and ($hash!="null")) die();
-	if($hash!="null") mysql_query("DELETE FROM `roads` WHERE `hash`='$hash'");
+	if($hash!="null") mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
 	echo "ok";
 	die();
 }
@@ -204,23 +244,23 @@ $nocache = isset($_GET['nocache']);
 $nocache = true;
 $nocache = $nocache?"?nocacher=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<title>CourseRoad<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
+<title>CourseRoad 2.0<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
-<script type="text/javascript" src="cr.js<?= $nocache ?>"></script>
+<script type="text/javascript" src="cr2.js<?= $nocache ?>"></script>
 <!--script type="text/javascript" src="http://intralife.researchstudio.at:8080/api-js/easyrec.js"></script-->
 <script type="text/javascript" src="WireIt-0.5.0/lib/yui/utilities/utilities.js"></script>
 <!--[if IE]><script type="text/javascript" src="WireIt-0.5.0/lib/excanvas.js"></script><![endif]-->
 <script type="text/javascript" src="WireIt-0.5.0/wireit-min.js"></script>
 <link rel="stylesheet" type="text/css" href="WireIt-0.5.0/css/WireIt.css">
-<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
-<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" media="print">
-<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="cr-ie.css<?= $nocache ?>"><![endif]-->
+<link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
+<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?'':'media="print"' ?>>
+<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>"><![endif]-->
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-31018454-1']);
@@ -247,18 +287,9 @@ window.onhashchange = function(){
 	if(userhashchange) window.location.reload(); 
 }
 
-var classes = {}; //An object to hold each classes' data.
-var terminals = {}; //An object to hold the wire terminals that allow CourseRoad to display wires.
 var sortstartterms;
 var loadingclasses = 0;
-var gir = {};
-gir.SCI = {};
-gir.CI = [];
-gir.REST = [];
-gir.LAB = [];
-gir.HASS = {};
-gir.HASS2 = [];
-gir.totalUnits = 0;
+var totalUnits = 0;
 var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
 $(function(){
 	$(window).bind("beforeunload", function(){
@@ -267,7 +298,7 @@ $(function(){
 			return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
 		}
 	});
-	setInterval('addAllWires();', 5000); //Assures regular updating of the window, should anything change
+	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	$('#getnewclassid').blur(function(){
 		$("#getnewclass .ui-autocomplete").hide();
 	}).focus();
@@ -288,12 +319,12 @@ $(function(){
 			$("#overrider span").css('opacity', 1);
 			$('.classdiv').not($(this)).addClass("classdivlow");
 			$('.WireIt-Wire').addClass("WireIt-Wire-low");
-			for(i in terminals[$(".classdivhigh").attr("id")].terminal.wires){
-				$(terminals[$(".classdivhigh").attr("id")].terminal.wires[i].element).removeClass("WireIt-Wire-low");
+			for(i in $(".classdivhigh").data("terminals").terminal.wires){
+				$($(".classdivhigh").data("terminals").terminal.wires[i].element).removeClass("WireIt-Wire-low");
 			}
-			$("#nowreading").html(classes[$('.classdivhigh').attr('id')].info);
+			$("#nowreading").html($('.classdivhigh').data("info"));
 			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
-			$("#overridercheck").prop("disabled", false).prop("checked", classes[$('.classdivhigh').attr('id')].override);
+			$("#overridercheck").prop("disabled", false).prop("checked", $('.classdivhigh').data('override'));
 		}else{
 			$("#overrider span").css('opacity', 0);
 			$("#overridercheck").prop("disabled", true);
@@ -303,7 +334,7 @@ $(function(){
 		}
 	});
 	$("#overridercheck").change(function(){
-		classes[$('.classdivhigh').attr('id')].override = $(this).prop("checked");
+		$(".classdivhigh").data("override", $(this).prop("checked"));
 		$('.classdivhigh').toggleClass("classdivoverride");
 		addAllWires();
 	});
@@ -357,9 +388,8 @@ $(function(){
 			$(this).removeClass('trashhover', 'fast');
 		},
 		drop: function(event, ui){
-			trashed = ui.draggable.attr("id");
-			console.log(trashed);
-			delete classes[trashed];
+			//trashed = ui.draggable.attr("id");
+			//console.log(trashed);
 			ui.draggable.remove();
 			//$(".ui-sortable-placeholder").remove();
 			$(this).removeClass('trashhover', 'fast');
@@ -367,7 +397,7 @@ $(function(){
 		}
 	});
 	$("#getnewclassid").autocomplete({
-		source: "autocomplete.php",
+		source: "#",
 		minLength: 2,
 		appendTo: "#getnewclass"
 	});
@@ -410,11 +440,13 @@ $(function(){
 	});
 	if(window.location.hash){
 		//Load hash's classes on pageload
-		$.post("?", {hash: window.location.hash}, function(data){
-			temp = eval(data);
-			$("#choosemajor").val(temp[1]).attr("selected",true);
-			if(temp[0]=="") return false;
-			getClasses(eval(temp[0]));
+		$("#loading").show();
+		$.post("?", {gethash:window.location.hash}, function(data){
+			$("#loading").hide();
+			if(data=="") return false;
+			json = $.parseJSON(data);
+			$("#choosemajor").val(json.pop()).attr("selected",true);
+			getClasses(json);
 		});
 	}
 	$("#choosemajor").change(checkMajor);
@@ -483,29 +515,30 @@ $(function(){
 	});
 	//$("#rightbar").css('width', $("#rightbar").width());
 	$(window).resize(function() {
+		updateWires();
 		//$("#rightbar").css('width', 'auto');
 		//addAllWires();
 		//$("#rightbar").css('width', $("#rightbar").width());
 	});
 	$("#printroad").click(function(){
 		$("body, #rightbar, .term, .year").toggleClass("printing");
-		addAllWires();
+		updateWires();
 		window.print();
 		$("body, #rightbar, .term, .year").toggleClass("printing");
-		addAllWires();
+		updateWires();
 	});
 });
 </script>
 <div id="leftbar">
 	<div id="getnewclass">
-		<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog (new!)</a><br>
+		<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a><br>
 		<?
 		if(isset($_SESSION['athena'])){
 			echo "Welcome, <strong>{$_SESSION['athena']}</strong>!";
 		}
 		?>
 		<br><br>
-		<form action="" method="POST">
+		<form action="#" method="POST">
 			<span>Add</span>
 			<input id="getnewclassid" type="text" size="5" name="classname"> to 
 			<select id="getnewclassterm" name="classterm" style="width: 111px;">
@@ -526,34 +559,34 @@ $(function(){
 			<input id="getnewclasssubmit" class="bubble loaders" onclick="return false;" type="submit" value="Add Class">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
 			<input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
-			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road"> <!-- soon! -->
+			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road">--><!-- soon! -->
 		</form>
 		<br>
 		<br>
 	</div>
 	<div id="COREchecker">
 	<strong>General Institute Requirements:</strong><br>
-		Physics I: <span id="Physics_I" class="coreSCI">[ ]</span><br>
-		Physics II: <span id="Physics_II" class="coreSCI">[ ]</span><br>
-		Calculus I: <span id="Calculus_I" class="coreSCI">[ ]</span><br>
-		Calculus II: <span id="Calculus_II" class="coreSCI">[ ]</span><br>
-		Chemistry: <span id="Chemistry" class="coreSCI">[ ]</span><br>
-		Biology: <span id="Biology" class="coreSCI">[ ]</span><br>
+		Physics I: <span id="Physics_I" class="corecheck coreSCI">[ ]</span><br>
+		Physics II: <span id="Physics_II" class="corecheck coreSCI">[ ]</span><br>
+		Calculus I: <span id="Calculus_I" class="corecheck coreSCI">[ ]</span><br>
+		Calculus II: <span id="Calculus_II" class="corecheck coreSCI">[ ]</span><br>
+		Chemistry: <span id="Chemistry" class="corecheck coreSCI">[ ]</span><br>
+		Biology: <span id="Biology" class="corecheck coreSCI">[ ]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="coreCI">[ ]</span>&nbsp;<span id="CI_H2" class="coreCI">[ ]</span><br>
-		REST <span id="REST" class="coreREST">[ ]</span>&nbsp;<span id="REST2" class="coreREST">[ ]</span><br>
-		LAB <span id="LAB" class="coreLAB">[ ]</span>&nbsp;<span id="LAB2" class="coreLAB">[ ]</span><br>
+		CI-H <span id="CI_H" class="corecheck coreCI">[ ]</span>&nbsp;<span id="CI_H2" class="corecheck coreCI">[ ]</span><br>
+		REST <span id="REST" class="corecheck coreREST">[ ]</span>&nbsp;<span id="REST2" class="corecheck coreREST">[ ]</span><br>
+		LAB <span id="LAB" class="corecheck coreLAB">[ ]</span>&nbsp;<span id="LAB2" class="corecheck coreLAB">[ ]</span><br>
 		-----------------<br>
 		HASS:<br>
-		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="coreHASS">[ ]</span>
-					&nbsp;H <span id="HASS_Humanities" class="coreHASS">[ ]</span>
-					&nbsp;S <span id="HASS_Social_Sciences" class="coreHASS">[ ]</span><br>
+		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="corecheck coreHASS">[ ]</span>
+					&nbsp;H <span id="HASS_Humanities" class="corecheck coreHASS">[ ]</span>
+					&nbsp;S <span id="HASS_Social_Sciences" class="corecheck coreHASS">[ ]</span><br>
 		&nbsp;&nbsp;&nbsp;Other HASS: 
-		<span id="HASS_E"  class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E2" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E3" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E4" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E5" class="coreHASS coreHASSE">[ ]</span><br>
+		<span id="HASS_E"  class="corecheck coreHASS coreHASSE">[ ]</span>
+		<span id="HASS_E2" class="corecheck coreHASS coreHASSE">[ ]</span>
+		<span id="HASS_E3" class="corecheck coreHASS coreHASSE">[ ]</span>
+		<span id="HASS_E4" class="corecheck coreHASS coreHASSE">[ ]</span>
+		<span id="HASS_E5" class="corecheck coreHASS coreHASSE">[ ]</span><br>
 		-----------------<br>
 		<select id="choosemajor" name="choosemajor" style="width: 200px;">
 			<option value="m0">---Select a Major---</option>
@@ -736,9 +769,10 @@ $(function(){
 	</div>
 	<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
 </div>
+<div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble">
 	<div id="viewroads_close">Close this</div>
-	<h3 id="viewroads_header">Your saved roads:</h2>
+	<h3 id="viewroads_header">Your saved roads:</h3>
 	<div id="savedroads">
 	
 	</div>
@@ -780,7 +814,6 @@ $(function(){
 		<h3><a href="#" class="dummylink">How do I save classes for later or to share with others?</a></h3>
 		<div>
 			If you want to save your course map for later, simply click the "Save Classes" button in the upper-left. The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.
-			</p>
 		</div>
 		<h3><a href="#" class="dummylink">What about privacy?</a></h3>
 		<div>

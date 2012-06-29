@@ -1,5 +1,6 @@
 <?php
-//*
+
+/*
 die();
 //*/
 require("connect.php");

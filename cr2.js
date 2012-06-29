@@ -184,9 +184,8 @@ function classFromJSON(json){
 	json.reqstatus = true;
 	if(json.override) newdiv.addClass('classdivoverride');
 	for(attr in json) newdiv.data(attr, json[attr]);
-	newdiv.data("block", YAHOO.util.Dom.get(id));
 	newdiv.data("terminals", {});
-	newdiv.data("terminals").terminal = new WireIt.Terminal(newdiv.data("block"), {editable: false });
+	newdiv.data("terminals").terminal = new WireIt.Terminal(newdiv[0], {editable: false });
 	newdiv.data("terminals").wires = [];
 	return newdiv;
 }
@@ -225,11 +224,11 @@ function newWire(from,to){
 	dterm = Math.abs(fromterm - toterm);
 	if(to.coreq==1){
 		options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqerror:false};
-		//if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
+		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
 	}else{
 		toterm += to.div.data("override")?0:1;
 		options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqerror:false};
-		//if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
+		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
 	}
 	if(dterm==1 || dterm==2){
 		tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);

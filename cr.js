@@ -82,20 +82,6 @@ function checkMajor(){
 	if(val=="m0") reqs[1] = "";
 }
 
-function checkMajor2(){
-	var val = $("#choosemajor2").val();
-	if(majors[val]==undefined) majors[val]=[0];
-	//console.log(val+": "+majors[val]);
-	$("#majorreqs2").html(buildMajor2());
-	if(val!="m0") $("#majorreqs2").append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
-	$(".majorchk2").removeClass("chk").html("[ ]").removeAttr("title");
-	var reqs = checkReqs(majors[val], checkOff2, ["lvl", "cls"]);
-	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
-	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
-	reqs[1] = "<strong>Major requirements:<\/strong><br>" + reqs[1];
-	if(val=="m0") reqs[1] = "";
-}
-
 function checkOff(lvl, cls){ 
 	$(".majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls); 
 	return true;
@@ -133,46 +119,6 @@ function buildMajor(arr, level){
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
 	if(!level.length) return "<strong>Major requirements:<\/strong><br>\n"+tempstr;
-	return "<li>"+tempstr+"<\/li>\n";
-}
-
-function checkOff2(lvl, cls){ 
-	$(".majorchk2.majorchk2_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls); 
-	return true;
-}
-
-function buildMajor2(arr, level){
-	if(arr==undefined) arr = majors[$("#choosemajor2").val()];
-	if(level==undefined) level = []; //Keep track of recursion. 
-	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
-	var tempstr = ""; //""; //Holds the unsatisfied requisites in a string for display to the user.
-	var temp2 = true;
-	//console.log("checkReqs in action: "+arr+" on level "+level);
-	for(var i=1;i<arr.length;i++){
-		//console.log("i="+i+" yields: "+arr[i]);
-		if(typeof(arr[i])=="object"){
-			//console.log("it's an object!");
-			req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
-			//console.log(req);
-			tempstr += req;
-			continue;
-		}
-		
-		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
-		if(arr[i].indexOf("-")!=-1){
-			var innertempstr = "";
-			for(var j=0;j<arr[0];j++){
-				innertempstr += "<span class='majorchk2 majorchk2_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
-			}
-			return "<li>"+innertempstr+" "+arr[0]+" from the range "+arr[i]+"<\/li>\n";
-		}
-		//Now only strings
-		//console.log("it's a string!");
-		tempstr += "<li><span class='majorchk2 majorchk2_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
-	}
-	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
-	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
-	if(!level.length && arr!=[0]) return "<strong>Second major requirements:<\/strong><br>\n"+tempstr;
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
@@ -275,11 +221,11 @@ function newWire(from,to,coreq){
 	dterm = Math.abs(fromterm - toterm);
 	if(coreq){
 		options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqerror:false};
-		//if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
+		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
 	}else{
 		toterm += classes[toid].override?0:1;
 		options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqerror:false};
-		//if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
+		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
 	}
 	if(dterm==1 || dterm==2){
 		tempwire = new WireIt.Wire(terminals[fromid].terminal, terminals[toid].terminal, document.body, options);
