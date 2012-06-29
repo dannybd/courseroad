@@ -1,7 +1,5 @@
 /WireIt-0.5.0
 /blog
-/trac
+/gitignore
 /connect.php
-/full-catalog.csv
-/.full-catalog.csv.swp
 /structure.txt

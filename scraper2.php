@@ -43,7 +43,7 @@ added
 
 EOD;//*/
 
-$handle = fopen('full-catalog.csv', 'r');
+$handle = fopen('gitignore/full-catalog.csv', 'r');
 $headers = fgetcsv($handle);
 foreach($headers as &$header){
 	$header = strtr(($header), ' ', '_');
