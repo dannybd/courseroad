@@ -68,41 +68,27 @@ majors["mCMS"] = [0, "21L.011", "CMS.100", [1, "CMS.400", "CMS.403", "CMS.405", 
 majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008", "STS.009", "STS.010", "STS.011"], [1, "STS.025-STS.090"], "STS.091", "STS.THT", "STS.THU", [5, "Coherent group of subjects in STS"]];
 //majors["mWGS"] = [0];
 
-function checkMajor(){
-	var val = $("#choosemajor").val();
+function checkMajor(selector, majordiv){
+	//var val = $("#choosemajor").val();
+	var val = $(selector).val();
 	if(majors[val]==undefined) majors[val]=[0];
 	//console.log(val+": "+majors[val]);
-	$("#majorreqs").html(buildMajor());
-	if(val!="m0") $("#majorreqs").append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
-	$(".majorchk").removeClass("chk").html("[ ]").removeAttr("title");
-	var reqs = checkReqs(majors[val], checkOff, ["lvl", "cls"]);
+	$(majordiv).html(buildMajor(majors[val]));
+	if(val!="m0") $(majordiv).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	$(majordiv+" .majorchk").removeClass("chk").html("[ ]").removeAttr("title");
+	var reqs = checkReqs(majors[val], checkOff, [majordiv, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
 	reqs[1] = "<strong>Major requirements:<\/strong><br>" + reqs[1];
 	if(val=="m0") reqs[1] = "";
 }
 
-function checkMajor2(){
-	var val = $("#choosemajor2").val();
-	if(majors[val]==undefined) majors[val]=[0];
-	//console.log(val+": "+majors[val]);
-	$("#majorreqs2").html(buildMajor2());
-	if(val!="m0") $("#majorreqs2").append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
-	$(".majorchk2").removeClass("chk").html("[ ]").removeAttr("title");
-	var reqs = checkReqs(majors[val], checkOff2, ["lvl", "cls"]);
-	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
-	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
-	reqs[1] = "<strong>Major requirements:<\/strong><br>" + reqs[1];
-	if(val=="m0") reqs[1] = "";
-}
-
-function checkOff(lvl, cls){ 
-	$(".majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls.id); 
+function checkOff(majordiv, lvl, cls){ 
+	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls.id); 
 	return true;
 }
 
 function buildMajor(arr, level){
-	if(arr==undefined) arr = majors[$("#choosemajor").val()];
 	if(level==undefined) level = []; //Keep track of recursion. 
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
 	var tempstr = ""; //""; //Holds the unsatisfied requisites in a string for display to the user.
@@ -133,46 +119,6 @@ function buildMajor(arr, level){
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
 	if(!level.length) return "<strong>Major requirements:<\/strong><br>\n"+tempstr;
-	return "<li>"+tempstr+"<\/li>\n";
-}
-
-function checkOff2(lvl, cls){ 
-	$(".majorchk2.majorchk2_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls.id); 
-	return true;
-}
-
-function buildMajor2(arr, level){
-	if(arr==undefined) arr = majors[$("#choosemajor2").val()];
-	if(level==undefined) level = []; //Keep track of recursion. 
-	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
-	var tempstr = ""; //""; //Holds the unsatisfied requisites in a string for display to the user.
-	var temp2 = true;
-	//console.log("checkReqs in action: "+arr+" on level "+level);
-	for(var i=1;i<arr.length;i++){
-		//console.log("i="+i+" yields: "+arr[i]);
-		if(typeof(arr[i])=="object"){
-			//console.log("it's an object!");
-			req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
-			//console.log(req);
-			tempstr += req;
-			continue;
-		}
-		
-		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
-		if(arr[i].indexOf("-")!=-1){
-			var innertempstr = "";
-			for(var j=0;j<arr[0];j++){
-				innertempstr += "<span class='majorchk2 majorchk2_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
-			}
-			return "<li>"+innertempstr+" "+arr[0]+" from the range "+arr[i]+"<\/li>\n";
-		}
-		//Now only strings
-		//console.log("it's a string!");
-		tempstr += "<li><span class='majorchk2 majorchk2_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
-	}
-	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
-	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
-	if(!level.length && arr!=[0]) return "<strong>Second major requirements:<\/strong><br>\n"+tempstr;
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
@@ -339,9 +285,9 @@ function addWires(div, addwires){
 	div.data("terminals").wires = [];
 	div.data("reqstatus", true);
 	if(div.data("reqs")!=false){
-		prereqcheck = checkReqs(div.data("reqs"), newWire, [div, "cls"]);  //REVISIT
-		div.data("reqstatus", prereqcheck[0]);
-		tempstr = prereqcheck[1];
+		reqcheck = checkReqs(div.data("reqs"), newWire, [div, "cls"]);
+		div.data("reqstatus", reqcheck[0]);
+		tempstr = reqcheck[1];
 	}
 	if(div.data("reqstatus") || div.data("override") || !div.data("classterm")){
 		div.find(".reqs").html("Reqs: [X]").removeAttr('title');
@@ -349,13 +295,12 @@ function addWires(div, addwires){
 		div.find(".reqs").html("Reqs: [ ]").attr('title','Need: '+tempstr);
 	}
 	if(div.data("override")) div.find(".reqs").attr('title','OVERRIDE enabled');
-	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring")])[(div.data("classterm")-1)%3]=="1"));
+	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring")])[(div.data("classterm")-1)%3]));
 	div.data("status", ((div.data("reqstatus") || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);
 	div.removeClass("classdivgood").removeAttr('title');
 	if(div.data("status")) div.addClass("classdivgood");
 	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term'])[(div.data("classterm")-1)%3]);
 	if(div.data("override")) div.find(".coreqs").attr('title','OVERRIDE enabled');
-	//div.data("terminals").terminal.redrawAllWires();
 	if($('.classdivhigh').length==1){
 		$('.WireIt-Wire').addClass("WireIt-Wire-low");
 		for(i in $(".classdivhigh").data("terminals").terminal.wires){
@@ -373,12 +318,11 @@ function addAllWires(){
 	status = true;
 	$(".classdiv").each(function(){
 		$(this).data("classterm", $(".term").index($(this).parent()));
-		//classes[$(this).attr('id')].classterm = $(".term").index($(this).parent());
 		temp = addWires($(this));
 		status = status && temp;
 	});
 	updateWires();
-	//checkClasses();
+	checkClasses();
 	return status;
 }
 
@@ -389,77 +333,73 @@ function updateWires(){
 }
 function checkClasses(){
 	//This does the work for the left-hand side checklist bar.
-	/*
-	gir = {};
-	gir.SCI = {};
-	gir.CI = [];
-	gir.REST = [];
-	gir.LAB = [];
-	gir.HASS = {};
-	gir.HASS2 = [];//*/
 	totalUnits = 0;
 	$("#COREchecker span").removeAttr('title').each(function(){
 		$(this).html('[ ]');
 	});
-	$(".corecheck").removeClass('oneLeft').addClass('oneLeft');
-	$(".classdiv").each(function(){
-		if($.inArray($(this).data("grade_rule"), ['J','U','R'])){
-			forUnits = true;
-		}else{
-			temp = $(this).data("classterm");
-			$(".classdiv").not($(this)).filter(function(){
-				return true;
+	$(".corecheck").addClass("unused");
+	$(".classdiv").each(function(i){
+		//console.log("==============");
+		if($.inArray($(this).data("grade_rule"), ['J','U','R'])==-1){
+			//console.log($(this).data("subject_id")+" is a repeating class");
+			par = $(this);
+			disquals = $(".classdiv").not(this).filter(function(j){
+				return ((($.inArray($(this).data("subject_id"), par.data("equiv_subjects"))!=-1) || $(this).hasClass(par.data("id"))) && (j<i));
 			});
-			forUnits = true; //fix this
+			if(disquals.length) return true;
 		}
-		
-	});
-	for(cls in classes){
-		if(classes[cls]==undefined || jQuery.isEmptyObject(classes[cls])) continue;
+		//console.log($(this).data("subject_id")+" is good to check forUnits");
 		forUnits = true;
-		if(classes[cls].isGIR=="0"){
-			gir.totalUnits += parseInt(classes[cls].units);
-			continue;
+		if(!$(this).data("special")){
+			//console.log($(this).data("subject_id")+" isn't special: "+$(this).data("special"));
+			console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
+			totalUnits += $(this).data("total_units");
+			return true;
 		}
-		used = true;
-		if(classes[cls].SCI && gir.SCI[classes[cls].SCI]==undefined){
-			gir.SCI[classes[cls].SCI] = classes[cls].id;
-			$("#COREchecker #"+classes[cls].SCI.replace(/ /g,'_')).addClass('done').attr('title',classes[cls].course).html('[X]');
-			forUnits = false;
-		}
-		if(classes[cls].CI && gir.CI.length<2){
-			gir.CI.push(classes[cls].id);
-			$("#COREchecker .coreCI.oneLeft:first").removeClass("oneLeft").attr('title',classes[cls].course).html("[X]");
-			forUnits = false;
-		}
-		if(classes[cls].REST && gir.REST.length<2){
-			gir.REST.push(classes[cls].id);
-			$("#COREchecker .coreREST.oneLeft:first").removeClass("oneLeft").attr('title',classes[cls].course).html("[X]");
-			forUnits = false;
-		}
-		if(classes[cls].LAB && gir.LAB.length<2){
-			gir.LAB.push(classes[cls].id);
-			$("#COREchecker .coreLAB.oneLeft:first").removeClass("oneLeft").attr('title',classes[cls].course).html("[X]");
-			if(classes[cls].LAB==12){
-				$("#COREchecker .coreLAB.oneLeft:first").removeClass("oneLeft").attr('title',classes[cls].course).html("[X]");
-			}
-			forUnits = false;
-		}
-		if(classes[cls].HASS){
-			if(classes[cls].HASS!="HASS Elective" && gir.HASS[classes[cls].HASS]==undefined){
-				gir.HASS[classes[cls].HASS] = classes[cls].id;
-				$("#COREchecker #"+classes[cls].HASS.replace(/ /g,'_')).addClass('done').attr('title',classes[cls].course).html('[X]');
-				forUnits = false;
-			}else if(gir.HASS2.length<5){
-				gir.HASS2.push(classes[cls].id);
-				$("#COREchecker .coreHASSE.oneLeft:first").removeClass("oneLeft").attr('title',classes[cls].course).html("[X]");
+		if($(this).data("gir")){
+			//console.log($(this).data("subject_id")+" is a GIR: "+$(this).data("gir"));
+			effect = "#COREchecker .corecheck.unused.GIR."+$(this).data("gir")+":first";
+			if($(effect).length){
+				$(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
+				if($(this).data("gir")=="LAB") $(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
 				forUnits = false;
 			}
 		}
-		if(forUnits) gir.totalUnits += parseInt(classes[cls].units);
-	}
-	$("#totalunits").html(gir.totalUnits);
-	checkMajor();
+		if($(this).data("ci")){
+			effect = "#COREchecker .corecheck.unused.CI."+$(this).data("ci")+":first";
+			if($(effect).length){
+				$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+				forUnits = false;
+			}
+		}
+		if($(this).data("hass")){
+			hass = [$(this).data("hass")];
+			if(hass[0].indexOf(",")!=-1){
+				hass = hass[0].split(",");
+			}
+			for(i in hass){
+				effect = "#COREchecker .corecheck.unused.HASS."+hass[i]+":first";
+				if($(effect).length){
+					$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+					forUnits = false;
+				}else{
+					if((hass.length>1)&&(i!=(hass.length-1))) continue;
+					effect = "#COREchecker .corecheck.unused.HASS.HE:first";
+					if($(effect).length){
+						$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+						forUnits = false;
+					}
+				}
+			}
+		}
+		if(forUnits){
+			console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
+			totalUnits += $(this).data("total_units");
+		}
+	});
+	$("#totalunits").html(totalUnits);
+	checkMajor("#choosemajor", "#majorreqs");
+	checkMajor("#choosemajor2", "#majorreqs2");
 }
 
 function minclass(stringify){

@@ -62,11 +62,18 @@ function pullClass($class, $year=false, $json=true, $classterm=0, $override=fals
 	unset($row['last_modified']);
 	$row['id'] = str_replace('.','_',$row['subject_id']);
 	$row['divid'] = $row['id']."__".rand();
+	$row['is_variable_units'] = ($row['is_variable_units']=='1');
+	$row['offered_this_year'] = ($row['offered_this_year']=='1');
+	$row['fall'] = ($row['fall']=='1');
+	$row['iap'] = ($row['iap']=='1');
+	$row['spring'] = ($row['spring']=='1');
+	$row['summer'] = ($row['summer']=='1');
 	$row['permission'] = (strpos($row['reqs'],'Permission')!=false);
 	$row['reqs'] = json_decode($row['reqs']);
 	$reqs = $row['reqs']?"<span class='reqs'>Reqs: [X]</span>":"No reqs :D";
 	if($row['reqstr']) $row['reqstr'] = "Requisites: ".$row['reqstr']."<br>";
-	if($row['total_units']=="0") $row['total_units'] = "12";
+	$row['total_units'] = floatval($row['total_units']);
+	if(!$row['total_units']) $row['total_units'] = 12;
 	$row['info'] = <<<EOD
 Additional info for <strong>{$row['subject_id']}</strong>:<br>
 <strong>{$row['subject_title']}</strong><br>
@@ -85,9 +92,11 @@ EOD;
 	foreach($row['equiv_subjects'] as &$subj) $subj = rtrim($subj, 'J');
 	if(!$row['equiv_subjects'][0]) $row['equiv_subjects'] = false;
 	if($row['joint_subjects']) $row['divclasses'] .= " ".implode(' ',$row['joint_subjects']);
+	if($row['gir'] and $row['gir'][0]=="H") $row['gir'] = "";
 	if($row['gir']) $row['divclasses'] .= " GIR ".$row['gir'];
 	if($row['ci']) $row['divclasses'] .= " CI ".$row['ci'];
 	if($row['hass']) $row['divclasses'] .= " HASS ".$row['hass'];
+	$row['special'] = ($row['gir'] or $row['ci'] or $row['hass']);
 	$row['classterm'] = $classterm;
 	$row['override'] = $override;
 	//the $row['div'] actually stores the HTML of the class bubble.
@@ -290,13 +299,24 @@ var loadingclasses = 0;
 var totalUnits = 0;
 var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
 $(function(){
+	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
+	if(window.location.hash){
+		//Load hash's classes on pageload
+		$("#loading").show();
+		$.post("?", {gethash:window.location.hash}, function(data){
+			$("#loading").hide();
+			if(data=="") return false;
+			json = $.parseJSON(data);
+			$("#choosemajor").val(json.pop()).attr("selected",true);
+			getClasses(json);
+		});
+	}
 	$(window).bind("beforeunload", function(){
 		//Still a work in progress
 		if(!userhashchange){
 			return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
 		}
 	});
-	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	$('#getnewclassid').blur(function(){
 		$("#getnewclass .ui-autocomplete").hide();
 	}).focus();
@@ -309,7 +329,7 @@ $(function(){
 		return false;
 	});
 	$("body").on("click", ".classdiv", function(){
-		//Highlights the selected class, dims the others, adn displays info on that class in the lower right
+		//Highlights the selected class, dims the others, and displays info on that class in the lower right
 		$(".classdiv").not($(this)).removeClass("classdivhigh");
 		$(".classdiv").removeClass("classdivlow");
 		$(this).toggleClass("classdivhigh");
@@ -436,19 +456,12 @@ $(function(){
 			});
 		}
 	});
-	if(window.location.hash){
-		//Load hash's classes on pageload
-		$("#loading").show();
-		$.post("?", {gethash:window.location.hash}, function(data){
-			$("#loading").hide();
-			if(data=="") return false;
-			json = $.parseJSON(data);
-			$("#choosemajor").val(json.pop()).attr("selected",true);
-			getClasses(json);
-		});
-	}
-	$("#choosemajor").change(checkMajor);
-	$("#choosemajor2").change(checkMajor2);
+	$("#choosemajor").change(function(){
+		checkMajor("#choosemajor", "#majorreqs");
+	});
+	$("#choosemajor2").change(function(){
+		checkMajor("#choosemajor2", "#majorreqs2");
+	});
 	$("#viewroads").dialog({
 		autoOpen: false,
 		width: 800,
@@ -564,27 +577,27 @@ $(function(){
 	</div>
 	<div id="COREchecker">
 	<strong>General Institute Requirements:</strong><br>
-		Physics I: <span id="Physics_I" class="corecheck coreSCI">[ ]</span><br>
-		Physics II: <span id="Physics_II" class="corecheck coreSCI">[ ]</span><br>
-		Calculus I: <span id="Calculus_I" class="corecheck coreSCI">[ ]</span><br>
-		Calculus II: <span id="Calculus_II" class="corecheck coreSCI">[ ]</span><br>
-		Chemistry: <span id="Chemistry" class="corecheck coreSCI">[ ]</span><br>
-		Biology: <span id="Biology" class="corecheck coreSCI">[ ]</span><br>
+		Physics I: <span id="Physics_I" class="corecheck GIR PHY1">[ ]</span><br>
+		Physics II: <span id="Physics_II" class="corecheck GIR PHY2">[ ]</span><br>
+		Calculus I: <span id="Calculus_I" class="corecheck GIR CAL1">[ ]</span><br>
+		Calculus II: <span id="Calculus_II" class="corecheck GIR CAL2">[ ]</span><br>
+		Chemistry: <span id="Chemistry" class="corecheck GIR CHEM">[ ]</span><br>
+		Biology: <span id="Biology" class="corecheck GIR BIOL">[ ]</span><br>
+		REST <span id="REST" class="corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="corecheck GIR REST">[ ]</span><br>
+		LAB <span id="LAB" class="corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="corecheck GIR LAB LAB2">[ ]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="corecheck coreCI">[ ]</span>&nbsp;<span id="CI_H2" class="corecheck coreCI">[ ]</span><br>
-		REST <span id="REST" class="corecheck coreREST">[ ]</span>&nbsp;<span id="REST2" class="corecheck coreREST">[ ]</span><br>
-		LAB <span id="LAB" class="corecheck coreLAB">[ ]</span>&nbsp;<span id="LAB2" class="corecheck coreLAB">[ ]</span><br>
+		CI-H <span id="CI_H" class="corecheck CI CIH">[ ]</span>&nbsp;<span id="CI_H2" class="corecheck CI CIH">[ ]</span><br>
 		-----------------<br>
 		HASS:<br>
-		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="corecheck coreHASS">[ ]</span>
-					&nbsp;H <span id="HASS_Humanities" class="corecheck coreHASS">[ ]</span>
-					&nbsp;S <span id="HASS_Social_Sciences" class="corecheck coreHASS">[ ]</span><br>
+		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="corecheck HASS HA">[ ]</span>
+					&nbsp;H <span id="HASS_Humanities" class="corecheck HASS HH">[ ]</span>
+					&nbsp;S <span id="HASS_Social_Sciences" class="corecheck HASS HS">[ ]</span><br>
 		&nbsp;&nbsp;&nbsp;Other HASS: 
-		<span id="HASS_E"  class="corecheck coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E2" class="corecheck coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E3" class="corecheck coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E4" class="corecheck coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E5" class="corecheck coreHASS coreHASSE">[ ]</span><br>
+		<span id="HASS_E"  class="corecheck HASS HE">[ ]</span>
+		<span id="HASS_E2" class="corecheck HASS HE">[ ]</span>
+		<span id="HASS_E3" class="corecheck HASS HE">[ ]</span>
+		<span id="HASS_E4" class="corecheck HASS HE">[ ]</span>
+		<span id="HASS_E5" class="corecheck HASS HE">[ ]</span><br>
 		-----------------<br>
 		<select id="choosemajor" name="choosemajor" style="width: 200px;">
 			<option value="m0">---Select a Major---</option>
