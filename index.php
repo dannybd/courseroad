@@ -30,6 +30,7 @@ if(isset($_GET['hash'])){
 }
 require("connect.php"); //connect to database
 
+
 session_start();
 //loads class data from the database and serves up the JSON CourseRoad requires to load that class.
 if(isset($_GET['getclass'])){
@@ -358,12 +359,16 @@ $(function(){
 		},
 		drop: function(event, ui){
 			trashed = ui.draggable.attr("id");
-			console.log(trashed);
+			console.log(trashed,' ',(new Date()).getTime());
 			delete classes[trashed];
+			console.log(trashed,' ',(new Date()).getTime());
 			ui.draggable.remove();
+			console.log(trashed,' ',(new Date()).getTime());
 			//$(".ui-sortable-placeholder").remove();
 			$(this).removeClass('trashhover', 'fast');
+			console.log(trashed,' ',(new Date()).getTime());
 			addAllWires();
+			console.log(trashed,' ',(new Date()).getTime());
 		}
 	});
 	$("#getnewclassid").autocomplete({

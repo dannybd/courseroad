@@ -12,9 +12,11 @@ majors["m1_A"] = [0, "1.018", "1.020", "1.050", "1.060", "18.03", [1, "1.00", "1
 majors["m1_C"] = [0, "1.018", "1.020", "1.050", "1.060", "18.03", "1.013", "1.00", "1.010", "1.011", "1.035", "1.036", "1.041", "1.101", "1.102", [1, "1.015", "1.032", "1.054", "1.124", "1.200", "1.201", "1.252", "1.260", "1.573"]];
 majors["m1_E"] = [0, "1.018", "1.020", "1.050", "1.060", "18.03", "1.013", [1, "1.00", "1.010"], "1.061", "1.070", "1.080", "1.083", "1.106", "1.107", [1, "1.801", "11.002", "11.122", "14.01"], "1.101", "1.102", [1, "1.071", "1.64", "1.69", "1.72", "1.731", "1.77", "1.83", "1.89"]];
 majors["m2"] = [0, "2.001", "2.002", "2.003", "2.004", "2.005", "2.006", "2.008", "2.009", "2.086", "2.670", "2.671", "18.03", "2.THU", [1, "2.007", "2.017"], [1, "2.672", "2.674"], [2, "2.016", "2.017", "2.019", "2.050", "2.092", "2.12", "2.14", "2.184", "2.370", "2.51", "2.60", "2.71", "2.72", "2.793", "2.797", "2.813", "2.96"]];
-majors["m2_A"] = [0, "2.001", "2.003", "2.005", "2.009", "2.670", "2.671", "18.03", [2, "2.002", "2.004", "2.006", "2.007", "2.008", "2.086", "2.THU"], [6, "Elective Subjects with Engineering Content"]];
+majors["m2_A_old"] = [0, "2.001", "2.003", "2.005", "2.009", "2.670", "2.671", "18.03", [2, "2.002", "2.004", "2.006", "2.007", "2.008", "2.086", "2.THU"], [6, "Elective Subjects with Engineering Content"]];
+majors["m2_A_new"] = [0, [1, "2.00", "2.00B"], "2.678", "2.087", "2.090", "2.01", [1, "2.02A", "2.02B"], "2.03", [1, "2.04A", "2.04B"], "2.05", "2.051", "2.06", "2.671", "2.009", [6, "2A Concentration"]];
 majors["m2_OE"] = [0, "2.001", "2.002", "2.003", "2.004", "2.005", "2.016", "2.017", "2.019", "2.086", "2.612", "2.670", "2.671", "18.03", [2, "2.006", "2.007", "2.008", "2.065", "2.092", "2.12", "2.14", "2.51", "2.60", "2.700", "2.72", "2.96", "2.THU"]];
 majors["m3"] = [0, "3.012", "3.014", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.01", "3.016"], "3.022", "3.024", "3.032", "3.034", "3.042", "3.044", [1, "3.THU", "3.930"], "3.931", [4, "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052", "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073", "3.074", "3.080", "3.14", "3.15", "3.153", "3.155"]];
+majors["m3_A"] = [0, [5, "3.012", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.001"], "3.022", "3.024", "3.032", "3.034", "3.042", "3.044"], "3.014", [3, "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052", "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073", "3.074", "3.080", "3.14", "3.15", "3.153", "3.155"], [6, "Planned electives appropriate to the student's stated goals"]];
 majors["m3_C"] = [0, "3.012", "3.014", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.01"], "3.022", [1, "3.032", "3.044"], "3.THU", "3.985", "3.986", "3.987", "3.990", "12.001", [1, "12.110", "12.119"], "21A.100", [1, "3.07", "3.14", "3.051", "3.052"], [1, "3.982", "3.983", "3.984", "3.988"]];
 majors["m4_archdesign"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.113", "4.114", "4.115", "4.440", "4.603", "4.605", [1, "4.116", [2, "Classes from other streams"]]];
 majors["m4_buildingtech"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.411", "4.440", "4.605", "4.THT", "4.THU", [4, "Classes in Building Tech"], [1, "Class from the other streams"]];
@@ -68,18 +70,26 @@ majors["mCMS"] = [0, "21L.011", "CMS.100", [1, "CMS.400", "CMS.403", "CMS.405", 
 majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008", "STS.009", "STS.010", "STS.011"], [1, "STS.025-STS.090"], "STS.091", "STS.THT", "STS.THU", [5, "Coherent group of subjects in STS"]];
 //majors["mWGS"] = [0];
 
+//majors["miApplied_international"] = [0];
+majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], "Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor."];
+majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", "An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22"], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"]]]];
+majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [2, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
+majors["miPsych"] = [0, "9.00", [2, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"], [3, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"]];
+majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], [3, "Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy"]];
+
 function checkMajor(selector, majordiv){
 	//var val = $("#choosemajor").val();
 	var val = $(selector).val();
 	if(majors[val]==undefined) majors[val]=[0];
+	if(val=="m0") return false;
 	//console.log(val+": "+majors[val]);
 	$(majordiv).html(buildMajor(majors[val]));
 	if(val!="m0") $(majordiv).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
 	$(majordiv+" .majorchk").removeClass("chk").html("[ ]").removeAttr("title");
 	var reqs = checkReqs(majors[val], checkOff, [majordiv, "lvl", "cls"]);
-	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
+	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major or minor's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
-	reqs[1] = "<strong>Major requirements:<\/strong><br>" + reqs[1];
+	reqs[1] = "<strong>Requirements:<\/strong><br>" + reqs[1];
 	if(val=="m0") reqs[1] = "";
 }
 
@@ -118,7 +128,7 @@ function buildMajor(arr, level){
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
-	if(!level.length) return "<strong>Major requirements:<\/strong><br>\n"+tempstr;
+	if(!level.length) return "<strong>Requirements:<\/strong><br>\n"+tempstr;
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
@@ -296,9 +306,16 @@ function addWires(div, addwires){
 	}
 	if(div.data("override")) div.find(".reqs").attr('title','OVERRIDE enabled');
 	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring")])[(div.data("classterm")-1)%3]));
-	div.data("status", ((div.data("reqstatus") || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);
+	div.data("checkrepeat", true);
+	if($.inArray(div.data("grade_rule"), ['J','U','R'])==-1){
+		if($(".classdiv").not(div).filter(function(j){
+			return ((($.inArray($(this).data("subject_id"), div.data("equiv_subjects"))!=-1) || $(this).hasClass(div.data("id"))) && (j<i));
+		}).length) div.data("checkrepeat", false);
+	}
+	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat")) || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);
 	div.removeClass("classdivgood").removeAttr('title');
 	if(div.data("status")) div.addClass("classdivgood");
+	if(!div.data("checkrepeat")) div.attr('title', div.data("subject_id")+' is not counting for credit');
 	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term'])[(div.data("classterm")-1)%3]);
 	if(div.data("override")) div.find(".coreqs").attr('title','OVERRIDE enabled');
 	if($('.classdivhigh').length==1){
@@ -314,7 +331,6 @@ function addAllWires(){
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.removeAllWires();
 	});
-	//checkClasses();
 	status = true;
 	$(".classdiv").each(function(){
 		$(this).data("classterm", $(".term").index($(this).parent()));
@@ -331,6 +347,7 @@ function updateWires(){
 		$(this).data("terminals").terminal.redrawAllWires();
 	});
 }
+
 function checkClasses(){
 	//This does the work for the left-hand side checklist bar.
 	totalUnits = 0;
@@ -340,19 +357,12 @@ function checkClasses(){
 	$(".corecheck").addClass("unused");
 	$(".classdiv").each(function(i){
 		//console.log("==============");
-		if($.inArray($(this).data("grade_rule"), ['J','U','R'])==-1){
-			//console.log($(this).data("subject_id")+" is a repeating class");
-			par = $(this);
-			disquals = $(".classdiv").not(this).filter(function(j){
-				return ((($.inArray($(this).data("subject_id"), par.data("equiv_subjects"))!=-1) || $(this).hasClass(par.data("id"))) && (j<i));
-			});
-			if(disquals.length) return true;
-		}
-		//console.log($(this).data("subject_id")+" is good to check forUnits");
+		if(!$(this).data("checkrepeat")) return true;
+		console.log($(this).data("subject_id")+" is good to check forUnits");
 		forUnits = true;
 		if(!$(this).data("special")){
 			//console.log($(this).data("subject_id")+" isn't special: "+$(this).data("special"));
-			console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
+			//console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
 			totalUnits += $(this).data("total_units");
 			return true;
 		}
@@ -393,13 +403,15 @@ function checkClasses(){
 			}
 		}
 		if(forUnits){
-			console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
+			//console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
 			totalUnits += $(this).data("total_units");
 		}
 	});
 	$("#totalunits").html(totalUnits);
 	checkMajor("#choosemajor", "#majorreqs");
 	checkMajor("#choosemajor2", "#majorreqs2");
+	checkMajor("#chooseminor", "#minorreqs");
+	checkMajor("#chooseminor2", "#minorreqs2");
 }
 
 function minclass(stringify){
@@ -415,6 +427,10 @@ function minclass(stringify){
 	}).get();
 	if(!stringify) return temp;
 	return '['+temp.join(',')+']';
+}
+
+function minmajors(){
+	return '["'+$("#choosemajor").val()+'","'+$("#choosemajor2").val()+'","'+$("#chooseminor").val()+'","'+$("#chooseminor2").val()+'"]';
 }
 
 function deltaDate(){

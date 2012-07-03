@@ -167,6 +167,8 @@ if(isset($_POST['gethash'])){
 		$major = stripslashes($row['major']);
 	}
 	if($classes=='') die();
+	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
+	$major = json_decode($major);
 	$json = array();
 	foreach($classes as $class){ //id, classterm, override, [year]
 		$json[] = pullClass($class[0], $class[1], false, $class[2], ($class[3]==true));
@@ -212,7 +214,11 @@ if(isset($_GET['savedroads'])){
 		echo "<tr>";
 		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"".stripslashes($row['hash'])."\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
 		echo "<td><a href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
-		echo "<td>".stripslashes($row['major'])."</td>";
+		$major = stripslashes($row['major']);
+		if($major[0]!='[') $major = "[\"$major\"]";
+		$major = str_replace(',"m0"','',$major);
+		$major = implode(",<br>\n", json_decode($major));
+		echo "<td>$major</td>";
 		$classes = json_decode(stripslashes($row['classes']), true);
 		$classes2 = array();
 		foreach($classes as &$class2){
@@ -256,7 +262,7 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta charset="utf-8">
 <title>CourseRoad 2.0<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
@@ -266,8 +272,10 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <script type="text/javascript" src="cr2.js<?= $nocache ?>"></script>
 <link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
 <link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?'':'media="print"' ?>>
-<!--[if IE]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
-<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>"><![endif]-->
+<!--[if lt IE 9]>
+	<script type="text/javascript" src="excanvas.compiled.js"></script>
+	<link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>">
+<![endif]-->
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-31018454-1']);
@@ -307,7 +315,12 @@ $(function(){
 			$("#loading").hide();
 			if(data=="") return false;
 			json = $.parseJSON(data);
-			$("#choosemajor").val(json.pop()).attr("selected",true);
+			var jsonmajors = json.pop();
+			//console.log(jsonmajors);
+			$("#choosemajor").val(jsonmajors[0]).attr("selected",true);
+			$("#choosemajor2").val(jsonmajors[1]).attr("selected",true);
+			$("#chooseminor").val(jsonmajors[2]).attr("selected",true);
+			$("#chooseminor2").val(jsonmajors[3]).attr("selected",true);
 			getClasses(json);
 		});
 	}
@@ -420,7 +433,8 @@ $(function(){
 		appendTo: "#getnewclass"
 	});
 	$("#savemap").click(function(){
-		$.post("?", {classes: minclass(true), major: $("#choosemajor").val(), trycert: loggedin}, function(data){
+		console.log(minmajors());
+		$.post("?", {classes: minclass(true), major: minmajors(), trycert: loggedin}, function(data){
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
@@ -444,7 +458,7 @@ $(function(){
 		if(loggedin){
 			$("#viewroads").dialog("open");
 		}else{
-			$.post("?", {classes: minclass(true), major: $("#choosemajor").val(), trycert: true}, function(data){
+			$.post("?", {classes: minclass(true), major: minmajors(), trycert: true}, function(data){
 				if(data=="**auth**"){
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
@@ -461,6 +475,12 @@ $(function(){
 	});
 	$("#choosemajor2").change(function(){
 		checkMajor("#choosemajor2", "#majorreqs2");
+	});
+	$("#chooseminor").change(function(){
+		checkMajor("#chooseminor", "#minorreqs");
+	});
+	$("#chooseminor2").change(function(){
+		checkMajor("#chooseminor2", "#minorreqs2");
 	});
 	$("#viewroads").dialog({
 		autoOpen: false,
@@ -605,9 +625,11 @@ $(function(){
 			<option value="m1_C">1C -- Civil Engineering</option>
 			<option value="m1_E">1E -- Environmental Engineering Science</option>
 			<option value="m2">2 -- Mechanical Engineering</option>
-			<option value="m2_A">2A -- Engineering</option>
+			<option value="m2_A_new">2A (new) -- Engineering</option>
+			<option value="m2_A_old">2A (old) -- Engineering</option>
 			<option value="m2_OE">2-OE -- Ocean Engineering</option>
 			<option value="m3">3 -- Materials Science and Engineering</option>
+			<option value="m3_A">3A	-- Materials Science and Engineering</option>
 			<option value="m3_C">3C -- Archaeology and Materials</option>
 			<option value="m4_archdesign">4 -- Architecture (Architectural Design)</option>
 			<option value="m4_buildingtech">4 -- Architecture (Building Technology)</option>
@@ -679,9 +701,11 @@ $(function(){
 			<option value="m1_C">1C -- Civil Engineering</option>
 			<option value="m1_E">1E -- Environmental Engineering Science</option>
 			<option value="m2">2 -- Mechanical Engineering</option>
-			<option value="m2_A">2A -- Engineering</option>
+			<option value="m2_A_new">2A (new) -- Engineering</option>
+			<option value="m2_A_old">2A (old) -- Engineering</option>
 			<option value="m2_OE">2-OE -- Ocean Engineering</option>
 			<option value="m3">3 -- Materials Science and Engineering</option>
+			<option value="m3_A">3A	-- Materials Science and Engineering</option>
 			<option value="m3_C">3C -- Archaeology and Materials</option>
 			<option value="m4_archdesign">4 -- Architecture (Architectural Design)</option>
 			<option value="m4_buildingtech">4 -- Architecture (Building Technology)</option>
@@ -744,6 +768,30 @@ $(function(){
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
 		<div id="majorreqs2">
+		
+		</div>
+		-----------------<br>
+		<select id="chooseminor" name="chooseminor" style="width: 200px;">
+			<option value="m0">---Select a Minor---</option>
+			<option value="miAstronomy">Minor in Astronomy</option>
+			<option value="miBiomed">Minor in Biomedical Engineering</option>
+			<option value="miEnergy_studies">Minor in Energy Studies</option>
+			<option value="miPsych">Minor in Psychology</option>
+			<option value="miPublic_policy">Minor in Public Policy</option>
+		</select><br>
+		<div id="minorreqs">
+		
+		</div>
+		-----------------<br>
+		<select id="chooseminor2" name="chooseminor2" style="width: 200px;">
+			<option value="m0">---Select a Minor---</option>
+			<option value="miAstronomy">Minor in Astronomy</option>
+			<option value="miBiomed">Minor in Biomedical Engineering</option>
+			<option value="miEnergy_studies">Minor in Energy Studies</option>
+			<option value="miPsych">Minor in Psychology</option>
+			<option value="miPublic_policy">Minor in Public Policy</option>
+		</select><br>
+		<div id="minorreqs2">
 		
 		</div>
 		-----------------<br>
