@@ -45,7 +45,7 @@ if(isset($_GET['term'])){
 	die();
 }
 
-function pullClass($class, $year=false, $json=true, $classterm=0, $override=false){
+function pullClass($class, $year=false, $classterm=0, $override=false){
 	$sql = "SELECT * FROM `warehouse` WHERE `subject_id`='$class' ".($year?"AND `year`='$year' ORDER BY `last_modified` DESC;":"ORDER BY `year` DESC, `last_modified` DESC;");
 	//echo $sql."\n";
 	$query = mysql_query($sql);
@@ -60,6 +60,7 @@ function pullClass($class, $year=false, $json=true, $classterm=0, $override=fals
 	unset($row['hgn_code']);
 	unset($row['hgn_except']);
 	unset($row['last_modified']);
+	unset($row['notes']);
 	$row['id'] = str_replace('.','_',$row['subject_id']);
 	$row['divid'] = $row['id']."__".rand();
 	$row['is_variable_units'] = ($row['is_variable_units']=='1');
@@ -99,6 +100,7 @@ EOD;
 	$row['special'] = ($row['gir'] or $row['ci'] or $row['hass']);
 	$row['classterm'] = $classterm;
 	$row['override'] = $override;
+	$row['custom'] = false;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
 <div id='{$row['divid']}' class='{$row['divclasses']}'>
@@ -113,7 +115,7 @@ EOD;
 EOD;
 	//print_r($row);
 	//echo "\n\n\n";
-	return $json?json_encode($row):$row;
+	return $row;
 }
 
 //loads class data from the database and serves up the JSON CourseRoad requires to load that class.
@@ -122,7 +124,46 @@ if(isset($_GET['getclass'])){
 	$class = mysql_real_escape_string($_GET['getclass']);
 	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
 	//echo $class;
-	echo pullClass($class, $year);
+	echo json_encode(pullClass($class, $year));
+	die();
+}
+
+function pullCustom($name, $units, $classterm=0){
+	$row = array();
+	$row['year'] = "0";
+	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
+	$row['divid'] = $row['id']."__".rand();
+	$row['subject_title'] = $name;
+	$row['total_units'] = floatval($units);
+	if(!$row['total_units']) $row['total_units'] = 12;
+	$row['info'] = <<<EOD
+<strong>{$row['subject_title']}</strong><br>
+<p class='infounits'>({$row['total_units']} units)</p><br>
+<p class='infoinfo'>[This is a user-defined subject.]</p>
+EOD;
+	$row['divclasses']  = "classdiv bubble custom";
+	$row['classterm'] = $classterm;
+	$row['checkrepeat'] = true;
+	$row['custom'] = true;
+	//the $row['div'] actually stores the HTML of the class bubble.
+	$row['div'] = <<<EOD
+<div id='{$row['divid']}' class='{$row['divclasses']}'>
+	<div class='classdivlabel'>
+		<div class='classdivtitle' title='{$row['subject_title']}'>&nbsp;&nbsp;{$row['subject_title']}</div>
+	</div>
+	<div class='classdivinfo'>
+		Custom subject: {$row['total_units']} units
+	</div>
+</div>
+EOD;
+	return $row;
+}
+
+if(isset($_GET['getcustom'])){
+	header("Content-type: text/javascript");
+	$name = mysql_real_escape_string($_GET['getcustom']);
+	$units = isset($_GET['getunits'])?floatval($_GET['getunits']):false;
+	echo json_encode(pullCustom($name, $units));
 	die();
 }
 	
@@ -154,6 +195,7 @@ if(isset($_POST['classes'])){
 	die();
 }
 
+if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //For development only
 //Returns the desired hash's class and major data
 if(isset($_POST['gethash'])){
 	header("Content-type: text/javascript");
@@ -163,15 +205,19 @@ if(isset($_POST['gethash'])){
 	$classes = '';
 	$major = '';
 	while($row = mysql_fetch_array($query)){
-		$classes = json_decode(stripslashes($row['classes']));
+		$classes = json_decode(stripslashes($row['classes']), true);
 		$major = stripslashes($row['major']);
 	}
 	if($classes=='') die();
 	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
-	$major = json_decode($major);
+	$major = json_decode($major, true);
 	$json = array();
-	foreach($classes as $class){ //id, classterm, override, [year]
-		$json[] = pullClass($class[0], $class[1], false, $class[2], ($class[3]==true));
+	foreach($classes as $class){ // id/custom(name+units), classterm, override, [year]
+		if(is_array($class[0])){
+			$json[] = pullCustom($class[0]["name"], $class[0]["units"], $class[2]);
+		}else{
+			$json[] = pullClass($class[0], $class[1], $class[2], ($class[3]==true));
+		}
 	}
 	$json[] = $major;
 	//print_r($json);
@@ -220,8 +266,10 @@ if(isset($_GET['savedroads'])){
 		$major = implode(",<br>\n", json_decode($major));
 		echo "<td>$major</td>";
 		$classes = json_decode(stripslashes($row['classes']), true);
+		//echo $row['classes'];
 		$classes2 = array();
 		foreach($classes as &$class2){
+			if(is_array($class2[0])) $class2[0] = '('.$class2[0]["name"].')';
 			if($class2[3]) $class2[0] .= "*";
 			$classes2[] = $class2[0];
 		}
@@ -267,6 +315,7 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="json2-min.js"></script>
 <script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
 <script type="text/javascript" src="wireit-min.js"></script>
 <script type="text/javascript" src="cr2.js<?= $nocache ?>"></script>

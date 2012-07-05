@@ -271,6 +271,9 @@ body.printing{
 .classdivgood{
 	background-color: #CFC;
 }
+.custom{
+	background-color: #CCF;
+}
 .classdivlow{
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	filter: alpha(opacity=60);

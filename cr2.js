@@ -146,11 +146,18 @@ function classFromJSON(json){
 	return newdiv;
 }
 
-function getClass(classid, classterm, override, ignore){
+function getClass(classid, classterm, override){
 	//pulls down and interprets the class data
 	if(override==undefined) override = false;
-	if(ignore==undefined) ignore = false;
-	$.getJSON('?getclass='+classid, function(json){
+	var data = {};
+	if(classid[0]=="*"){
+		temp = classid.substr(1).split('~');
+		if(!temp[1]) temp[1] = 0;
+		data = {getcustom: temp[0], getunits: temp[1]};
+	}else{
+		data = {getclass: classid};
+	}
+	$.getJSON('?', data, function(json){
 		if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
 		json.classterm = classterm;
 		json.override = override;
@@ -334,6 +341,7 @@ function addAllWires(){
 	status = true;
 	$(".classdiv").each(function(){
 		$(this).data("classterm", $(".term").index($(this).parent()));
+		if($(this).data("custom")) return true;
 		temp = addWires($(this));
 		status = status && temp;
 	});
@@ -358,7 +366,7 @@ function checkClasses(){
 	$(".classdiv").each(function(i){
 		//console.log("==============");
 		if(!$(this).data("checkrepeat")) return true;
-		console.log($(this).data("subject_id")+" is good to check forUnits");
+		//console.log($(this).data("subject_id")+" is good to check forUnits");
 		forUnits = true;
 		if(!$(this).data("special")){
 			//console.log($(this).data("subject_id")+" isn't special: "+$(this).data("special"));
@@ -418,15 +426,10 @@ function minclass(stringify){
 	//Creates the storable string which holds our precious class data. Used primarily in saved classes
 	if(stringify==undefined) stringify = false;
 	temp = $(".classdiv").map(function(){
-		arr = [$(this).data("subject_id"), $(this).data("year"), $(this).data("classterm"), $(this).data("override")];
-		//obj = {id:$(this).data("subject_id"), year:$(this).data("year"), classterm:$(this).data("classterm"), override:$(this).data("override")};
-		if(!stringify) return [arr];
-		//if(!stringify) return [obj];
-		return '["'+arr[0]+'","'+arr[1]+'",'+arr[2]+','+arr[3]+']';
-		//return '{"id":"'+obj.id+'","year":"'+obj.year+'","classterm":'+obj.classterm+',"override":'+obj.override+'}';
+		arr = [$(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units")}:$(this).data("subject_id"), $(this).data("year"), $(this).data("classterm"), $(this).data("override")];
+		return [arr];
 	}).get();
-	if(!stringify) return temp;
-	return '['+temp.join(',')+']';
+	return stringify?JSON.stringify(temp):temp;
 }
 
 function minmajors(){
