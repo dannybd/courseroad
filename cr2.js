@@ -312,7 +312,7 @@ function addWires(div, addwires){
 		div.find(".reqs").html("Reqs: [ ]").attr('title','Need: '+tempstr);
 	}
 	if(div.data("override")) div.find(".reqs").attr('title','OVERRIDE enabled');
-	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring")])[(div.data("classterm")-1)%3]));
+	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring"), div.data("summer")])[(div.data("classterm")-1)%4]));
 	div.data("checkrepeat", true);
 	if($.inArray(div.data("grade_rule"), ['J','U','R'])==-1){
 		if($(".classdiv").not(div).filter(function(j){
@@ -323,7 +323,7 @@ function addWires(div, addwires){
 	div.removeClass("classdivgood").removeAttr('title');
 	if(div.data("status")) div.addClass("classdivgood");
 	if(!div.data("checkrepeat")) div.attr('title', div.data("subject_id")+' is not counting for credit');
-	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term'])[(div.data("classterm")-1)%3]);
+	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term', 'in the Summer term'])[(div.data("classterm")-1)%4]);
 	if(div.data("override")) div.find(".coreqs").attr('title','OVERRIDE enabled');
 	if($('.classdivhigh').length==1){
 		$('.WireIt-Wire').addClass("WireIt-Wire-low");

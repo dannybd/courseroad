@@ -144,6 +144,7 @@ EOD;
 	$row['divclasses']  = "classdiv bubble custom";
 	$row['classterm'] = $classterm;
 	$row['checkrepeat'] = true;
+	$row['override'] = false;
 	$row['custom'] = true;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
@@ -482,14 +483,14 @@ $(function(){
 		appendTo: "#getnewclass"
 	});
 	$("#savemap").click(function(){
-		console.log(minmajors());
+		//console.log(minmajors());
 		$.post("?", {classes: minclass(true), major: minmajors(), trycert: loggedin}, function(data){
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
-					console.log("CERTS! "+data);
+					//console.log("CERTS! "+data);
 					userhashchange = false;
 					window.location.hash = data;
 					setTimeout(function(){userhashchange = true;}, 1000);
@@ -558,10 +559,10 @@ $(function(){
 		if(confirm("Are you sure you want to delete this road? This action cannot be undone.")){
 			var parent = $(this).parent().parent();
 			val = parent.find(":radio").val();
-			parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
 			$.get("?", {deleteroad: val}, function(data){
 				if(data=="ok"){
-					console.log("Class deleted.");
+					parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
+					//console.log("Class deleted.");
 				}
 			});
 		}
@@ -596,9 +597,6 @@ $(function(){
 	//$("#rightbar").css('width', $("#rightbar").width());
 	$(window).resize(function() {
 		updateWires();
-		//$("#rightbar").css('width', 'auto');
-		//addAllWires();
-		//$("#rightbar").css('width', $("#rightbar").width());
 	});
 	$("#printroad").click(function(){
 		$("body, #rightbar, .term, .year").toggleClass("printing");
@@ -607,6 +605,7 @@ $(function(){
 		$("body, #rightbar, .term, .year").toggleClass("printing");
 		updateWires();
 	});
+	//$(".summer:first .termname").fadeToggle("slow");$(".summer:first").slideToggle("slow", function(){updateWires();});
 });
 </script>
 <div id="leftbar">
@@ -626,15 +625,15 @@ $(function(){
 				<option value="1">Freshman Fall</option>
 				<option value="2">Freshman IAP</option>
 				<option value="3">Freshman Spring</option>
-				<option value="4">Sophomore Fall</option>
-				<option value="5">Sophomore IAP</option>
-				<option value="6">Sophomore Spring</option>
-				<option value="7">Junior Fall</option>
-				<option value="8">Junior IAP</option>
-				<option value="9">Junior Spring</option>
-				<option value="10">Senior Fall</option>
-				<option value="11">Senior IAP</option>
-				<option value="12">Senior Spring</option>
+				<option value="5">Sophomore Fall</option>
+				<option value="6">Sophomore IAP</option>
+				<option value="7">Sophomore Spring</option>
+				<option value="9">Junior Fall</option>
+				<option value="10">Junior IAP</option>
+				<option value="11">Junior Spring</option>
+				<option value="13">Senior Fall</option>
+				<option value="14">Senior IAP</option>
+				<option value="15">Senior Spring</option>
 			</select><br> 
 			<input id="getnewclasssubmit" class="bubble loaders" onclick="return false;" type="submit" value="Add Class">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
@@ -856,24 +855,28 @@ $(function(){
 		<div class="term fall"><div class="termname">Fall</div></div>
 		<div class="term iap"><div class="termname">Iap</div></div>
 		<div class="term spring"><div class="termname">Spring</div></div>
+		<div class="term summer"><div class="termname">Summer</div></div>
 	</div>
 	<div id="sophomore" class="year">
 		<div class="yearname">Sophomore Year</div>
 		<div class="term fall"><div class="termname">Fall</div></div>
 		<div class="term iap"><div class="termname">Iap</div></div>
 		<div class="term spring"><div class="termname">Spring</div></div>
+		<div class="term summer"><div class="termname">Summer</div></div>
 	</div>
 	<div id="junior" class="year">
 		<div class="yearname">Junior Year</div>
 		<div class="term fall"><div class="termname">Fall</div></div>
 		<div class="term iap"><div class="termname">Iap</div></div>
 		<div class="term spring"><div class="termname">Spring</div></div>
+		<div class="term summer"><div class="termname">Summer</div></div>
 	</div>
 	<div id="senior" class="year">
 		<div class="yearname">Senior Year</div>
 		<div class="term fall"><div class="termname">Fall</div></div>
 		<div class="term iap"><div class="termname">Iap</div></div>
 		<div class="term spring"><div class="termname">Spring</div></div>
+		<div class="term summer"><div class="termname">Summer</div></div>
 	</div>
 	<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
 </div>

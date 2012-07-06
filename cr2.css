@@ -219,16 +219,26 @@ body.printing{
 .fall{
 	background-color: #feb;
 }
-.spring{
-	background-color: #dfd;
-	border-top: 1px dotted #888;
-}
 .iap{
 	background-color: #E8F9FF;
 	height: 45px;
 	border-top: 1px dotted #888;
 }
 .iap .termname{
+	margin-top: 12px;
+}
+.spring{
+	background-color: #dfd;
+	border-top: 1px dotted #888;
+}
+.summer{
+	display: none;
+	background-color: #FFFFAE;
+	height: 45px;
+	border-top: 1px dotted #888;
+}
+.summer .termname{
+	display: none;
 	margin-top: 12px;
 }
 .credit{

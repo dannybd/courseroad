@@ -6,6 +6,30 @@ die();
 require("connect.php");
 
 header("Content-type: text/javascript");
+
+$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
+
+$sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 1,10000";
+$query = mysql_query($sql);
+while($row = mysql_fetch_array($query)){
+	//print_r($row);
+	echo $row['classes']."\n\n";
+	$classes = json_decode(stripslashes($row['classes']), true);
+	if(!$classes) continue;
+	foreach($classes as &$class){
+		$class[2] = $map[$class[2]];
+	}
+	$classes = mysql_real_escape_string(json_encode($classes));
+	//print_r($classes);
+	//echo $classes;
+	//echo json_encode($classes)==$row['classes'];
+	$sql = "UPDATE `roads2` SET `classes`='$classes' WHERE `id`='{$row['id']}'";
+	echo $sql;
+	//mysql_query($sql);
+	echo "\n------------------------\n\n";
+}
+
+die();
 /*
 echo <<<EOD
 id
