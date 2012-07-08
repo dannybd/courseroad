@@ -7,27 +7,41 @@ require("connect.php");
 
 header("Content-type: text/javascript");
 
-$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
+//$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
 
-$sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 1,10000";
+$sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 0,10000";
 $query = mysql_query($sql);
 while($row = mysql_fetch_array($query)){
 	//print_r($row);
 	echo $row['classes']."\n\n";
 	$classes = json_decode(stripslashes($row['classes']), true);
-	if(!$classes) continue;
 	foreach($classes as &$class){
-		$class[2] = $map[$class[2]];
+		$temp = array();
+		if(is_array($class[0])){
+			$temp["name"] = $class[0]["name"];
+			$temp["units"] = $class[0]["units"];
+			$temp["term"] = $class[2];
+			$temp["custom"] = true;
+			$temp["override"] = ($class[3]=="1");
+		}else{
+			$temp["id"] = $class[0];
+			$temp["year"] = $class[1];
+			$temp["term"] = $class[2];
+			$temp["override"] = ($class[3]=="1");
+		}
+		$class = $temp;
+		//$class[2] = $map[$class[2]];
 	}
 	$classes = mysql_real_escape_string(json_encode($classes));
-	//print_r($classes);
 	//echo $classes;
+	//print_r(json_decode(stripslashes($classes),true));
 	//echo json_encode($classes)==$row['classes'];
 	$sql = "UPDATE `roads2` SET `classes`='$classes' WHERE `id`='{$row['id']}'";
 	echo $sql;
-	//mysql_query($sql);
+	mysql_query($sql);
 	echo "\n------------------------\n\n";
 }
+echo "YAY";
 
 die();
 /*

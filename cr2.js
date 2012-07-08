@@ -77,16 +77,15 @@ majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]],
 majors["miPsych"] = [0, "9.00", [2, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"], [3, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"]];
 majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], [3, "Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy"]];
 
-function checkMajor(selector, majordiv){
-	//var val = $("#choosemajor").val();
+function checkMajor(selector){
 	var val = $(selector).val();
+	div = $(selector).data("div");
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
-	//console.log(val+": "+majors[val]);
-	$(majordiv).html(buildMajor(majors[val]));
-	if(val!="m0") $(majordiv).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
-	$(majordiv+" .majorchk").removeClass("chk").html("[ ]").removeAttr("title");
-	var reqs = checkReqs(majors[val], checkOff, [majordiv, "lvl", "cls"]);
+	$(div).html(buildMajor(majors[val]));
+	if(val!="m0") $(div).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	$(div+" .majorchk").removeClass("chk").html("[ ]").removeAttr("title");
+	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major or minor's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
 	reqs[1] = "<strong>Requirements:<\/strong><br>" + reqs[1];
@@ -101,15 +100,11 @@ function checkOff(majordiv, lvl, cls){
 function buildMajor(arr, level){
 	if(level==undefined) level = []; //Keep track of recursion. 
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
-	var tempstr = ""; //""; //Holds the unsatisfied requisites in a string for display to the user.
+	var tempstr = ""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
-	//console.log("checkReqs in action: "+arr+" on level "+level);
 	for(var i=1;i<arr.length;i++){
-		//console.log("i="+i+" yields: "+arr[i]);
 		if(typeof(arr[i])=="object"){
-			//console.log("it's an object!");
 			req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
-			//console.log(req);
 			tempstr += req;
 			continue;
 		}
@@ -123,7 +118,6 @@ function buildMajor(arr, level){
 			return "<li>"+innertempstr+" "+arr[0]+" from the range "+arr[i]+"<\/li>\n";
 		}
 		//Now only strings
-		//console.log("it's a string!");
 		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
@@ -364,18 +358,13 @@ function checkClasses(){
 	});
 	$(".corecheck").addClass("unused");
 	$(".classdiv").each(function(i){
-		//console.log("==============");
 		if(!$(this).data("checkrepeat")) return true;
-		//console.log($(this).data("subject_id")+" is good to check forUnits");
 		forUnits = true;
 		if(!$(this).data("special")){
-			//console.log($(this).data("subject_id")+" isn't special: "+$(this).data("special"));
-			//console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
 			totalUnits += $(this).data("total_units");
 			return true;
 		}
 		if($(this).data("gir")){
-			//console.log($(this).data("subject_id")+" is a GIR: "+$(this).data("gir"));
 			effect = "#COREchecker .corecheck.unused.GIR."+$(this).data("gir")+":first";
 			if($(effect).length){
 				$(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
@@ -410,24 +399,20 @@ function checkClasses(){
 				}
 			}
 		}
-		if(forUnits){
-			//console.log($(this).data("subject_id")+" adds to totalUnits: "+$(this).data("total_units")+"+"+totalUnits+"="+($(this).data("total_units")+totalUnits));
-			totalUnits += $(this).data("total_units");
-		}
+		if(forUnits) totalUnits += $(this).data("total_units");
 	});
 	$("#totalunits").html(totalUnits);
-	checkMajor("#choosemajor", "#majorreqs");
-	checkMajor("#choosemajor2", "#majorreqs2");
-	checkMajor("#chooseminor", "#minorreqs");
-	checkMajor("#chooseminor2", "#minorreqs2");
+	$("select.majorminor").each(function(){checkMajor(this);});
 }
 
 function minclass(stringify){
 	//Creates the storable string which holds our precious class data. Used primarily in saved classes
 	if(stringify==undefined) stringify = false;
 	temp = $(".classdiv").map(function(){
-		arr = [$(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units")}:$(this).data("subject_id"), $(this).data("year"), $(this).data("classterm"), $(this).data("override")];
-		return [arr];
+		arr = $(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units"),custom:true}:{id:$(this).data("subject_id"), year:$(this).data("year")};
+		arr.term = $(this).data("classterm");
+		arr.override = $(this).data("override");
+		return arr;
 	}).get();
 	return stringify?JSON.stringify(temp):temp;
 }

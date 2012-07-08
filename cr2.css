@@ -109,12 +109,15 @@ body.printing{
 	overflow-y: auto;
 	border-radius: 5px;
 }
-#majorreqs>ul{
+select.majorminor{
+	width: 200px;
+}
+div.majorminor>ul{
 	margin: 0px;
 	padding: 0px;
 	padding-left: 10px;
 }
-#majorreqs>ul>li ul{
+div.majorminor>ul>li ul{
 	list-style: none;
 }
 #overrider{
@@ -355,6 +358,9 @@ div.WireIt-Wire-scissors{
 	border-top: 1px solid #CCC;
 	font-size: 8pt;
 	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .ui-sortable-placeholder { 

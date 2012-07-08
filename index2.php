@@ -118,17 +118,7 @@ EOD;
 	return $row;
 }
 
-//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
-if(isset($_GET['getclass'])){
-	header("Content-type: text/javascript");
-	$class = mysql_real_escape_string($_GET['getclass']);
-	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
-	//echo $class;
-	echo json_encode(pullClass($class, $year));
-	die();
-}
-
-function pullCustom($name, $units, $classterm=0){
+function pullCustom($name, $units, $classterm=0, $override=false){
 	$row = array();
 	$row['year'] = "0";
 	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
@@ -144,20 +134,49 @@ EOD;
 	$row['divclasses']  = "classdiv bubble custom";
 	$row['classterm'] = $classterm;
 	$row['checkrepeat'] = true;
-	$row['override'] = false;
+	$row['override'] = $override;
 	$row['custom'] = true;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
 <div id='{$row['divid']}' class='{$row['divclasses']}'>
 	<div class='classdivlabel'>
-		<div class='classdivtitle' title='{$row['subject_title']}'>&nbsp;&nbsp;{$row['subject_title']}</div>
+		<div class='classdivcourse'>****&nbsp;</div>
+		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
 	</div>
 	<div class='classdivinfo'>
-		Custom subject: {$row['total_units']} units
+		({$row['total_units']} units)
 	</div>
 </div>
 EOD;
 	return $row;
+}
+
+function yearHTML($title){
+	return <<<EOD
+	<div class="year">
+		<div class="yearname">$title</div>
+		<div class="term fall"><div class="termname">Fall</div></div>
+		<div class="term iap"><div class="termname">Iap</div></div>
+		<div class="term spring"><div class="termname">Spring</div></div>
+		<div class="term summer"><div class="termname">Summer</div></div>
+	</div>
+
+EOD;
+}
+
+if(isset($_GET['yearHTML'])){
+	echo yearHTML($_GET['yearHTML']);
+	die();
+}
+
+//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
+if(isset($_GET['getclass'])){
+	header("Content-type: text/javascript");
+	$class = mysql_real_escape_string($_GET['getclass']);
+	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
+	//echo $class;
+	echo json_encode(pullClass($class, $year));
+	die();
 }
 
 if(isset($_GET['getcustom'])){
@@ -190,13 +209,14 @@ if(isset($_POST['classes'])){
 			$_SESSION['trycert'] = true;
 		}
 	}
+	//id, hash, user, classes, major, public, ip, added
 	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
 	mysql_query($sql);
 	echo $trycert?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
 	die();
 }
 
-if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //For development only
+if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //Uncomment for development
 //Returns the desired hash's class and major data
 if(isset($_POST['gethash'])){
 	header("Content-type: text/javascript");
@@ -213,17 +233,16 @@ if(isset($_POST['gethash'])){
 	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
 	$major = json_decode($major, true);
 	$json = array();
-	foreach($classes as $class){ // id/custom(name+units), classterm, override, [year]
-		if(is_array($class[0])){
-			$json[] = pullCustom($class[0]["name"], $class[0]["units"], $class[2]);
+	foreach($classes as $class){
+		if(isset($class["custom"])){
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
 		}else{
-			$json[] = pullClass($class[0], $class[1], $class[2], ($class[3]==true));
+			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
 		}
 	}
 	$json[] = $major;
 	//print_r($json);
 	echo json_encode($json);
-	//echo json_encode(array($classes, $major));
 	die();
 }
 
@@ -304,8 +323,9 @@ if(isset($_GET['deleteroad'])){
 	die();
 }
 mysql_close($connect);
+
 $nocache = isset($_GET['nocache']);
-$nocache = true;
+$nocache = true; //Uncomment during development
 $nocache = $nocache?"?nocacher=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
 ?>
 <!DOCTYPE html>
@@ -343,8 +363,8 @@ _gaq.push(['_trackPageview']);
 //var apiKey = "cd2cfd891944811e690fc5c56acb0660";
 //var tenantId = "CourseRoad";
 //var USERID = SESSIONID = "<?= session_id(); ?>"; //These date to a prior feature testing; ignore...for now
-var loggedin = <?= isset($_SESSION['athena'])?"1":"0"; ?>;
-var triedlogin = <?= $_SESSION['triedcert']?"1":"0"; ?>; //These are not trusted variables, but they do aid in displaying different things based on login status.
+var loggedin = <?= isset($_SESSION['athena'])?"true":"false"; ?>;
+var triedlogin = <?= $_SESSION['triedcert']?"true":"false"; ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
 var userhashchange = true;
 window.onhashchange = function(){
 	//userhashchange means that if the user types in a new hash in the URL, 
@@ -366,7 +386,6 @@ $(function(){
 			if(data=="") return false;
 			json = $.parseJSON(data);
 			var jsonmajors = json.pop();
-			//console.log(jsonmajors);
 			$("#choosemajor").val(jsonmajors[0]).attr("selected",true);
 			$("#choosemajor2").val(jsonmajors[1]).attr("selected",true);
 			$("#chooseminor").val(jsonmajors[2]).attr("selected",true);
@@ -469,10 +488,7 @@ $(function(){
 			$(this).removeClass('trashhover', 'fast');
 		},
 		drop: function(event, ui){
-			//trashed = ui.draggable.attr("id");
-			//console.log(trashed);
 			ui.draggable.remove();
-			//$(".ui-sortable-placeholder").remove();
 			$(this).removeClass('trashhover', 'fast');
 			addAllWires();
 		}
@@ -483,7 +499,6 @@ $(function(){
 		appendTo: "#getnewclass"
 	});
 	$("#savemap").click(function(){
-		//console.log(minmajors());
 		$.post("?", {classes: minclass(true), major: minmajors(), trycert: loggedin}, function(data){
 			if(loggedin){
 				if(data=="**auth**"){
@@ -512,7 +527,7 @@ $(function(){
 				if(data=="**auth**"){
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
-					console.log("CERTS! "+data);
+					//console.log("CERTS! "+data);
 					userhashchange = false;
 					window.location.hash = data;
 					setTimeout(function(){userhashchange = true;}, 1000);
@@ -520,18 +535,7 @@ $(function(){
 			});
 		}
 	});
-	$("#choosemajor").change(function(){
-		checkMajor("#choosemajor", "#majorreqs");
-	});
-	$("#choosemajor2").change(function(){
-		checkMajor("#choosemajor2", "#majorreqs2");
-	});
-	$("#chooseminor").change(function(){
-		checkMajor("#chooseminor", "#minorreqs");
-	});
-	$("#chooseminor2").change(function(){
-		checkMajor("#chooseminor2", "#minorreqs2");
-	});
+	$("select.majorminor").on("change", function(){checkMajor(this);});
 	$("#viewroads").dialog({
 		autoOpen: false,
 		width: 800,
@@ -560,10 +564,7 @@ $(function(){
 			var parent = $(this).parent().parent();
 			val = parent.find(":radio").val();
 			$.get("?", {deleteroad: val}, function(data){
-				if(data=="ok"){
-					parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
-					//console.log("Class deleted.");
-				}
+				if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
 			});
 		}
 	});
@@ -667,9 +668,9 @@ $(function(){
 		<span id="HASS_E4" class="corecheck HASS HE">[ ]</span>
 		<span id="HASS_E5" class="corecheck HASS HE">[ ]</span><br>
 		-----------------<br>
-		<select id="choosemajor" name="choosemajor" style="width: 200px;">
+		<select id="choosemajor" name="choosemajor" class="majorminor" data-div="#majorreqs">
 			<option value="m0">---Select a Major---</option>
-			<option value="m1_A">1A -- Engineering</option><!-- -->
+			<option value="m1_A">1A -- Engineering</option>
 			<option value="m1_C">1C -- Civil Engineering</option>
 			<option value="m1_E">1E -- Environmental Engineering Science</option>
 			<option value="m2">2 -- Mechanical Engineering</option>
@@ -739,13 +740,11 @@ $(function(){
 			<option value="mSTS">STS -- Science, Technology and Society</option>
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
-		<div id="majorreqs">
-		
-		</div>
+		<div id="majorreqs" class="majorminor"></div>
 		-----------------<br>
-		<select id="choosemajor2" name="choosemajor2" style="width: 200px;">
+		<select id="choosemajor2" name="choosemajor2" class="majorminor" data-div="#majorreqs2">
 			<option value="m0">---Select a Major---</option>
-			<option value="m1_A">1A -- Engineering</option><!-- -->
+			<option value="m1_A">1A -- Engineering</option>
 			<option value="m1_C">1C -- Civil Engineering</option>
 			<option value="m1_E">1E -- Environmental Engineering Science</option>
 			<option value="m2">2 -- Mechanical Engineering</option>
@@ -815,11 +814,9 @@ $(function(){
 			<option value="mSTS">STS -- Science, Technology and Society</option>
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
-		<div id="majorreqs2">
-		
-		</div>
+		<div id="majorreqs2" class="majorminor"></div>
 		-----------------<br>
-		<select id="chooseminor" name="chooseminor" style="width: 200px;">
+		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
@@ -827,11 +824,9 @@ $(function(){
 			<option value="miPsych">Minor in Psychology</option>
 			<option value="miPublic_policy">Minor in Public Policy</option>
 		</select><br>
-		<div id="minorreqs">
-		
-		</div>
+		<div id="minorreqs" class="majorminor"></div>
 		-----------------<br>
-		<select id="chooseminor2" name="chooseminor2" style="width: 200px;">
+		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
@@ -839,9 +834,7 @@ $(function(){
 			<option value="miPsych">Minor in Psychology</option>
 			<option value="miPublic_policy">Minor in Public Policy</option>
 		</select><br>
-		<div id="minorreqs2">
-		
-		</div>
+		<div id="minorreqs2" class="majorminor"></div>
 		-----------------<br>
 		<strong>Total Units: <span id="totalunits">0</span></strong>
 	</div>
@@ -850,36 +843,14 @@ $(function(){
 </div>
 <div id="rightbar">
 	<div class="term credit"><div class="termname">Prior<br>Credit</div></div>
-	<div id="freshman" class="year">
-		<div class="yearname">Freshman Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
-		<div class="term summer"><div class="termname">Summer</div></div>
-	</div>
-	<div id="sophomore" class="year">
-		<div class="yearname">Sophomore Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
-		<div class="term summer"><div class="termname">Summer</div></div>
-	</div>
-	<div id="junior" class="year">
-		<div class="yearname">Junior Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
-		<div class="term summer"><div class="termname">Summer</div></div>
-	</div>
-	<div id="senior" class="year">
-		<div class="yearname">Senior Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
-		<div class="term summer"><div class="termname">Summer</div></div>
-	</div>
-	<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
+<?
+	echo yearHTML("Freshman Year");
+	echo yearHTML("Sophomore Year");
+	echo yearHTML("Junior Year");
+	echo yearHTML("Senior Year");
+?>
 </div>
+<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble">
 	<div id="viewroads_close">Close this</div>
