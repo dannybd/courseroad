@@ -125,7 +125,7 @@ function pullCustom($name, $units, $classterm=0, $override=false){
 	$row['divid'] = $row['id']."__".rand();
 	$row['subject_title'] = $name;
 	$row['total_units'] = floatval($units);
-	if(!$row['total_units']) $row['total_units'] = 12;
+	if(!$row['total_units']) $row['total_units'] = 0;
 	$row['info'] = <<<EOD
 <strong>{$row['subject_title']}</strong><br>
 <p class='infounits'>({$row['total_units']} units)</p><br>
@@ -149,24 +149,6 @@ EOD;
 </div>
 EOD;
 	return $row;
-}
-
-function yearHTML($title){
-	return <<<EOD
-	<div class="year">
-		<div class="yearname">$title</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
-		<div class="term summer"><div class="termname">Summer</div></div>
-	</div>
-
-EOD;
-}
-
-if(isset($_GET['yearHTML'])){
-	echo yearHTML($_GET['yearHTML']);
-	die();
 }
 
 //loads class data from the database and serves up the JSON CourseRoad requires to load that class.
@@ -289,9 +271,10 @@ if(isset($_GET['savedroads'])){
 		//echo $row['classes'];
 		$classes2 = array();
 		foreach($classes as &$class2){
-			if(is_array($class2[0])) $class2[0] = '('.$class2[0]["name"].')';
-			if($class2[3]) $class2[0] .= "*";
-			$classes2[] = $class2[0];
+			if(isset($class2["custom"])) $class2["id"] = '('.$class2["name"].')';
+			if(!isset($class2["id"])) continue;
+			if($class2["override"]) $class2["id"] .= "*";
+			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
 		echo "<td><strong class=\"deleteroad\">X</strong></td>";
@@ -333,6 +316,12 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <head>
 <meta charset="utf-8">
 <title>CourseRoad 2.0<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
+<link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
+<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?'':'media="print"' ?>>
+<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>">
+	<script type="text/javascript" src="excanvas.compiled.js"></script>
+<![endif]-->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
@@ -340,12 +329,6 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
 <script type="text/javascript" src="wireit-min.js"></script>
 <script type="text/javascript" src="cr2.js<?= $nocache ?>"></script>
-<link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
-<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?'':'media="print"' ?>>
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="excanvas.compiled.js"></script>
-	<link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>">
-<![endif]-->
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-31018454-1']);
@@ -363,19 +346,18 @@ _gaq.push(['_trackPageview']);
 //var apiKey = "cd2cfd891944811e690fc5c56acb0660";
 //var tenantId = "CourseRoad";
 //var USERID = SESSIONID = "<?= session_id(); ?>"; //These date to a prior feature testing; ignore...for now
-var loggedin = <?= isset($_SESSION['athena'])?"true":"false"; ?>;
-var triedlogin = <?= $_SESSION['triedcert']?"true":"false"; ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
+var loggedin = <?= isset($_SESSION['athena'])?"1":"0"; ?>;
+var triedlogin = <?= $_SESSION['triedcert']?"1":"0"; ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
 var userhashchange = true;
+var preventUpdateWires = false;
 window.onhashchange = function(){
 	//userhashchange means that if the user types in a new hash in the URL, 
 	//the browser will reload, but if the has changes do to saving a new version or something it won't.
 	if(userhashchange) window.location.reload(); 
 }
 
-var sortstartterms;
-var loadingclasses = 0;
 var totalUnits = 0;
-var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
+//var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
 $(function(){
 	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	if(window.location.hash){
@@ -384,7 +366,7 @@ $(function(){
 		$.post("?", {gethash:window.location.hash}, function(data){
 			$("#loading").hide();
 			if(data=="") return false;
-			json = $.parseJSON(data);
+			var json = $.parseJSON(data);
 			var jsonmajors = json.pop();
 			$("#choosemajor").val(jsonmajors[0]).attr("selected",true);
 			$("#choosemajor2").val(jsonmajors[1]).attr("selected",true);
@@ -462,9 +444,11 @@ $(function(){
 		scroll: true, 
 		zIndex: 99,
 		start: function(event, ui){
+			preventUpdateWires = true;
 			$('.WireIt-Wire').hide();
 		},
 		stop: function(event, ui){
+			preventUpdateWires = false;
 			$('.classdiv').removeAttr("style");
 			$('.WireIt-Wire').show();
 			addAllWires();
@@ -482,14 +466,14 @@ $(function(){
 			$(this).removeClass('trashon', 'fast');
 		},
 		over: function(event, ui){
-			$(this).addClass('trashhover', 'fast');
+			$(".trash").addClass('trashhover', 'fast');
 		},
 		out: function(event, ui){
-			$(this).removeClass('trashhover', 'fast');
+			$(".trash").removeClass('trashhover', 'fast');
 		},
 		drop: function(event, ui){
 			ui.draggable.remove();
-			$(this).removeClass('trashhover', 'fast');
+			$(".trash").removeClass('trashhover', 'fast');
 			addAllWires();
 		}
 	});
@@ -626,15 +610,23 @@ $(function(){
 				<option value="1">Freshman Fall</option>
 				<option value="2">Freshman IAP</option>
 				<option value="3">Freshman Spring</option>
+				<option value="4">Freshman Summer</option>
 				<option value="5">Sophomore Fall</option>
 				<option value="6">Sophomore IAP</option>
 				<option value="7">Sophomore Spring</option>
+				<option value="8">Sophomore Summer</option>
 				<option value="9">Junior Fall</option>
 				<option value="10">Junior IAP</option>
 				<option value="11">Junior Spring</option>
+				<option value="12">Junior Summer</option>
 				<option value="13">Senior Fall</option>
 				<option value="14">Senior IAP</option>
 				<option value="15">Senior Spring</option>
+				<option value="16">Senior Summer</option>
+				<option value="17">Super-Senior Fall</option>
+				<option value="18">Super-Senior IAP</option>
+				<option value="19">Super-Senior Spring</option>
+				<option value="20">Super-Senior Summer</option>
 			</select><br> 
 			<input id="getnewclasssubmit" class="bubble loaders" onclick="return false;" type="submit" value="Add Class">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
@@ -842,15 +834,44 @@ $(function(){
 	<div id="nowreading">Click on a class to see more info.</div>
 </div>
 <div id="rightbar">
-	<div class="term credit"><div class="termname">Prior<br>Credit</div></div>
-<?
-	echo yearHTML("Freshman Year");
-	echo yearHTML("Sophomore Year");
-	echo yearHTML("Junior Year");
-	echo yearHTML("Senior Year");
-?>
+	<div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>
+	<div class="year">
+		<div class="yearname"><span>Freshman Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+	</div>
+	<div class="year">
+		<div class="yearname"><span>Sophomore Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+	</div>
+	<div class="year">
+		<div class="yearname"><span>Junior Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+	</div>
+	<div class="year">
+		<div class="yearname"><span>Senior Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+	</div>
+	<div class="year supersenior hidden">
+		<div class="yearname supersenior hidden"><span>Super-senior Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+	</div>
 </div>
-<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
+<div id="trash" class="trash trashdefault"><img src="trashx.png" alt="" class="trash"></div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble">
 	<div id="viewroads_close">Close this</div>

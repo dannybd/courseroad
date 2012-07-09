@@ -13,9 +13,14 @@ $sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 0,10000";
 $query = mysql_query($sql);
 while($row = mysql_fetch_array($query)){
 	//print_r($row);
-	echo $row['classes']."\n\n";
+	//echo $row['classes']."\n\n";
 	$classes = json_decode(stripslashes($row['classes']), true);
 	foreach($classes as &$class){
+		if(!isset($class["custom"]) and !$class["id"]){
+			print_r($row);
+			continue;
+		}
+		/*
 		$temp = array();
 		if(is_array($class[0])){
 			$temp["name"] = $class[0]["name"];
@@ -31,15 +36,16 @@ while($row = mysql_fetch_array($query)){
 		}
 		$class = $temp;
 		//$class[2] = $map[$class[2]];
+		//*/
 	}
 	$classes = mysql_real_escape_string(json_encode($classes));
 	//echo $classes;
 	//print_r(json_decode(stripslashes($classes),true));
 	//echo json_encode($classes)==$row['classes'];
 	$sql = "UPDATE `roads2` SET `classes`='$classes' WHERE `id`='{$row['id']}'";
-	echo $sql;
-	mysql_query($sql);
-	echo "\n------------------------\n\n";
+	//echo $sql;
+	//mysql_query($sql);
+	//echo "\n------------------------\n\n";
 }
 echo "YAY";
 

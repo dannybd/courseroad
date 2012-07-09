@@ -79,7 +79,7 @@ majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "
 
 function checkMajor(selector){
 	var val = $(selector).val();
-	div = $(selector).data("div");
+	var div = $(selector).data("div");
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
 	$(div).html(buildMajor(majors[val]));
@@ -100,11 +100,17 @@ function checkOff(majordiv, lvl, cls){
 function buildMajor(arr, level){
 	if(level==undefined) level = []; //Keep track of recursion. 
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
+	if(typeof(arr[0])=="number"){
+		arr[0] = {count:(0+arr[0]),special:false};
+	}else{
+		arr[0] = $.extend({}, arr[0]);
+		arr[0].special = true;
+	}
 	var tempstr = ""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
 	for(var i=1;i<arr.length;i++){
 		if(typeof(arr[i])=="object"){
-			req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
+			var req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
 			tempstr += req;
 			continue;
 		}
@@ -112,23 +118,25 @@ function buildMajor(arr, level){
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
 		if(arr[i].indexOf("-")!=-1){
 			var innertempstr = "";
-			for(var j=0;j<arr[0];j++){
+			for(var j=0;j<arr[0].count;j++){
 				innertempstr += "<span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
 			}
-			return "<li>"+innertempstr+" "+arr[0]+" from the range "+arr[i]+"<\/li>\n";
+			return "<li>"+innertempstr+" "+arr[0].count+" from the range "+arr[i]+"<\/li>\n";
 		}
 		//Now only strings
 		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
-	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
+	if(level.length || (!level.length && (arr[0].count!=arr.length-1))) tempstr = ""+arr[0].count+" from:\n"+tempstr;
 	if(!level.length) return "<strong>Requirements:<\/strong><br>\n"+tempstr;
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
 function classFromJSON(json){
+	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", "slow");
+	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn("slow").parent().slideDown("slow", function(){updateWires();});
 	$('.term').eq(json.classterm).append(json.div);
-	id = json.divid;
+	var id = json.divid;
 	var newdiv = $("#"+id);
 	if(json.reqs==null) json.reqs=false;
 	json.reqstatus = true;
@@ -145,11 +153,11 @@ function getClass(classid, classterm, override){
 	if(override==undefined) override = false;
 	var data = {};
 	if(classid[0]=="*"){
-		temp = classid.substr(1).split('~');
+		var temp = classid.substr(1).split('~');
 		if(!temp[1]) temp[1] = 0;
-		data = {getcustom: temp[0], getunits: temp[1]};
+		var data = {getcustom: temp[0], getunits: temp[1]};
 	}else{
-		data = {getclass: classid};
+		var data = {getclass: classid};
 	}
 	$.getJSON('?', data, function(json){
 		if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
@@ -174,23 +182,23 @@ function newWire(from,to){
 	//Defines new wire's properties (black/grey, straight/curved) 
 	//partially based on the relative semesters and terms of the two would-be connected classes.
 	//from is $ div, to is object with to.div as $ div.
-	fromid = from.attr("id");
-	toid = to.div.attr("id");
-	fromterm = from.data("classterm")+0;
-	toterm = to.div.data("classterm")+0;
-	dterm = Math.abs(fromterm - toterm);
+	var fromid = from.attr("id");
+	var toid = to.div.attr("id");
+	var fromterm = from.data("classterm")+0;
+	var toterm = to.div.data("classterm")+0;
+	var dterm = Math.abs(fromterm - toterm);
 	if(to.coreq==1){
-		options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqerror:false};
+		var options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqerror:false};
 		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
 	}else{
 		toterm += to.div.data("override")?0:1;
-		options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqerror:false};
+		var options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqerror:false};
 		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
 	}
 	if(dterm==1 || dterm==2){
-		tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
+		var tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
 	}else{
-		tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
+		var tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
 	}
 	//tempwire.redraw();
 	from.data("terminals").wires.push(tempwire);
@@ -205,100 +213,122 @@ function checkReqs(arr, callback, callbackargs, level){
 	if(callbackargs==undefined) callbackargs = []; //Holds the arguments for callback. "cls" (with quotes) will be replaced with the matched course number before beign fed into callback
 	if(level==undefined){
 		level = []; //Keep track of recursion. 
-		matches = [];
+		globalmatches = [];
 	}
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
-	var matched = 0+arr[0]; //How many requirements in this requisite branch have been met?
+	if(typeof(arr[0])=="number"){
+		var matched = {count:(0+arr[0]),special:false};
+	}else{
+		var matched = $.extend({}, arr[0]);
+		matched.special = true;
+	}
+	matched.matches = [];
+	//var matched = 0+arr[0]; //How many requirements in this requisite branch have been met?
 	var tempstr = []; //""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
 	for(var i=1;i<arr.length;i++){
 		if($.isArray(arr[i])){
-			req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
+			var req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
+			//console.log($(req).eq(0).data("id"));
 			if(req[0]){ //If the sub-branch matched its requirements
-				matched--;
+				//console.log(req[2]);
+				if(matched.special){
+					$(req[2]).each(function(){
+						matched.count -= $(this).data(matched.type);
+					});
+				}else{
+					matched.count--;
+				}
 			}else{
 				tempstr.push(req[1]);
 			}
 			continue;
 		}
 		//Let's deal with the objects (for things like coreqs) now.
-		itemIsObject = (typeof(arr[i])=="object");
-		if(itemIsObject){ //Converting both things to objects, but only the coreq ones will have a "coreq":1 thing.
-			newarr = $.extend({}, arr[i]);
+		if(typeof(arr[i])=="object"){ //Converting both things to objects, but only the coreq ones will have a "coreq":1 thing.
+			var newarr = $.extend({}, arr[i]);
 		}else{
-			newarr = {"id":arr[i]};
+			var newarr = {id:arr[i]};
 		}
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
 		if(newarr.id.indexOf("-")!=-1){
-			rangematches = $(".classdiv").filter(function(index){
+			var rangematches = $(".classdiv").filter(function(index){
 				var rng = newarr.id.split("-");
 				rng = [rng[0].split(".")[0], parseFloat("."+rng[0].split(".")[1]), parseFloat("."+rng[1].split(".")[1])];
 				var temp2 = [$(this).data("subject_code"), parseFloat("."+$(this).data("subject_number"))];
 				return ((temp2[0]==rng[0]) && (rng[1]<=temp2[1]) && (temp2[1]<=rng[2]));
 			}).each(function(){
-				if($.inArray($(this).attr("id"), matches)!=-1) return true;
-				tempargs = callbackargs.slice();
-				clspos = $.inArray("cls", tempargs);
+				if($.inArray(this, globalmatches)!=-1) return true;
+				var tempargs = callbackargs.slice();
+				var clspos = $.inArray("cls", tempargs);
 				if(clspos!=-1){
 					tempargs[clspos] = $.extend({},newarr);
 					tempargs[clspos].div = $(this);
 				}
-				lvlpos = jQuery.inArray("lvl", tempargs);
+				var lvlpos = jQuery.inArray("lvl", tempargs);
 				if(lvlpos!=-1) tempargs[lvlpos] = level.concat([i]);
-				temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
+				var temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
 				if(temp2){
-					matched--;
-					matches.push($(this).attr("id"));
+					matched.count -= matched.special?$(this).data(matched.type):1;
+					matched.matches.push(this);
+					globalmatches.push(this);
 				}
-				if(matched<=0) return [true, ""];
+				if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 			});
-			if(matched>0){
-				return [false, "("+matched+" from: "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+")"];
+			if(matched.count>0){
+				return [false, "("+(matched.special?(matched.count+" '"+matched.type+"'"):matched.count)+" from: "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+")", level.length?matched.matches:globalmatches];
 			}else{
-				return [true, ""];
+				return [true, "", level.length?matched.matches:globalmatches];
 			}
 		}
 		//Now only bona fide classes
-		classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
+		var classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
 		classmatches.each(function(){
-			if($.inArray($(this).attr("id"), matches)!=-1) return true;
-			tempargs = callbackargs.slice();
-			clspos = $.inArray("cls", tempargs);
+			if($.inArray(this, globalmatches)!=-1) return true;
+			var tempargs = callbackargs.slice();
+			var clspos = $.inArray("cls", tempargs);
 			if(clspos!=-1){
 				tempargs[clspos] = $.extend({},newarr);
 				tempargs[clspos].div = $(this);
 			}
-			lvlpos = jQuery.inArray("lvl", tempargs);
+			var lvlpos = jQuery.inArray("lvl", tempargs);
 			if(lvlpos!=-1) tempargs[lvlpos] = level.concat([i]);
-			temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
+			var temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
 			if(temp2){
-				matched--;
-				matches.push($(this).attr("id"));
+				matched.count -= matched.special?$(this).data(matched.type):1;
+				matched.matches.push(this);
+				globalmatches.push(this);
 				return false;
 			}
 		});
 		if(!classmatches.length || !temp2){ //If it's not a class, or callback failed, then we need to note that.
 			tempstr.push((newarr.coreq==1)?"["+newarr.id+"]":newarr.id);
 		}
-		if(matched<=0) return [true, ""];
+		if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 	}
 	//return two pieces of info: state and string
-	if(matched<=0) return [true, ""];
-	tempstr = tempstr.join(", ");
-	if((level.length || (!level.length && (arr[0]!=arr.length-1))) && matched>0) tempstr = "("+matched+" from: "+tempstr+")";
-	if(!level.length) return [false, tempstr, matches];
-	return [false, tempstr];
+	if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
+	var tempstr = tempstr.join(", ");
+	if((level.length || (!level.length && (arr[0]!=arr.length-1))) && matched.count>0){
+		if(matched.special){
+			tempstr = "("+matched.count+" '"+matched.type+"' from: "+(JSON.stringify(arr.slice(1)))+")";
+		}else{
+			tempstr = "("+matched.count+" from: "+tempstr+")";
+		}
+	}
+	return [false, tempstr, level.length?matched.matches:globalmatches];
+	//return [false, tempstr];
 }
 
 function addWires(div, addwires){
 	//Frankly, this function has outgrown its name. addWires adds everything for a given class and updates its status.
-	if(addwires==undefined) addwires=true;
+	if(addwires==undefined) var addwires=true;
 	div.data("terminals").wires = [];
 	div.data("reqstatus", true);
 	if(div.data("reqs")!=false){
-		reqcheck = checkReqs(div.data("reqs"), newWire, [div, "cls"]);
+		var reqcheck = checkReqs(div.data("reqs"), newWire, [div, "cls"]);
 		div.data("reqstatus", reqcheck[0]);
-		tempstr = reqcheck[1];
+		var tempstr = reqcheck[1];
 	}
 	if(div.data("reqstatus") || div.data("override") || !div.data("classterm")){
 		div.find(".reqs").html("Reqs: [X]").removeAttr('title');
@@ -332,11 +362,11 @@ function addAllWires(){
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.removeAllWires();
 	});
-	status = true;
+	var status = true;
 	$(".classdiv").each(function(){
 		$(this).data("classterm", $(".term").index($(this).parent()));
 		if($(this).data("custom")) return true;
-		temp = addWires($(this));
+		var temp = addWires($(this));
 		status = status && temp;
 	});
 	updateWires();
@@ -345,6 +375,7 @@ function addAllWires(){
 }
 
 function updateWires(){
+	if(preventUpdateWires) return false;
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.redrawAllWires();
 	});
@@ -359,13 +390,13 @@ function checkClasses(){
 	$(".corecheck").addClass("unused");
 	$(".classdiv").each(function(i){
 		if(!$(this).data("checkrepeat")) return true;
-		forUnits = true;
+		var forUnits = true;
 		if(!$(this).data("special")){
 			totalUnits += $(this).data("total_units");
 			return true;
 		}
 		if($(this).data("gir")){
-			effect = "#COREchecker .corecheck.unused.GIR."+$(this).data("gir")+":first";
+			var effect = "#COREchecker .corecheck.unused.GIR."+$(this).data("gir")+":first";
 			if($(effect).length){
 				$(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
 				if($(this).data("gir")=="LAB") $(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
@@ -373,25 +404,25 @@ function checkClasses(){
 			}
 		}
 		if($(this).data("ci")){
-			effect = "#COREchecker .corecheck.unused.CI."+$(this).data("ci")+":first";
+			var effect = "#COREchecker .corecheck.unused.CI."+$(this).data("ci")+":first";
 			if($(effect).length){
 				$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
 				forUnits = false;
 			}
 		}
 		if($(this).data("hass")){
-			hass = [$(this).data("hass")];
+			var hass = [$(this).data("hass")];
 			if(hass[0].indexOf(",")!=-1){
 				hass = hass[0].split(",");
 			}
 			for(i in hass){
-				effect = "#COREchecker .corecheck.unused.HASS."+hass[i]+":first";
+				var effect = "#COREchecker .corecheck.unused.HASS."+hass[i]+":first";
 				if($(effect).length){
 					$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
 					forUnits = false;
 				}else{
 					if((hass.length>1)&&(i!=(hass.length-1))) continue;
-					effect = "#COREchecker .corecheck.unused.HASS.HE:first";
+					var effect = "#COREchecker .corecheck.unused.HASS.HE:first";
 					if($(effect).length){
 						$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
 						forUnits = false;
@@ -408,7 +439,7 @@ function checkClasses(){
 function minclass(stringify){
 	//Creates the storable string which holds our precious class data. Used primarily in saved classes
 	if(stringify==undefined) stringify = false;
-	temp = $(".classdiv").map(function(){
+	var temp = $(".classdiv").map(function(){
 		arr = $(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units"),custom:true}:{id:$(this).data("subject_id"), year:$(this).data("year")};
 		arr.term = $(this).data("classterm");
 		arr.override = $(this).data("override");
@@ -423,7 +454,7 @@ function minmajors(){
 
 function deltaDate(){
 	//Simply returns a date which is relative to now
-	d = new Date();
+	var d = new Date();
 	d = [d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds()];
 	for(t in arguments){
 		d[t] += arguments[t];

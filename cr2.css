@@ -4,6 +4,7 @@ body{
 	background-color: #ddd;
 	margin: 0;
 	padding: 0;
+	min-width: 950px;
 }
 body.printing{
 	overflow-x: hidden;
@@ -161,7 +162,6 @@ div.majorminor>ul>li ul{
 	background-color: #FDFDFD;
 	height: 100%;
 	width: auto;
-	min-width: 700px;
 	margin-left: 250px;
 	//overflow-y: scroll;
 	border-left: 1px solid
@@ -180,19 +180,31 @@ div.majorminor>ul>li ul{
 .year:nth-child(even){
 	background-color: #eee;
 }
+.supersenior.hidden{
+	border-top: 0px;
+	height: 0px;
+	overflow: hidden;
+}
 .yearname{
 	position: absolute;
 	font-variant: small-caps;
 	font-size: 20px;
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	//text-align: center;
-	margin-top: 93px;
-	width: 312px;
-	margin-left: -144px;
+	width: 399px;
+}
+.yearname span{
+	display: inline-block;
+	width: 399px;
+	margin-top: 100%;
 	cursor: default;
+	text-align: center;
+	-webkit-transform-origin: top left;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform-origin: top left;
+	-moz-transform: rotate(-90deg);
+	-ms-transform-origin: top left;
+	-ms-transform: rotate(-90deg);
+	-o-transform-origin: top left;
+	-o-transform: rotate(-90deg);
 }
 .term{
 	width: auto;
@@ -207,17 +219,38 @@ div.majorminor>ul>li ul{
 }
 .termname{
 	position: absolute;
+	width: 116px;
+	margin-left: -20px;
 	font-variant: small-caps;
 	font-size: 17px;
-	width: 50px;
+}
+.termname span{
+	display: inline-block;
+	width: 116px;
+	margin-top: 100%;
 	cursor: default;
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	margin-left: -32px;
-	margin-top: 45px;
 	text-align: center;
+	-webkit-transform-origin: top left;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform-origin: top left;
+	-moz-transform: rotate(-90deg);
+	-ms-transform-origin: top left;
+	-ms-transform: rotate(-90deg);
+	-o-transform-origin: top left;
+	-o-transform: rotate(-90deg);
+}
+.credit{
+	height: 45px;
+	margin-left: 0;
+	background-color: #AAA;
+	padding-left: 45px;
+}
+.credit .termname{
+	width: 45px;
+	margin-left: -40px;
+}
+.credit .termname span{
+	width: 45px;
 }
 .fall{
 	background-color: #feb;
@@ -227,8 +260,8 @@ div.majorminor>ul>li ul{
 	height: 45px;
 	border-top: 1px dotted #888;
 }
-.iap .termname{
-	margin-top: 12px;
+.iap .termname, .iap .termname span{
+	width: 45px;
 }
 .spring{
 	background-color: #dfd;
@@ -240,27 +273,17 @@ div.majorminor>ul>li ul{
 	height: 45px;
 	border-top: 1px dotted #888;
 }
-.summer .termname{
+.summer .termname{ 
 	display: none;
-	margin-top: 12px;
+	width: 45px;
 }
-.credit{
-	height: 45px;
-	margin-left: 0;
-	background-color: #AAA;
-	padding-left: 45px;
-}
-.credit .termname{
-	margin-top: 3px;
-	margin-left: -45px;
+.summer .termname span{
+	width: 45px;
 }
 .bubble{
 	background-color: #EEE;
-	//overflow: hidden;
 	border: 2px solid #B8B8B8;
 	border-radius: 6px;
-	-webkit-border-radius: 6px;
-	//margin: 0px;
 }
 .loaders:active{
 	background-color: #DDD;
@@ -313,12 +336,6 @@ div.WireIt-Terminal{
 	width: 1px;
 	height: 1px;
 	pointer: default;
-}
-div.WireIt-Terminal-connected, div.WireIt-Terminal-dropinvite{
-	background-position: 0 0px;
-}
-div.WireIt-Wire-scissors{
-	display: none;
 }
 .WireIt-Wire{
 	position: absolute;
@@ -386,18 +403,18 @@ div.WireIt-Wire-scissors{
 }
 
 #trash{
-	//display: none;
 	position: fixed;
 	top: 0;
+	height: 100%;
 	background-color: #ddd;
 	text-align: center;
-	//width: 50px;
-	//height: 50px;
+	z-index: 10;
+	float: right;
 }
 .trashdefault{
 	right: -20px;
 	width: 20px;
-	height: 20px;
+	height: 100%;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 	filter: alpha(opacity=0);
 	-moz-opacity: 0.0;
@@ -421,12 +438,18 @@ div.WireIt-Wire-scissors{
 	-khtml-opacity: 1;
 	opacity: 1;
 }
-#trash img{
+.trashdefault img{
 	position: absolute;
 	left: 0px;
-	top: 0px;
-	width:100%;
-	height:100%;
+	top: 50%;
+	margin-top: -10px;
+	width:	20px;
+	height:	20px;
+}
+img.trashhover{
+	margin-top: -25px;
+	width: 50px;
+	height: 50px;
 }
 #footer{
 	position: fixed;
