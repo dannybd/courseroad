@@ -68,27 +68,32 @@ majors["mCMS"] = [0, "21L.011", "CMS.100", [1, "CMS.400", "CMS.403", "CMS.405", 
 majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008", "STS.009", "STS.010", "STS.011"], [1, "STS.025-STS.090"], "STS.091", "STS.THT", "STS.THU", [5, "Coherent group of subjects in STS"]];
 //majors["mWGS"] = [0];
 
-function checkMajor(){
-	var val = $("#choosemajor").val();
+//majors["miApplied_international"] = [0];
+majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], "Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor."];
+majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", "An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22"], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"]]]];
+majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [2, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
+majors["miPsych"] = [0, "9.00", [2, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"], [3, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"]];
+majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], [3, "Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy"]];
+
+function checkMajor(selector){
+	var val = $(selector).val();
+	var div = $(selector).data("div");
 	if(majors[val]==undefined) majors[val]=[0];
-	//console.log(val+": "+majors[val]);
-	$("#majorreqs").html(buildMajor());
-	if(val!="m0") $("#majorreqs").append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
-	$(".majorchk").removeClass("chk").html("[ ]").removeAttr("title");
-	var reqs = checkReqs(majors[val], checkOff, ["lvl", "cls"]);
+	if(val=="m0") return false;
+	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
 	reqs[1] = "<strong>Major requirements:<\/strong><br>" + reqs[1];
 	if(val=="m0") reqs[1] = "";
 }
 
-function checkOff(lvl, cls){ 
-	$(".majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls); 
+function checkOff(majordiv, lvl, cls){ 
+	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls); 
 	return true;
 }
 
 function buildMajor(arr, level){
-	if(arr==undefined) arr = majors[$("#choosemajor").val()];
 	if(level==undefined) level = []; //Keep track of recursion. 
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
 	var tempstr = ""; //""; //Holds the unsatisfied requisites in a string for display to the user.
@@ -108,13 +113,13 @@ function buildMajor(arr, level){
 		if(arr[i].indexOf("-")!=-1){
 			var innertempstr = "";
 			for(var j=0;j<arr[0];j++){
-				innertempstr += "<span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[&#x2717;]<\/span>";
+				innertempstr += "<span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
 			}
 			return "<li>"+innertempstr+" "+arr[0]+" from the range "+arr[i]+"<\/li>\n";
 		}
 		//Now only strings
 		//console.log("it's a string!");
-		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[&#x2717;]<\/span> "+arr[i]+"<\/li>\n";
+		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(level.length || (!level.length && (arr[0]!=arr.length-1))) tempstr = ""+arr[0]+" from:\n"+tempstr;
@@ -430,7 +435,7 @@ function checkClasses(){
 		if(forUnits) gir.totalUnits += parseInt(classes[cls].units);
 	}
 	$("#totalunits").html(gir.totalUnits);
-	checkMajor();
+	$("select.majorminor").each(function(){checkMajor(this);});
 }
 
 function lowAttr(arr, attr, map, clean){

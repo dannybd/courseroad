@@ -422,7 +422,8 @@ $(function(){
 			getClasses(eval(temp[0]));
 		});
 	}
-	$("#choosemajor").change(checkMajor);
+	//$("#choosemajor").change(checkMajor);
+	$("select.majorminor").on("change", function(){checkMajor(this);});
 	$("#viewroads").dialog({
 		autoOpen: false,
 		width: 800,
@@ -559,15 +560,17 @@ $(function(){
 		<span id="HASS_E4" class="coreHASS coreHASSE">[ ]</span>
 		<span id="HASS_E5" class="coreHASS coreHASSE">[ ]</span><br>
 		-----------------<br>
-		<select id="choosemajor" name="choosemajor" style="width: 200px;">
+		<select id="choosemajor" name="choosemajor" class="majorminor" data-div="#majorreqs">
 			<option value="m0">---Select a Major---</option>
-			<option value="m1_A">1A -- Engineering</option><!-- -->
+			<option value="m1_A">1A -- Engineering</option>
 			<option value="m1_C">1C -- Civil Engineering</option>
 			<option value="m1_E">1E -- Environmental Engineering Science</option>
 			<option value="m2">2 -- Mechanical Engineering</option>
-			<option value="m2_A">2A -- Engineering</option>
+			<option value="m2_A_new">2A (new) -- Engineering</option>
+			<option value="m2_A_old">2A (old) -- Engineering</option>
 			<option value="m2_OE">2-OE -- Ocean Engineering</option>
 			<option value="m3">3 -- Materials Science and Engineering</option>
+			<option value="m3_A">3A	-- Materials Science and Engineering</option>
 			<option value="m3_C">3C -- Archaeology and Materials</option>
 			<option value="m4_archdesign">4 -- Architecture (Architectural Design)</option>
 			<option value="m4_buildingtech">4 -- Architecture (Building Technology)</option>
@@ -629,9 +632,101 @@ $(function(){
 			<option value="mSTS">STS -- Science, Technology and Society</option>
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
-		<div id="majorreqs">
-		
-		</div>
+		<div id="majorreqs" class="majorminor"></div>
+		-----------------<br>
+		<select id="choosemajor2" name="choosemajor2" class="majorminor" data-div="#majorreqs2">
+			<option value="m0">---Select a Major---</option>
+			<option value="m1_A">1A -- Engineering</option>
+			<option value="m1_C">1C -- Civil Engineering</option>
+			<option value="m1_E">1E -- Environmental Engineering Science</option>
+			<option value="m2">2 -- Mechanical Engineering</option>
+			<option value="m2_A_new">2A (new) -- Engineering</option>
+			<option value="m2_A_old">2A (old) -- Engineering</option>
+			<option value="m2_OE">2-OE -- Ocean Engineering</option>
+			<option value="m3">3 -- Materials Science and Engineering</option>
+			<option value="m3_A">3A	-- Materials Science and Engineering</option>
+			<option value="m3_C">3C -- Archaeology and Materials</option>
+			<option value="m4_archdesign">4 -- Architecture (Architectural Design)</option>
+			<option value="m4_buildingtech">4 -- Architecture (Building Technology)</option>
+			<option value="m4_computation">4 -- Architecture (Computation)</option>
+			<option value="m4_history">4 -- Architecture (History, Theory, and Criticism)</option>
+			<option value="m4_artculture">4 -- Architecture (Art, Culture, and Technology)</option>
+			<option value="m5">5 -- Chemistry</option>
+			<option value="m6_1">6-1 -- Electrical Science and Engineering</option>
+			<option value="m6_2">6-2 -- Electrical Engineering and Computer Science</option>
+			<option value="m6_3">6-3 -- Computer Science and Engineering</option>
+			<option value="m6_7">6-7 -- Computer Science and Molecular Biology</option>
+			<option value="m7">7 -- Biology</option>
+			<option value="m8_flexible">8 -- Physics (Flexible)</option>
+			<option value="m8_focused">8 -- Physics (Focused)</option>
+			<option value="m9">9 -- Brain and Cognitive Sciences</option>
+			<option value="m10">10 -- Chemical Engineering</option>
+			<option value="m10_B">10B -- Chemical-Biological Engineering</option>
+			<option value="m10_ENG">10-ENG -- Engineering</option>
+			<option value="m11_enviro">11 -- Urban and Environmental Policy and Planning</option>
+			<option value="m11_society">11 -- Urban Society, History, and Politics</option>
+			<option value="m11_regional">11 -- Urban and Regional Public Policy</option>
+			<option value="m12">12 -- Earth, Atmospheric, and Planetary Sciences</option>
+			<option value="m14">14 -- Economics</option>
+			<option value="m15">15 -- Management / Management Science</option>
+			<option value="m16_1">16-1 -- Aerospace Engineering</option>
+			<option value="m16_2">16-2 -- Aerospace Engineering with Information Technology</option>
+			<option value="m16_ENG">16-ENG -- Engineering</option>
+			<option value="m17">17 -- Political Science</option>
+			<option value="m18_general">18 -- Mathematics (General Option)</option>
+			<option value="m18_applied">18 -- Mathematics (Applied Option)</option>
+			<option value="m18_theoretical">18 -- Mathematics (Theoretical Option)</option>
+			<option value="m18_C">18-C -- Mathematics with Computer Science</option>
+			<option value="m20">20 -- Biological/Biomedical Engineering</option>
+			<option value="m21_german">21 -- German Focus</option>
+			<option value="m21">21 -- Ancient and Medieval Studies</option>
+			<option value="m21">21 -- East Asian Studies</option>
+			<option value="m21">21 -- German</option>
+			<option value="m21">21 -- Humanities</option>
+			<option value="m21">21 -- Latin American Studies</option>
+			<option value="m21">21 -- Psychology</option>
+			<option value="m21">21 -- Russian Studies</option>
+			<option value="m21_german">21 -- German Studies</option>
+			<option value="m21_A">21A -- Anthropology</option>
+			<option value="m21_E">21E -- Humanities and Engineering</option>
+			<option value="m21_F_french">21F -- French Studies</option>
+			<option value="m21_F_spanish">21F -- Spanish Studies</option>
+			<option value="m21_H">21H -- History</option>
+			<option value="m21_L">21L -- Literature</option>
+			<option value="m21_M">21M -- Music</option>
+			<option value="m21_S">21S -- Humanities and Science</option>
+			<option value="m21_W_creative">21W -- Writing (Creative Writing focus)</option>
+			<option value="m21_W_science">21W -- Writing (Science Writing focus)</option>
+			<option value="m21_W_digital">21W -- Writing (Digital Media focus)</option>
+			<option value="m22">22 -- Nuclear Science & Engineering</option>
+			<option value="m24_1">24-1 -- Philosophy</option>
+			<option value="m24_2_linguistics">24-2 -- Linguistics</option>
+			<option value="m24_2_philosophy">24-2 -- Philosophy / Linguistics</option>
+			<option value="mCMS">CMS -- Comparative Media Studies</option>
+			<option value="mSTS">STS -- Science, Technology and Society</option>
+			<option value="mWGS">WGS -- Women's and Gender Studies</option>
+		</select><br>
+		<div id="majorreqs2" class="majorminor"></div>
+		-----------------<br>
+		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
+			<option value="m0">---Select a Minor---</option>
+			<option value="miAstronomy">Minor in Astronomy</option>
+			<option value="miBiomed">Minor in Biomedical Engineering</option>
+			<option value="miEnergy_studies">Minor in Energy Studies</option>
+			<option value="miPsych">Minor in Psychology</option>
+			<option value="miPublic_policy">Minor in Public Policy</option>
+		</select><br>
+		<div id="minorreqs" class="majorminor"></div>
+		-----------------<br>
+		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
+			<option value="m0">---Select a Minor---</option>
+			<option value="miAstronomy">Minor in Astronomy</option>
+			<option value="miBiomed">Minor in Biomedical Engineering</option>
+			<option value="miEnergy_studies">Minor in Energy Studies</option>
+			<option value="miPsych">Minor in Psychology</option>
+			<option value="miPublic_policy">Minor in Public Policy</option>
+		</select><br>
+		<div id="minorreqs2" class="majorminor"></div>
 		-----------------<br>
 		<strong>Total Units: <span id="totalunits">0</span></strong>
 	</div>

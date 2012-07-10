@@ -472,6 +472,7 @@ $(function(){
 			$(".trash").removeClass('trashhover', 'fast');
 		},
 		drop: function(event, ui){
+			preventUpdateWires = false;
 			ui.draggable.remove();
 			$(".trash").removeClass('trashhover', 'fast');
 			addAllWires();

@@ -109,12 +109,25 @@ body.printing{
 	overflow-y: auto;
 	border-radius: 5px;
 }
+/*
 #majorreqs>ul{
 	margin: 0px;
 	padding: 0px;
 	padding-left: 10px;
 }
 #majorreqs>ul>li ul{
+	list-style: none;
+}
+//*/
+select.majorminor{
+	width: 200px;
+}
+div.majorminor>ul{
+	margin: 0px;
+	padding: 0px;
+	padding-left: 10px;
+}
+div.majorminor>ul>li ul{
 	list-style: none;
 }
 #overrider{
