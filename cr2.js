@@ -5,7 +5,7 @@ is an integer which provides the condition you need from the elements that follo
 that branch. Most of the time, this condition is a number: this means that n of the following
 classes must be present and correct (which is defined later) in order for that "branch" of the
 list to be valid. Alternative conditions are stored as objects, of the form:
-{count:42, type:"total_units", desc:"units", special:true}
+{count:42, type:"total_units", desc:"units from", special:true}
 which means that the present and correct classes must add up to at least 42 units.
 
 There's a subtle point here: the lists can then themselves contain further lists.
@@ -42,16 +42,16 @@ majors["m8_focused"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", "8.0
 majors["m9"] = [0, "9.00", "9.01", "9.07", [6, "9.34", "9.37", "9.56", "9.57", "9.59", "9.65", "9.66", "9.85", "24.900", "9.10", "9.20", "9.22", "9.35", "9.71", "9.03", "9.04", "9.05", "9.09", "9.14", "9.15", "9.18", "9.24", "9.29", "9.31"], [1, "9.02", "9.12", "9.63"], [1, "9.URG", "9.02", "9.12", "9.41", "9.50", "9.63"]];
 majors["m10"] = [0, "5.12", [1, "5.07", "7.05"], "5.310", "5.60", "10.10", "10.213", [1, "10.28", "10.26", "10.27", "10.29"], "10.301", "10.302", "10.32", "10.37", "10.490", "10.491", [2, "10.492", "10.493", "10.494"], [1, "18.03", "18.034"], [1, [1, "10.001-10.039"], [1, "10.401-10.791"], [1, "10.793-10.800"], [1, "10.817-10.899"]], [1, "3.014", "5.36", "6.152", "10.28", "10.467", "10.702", "10.26", "10.27", "10.29"]];
 majors["m10_B"] = [0, "5.12", "5.60", [1, "7.02", "10.702"], "7.03", [1, "5.07", "7.05"], "7.06", "10.10", "10.213", [1, "10.28", "10.26", "10.27", "10.29"], "10.301", "10.302", "10.37", "10.490", "10.491", [2, "10.492", "10.493", "10.494"], [1, "18.03", "18.034"]];
-majors["m10_ENG"] = [0, "5.12", "18.03", "10.10", "10.213", "10.301", "10.302", "10.37", [1, "10.28", "10.26", "10.27", "10.29", "10.467"], [1, [2, "1.106", "1.107"], "2.671", "3.014", "5.310", "5.35", "10.702", "12.335", "20.109"], [1, "1.00", "1.018", "1.080", "3.012", "3.155", "5.12", "5.61", "6.00", "7.03", "8.21"], [4, "Engineering concentration"], [1, "10.THU", [{count:12,type:"total_units",desc:"units",special:true}, "10.490-10.494"], [2, "10.910", [1, "10.492-10.494"]]]];
+majors["m10_ENG"] = [0, "5.12", "18.03", "10.10", "10.213", "10.301", "10.302", "10.37", [1, "10.28", "10.26", "10.27", "10.29", "10.467"], [1, [2, "1.106", "1.107"], "2.671", "3.014", "5.310", "5.35", "10.702", "12.335", "20.109"], [1, "1.00", "1.018", "1.080", "3.012", "3.155", "5.12", "5.61", "6.00", "7.03", "8.21"], [4, "Engineering concentration"], [1, "10.THU", [{count:12,type:"total_units",desc:"units from",special:true}, "10.490-10.494"], [2, "10.910", [1, "10.492-10.494"]]]];
 majors["m11_enviro"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.011", "11.014", "11.016", "11.021", "11.026", "11.122", "11.162", "11.165", "11.168", "1.011", "1.041"], "11.027", "11.THT", "11.THU"];
 majors["m11_society"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.013", "11.014", "11.015", "11.016", "11.019", "11.026", "11.150"], "11.027", "11.THT", "11.THU"];
 majors["m11_regional"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.003", "11.005", "11.011", "11.025", "11.126", "11.152", "11.164", "11.166"], "11.027", "11.THT", "11.THU"];
-majors["m12"] = [0, "12.001", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP", "12.THU", [1, "12.115", [2, "12.221", "12.222"], "12.307", "12.335", "12.410"], [6, "12.002", "12.005", "12.006", "12.007", "12.008", "12.021", "12.086", "12.021", "12.102", "12.104", "12.108", "12.109", "12.110", "12.113", "12.114", "12.119", "12.120", "12.158", "12.163", "12.170", "12.172", "12.201", "12.207", "12.213", "12.214", "12.301", "12.310", "12.333", "12.340", "12.348", "12.420", "12.425", "12.43", "12.431", "1.00", "1.060", "1.061", "1.080", "3.012", "5.60", "5.03", "5.12", "5.61", "6.00", "7.03", "7.05", "7.21", "8.03", "8.04", "8.044", "8.07", "8.09", "8.21", "12.010", "12.320", "18.04", "18.05", "18.06", "18.100A", "18.100B", "18.100C", "18.311"]];
-majors["m14"] = [0, "14.01", "14.02", "14.04", "14.05", "14.30", "14.32", "14.33", "14.THU", [{count:60,type:"total_units",desc:"units",special:true}, "Elective subjects in economics"]];
+majors["m12"] = [0, "12.001", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP", "12.THU", [1, "12.115", [2, "12.221", "12.222"], "12.307", "12.335", "12.410"], [{count:72,type:"total_units",desc:"units from",special:true}, [{count:24,type:"total_units",desc:"units (at least) from",special:true}, "12.002", "12.005", "12.006", "12.007", "12.008", "12.021", "12.086", "12.021", "12.102", "12.104", "12.108", "12.109", "12.110", "12.113", "12.114", "12.119", "12.120", "12.158", "12.163", "12.170", "12.172", "12.201", "12.207", "12.213", "12.214", "12.301", "12.310", "12.333", "12.340", "12.348", "12.420", "12.425", "12.43", "12.431"], [{count:48,type:"total_units",desc:"units (at MAX) from",special:true}, "1.00", "1.060", "1.061", "1.080", "3.012", "5.60", "5.03", "5.12", "5.61", "6.00", "7.03", "7.05", "7.21", "8.03", "8.04", "8.044", "8.07", "8.09", "8.21", "12.010", "12.320", "18.04", "18.05", "18.06", "18.100A", "18.100B", "18.100C", "18.311"]]];
+majors["m14"] = [0, "14.01", "14.02", "14.04", "14.05", "14.30", "14.32", "14.33", "14.THU", [{count:60,type:"total_units",desc:"units from",special:true}, "Elective subjects in economics"]];
 majors["m15"] = [0, "1.00", "6.041", "14.01", "14.02", "15.053", "15.075", "15.279", "15.301", "15.501", "18.06", [1, "15.354", "15.401", "15.812", "15.761"], [2, "Subects in Finanace, Information Technologies, Marketing Science, Operations Research"]];
 majors["m16_1"] = [0, "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07", [1, "16.09", "6.041"], [1, "18.03", "18.034"], [2, "16.20", "16.50", "16.90", "16.100"], [2, "16.100", "16.20", "16.50", "16.90", "16.30", "6.111", "16.35", "16.36", "16.400", "16.410"], [1, "16.82", "16.83"], [1, [2, "16.621", "16.622"], "16.821", "16.831"]];
 majors["m16_2"] = [0, "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07", [1, "16.09", "6.041"], [1, "18.03", "18.034"], [3, "16.30", "6.111", "16.35", "16.36", "16.400", "16.410"], [1, "16.100", "16.20", "16.50", "16.90", "16.30", "6.111", "16.35", "16.36", "16.400", "16.410"], [1, "16.82", "16.83"], [1, [2, "16.621", "16.622"], "16.821", "16.831"]];
-majors["m16_ENG"] = [0, "16.001", "16.002", "16.003", "16.004", "1.00", [1, "18.03", "18.034"], [1, "16.06", "16.07"], [{count:42,type:"total_units",desc:"units",special:true}, "Engineering concentration electives"], [{count:12,type:"total_units",desc:"units",special:true}, "Math or science concentration electives"], [{count:18,type:"total_units",desc:"units",special:true}, "Other concentration electives"], [1, "16.82", "16.83"], [1, [2, "16.621", "16.622"], "16.821", "16.831"]];
+majors["m16_ENG"] = [0, "16.001", "16.002", "16.003", "16.004", "1.00", [1, "18.03", "18.034"], [1, "16.06", "16.07"], [{count:42,type:"total_units",desc:"units from",special:true}, "Engineering concentration electives"], [{count:12,type:"total_units",desc:"units from",special:true}, "Math or science concentration electives"], [{count:18,type:"total_units",desc:"units from",special:true}, "Other concentration electives"], [1, "16.82", "16.83"], [1, [2, "16.621", "16.622"], "16.821", "16.831"]];
 majors["m17"] = [0, "17.869", "17.871", "17.THT", "17.THU", [1, "17.00-17.099"], [1, "17.20-17.299"], [1, "17.30-17.399"], [1, "17.40-17.599"], [3, "Additional political science subjects representing a coherent plan of study"]];
 majors["m18_general"] = [0, [1, "18.03", "18.034"], [1, [2, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504", "18.704", "18.784", "18.821", "18.904", "18.994"], [2, [1, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504", "18.704", "18.784", "18.821", "18.904", "18.994"], [1, "8.06", "14.33", "18.100C", "18.310"]]], [1, "18.06", "18.700", "18.701"], [6, "18.100-18.999"], [2, "18.04-18.999"]];
 majors["m18_applied"] = [0, [1, "18.03", "18.034"], [1, [2, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504", "18.704", "18.784", "18.821", "18.904", "18.994"], [2, [1, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504", "18.704", "18.784", "18.821", "18.904", "18.994"], [1, "8.06", "14.33", "18.100C", "18.310"]]], "18.310", "18.311", [1, "18.04", "18.112"], [1, "18.06", "18.700"], "Group I class: Probability and statistics, combinatorics, computer science", "Group II class: Numerical analysis, physical mathematics, nonlinear dynamics", "Class from Groups I or II", "Class from Groups I or II"];
@@ -81,7 +81,7 @@ majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", 
 //majors["miApplied_international"] = [0];
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], "Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor."];
 majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", "An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22"], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"]]]];
-majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [2, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
+majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:true}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
 majors["miPsych"] = [0, "9.00", [2, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"], [3, "Subject in experimental psychology", "Subject in personality and social psychology", "Subject in applied psychology"]];
 majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], [3, "Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy"]];
 
@@ -90,7 +90,7 @@ function checkMajor(selector){
 	var div = $(selector).data("div");
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
-	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
 	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major or minor's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
@@ -107,36 +107,42 @@ function buildMajor(arr, level){
 	if(level==undefined) level = []; //Keep track of recursion. 
 	if(arr[0]==0) arr[0] = arr.length-1; //allows "and" arrays to be prefixed with a 0 (easier) [0, "a", "b"] --> [2, "a", "b"];
 	if(typeof(arr[0])=="number"){
-		holdobj = {count:(0+arr[0]),special:false};
+		var holdobj = {count:(0+arr[0]),desc:"from",special:false};
 	}else{
-		holdobj = $.extend({}, arr[0]);
+		var holdobj = $.extend({}, arr[0]);
 		holdobj.special = true;
 	}
 	var tempstr = ""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
 	for(var i=1;i<arr.length;i++){
-		if(typeof(arr[i])=="object"){
+		//if(typeof(arr[i])=="object"){
+		if($.isArray(arr[i])){
 			var req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
 			tempstr += req;
 			continue;
 		}
-		
+		if(typeof(arr[i])=="object"){ //Converting both things to objects, but only the coreq ones will have a "coreq":1 thing.
+			var newarr = $.extend({}, arr[i]);
+		}else{
+			var newarr = {id:arr[i]};
+		}
+		if(newarr.desc==undefined) newarr.desc = "";
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
-		if(arr[i].indexOf("-")!=-1){
+		if(newarr.id.indexOf("-")!=-1){
 			var innertempstr = "";
 			for(var j=0;j<holdobj.count;j++){
 				innertempstr += "<span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
 			}
-			return "<li>"+innertempstr+" "+holdobj.count+" from the range "+arr[i]+"<\/li>\n";
+			return "<li>"+innertempstr+" "+holdobj.count+" from the range "+newarr.id+newarr.desc+"<\/li>\n";
 		}
 		//Now only strings
-		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+arr[i]+"<\/li>\n";
+		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+newarr.id+newarr.desc+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(holdobj.special){
-		tempstr = ""+holdobj.count+" "+holdobj.desc+" from:\n"+tempstr;
+		tempstr = ""+holdobj.count+" "+holdobj.desc+":\n"+tempstr;
 	}else if(level.length || (!level.length && (holdobj.count!=arr.length-1))){
-		tempstr = ""+holdobj.count+" from:\n"+tempstr; //the != part find the "2 from following" strings
+		tempstr = ""+holdobj.count+" "+holdobj.desc+":\n"+tempstr; //the != part find the "2 from following" strings
 	}
 	if(!level.length) return "<strong>Requirements:<\/strong><br>\n"+tempstr;
 	return "<li>"+tempstr+"<\/li>\n";
@@ -221,7 +227,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		return true; //The default callback is just a return true
 	};
 	if(callbackargs==undefined) callbackargs = []; //Holds the arguments for callback. "cls" (with quotes) will be replaced with the matched course number before beign fed into callback
-	if(test==undefined) test = true; //Holds the arguments for callback. "cls" (with quotes) will be replaced with the matched course number before beign fed into callback
+	if(test==undefined) test = true;
 	if(level==undefined){
 		level = []; //Keep track of recursion. 
 		globalmatches = [];
@@ -231,10 +237,10 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		var matched = {count:(0+arr[0]),special:false};
 	}else{
 		var matched = $.extend({}, arr[0]);
+		matched.desc = "from";
 		matched.special = true;
 	}
 	matched.matches = [];
-	//var matched = 0+arr[0]; //How many requirements in this requisite branch have been met?
 	var tempstr = []; //""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
 	for(var i=1;i<arr.length;i++){
@@ -261,6 +267,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		}else{
 			var newarr = {id:arr[i]};
 		}
+		if(newarr.desc==undefined) newarr.desc = "";
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
 		if(newarr.id.indexOf("-")!=-1){
 			var rangematches = $(".classdiv").filter(function(index){
@@ -287,7 +294,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 				console.log(matched);
 				if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 			});
-			return [false, "("+(matched.special?(matched.count+" '"+matched.type+"'"):matched.count)+" from: "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+")", level.length?matched.matches:globalmatches];
+			return [false, "("+matched.count+" "+matched.desc+": "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+newarr.desc+")", level.length?matched.matches:globalmatches];
 		}
 		//Now only bona fide classes
 		var classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
@@ -310,7 +317,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			}
 		});
 		if(!classmatches.length || !temp2){ //If it's not a class, or callback failed, then we need to note that.
-			tempstr.push((newarr.coreq==1)?"["+newarr.id+"]":newarr.id);
+			tempstr.push((newarr.coreq==1)?("["+newarr.id+newarr.desc+"]"):(newarr.id+newarr.desc));
 		}
 		if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 	}
@@ -323,10 +330,13 @@ function checkReqs(arr, callback, callbackargs, level, test){
 	tempstr = tempstr.replace(/GIR:CAL2/g, "Calculus II (GIR)");
 	tempstr = tempstr.replace(/GIR:BIOL/g, "Biology (GIR)");
 	tempstr = tempstr.replace(/GIR:CHEM/g, "Chemistry (GIR)");
+	tempstr = tempstr.replace(/GIR:REST/g, "REST Requirement");
+	tempstr = tempstr.replace(/GIR:LAB/g, "LAB Requirement");
+	tempstr = tempstr.replace(/GIR:LAB2/g, "1/2 LAB Requirement");
 	if(matched.special){
-		tempstr = "("+matched.count+" "+matched.desc+" from: "+(JSON.stringify(arr.slice(1)))+")";
+		tempstr = "("+matched.count+" "+matched.desc+": "+(JSON.stringify(arr.slice(1)))+")";
 	}else if(level.length || (!level.length && (arr[0]!=arr.length-1))){
-		tempstr = "("+matched.count+" from: "+tempstr+")";
+		tempstr = "("+matched.count+" "+matched.desc+": "+tempstr+")";
 	}
 	return [false, tempstr, level.length?matched.matches:globalmatches];
 	//return [false, tempstr];

@@ -929,7 +929,7 @@ $(function(){
 		</div>
 		<h3><a href="#" class="dummylink">Further help, who's behind this, and why?</a></h3>
 		<div>
-			First off, feel free to email me at <a href="mailto:dannybd@mit.edu?subject=[CourseRoad]">dannybd@mit.edu</a> if you have any comments/complaints/hate mail/alternate history fiction.<br>
+			First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/alternate history fiction.<br>
 			<br>
 			CourseRoad is the brainchild of Danny Ben-David '15, as an entry in the <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT last August, I've been bothered at how unintuitive the course and major structures are when laid out as they are in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
 			<br>

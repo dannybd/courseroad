@@ -80,7 +80,7 @@ function checkMajor(selector){
 	var div = $(selector).data("div");
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
-	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:dannybd@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
 	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
