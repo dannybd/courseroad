@@ -866,10 +866,10 @@ $(function(){
 	</div>
 	<div class="year supersenior hidden">
 		<div class="yearname supersenior hidden"><span>Super-senior Year</span></div>
-		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
-		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
-		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
-		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
+		<div class="term fall supersenior hidden"><div class="termname supersenior hidden"><span>Fall</span></div></div>
+		<div class="term iap supersenior hidden"><div class="termname supersenior hidden"><span>Iap</span></div></div>
+		<div class="term spring supersenior hidden"><div class="termname supersenior hidden"><span>Spring</span></div></div>
+		<div class="term summer supersenior hidden"><div class="termname supersenior hidden"><span>Summer</span></div></div>
 	</div>
 </div>
 <div id="trash" class="trash trashdefault"><img src="trashx.png" alt="" class="trash"></div>

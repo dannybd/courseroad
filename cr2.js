@@ -148,9 +148,10 @@ function buildMajor(arr, level){
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
-function classFromJSON(json){
-	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", "slow");
-	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn("slow").parent().slideDown("slow", function(){updateWires();});
+function classFromJSON(json, loadspeed){
+	if(loadspeed==undefined) loadspeed = "slow";
+	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", loadspeed);
+	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn(loadspeed).parent().slideDown(loadspeed, function(){updateWires();}).siblings(".yearname").addClass("showsummer", loadspeed);
 	$('.term').eq(json.classterm).append(json.div);
 	var id = json.divid;
 	var newdiv = $("#"+id);
@@ -189,7 +190,7 @@ function getClass(classid, classterm, override){
 function getClasses(classarr){
 	//Used for initial pageload when a hash is present: takes in an array containing objects describing the classes.
 	for(i=0;i<classarr.length;i++){
-		classFromJSON(classarr[i]);
+		classFromJSON(classarr[i], 0);
 	}
 	addAllWires();
 }
@@ -237,9 +238,9 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		var matched = {count:(0+arr[0]),special:false};
 	}else{
 		var matched = $.extend({}, arr[0]);
-		matched.desc = "from";
 		matched.special = true;
 	}
+	if(matched.desc==undefined) matched.desc = "from";
 	matched.matches = [];
 	var tempstr = []; //""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
@@ -291,7 +292,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 					matched.matches.push(this);
 					globalmatches.push(this);
 				}
-				console.log(matched);
+				//console.log(matched);
 				if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 			});
 			return [false, "("+matched.count+" "+matched.desc+": "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+newarr.desc+")", level.length?matched.matches:globalmatches];
