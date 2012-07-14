@@ -71,7 +71,7 @@ function pullClass($class, $year=false, $classterm=0, $override=false){
 	$row['summer'] = ($row['summer']=='1');
 	$row['permission'] = (strpos($row['reqs'],'Permission')!=false);
 	$row['reqs'] = json_decode($row['reqs']);
-	$reqs = $row['reqs']?"<span class='reqs'>Reqs: [X]</span>":"No reqs :D";
+	$reqs = $row['reqs']?"Reqs: [X]":"No reqs :D";
 	if($row['reqstr']) $row['reqstr'] = "Requisites: ".$row['reqstr']."<br>";
 	$row['total_units'] = floatval($row['total_units']);
 	if(!$row['total_units']) $row['total_units'] = 12;
@@ -101,6 +101,17 @@ EOD;
 	$row['classterm'] = $classterm;
 	$row['override'] = $override;
 	$row['custom'] = false;
+	
+	$query2 = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
+	$row['otheryears'] = "<select>";
+	while($row2 = mysql_fetch_assoc($query2)){
+		$year2 = $row2['year'];
+		$row['otheryears'] .= "\n\t<option value='$year2'";
+		$row['otheryears'] .= ($year2==$row['year'])?" selected='true'>":">";
+		$row['otheryears'] .= "$year2</option>";
+	}
+	$row['yearspan'] = "<a title=\"The data for this class is from the {$row['year']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['year']}</a>";
+	$row['otheryears'] .= "\n<select>";	
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
 <div id='{$row['divid']}' class='{$row['divclasses']}'>
@@ -109,7 +120,8 @@ EOD;
 		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
 	</div>
 	<div class='classdivinfo'>
-		$reqs
+		<div class='classdivyear'>{$row['yearspan']}</div>
+		<div class='reqs'>$reqs</div>
 	</div>
 </div>
 EOD;
@@ -140,11 +152,10 @@ EOD;
 	$row['div'] = <<<EOD
 <div id='{$row['divid']}' class='{$row['divclasses']}'>
 	<div class='classdivlabel'>
-		<div class='classdivcourse'>****&nbsp;</div>
 		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
 	</div>
 	<div class='classdivinfo'>
-		({$row['total_units']} units)
+		<div>({$row['total_units']} units)</div>
 	</div>
 </div>
 EOD;
@@ -191,8 +202,8 @@ if(isset($_POST['classes'])){
 			$_SESSION['trycert'] = true;
 		}
 	}
-	//id, hash, user, classes, major, public, ip, added
-	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
+	//id, hash, user, classes, major, public, desc, ip, added
+	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
 	mysql_query($sql);
 	echo $trycert?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
 	die();
@@ -368,18 +379,19 @@ $(function(){
 			if(data=="") return false;
 			var json = $.parseJSON(data);
 			var jsonmajors = json.pop();
-			$("#choosemajor").val(jsonmajors[0]).attr("selected",true);
-			$("#choosemajor2").val(jsonmajors[1]).attr("selected",true);
-			$("#chooseminor").val(jsonmajors[2]).attr("selected",true);
-			$("#chooseminor2").val(jsonmajors[3]).attr("selected",true);
+			$("select.majorminor").each(function(i){
+				$(this).val(jsonmajors[i]).attr("selected",true);
+			});
 			getClasses(json);
 		});
 	}
 	$(window).bind("beforeunload", function(){
 		//Still a work in progress
-		if(!userhashchange){
-			return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
-		}
+		//if(!userhashchange){
+		console.log(minclass());
+		console.log(minmajors());
+		return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
+		//}
 	});
 	$('#getnewclassid').blur(function(){
 		$("#getnewclass .ui-autocomplete").hide();
@@ -391,6 +403,33 @@ $(function(){
 	});
 	$("#getnewclass form").submit(function(){
 		return false;
+	});
+	$("body").on("click mouseover mouseenter", ".classdivyear a", function(){
+		var par = $(this).parents(".classdiv");
+		if(par.data("changing")) return false;
+		par.data("changing", true);
+		$(this).replaceWith(function(){return par.data("otheryears");});
+		par.data("changing", false);
+	});
+	$("body").on("change blur mouseout mouseleave", ".classdivyear select", function(){
+		var val = $(this).val();
+		var oldclass = $(this).parents(".classdiv");
+		if(oldclass.data("changing") || ($(this).is(":focus")&&((event.type=="mouseout")||(event.type=="mouseleave")))) return false;
+		oldclass.data("changing", true);
+		if(val==oldclass.data("year")){
+			$(this).replaceWith(function(){return oldclass.data("yearspan");});
+			oldclass.data("changing", false);
+			return false;
+		}
+		unhighlightClasses();
+		oldclass.addClass("classdivlow");
+		$.getJSON('?', {getclass:oldclass.data("subject_id"), getyear:val}, function(json){
+			if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
+			json.classterm = oldclass.data("classterm");
+			json.override = oldclass.data("override");
+			classFromJSON(json, 0, oldclass);
+			addAllWires();
+		});
 	});
 	$("body").on("click", ".classdiv", function(){
 		//Highlights the selected class, dims the others, and displays info on that class in the lower right
@@ -408,11 +447,7 @@ $(function(){
 			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
 			$("#overridercheck").prop("disabled", false).prop("checked", $('.classdivhigh').data('override'));
 		}else{
-			$("#overrider span").css('opacity', 0);
-			$("#overridercheck").prop("disabled", true);
-			$(".classdiv").removeClass("classdivlow");
-			$('.WireIt-Wire').removeClass("WireIt-Wire-low");
-			$("#nowreading").html('Click on a class to see more info.');
+			unhighlightClasses();
 		}
 	});
 	$("#overridercheck").change(function(){
@@ -420,18 +455,8 @@ $(function(){
 		$('.classdivhigh').toggleClass("classdivoverride");
 		addAllWires();
 	});
-	$(".term, .year").click(function(){
-		//Un-select a class
-		$("#overridercheck").prop("disabled", true);
-		$("#overrider span").css('opacity', 0);
-		$(".classdivhigh").removeClass("classdivhigh");
-		$(".classdiv").removeClass("classdivlow");
-		$('.WireIt-Wire').removeClass("WireIt-Wire-low");
-		$("#nowreading").html('Click on a class to see more info.');
-	});
-	$("body").on("click", "canvas.WireIt-Wire", function(){
-		$(".term:first").click();
-	});
+	$(".term, .year").click(unhighlightClasses);
+	$("body").on("click", "canvas.WireIt-Wire", unhighlightClasses);
 	$(".term").sortable({
 		//Allows the classes to be draggable and sortable.
 		connectWith: '.term', 
@@ -484,7 +509,7 @@ $(function(){
 		appendTo: "#getnewclass"
 	});
 	$("#savemap").click(function(){
-		$.post("?", {classes: minclass(true), major: minmajors(), trycert: loggedin}, function(data){
+		$.post("?", {classes: minclass(true), major: minmajors(true), trycert: loggedin}, function(data){
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
@@ -508,7 +533,7 @@ $(function(){
 		if(loggedin){
 			$("#viewroads").dialog("open");
 		}else{
-			$.post("?", {classes: minclass(true), major: minmajors(), trycert: true}, function(data){
+			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
 				if(data=="**auth**"){
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
@@ -566,7 +591,7 @@ $(function(){
 		$("#help").dialog('close');
 	});
 	$("#accordion").accordion();
-	$(".dummylink").click(function(e){
+	$("body").on("click", ".dummylink", function(e){
 		e.preventDefault();
 	});
 	$("#openhelp").click(function(){
@@ -577,7 +602,7 @@ $(function(){
 	if($.cookies.get('modalhelp')==null){
 		$.cookies.set('modalhelp','1',{expiresAt: deltaDate(0, 0, 14)});
 	}
-	$("#choosemajor option").each(function(){
+	$("select.majorminor option").each(function(){
 		if(majors[$(this).val()]==undefined) $(this).remove();
 	});
 	//$("#rightbar").css('width', $("#rightbar").width());

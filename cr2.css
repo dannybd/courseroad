@@ -68,7 +68,9 @@ body.printing{
 	position: fixed;
 	height: 100%;
 	width: 250px;
-	z-index: 5;
+	z-index: 6;
+	border-right: 1px solid;
+	background-color: #ddd;
 }
 #leftbar>div{
 	margin: 1% 2% 1%;
@@ -157,14 +159,10 @@ div.majorminor>ul>li ul{
 }
 
 #rightbar{
-	//position: fixed;
-	//background-color: #dfd;
 	background-color: #FDFDFD;
 	height: 100%;
 	width: auto;
-	margin-left: 250px;
-	//overflow-y: scroll;
-	border-left: 1px solid
+	margin-left: 251px;
 }
 #rightbar.printing{
 	width: 850px;
@@ -256,7 +254,7 @@ div.majorminor>ul>li ul{
 .credit{
 	height: 45px;
 	margin-left: 0;
-	background-color: #AAA;
+	background-color: #7A7A7A;
 	padding-left: 45px;
 }
 .credit .termname{
@@ -322,7 +320,8 @@ div.majorminor>ul>li ul{
 	background-color: #CFC;
 }
 .custom{
-	background-color: #CCF;
+	//background-color: #CCF;
+	background-color: #B2B2FF;
 }
 .classdivlow{
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
@@ -372,6 +371,7 @@ div.WireIt-Terminal{
 	white-space: nowrap;
 	padding: 2px;
 	cursor: default;
+	border-bottom: 1px solid #CCC;
 }
 .classdivterminal{
 	position: absolute;
@@ -384,14 +384,34 @@ div.WireIt-Terminal{
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.custom .classdivtitle{
+	text-align: center;
+}
 .classdivinfo{
-	padding: 3px;
-	border-top: 1px solid #CCC;
 	font-size: 8pt;
 	text-align: center;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.classdivinfo div{
+	padding: 4px 0px 4px;
+}
+.classdivyear{
+	float: left;
+	width: 30%;
+	border-right: 1px solid #CCC;
+}
+.classdivyear a{
+	text-decoration: none;
+	color: black;
+}
+.classdivyear a:hover{
+	color: blue;
+}
+.classdivyear select{
+	font-size: 8pt;
+	margin: -3px;
 }
 
 .ui-sortable-placeholder { 

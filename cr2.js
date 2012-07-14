@@ -148,11 +148,23 @@ function buildMajor(arr, level){
 	return "<li>"+tempstr+"<\/li>\n";
 }
 
-function classFromJSON(json, loadspeed){
+function unhighlightClasses(){
+	$("#overridercheck").prop("disabled", true);
+	$("#overrider span").css('opacity', 0);
+	$(".classdiv").removeClass("classdivhigh classdivlow");
+	$('.WireIt-Wire').removeClass("WireIt-Wire-low");
+	$("#nowreading").html('Click on a class to see more info.');
+}
+
+function classFromJSON(json, loadspeed, replacediv){
 	if(loadspeed==undefined) loadspeed = "slow";
 	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", loadspeed);
 	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn(loadspeed).parent().slideDown(loadspeed, function(){updateWires();}).siblings(".yearname").addClass("showsummer", loadspeed);
-	$('.term').eq(json.classterm).append(json.div);
+	if(replacediv==undefined){
+		$('.term').eq(json.classterm).append(json.div);
+	}else{
+		replacediv.replaceWith(json.div);
+	}
 	var id = json.divid;
 	var newdiv = $("#"+id);
 	if(json.reqs==null) json.reqs=false;
@@ -352,13 +364,13 @@ function addWires(div, addwires){
 		var reqcheck = checkReqs(div.data("reqs"), newWire, [div, "cls"]);
 		div.data("reqstatus", reqcheck[0]);
 		var tempstr = reqcheck[1];
+		if(div.data("reqstatus") || div.data("override") || !div.data("classterm")){
+			div.find(".reqs").html("Reqs: [X]").removeAttr('title');
+		}else{
+			div.find(".reqs").html("Reqs: [ ]").attr('title','Need: '+tempstr);
+		}
+		if(div.data("override")) div.find(".reqs").attr('title','OVERRIDE enabled');
 	}
-	if(div.data("reqstatus") || div.data("override") || !div.data("classterm")){
-		div.find(".reqs").html("Reqs: [X]").removeAttr('title');
-	}else{
-		div.find(".reqs").html("Reqs: [ ]").attr('title','Need: '+tempstr);
-	}
-	if(div.data("override")) div.find(".reqs").attr('title','OVERRIDE enabled');
 	div.data("checkterm", (div.data("classterm")==0) || (([div.data("fall"), div.data("iap"), div.data("spring"), div.data("summer")])[(div.data("classterm")-1)%4]));
 	div.data("checkrepeat", true);
 	if($.inArray(div.data("grade_rule"), ['J','U','R'])==-1){
@@ -456,6 +468,7 @@ function checkClasses(){
 		}
 		if(forUnits) totalUnits += $(this).data("total_units");
 	});
+	totalUnits = Math.round(100*totalUnits)/100;
 	$("#totalunits").html(totalUnits);
 }
 
@@ -471,8 +484,10 @@ function minclass(stringify){
 	return stringify?JSON.stringify(temp):temp;
 }
 
-function minmajors(){
-	return '["'+$("#choosemajor").val()+'","'+$("#choosemajor2").val()+'","'+$("#chooseminor").val()+'","'+$("#chooseminor2").val()+'"]';
+function minmajors(stringify){
+	var temp = [$("#choosemajor").val(),$("#choosemajor2").val(),$("#chooseminor").val(),$("#chooseminor2").val()];
+	return stringify?JSON.stringify(temp):temp;
+	//return '["'+$("#choosemajor").val()+'","'+$("#choosemajor2").val()+'","'+$("#chooseminor").val()+'","'+$("#chooseminor2").val()+'"]';
 }
 
 function deltaDate(){
