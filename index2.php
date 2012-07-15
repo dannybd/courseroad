@@ -336,6 +336,8 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<!--This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly.-->
+<!--[if IE 9]><script type="text/javascript">YAHOO.env.ua.ie=0;</script><![endif]-->
 <script type="text/javascript" src="json2-min.js"></script>
 <script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
 <script type="text/javascript" src="wireit-min.js"></script>
@@ -359,12 +361,14 @@ _gaq.push(['_trackPageview']);
 //var USERID = SESSIONID = "<?= session_id(); ?>"; //These date to a prior feature testing; ignore...for now
 var loggedin = <?= isset($_SESSION['athena'])?"1":"0"; ?>;
 var triedlogin = <?= $_SESSION['triedcert']?"1":"0"; ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
-var userhashchange = true;
+var userHashChange = true;
+var reasonToTrySave = false;
 var preventUpdateWires = false;
 window.onhashchange = function(){
-	//userhashchange means that if the user types in a new hash in the URL, 
-	//the browser will reload, but if the has changes do to saving a new version or something it won't.
-	if(userhashchange) window.location.reload(); 
+	//userHashChange means that if the user types in a new hash in the URL, 
+	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
+	if(userHashChange) window.location.reload(); 
+	userHashChange = true;
 }
 
 var totalUnits = 0;
@@ -383,16 +387,9 @@ $(function(){
 				$(this).val(jsonmajors[i]).attr("selected",true);
 			});
 			getClasses(json);
+			$(window).off("beforeunload", runBeforeUnload);
 		});
 	}
-	$(window).bind("beforeunload", function(){
-		//Still a work in progress
-		//if(!userhashchange){
-		console.log(minclass());
-		console.log(minmajors());
-		return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
-		//}
-	});
 	$('#getnewclassid').blur(function(){
 		$("#getnewclass .ui-autocomplete").hide();
 	}).focus();
@@ -410,8 +407,9 @@ $(function(){
 		par.data("changing", true);
 		$(this).replaceWith(function(){return par.data("otheryears");});
 		par.data("changing", false);
+		par.find(".classdivyear select").focus();
 	});
-	$("body").on("change blur mouseout mouseleave", ".classdivyear select", function(){
+	$("body").on("change blur mouseout mouseleave", ".classdivyear select", function(event){
 		var val = $(this).val();
 		var oldclass = $(this).parents(".classdiv");
 		if(oldclass.data("changing") || ($(this).is(":focus")&&((event.type=="mouseout")||(event.type=="mouseleave")))) return false;
@@ -421,7 +419,6 @@ $(function(){
 			oldclass.data("changing", false);
 			return false;
 		}
-		unhighlightClasses();
 		oldclass.addClass("classdivlow");
 		$.getJSON('?', {getclass:oldclass.data("subject_id"), getyear:val}, function(json){
 			if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
@@ -429,6 +426,7 @@ $(function(){
 			json.override = oldclass.data("override");
 			classFromJSON(json, 0, oldclass);
 			addAllWires();
+			unhighlightClasses();
 		});
 	});
 	$("body").on("click", ".classdiv", function(){
@@ -510,21 +508,20 @@ $(function(){
 	});
 	$("#savemap").click(function(){
 		$.post("?", {classes: minclass(true), major: minmajors(true), trycert: loggedin}, function(data){
+			$(window).off("beforeunload", runBeforeUnload);
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
 					//console.log("CERTS! "+data);
-					userhashchange = false;
+					userHashChange = false;
 					window.location.hash = data;
-					setTimeout(function(){userhashchange = true;}, 1000);
 				}	
 			}else{
 				console.log(data);
-				userhashchange = false;
+				userHashChange = false;
 				window.location.hash = data;
-				setTimeout(function(){userhashchange = true;}, 1000);
 			}
 		});
 	});
@@ -534,13 +531,13 @@ $(function(){
 			$("#viewroads").dialog("open");
 		}else{
 			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
+				$(window).off("beforeunload", runBeforeUnload);
 				if(data=="**auth**"){
 					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
 				}else{
 					//console.log("CERTS! "+data);
-					userhashchange = false;
+					userHashChange = false;
 					window.location.hash = data;
-					setTimeout(function(){userhashchange = true;}, 1000);
 				}
 			});
 		}
@@ -861,28 +858,28 @@ $(function(){
 </div>
 <div id="rightbar">
 	<div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>
-	<div class="year">
+	<div class="year freshman">
 		<div class="yearname"><span>Freshman Year</span></div>
 		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
 		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
 		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
 		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div class="year">
+	<div class="year sophomore">
 		<div class="yearname"><span>Sophomore Year</span></div>
 		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
 		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
 		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
 		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div class="year">
+	<div class="year junior">
 		<div class="yearname"><span>Junior Year</span></div>
 		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
 		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
 		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
 		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div class="year">
+	<div class="year senior">
 		<div class="yearname"><span>Senior Year</span></div>
 		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
 		<div class="term iap"><div class="termname"><span>Iap</span></div></div>

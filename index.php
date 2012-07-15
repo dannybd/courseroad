@@ -211,16 +211,20 @@ $nocache = $nocache?"?nocacher=".time():""; //This can help force through update
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <title>CourseRoad<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
+<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
+<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?"":"media=\"print\""?>>
+<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="cr-ie.css<?= $nocache ?>">
+	<script type="text/javascript" src="excanvas.compiled.js"></script>
+<![endif]-->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<!--This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly.-->
+<!--[if IE 9]><script type="text/javascript">YAHOO.env.ua.ie=0;</script><![endif]-->
 <script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
 <script type="text/javascript" src="wireit-min.js"></script>
 <script type="text/javascript" src="cr.js<?= $nocache ?>"></script>
-<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
-<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?"":"media=\"print\""?>>
-<!--[if IE]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
-<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="cr-ie.css<?= $nocache ?>"><![endif]-->
 <!--script type="text/javascript" src="http://intralife.researchstudio.at:8080/api-js/easyrec.js"></script-->
 <script type="text/javascript">
 var _gaq = _gaq || [];

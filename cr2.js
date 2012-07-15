@@ -407,6 +407,7 @@ function addAllWires(){
 	updateWires();
 	checkClasses();
 	$("select.majorminor").each(function(){checkMajor(this);});
+	$(window).on("beforeunload", runBeforeUnload);
 	return status;
 }
 
@@ -498,4 +499,9 @@ function deltaDate(){
 		d[t] += arguments[t];
 	}
 	return new Date(d[0],d[1],d[2],d[3],d[4],d[5],d[6]);
+}
+
+function runBeforeUnload(){
+	//console.log(minclass(), minmajors());
+	return "Are you sure you want to close CourseRoad? You'll lose any unsaved changes you've made.";
 }

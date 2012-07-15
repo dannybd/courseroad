@@ -1,12 +1,27 @@
+#leftbar{
+	left: 0px;
+}
+.year.freshman, .year.junior, .year.supersenior{
+	background-color: #eee;
+}
 .yearname{
+	left: 250px;
 	width: auto;
-	margin-top: 95px;
-	margin-left: 0px;
+	margin: 0px;
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 .termname{
+	left: 280px;
 	width: auto;
-	margin-top: 40px;
-	margin-left: -20px;
+	margin: 0px;
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+.credit .termname{
+	margin-left: -20px;
+}
+.yearname span{
+	margin-top: 0px;
+}
+.termname span{
+	margin-top: 0px;
 }
