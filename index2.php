@@ -110,18 +110,18 @@ EOD;
 		$row['otheryears'] .= ($year2==$row['year'])?" selected='true'>":">";
 		$row['otheryears'] .= "$year2</option>";
 	}
-	$row['yearspan'] = "<a title=\"The data for this class is from the {$row['year']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['year']}</a>";
+	$row['yearspan'] = "<span title=\"The data for this class is from the {$row['year']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['year']}</span>";
 	$row['otheryears'] .= "\n<select>";	
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
-<div id='{$row['divid']}' class='{$row['divclasses']}'>
-	<div class='classdivlabel'>
-		<div class='classdivcourse'>{$row['subject_id']}:&nbsp;</div>
-		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
+<div id="{$row['divid']}" class="{$row['divclasses']}">
+	<div class="classdivlabel">
+		<div class="classdivcourse">{$row['subject_id']}:&nbsp;</div>
+		<div class="classdivtitle" title="{$row['subject_title']}">{$row['subject_title']}</div>
 	</div>
-	<div class='classdivinfo'>
-		<div class='classdivyear'>{$row['yearspan']}</div>
-		<div class='reqs'>$reqs</div>
+	<div class="classdivinfo">
+		<div class="classdivyear">{$row['yearspan']}</div>
+		<div class="reqs">$reqs</div>
 	</div>
 </div>
 EOD;
@@ -150,11 +150,11 @@ EOD;
 	$row['custom'] = true;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
-<div id='{$row['divid']}' class='{$row['divclasses']}'>
-	<div class='classdivlabel'>
-		<div class='classdivtitle' title='{$row['subject_title']}'>{$row['subject_title']}</div>
+<div id="{$row['divid']}" class="{$row['divclasses']}">
+	<div class="classdivlabel">
+		<div class="classdivtitle" title="{$row['subject_title']}">{$row['subject_title']}</div>
 	</div>
-	<div class='classdivinfo'>
+	<div class="classdivinfo">
 		<div>({$row['total_units']} units)</div>
 	</div>
 </div>
@@ -174,7 +174,7 @@ if(isset($_GET['getclass'])){
 
 if(isset($_GET['getcustom'])){
 	header("Content-type: text/javascript");
-	$name = mysql_real_escape_string($_GET['getcustom']);
+	$name = htmlentities($_GET['getcustom']);
 	$units = isset($_GET['getunits'])?floatval($_GET['getunits']):false;
 	echo json_encode(pullCustom($name, $units));
 	die();
@@ -219,7 +219,7 @@ if(isset($_POST['gethash'])){
 	$classes = '';
 	$major = '';
 	while($row = mysql_fetch_array($query)){
-		$classes = json_decode(stripslashes($row['classes']), true);
+		$classes = json_decode($row['classes'], true);
 		$major = stripslashes($row['major']);
 	}
 	if($classes=='') die();
@@ -278,7 +278,7 @@ if(isset($_GET['savedroads'])){
 		$major = str_replace(',"m0"','',$major);
 		$major = implode(",<br>\n", json_decode($major));
 		echo "<td>$major</td>";
-		$classes = json_decode(stripslashes($row['classes']), true);
+		$classes = json_decode($row['classes'], true);
 		//echo $row['classes'];
 		$classes2 = array();
 		foreach($classes as &$class2){
@@ -401,7 +401,7 @@ $(function(){
 	$("#getnewclass form").submit(function(){
 		return false;
 	});
-	$("body").on("click mouseover mouseenter", ".classdivyear a", function(){
+	$("body").on("click mouseover mouseenter", ".classdivyear span", function(){
 		var par = $(this).parents(".classdiv");
 		if(par.data("changing")) return false;
 		par.data("changing", true);
@@ -501,6 +501,7 @@ $(function(){
 			addAllWires();
 		}
 	});
+	$("#getnewclass").tabs({collapsible: false, selected: 0});
 	$("#getnewclassid").autocomplete({
 		source: "#",
 		minLength: 2,
@@ -618,14 +619,12 @@ $(function(){
 </script>
 <div id="leftbar">
 	<div id="getnewclass">
-		<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a><br>
-		<?
-		if(isset($_SESSION['athena'])){
-			echo "Welcome, <strong>{$_SESSION['athena']}</strong>!";
-		}
-		?>
-		<br><br>
-		<form action="#" method="POST">
+		<ul>
+			<li><a href="#infotabs-about">About</a></li>
+			<li><a href="#infotabs-add">Add</a></li>
+			<li><a href="#infotabs-save">Save</a></li>
+		</ul>
+		<div id="infotabs-add" class="ui-corner-all">
 			<span>Add</span>
 			<input id="getnewclassid" type="text" size="5" name="classname"> to 
 			<select id="getnewclassterm" name="classterm" style="width: 111px;">
@@ -651,13 +650,21 @@ $(function(){
 				<option value="19">Super-Senior Spring</option>
 				<option value="20">Super-Senior Summer</option>
 			</select><br> 
-			<input id="getnewclasssubmit" class="bubble loaders" onclick="return false;" type="submit" value="Add Class">
+			<input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
+		</div>
+		<div id="infotabs-save" class="ui-corner-all">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
 			<input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
 			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road">--><!-- soon! -->
-		</form>
-		<br>
-		<br>
+		</div>
+		<div id="infotabs-about" class="ui-corner-all">
+			<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a><br>
+			<?
+			if(isset($_SESSION['athena'])){
+				echo "Welcome, <strong>{$_SESSION['athena']}</strong>!";
+			}
+			?>
+		</div>
 	</div>
 	<div id="COREchecker">
 	<strong>General Institute Requirements:</strong><br>
@@ -896,16 +903,16 @@ $(function(){
 </div>
 <div id="trash" class="trash trashdefault"><img src="trashx.png" alt="" class="trash"></div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
-<div id="viewroads" class="bubble">
-	<div id="viewroads_close">Close this</div>
-	<h3 id="viewroads_header">Your saved roads:</h3>
+<div id="viewroads" class="bubble my-dialog">
+	<div id="viewroads_close" class="my-dialog-close">Close this</div>
+	<h3 id="viewroads_header" class="my-dialog-header">Your saved roads:</h3>
 	<div id="savedroads">
 	
 	</div>
 </div>
-<div id="help" class="bubble">
-	<div id="help_close">Close this</div>
-	<h2 id="help_welcome">Welcome to CourseRoad!</h2>
+<div id="help" class="bubble my-dialog">
+	<div id="help_close" class="my-dialog-close">Close this</div>
+	<h2 id="help_welcome" class="my-dialog-header">Welcome to CourseRoad!</h2>
 	<div id="accordion">
 		<h3><a href="#" class="dummylink">What is CourseRoad?</a></h3>
 		<div>
