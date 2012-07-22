@@ -323,42 +323,33 @@ $nocache = true; //Uncomment during development
 $nocache = $nocache?"?nocacher=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 7]>		<html lang="en-us" class="ie ie7 lte9 lte8">	<![endif]-->
+<!--[if IE 8]>		<html lang="en-us" class="ie ie8 lte9 lte8">	<![endif]-->
+<!--[if IE 9]>		<html lang="en-us" class="ie ie9 lte9">			<![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en-us">				<!--<![endif]-->
 <head>
 <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>CourseRoad 2.0<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
 <link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
-<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?'':'media="print"' ?>>
-<!--[if lt IE 9]>
-	<link rel="stylesheet" type="text/css" href="cr-ie2.css<?= $nocache ?>">
-	<script type="text/javascript" src="excanvas.compiled.js"></script>
-<![endif]-->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-<!--This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly.-->
-<!--[if IE 9]><script type="text/javascript">YAHOO.env.ua.ie=0;</script><![endif]-->
-<script type="text/javascript" src="json2-min.js"></script>
-<script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
-<script type="text/javascript" src="wireit-min.js"></script>
-<script type="text/javascript" src="cr2.js<?= $nocache ?>"></script>
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-31018454-1']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
+<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<!--[if IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><? //This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly. ?>
+<script src="json2-min.js"></script>
+<script src="jquery.cookies.2.2.0.min.js"></script>
+<script src="wireit-min.js"></script>
+<script src="cr2.js<?= $nocache ?>"></script>
+<script>
+var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
+(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+g.src="https://ssl.google-analytics.com/ga.js";
+s.parentNode.insertBefore(g,s)}(document,"script"));
 </script>
 </head>
 <body>
 <script type="text/javascript">
-//var apiKey = "cd2cfd891944811e690fc5c56acb0660";
-//var tenantId = "CourseRoad";
-//var USERID = SESSIONID = "<?= session_id(); ?>"; //These date to a prior feature testing; ignore...for now
 var loggedin = <?= isset($_SESSION['athena'])?"1":"0"; ?>;
 var triedlogin = <?= $_SESSION['triedcert']?"1":"0"; ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
 var userHashChange = true;
@@ -624,7 +615,7 @@ $(function(){
 			<li><a href="#infotabs-add">Add</a></li>
 			<li><a href="#infotabs-save">Save</a></li>
 		</ul>
-		<div id="infotabs-add" class="ui-corner-all">
+		<div id="infotabs-add" class="ui-corner-all leftbarholder">
 			<span>Add</span>
 			<input id="getnewclassid" type="text" size="5" name="classname"> to 
 			<select id="getnewclassterm" name="classterm" style="width: 111px;">
@@ -652,12 +643,12 @@ $(function(){
 			</select><br> 
 			<input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
 		</div>
-		<div id="infotabs-save" class="ui-corner-all">
+		<div id="infotabs-save" class="ui-corner-all leftbarholder">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
 			<input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
 			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road">--><!-- soon! -->
 		</div>
-		<div id="infotabs-about" class="ui-corner-all">
+		<div id="infotabs-about" class="ui-corner-all leftbarholder">
 			<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a><br>
 			<?
 			if(isset($_SESSION['athena'])){
@@ -666,7 +657,7 @@ $(function(){
 			?>
 		</div>
 	</div>
-	<div id="COREchecker">
+	<div id="COREchecker" class="leftbarholder">
 	<strong>General Institute Requirements:</strong><br>
 		Physics I: <span id="Physics_I" class="corecheck GIR PHY1">[ ]</span><br>
 		Physics II: <span id="Physics_II" class="corecheck GIR PHY2">[ ]</span><br>
@@ -860,8 +851,8 @@ $(function(){
 		-----------------<br>
 		<strong>Total Units: <span id="totalunits">0</span></strong>
 	</div>
-	<div id="overrider"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQS: </label><input id="overridercheck" type="checkbox"></span></div>
-	<div id="nowreading">Click on a class to see more info.</div>
+	<div id="overrider" class="leftbarholder"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQUISITES: </label><input id="overridercheck" type="checkbox"></span></div>
+	<div id="nowreading" class="leftbarholder">Click on a class to see more info.</div>
 </div>
 <div id="rightbar">
 	<div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>

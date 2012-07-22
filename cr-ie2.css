@@ -1,27 +1,46 @@
-#leftbar{
+.lte8 #leftbar{
 	left: 0px;
 }
-.year.freshman, .year.junior, .year.supersenior{
+.lte7 #getnewclass{
+	background-color: #E0E0E0 !important;
+	border: 1px solid #5E5E5E !important;
+	width: 240px !important;
+	height: 133px !important;
+	padding-top: 2px !important;
+}
+.lte7 #getnewclass > ul, .lte7 .ui-tabs .ui-tabs-nav, .lte7 .ui-tabs .ui-tabs-nav .ui-state-default{
+	list-style-image: none;
+	display: none;
+}
+.lte7 #getnewclass>div.ui-tabs-panel{
+	display: inline !important;
+	border: none !important;
+	background: none !important;
+}
+.lte7 #mapcerts{
+	width: 200px !important;
+}
+.lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
 	background-color: #eee;
 }
-.yearname{
+.lte8 .yearname{
 	left: 250px;
 	width: auto;
 	margin: 0px;
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
-.termname{
+.lte8 .termname{
 	left: 280px;
 	width: auto;
 	margin: 0px;
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
-.credit .termname{
+.lte8 .credit .termname{
 	margin-left: -20px;
 }
-.yearname span{
+.lte8 .yearname span{
 	margin-top: 0px;
 }
-.termname span{
+.lte8 .termname span{
 	margin-top: 0px;
 }
