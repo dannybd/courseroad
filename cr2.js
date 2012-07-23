@@ -115,7 +115,6 @@ function buildMajor(arr, level){
 	var tempstr = ""; //Holds the unsatisfied requisites in a string for display to the user.
 	var temp2 = true;
 	for(var i=1;i<arr.length;i++){
-		//if(typeof(arr[i])=="object"){
 		if($.isArray(arr[i])){
 			var req = buildMajor(arr[i], level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
 			tempstr += req;
@@ -171,32 +170,34 @@ function classFromJSON(json, loadspeed, replacediv){
 	json.reqstatus = true;
 	if(json.override) newdiv.addClass('classdivoverride');
 	for(attr in json) newdiv.data(attr, json[attr]);
-	newdiv.data("terminals", {});
-	newdiv.data("terminals").terminal = new WireIt.Terminal(newdiv[0], {editable: false });
-	newdiv.data("terminals").wires = [];
+	newdiv.data("terminals", {
+		terminal: new WireIt.Terminal(newdiv[0], {editable: false }),
+		wires: []
+	});
 	return newdiv;
 }
 
-function getClass(classid, classterm, override){
+function getClass(){
 	//pulls down and interprets the class data
-	if(override==undefined) override = false;
-	var data = {};
-	if(classid[0]=="*"){
-		var temp = classid.substr(1).split('~');
-		if(!temp[1]) temp[1] = 0;
-		var data = {getcustom: temp[0], getunits: temp[1]};
+	var classterm = $("#getnewclassterm").val();
+	if($("input[name='getnewclasstype']:checked").val()=="custom"){
+		if(!$("#getnewclassname").val()) return false;
+		var data = {getcustom: $("#getnewclassname").val(), getunits: $("#getnewclassunits").val()||0};
 	}else{
-		var data = {getclass: classid};
+		if(!$("#getnewclassid").val()) return false;
+		var data = {getclass: $("#getnewclassid").val()};
 	}
+	$("#getnewclass .ui-autocomplete").hide();
+	$('.getnewclasstypes input').val('');
 	$.getJSON('?', data, function(json){
 		if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
 		json.classterm = classterm;
-		json.override = override;
+		json.override = false;
 		classFromJSON(json);
 		addAllWires();
-		$('#getnewclassid').focus();
+		$('.getnewclasstypes.visible input:first').focus();
+		return true;
 	});
-	return false;
 }
 
 function getClasses(classarr){
@@ -210,28 +211,26 @@ function getClasses(classarr){
 function newWire(from,to){
 	//Defines new wire's properties (black/grey, straight/curved) 
 	//partially based on the relative semesters and terms of the two would-be connected classes.
-	//from is $ div, to is object with to.div as $ div.
+	//from is $() div, to is object with to.div as $() div.
 	var fromid = from.attr("id");
 	var toid = to.div.attr("id");
 	var fromterm = from.data("classterm")+0;
 	var toterm = to.div.data("classterm")+0;
 	var dterm = Math.abs(fromterm - toterm);
 	if(to.coreq==1){
-		var options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqerror:false};
-		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#ff0000', borderwidth: 1, width: 1, reqerror:true};
+		var options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqOK:true};
 	}else{
 		toterm += to.div.data("override")?0:1;
-		var options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqerror:false};
-		if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqerror:true};
+		var options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqOK:true};
 	}
+	if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqOK:false};
 	if(dterm==1 || dterm==2){
 		var tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
 	}else{
 		var tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
 	}
-	//tempwire.redraw();
 	from.data("terminals").wires.push(tempwire);
-	return (!options["reqerror"]);
+	return (options.reqOK);
 }
 
 function checkReqs(arr, callback, callbackargs, level, test){
@@ -488,7 +487,6 @@ function minclass(stringify){
 function minmajors(stringify){
 	var temp = [$("#choosemajor").val(),$("#choosemajor2").val(),$("#chooseminor").val(),$("#chooseminor2").val()];
 	return stringify?JSON.stringify(temp):temp;
-	//return '["'+$("#choosemajor").val()+'","'+$("#choosemajor2").val()+'","'+$("#chooseminor").val()+'","'+$("#chooseminor2").val()+'"]';
 }
 
 function deltaDate(){
@@ -502,6 +500,5 @@ function deltaDate(){
 }
 
 function runBeforeUnload(){
-	//console.log(minclass(), minmajors());
 	return "Are you sure you want to close CourseRoad? You'll lose any unsaved changes you've made.";
 }

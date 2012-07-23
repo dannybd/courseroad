@@ -9,9 +9,6 @@ body{
 	padding: 0;
 	min-width: 950px;
 }
-body.printing{
-	overflow-x: hidden;
-}
 .ui-dialog-titlebar{
 	display: none;
 }
@@ -118,7 +115,27 @@ body.printing{
 .ui-tabs.ui-corner-all, .ui-tabs .ui-corner-all, .ui-tabs .ui-corner-bottom, .ui-tabs .ui-corner-left, .ui-tabs .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
 .ui-tabs.ui-corner-all, .ui-tabs .ui-corner-all, .ui-tabs .ui-corner-bottom, .ui-tabs .ui-corner-right, .ui-tabs .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
 
-/*--------------------------*/
+.infotabs-about-header{ font-size: 14pt !important; }
+.infotabs-about-subheader{ font-size: 8pt !important; padding-bottom: 5px; }
+#loginORusersettings{ margin-top: 5px; }
+
+#getnewclassid{
+	width: 60px;
+}
+#getnewclassname{
+	width: 100px;
+}
+#getnewclassunits{
+	width: 25px;
+	text-align: center;
+}
+.getnewclasstypes{
+	display: none;
+}
+.getnewclasstypes.visible{
+	display: inline-block !important;
+}
+
 .ui-autocomplete{
 	list-style: none;
 	background-color: #FFF;
@@ -191,15 +208,11 @@ div.majorminor ul{
 #nowreading a{
 	text-decoration: none;
 }
-
 #rightbar{
 	background-color: #FDFDFD;
 	height: 100%;
 	width: auto;
 	margin-left: 251px;
-}
-#rightbar.printing{
-	width: 850px;
 }
 .year{
 	width: 100%;
@@ -249,10 +262,6 @@ div.majorminor ul{
 	margin-left: 25px;
 	padding: 20px;
 	text-align: center;
-}
-.year.printing, .term.printing{
-	margin-right: -2970px;
-	padding-right: 2990px;
 }
 .termname{
 	position: absolute;
@@ -475,11 +484,6 @@ img.trashhover{
 	width: 80px;
 	height: 80px;
 }
-#footer{
-	position: fixed;
-	bottom: 2px;
-	right: 2px;
-}
 #loading{
 	display: none;
 	position: fixed;
@@ -491,6 +495,9 @@ img.trashhover{
 	text-align: center;
 	border-radius: 12px;
 	z-index: 10;
+}
+.flakyCSS{
+	margin: 1px !important;
 }
 /*** Print CSS ***/
 @media print{
