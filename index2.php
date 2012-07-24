@@ -363,7 +363,6 @@ window.onhashchange = function(){
 }
 
 var totalUnits = 0;
-//var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
 $(function(){
 	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	if(window.location.hash){
@@ -383,7 +382,7 @@ $(function(){
 	}
 	$('#getnewclassid').blur(function(){
 		$("#getnewclass .ui-autocomplete").hide();
-	});
+	}).focus();
 	$('#getnewclasssubmit').click(getClass);
 	$("body").on("click", ".classdivyear span", function(){
 		var par = $(this).parents(".classdiv");
@@ -671,28 +670,28 @@ $(function(){
 	</div>
 	<div id="COREchecker" class="leftbarholder">
 	<strong>General Institute Requirements:</strong><br>
-		Physics I: <span id="Physics_I" class="corecheck GIR PHY1">[ ]</span><br>
-		Physics II: <span id="Physics_II" class="corecheck GIR PHY2">[ ]</span><br>
-		Calculus I: <span id="Calculus_I" class="corecheck GIR CAL1">[ ]</span><br>
-		Calculus II: <span id="Calculus_II" class="corecheck GIR CAL2">[ ]</span><br>
-		Chemistry: <span id="Chemistry" class="corecheck GIR CHEM">[ ]</span><br>
-		Biology: <span id="Biology" class="corecheck GIR BIOL">[ ]</span><br>
-		REST <span id="REST" class="corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="corecheck GIR REST">[ ]</span><br>
-		LAB <span id="LAB" class="corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="corecheck GIR LAB LAB2">[ ]</span><br>
+		Physics I: <span id="Physics_I" class="checkbox1 corecheck GIR PHY1">[ ]</span><br>
+		Physics II: <span id="Physics_II" class="checkbox1 corecheck GIR PHY2">[ ]</span><br>
+		Calculus I: <span id="Calculus_I" class="checkbox1 corecheck GIR CAL1">[ ]</span><br>
+		Calculus II: <span id="Calculus_II" class="checkbox1 corecheck GIR CAL2">[ ]</span><br>
+		Chemistry: <span id="Chemistry" class="checkbox1 corecheck GIR CHEM">[ ]</span><br>
+		Biology: <span id="Biology" class="checkbox1 corecheck GIR BIOL">[ ]</span><br>
+		REST <span id="REST" class="checkbox1 corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="checkbox1 corecheck GIR REST">[ ]</span><br>
+		LAB <span id="LAB" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="corecheck CI CIH">[ ]</span>&nbsp;<span id="CI_H2" class="corecheck CI CIH">[ ]</span><br>
+		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH">[ ]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH">[ ]</span><br>
 		-----------------<br>
 		HASS:<br>
-		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="corecheck HASS HA">[ ]</span>
-					&nbsp;H <span id="HASS_Humanities" class="corecheck HASS HH">[ ]</span>
-					&nbsp;S <span id="HASS_Social_Sciences" class="corecheck HASS HS">[ ]</span><br>
+		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[ ]</span>
+					&nbsp;H <span id="HASS_Humanities" class="checkbox1 corecheck HASS HH">[ ]</span>
+					&nbsp;S <span id="HASS_Social_Sciences" class="checkbox1 corecheck HASS HS">[ ]</span><br>
 		&nbsp;&nbsp;&nbsp;Other HASS: 
-		<span id="HASS_E"  class="corecheck HASS HE">[ ]</span>
-		<span id="HASS_E2" class="corecheck HASS HE">[ ]</span>
-		<span id="HASS_E3" class="corecheck HASS HE">[ ]</span>
-		<span id="HASS_E4" class="corecheck HASS HE">[ ]</span>
-		<span id="HASS_E5" class="corecheck HASS HE">[ ]</span><br>
-		-----------------<br>
+		<span id="HASS_E"  class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E2" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E3" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E4" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E5" class="checkbox1 corecheck HASS HE">[ ]</span><br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="choosemajor" name="choosemajor" class="majorminor" data-div="#majorreqs">
 			<option value="m0">---Select a Major---</option>
 			<option value="m1_A">1A -- Engineering</option>
@@ -766,7 +765,7 @@ $(function(){
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
 		<div id="majorreqs" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="choosemajor2" name="choosemajor2" class="majorminor" data-div="#majorreqs2">
 			<option value="m0">---Select a Major---</option>
 			<option value="m1_A">1A -- Engineering</option>
@@ -840,7 +839,7 @@ $(function(){
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
 		<div id="majorreqs2" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
@@ -850,7 +849,7 @@ $(function(){
 			<option value="miPublic_policy">Minor in Public Policy</option>
 		</select><br>
 		<div id="minorreqs" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
 			<option value="miAstronomy">Minor in Astronomy</option>

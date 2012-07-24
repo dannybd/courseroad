@@ -88,8 +88,11 @@ majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "
 function checkMajor(selector){
 	var val = $(selector).val();
 	var div = $(selector).data("div");
+	var span = $(selector).prev("span.majorminor");
+	span.attr("data-empty",1).removeAttr("data-value");
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
+	span.attr("data-value", $(selector).find("option:selected").text()).removeAttr("data-empty");
 	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
 	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major or minor's requirements. (Or I haven't entered all of its data yet.)";
@@ -420,7 +423,7 @@ function updateWires(){
 function checkClasses(){
 	//This does the work for the left-hand side checklist bar.
 	totalUnits = 0;
-	$("#COREchecker span").removeAttr('title').each(function(){
+	$("#COREchecker span.checkbox1").removeAttr('title').each(function(){
 		$(this).html('[ ]');
 	});
 	$(".corecheck").addClass("unused");

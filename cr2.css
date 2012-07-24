@@ -164,10 +164,13 @@ body{
 	overflow-y: auto;
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
-	top: 139px;
+	top: 142px;
 	bottom: 144px;
 	padding: 2px;
 	width: 236px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#COREchecker{ top: 139px !important; }
 }
 select.majorminor{
 	width: 200px;
@@ -502,38 +505,48 @@ img.trashhover{
 /*** Print CSS ***/
 @media print{
 	* { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
-	#leftbar{ position: absolute; }
-	#leftbar>div{ position: initial; }
-	#getnewclass, #overrider, #nowreading, #footer, .WireIt-Wire{ display: none; }
-	#COREchecker{ display: block; height: auto; top: 0; bottom: 0; border: none; }
-	@page { margin: 0.5cm; }
-	.year { page-break-inside: avoid; }
+	body{ border: 1px solid black !important; }
+	#leftbar{ position: absolute !important; }
+	#leftbar>div{ position: initial !important; }
+	#getnewclass, #overrider, #nowreading, .WireIt-Wire, span.majorminor[data-empty], select.majorminor{ display: none !important; }
+	#COREchecker{ display: block !important; height: auto !important; top: 0 !important; bottom: 0 !important; border: none !important; }
+	span.majorminor[data-value]:after{ content: attr(data-value); font-weight: bold; }
+	.term:not(.credit){ border-left: 1px solid black !important; }
+	.term.credit{ border-bottom: 5px solid #444 !important; }
+	.year{ page-break-inside: avoid; border-top: 5px solid #444 !important; border-bottom: 5px solid #444 !important; }
+	@page{ margin: 0.5cm; }
 }
 /*** End Print CSS ***/
 
-/*** IE7/8 CSS ***/
-.lte8 #leftbar{
-	left: 0px;
+/*** Begin Mobile CSS ***/
+@media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px){ 
+	#leftbar{ position: absolute; }
 }
+/*** End Mobile CSS ***/
+
+/*** IE7/8 CSS ***/
+.lte8 #leftbar{ left: 0px; }
 .ie7 #getnewclass{
 	background-color: #E0E0E0 !important;
 	border: 1px solid #5E5E5E !important;
 	width: 240px !important;
 	height: 133px !important;
 	padding-top: 2px !important;
+	overflow-y: scroll;
 }
 .ie7 #getnewclass > ul, .ie7 .ui-tabs .ui-tabs-nav, .ie7 .ui-tabs .ui-tabs-nav .ui-state-default{
 	list-style-image: none;
 	display: none;
 }
-.ie7 #getnewclass>div.ui-tabs-panel{
-	display: inline !important;
+.ie7 #getnewclass>div{
+	display: inline-block !important;
 	border: none !important;
+	padding: 0px !important;
 	background: none !important;
+	height: auto !important;
 }
-.ie7 #mapcerts{
-	width: 200px !important;
-}
+.ie7 .getnewclasstypes.visible{ display: inline !important; }
+.ie7 #mapcerts{ width: 200px !important; }
 .lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
 	background-color: #eee;
 }
