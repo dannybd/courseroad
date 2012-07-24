@@ -568,7 +568,7 @@ $(function(){
 	//Runs the help dialog down below
 	<?= isset($_GET['modal'])?"$.cookies.del('modalhelp');\n":"\n" ?>
 	$("#help").dialog({
-		autoOpen: ($.cookies.get('modalhelp')==null),
+		autoOpen: false, //($.cookies.get('modalhelp')==null),
 		width: 600,
 		draggable: false,
 		resizeable: false,
@@ -585,7 +585,7 @@ $(function(){
 		$("#help").dialog('open').dialog('option', 'position', 'center');
 		$( "#accordion" ).accordion( "resize" );
 	});
-	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 500);
+	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 2500);
 	if($.cookies.get('modalhelp')==null){
 		$.cookies.set('modalhelp','1',{expiresAt: deltaDate(0, 0, 14)});
 	}
