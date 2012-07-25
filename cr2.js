@@ -377,7 +377,7 @@ function addWires(div, addwires){
 	div.data("checkrepeat", true);
 	if($.inArray(div.data("grade_rule"), ['J','U','R'])==-1){
 		if($(".classdiv").not(div).filter(function(j){
-			return ((($.inArray($(this).data("subject_id"), div.data("equiv_subjects"))!=-1) || $(this).hasClass(div.data("id"))) && (j<i));
+			return ((($.inArray($(this).data("subject_id"), div.data("equiv_subjects"))!=-1) || $(this).hasClass(div.data("id"))) && (j<$(div).index(".classdiv")));
 		}).length) div.data("checkrepeat", false);
 	}
 	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat")) || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);

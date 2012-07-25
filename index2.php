@@ -199,14 +199,13 @@ if(isset($_POST['classes'])){
 			$saveas = date("YmdHis");
 			$hash = $athena.'/'.$saveas;
 		}else if(!$_SESSION['triedcert']){
-			$trycert = true;
 			$_SESSION['trycert'] = true;
 		}
 	}
 	//id, hash, user, classes, major, public, desc, ip, added
 	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$athena', '$classes', '$major', '0', '', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
 	mysql_query($sql);
-	echo $trycert?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
+	echo isset($_SESSION['trycert'])?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
 	die();
 }
 
