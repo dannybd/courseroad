@@ -115,6 +115,26 @@ body{
 .ui-tabs.ui-corner-all, .ui-tabs .ui-corner-all, .ui-tabs .ui-corner-bottom, .ui-tabs .ui-corner-left, .ui-tabs .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
 .ui-tabs.ui-corner-all, .ui-tabs .ui-corner-all, .ui-tabs .ui-corner-bottom, .ui-tabs .ui-corner-right, .ui-tabs .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
 
+.ui-button { display: inline-block; position: relative; padding: 0; margin: -3px -1px -5px; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; } /* the overflow property removes extra width in IE */
+
+/*button icon element(s) */
+/*.ui-button-icon-only .ui-icon, .ui-button-text-icon-primary .ui-icon, .ui-button-text-icon-secondary .ui-icon, .ui-button-text-icons .ui-icon, .ui-button-icons-only .ui-icon { position: absolute; top: 50%; margin-top: -8px; }
+.ui-button-icon-only .ui-icon { left: 50%; margin-left: -8px; }
+.ui-button-text-icon-primary .ui-button-icon-primary, .ui-button-text-icons .ui-button-icon-primary, .ui-button-icons-only .ui-button-icon-primary { left: .5em; }
+.ui-button-text-icon-secondary .ui-button-icon-secondary, .ui-button-text-icons .ui-button-icon-secondary, .ui-button-icons-only .ui-button-icon-secondary { right: .5em; }
+.ui-button-text-icons .ui-button-icon-secondary, .ui-button-icons-only .ui-button-icon-secondary { right: .5em; }
+*/
+/* workarounds */
+/*button.ui-button::-moz-focus-inner { border: 0; padding: 0; }*/ /* reset extra padding in Firefox */
+/* Icons ----------------------------------*/
+
+button.changeclassterm span{ display: block; }
+
+.ui-icon { width: 16px; height: 16px; background-image: url(images/ui-icons_222222_256x240.png); }
+.ui-icon-triangle-1-n { background-position: 0 -16px; }
+.ui-icon-triangle-1-s { background-position: -64px -16px; }
+.ui-icon-trash { background-position: -176px -96px; }
+
 .infotabs-about-header{ font-size: 14pt !important; }
 .infotabs-about-subheader{ font-size: 8pt !important; padding-bottom: 5px; }
 #loginORusersettings{ margin-top: 5px; }
@@ -546,6 +566,7 @@ img.trashhover{
 	height: auto !important;
 }
 .ie7 .getnewclasstypes.visible{ display: inline !important; }
+.ie7 .ui-button { margin: -3px 0px -1px !important;}
 .ie7 #mapcerts{ width: 200px !important; }
 .lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
 	background-color: #eee;

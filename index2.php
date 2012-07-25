@@ -364,6 +364,7 @@ window.onhashchange = function(){
 
 var totalUnits = 0;
 $(function(){
+	$("#getnewclass").tabs({collapsible: false, selected: <?= $loggedin?1:0 ?>});
 	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	if(window.location.hash){
 		//Load hash's classes on pageload
@@ -484,7 +485,6 @@ $(function(){
 			addAllWires();
 		}
 	});
-	$("#getnewclass").tabs({collapsible: false, selected: <?= $loggedin?1:0 ?>});
 	$("input[name='getnewclasstype']").change(function(){
 		$(".getnewclasstypes").toggleClass("visible").filter(".visible").find("input:first").focus();
 	});
@@ -493,8 +493,12 @@ $(function(){
 		minLength: 2,
 		appendTo: "#getnewclass"
 	});
-	$(".getnewclasstypes input, #getnewclassterm").keydown(function(event){
+	$(".getnewclasstypes input").keydown(function(event){
 		if(event.which==13) getClass();
+	});
+	$("button.changeclassterm").click(function(){
+		$('.getnewclasstypes.visible input:first').focus();
+		$("#getnewclassterm").val(Math.max(0, Math.min($("#getnewclassterm option").length-1, parseInt($("#getnewclassterm").val())+parseInt($(this).val()))));
 	});
 	$("#savemap").click(function(){
 		$.post("?", {classes: minclass(true), major: minmajors(true), trycert: loggedin}, function(data){
@@ -502,7 +506,7 @@ $(function(){
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
-					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
+					window.location.href = "https://courseroad.mit.edu:444/secure.php";
 				}else{
 					//console.log("CERTS! "+data);
 					userHashChange = false;
@@ -523,7 +527,7 @@ $(function(){
 			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
 				$(window).off("beforeunload", runBeforeUnload);
 				if(data=="**auth**"){
-					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
+					window.location.href = "https://courseroad.mit.edu:444/secure.php";
 				}else{
 					//console.log("CERTS! "+data);
 					userHashChange = false;
@@ -636,7 +640,7 @@ $(function(){
 				&nbsp;(<input id="getnewclassunits" type="text" name="classunits" placeholder="12" pattern="[0-9\.]*"> units)
 			</div>
 			<br>
-			to 
+			&nbsp;to 
 			<select id="getnewclassterm" name="classterm">
 				<option value="0">Prior Credit</option>
 				<option value="1">Freshman Fall</option>
@@ -659,7 +663,14 @@ $(function(){
 				<option value="18">Super-Senior IAP</option>
 				<option value="19">Super-Senior Spring</option>
 				<option value="20">Super-Senior Summer</option>
-			</select><br> 
+			</select>
+				<button type="button" id="changeclassterm-up" class="bubble loaders changeclassterm ui-button" value="-1">
+					<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-n"></span>
+				</button>
+				<button type="button" id="changeclassterm-down" class="bubble loaders changeclassterm ui-button" value="1">
+					<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>
+				</button>
+			<br> 
 			<input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
 		</div>
 		<div id="infotabs-save" class="ui-corner-all leftbarholder">
