@@ -20,12 +20,11 @@ $_SESSION['athena'] = $athena;
 $_SESSION['fullname'] = $fullname;
 $_SESSION['saveas'] = date("YmdHis");
 $_SESSION['saveas'] = $_SESSION['athena'].'/'.$_SESSION['saveas'];
-$roadsdb = strstr($_SERVER['HTTP_REFERER'], "index2.php")?"roads2":"roads";
-$sql = "INSERT INTO `roads` (`id`, `hash`, `user`, `classes`, `major`, `public`, `ip`, `added`) (SELECT NULL, '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `public`, `ip`, CURRENT_TIMESTAMP FROM `roads` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
-if(strstr($_SERVER['HTTP_REFERER'], "index2.php")) $sql = "INSERT INTO `roads2` (`id`, `hash`, `user`, `classes`, `major`, `public`, `desc`, `ip`, `added`) (SELECT NULL, '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `public`, `desc`, `ip`, CURRENT_TIMESTAMP FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
+$sql = "INSERT INTO `roads2` (`id`, `hash`, `user`, `classes`, `major`, `public`, `desc`, `ip`, `added`) (SELECT NULL, '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `public`, `desc`, `ip`, CURRENT_TIMESTAMP FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
 mysql_query($sql);
 header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['saveas']}");
 die();
+
 print_r($_SESSION);
 echo $athena." ; ".$fullname;
 ?>

@@ -244,7 +244,7 @@ if(isset($_SESSION['trycert'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
 	unset($_SESSION['trycert']);
-	header("Location: /#".$_SESSION['crhash']);
+	header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['crhash']}");
 	die();
 }
 
@@ -506,7 +506,7 @@ $(function(){
 			if(loggedin){
 				if(data=="**auth**"){
 					//This redirects us to the secure cert check.
-					window.location.href = "https://courseroad.mit.edu:444/secure.php";
+					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
 				}else{
 					//console.log("CERTS! "+data);
 					userHashChange = false;
@@ -527,7 +527,7 @@ $(function(){
 			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
 				$(window).off("beforeunload", runBeforeUnload);
 				if(data=="**auth**"){
-					window.location.href = "https://courseroad.mit.edu:444/secure.php";
+					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
 				}else{
 					//console.log("CERTS! "+data);
 					userHashChange = false;
@@ -570,9 +570,8 @@ $(function(){
 		}
 	});
 	//Runs the help dialog down below
-	<?= isset($_GET['modal'])?"$.cookies.del('modalhelp');\n":"\n" ?>
 	$("#help").dialog({
-		autoOpen: false, //($.cookies.get('modalhelp')==null),
+		autoOpen: false,
 		width: 600,
 		draggable: false,
 		resizeable: false,
@@ -590,9 +589,6 @@ $(function(){
 		$( "#accordion" ).accordion( "resize" );
 	});
 	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 2500);
-	if($.cookies.get('modalhelp')==null){
-		$.cookies.set('modalhelp','1',{expiresAt: deltaDate(0, 0, 14)});
-	}
 	$("select.majorminor option").each(function(){
 		if(majors[$(this).val()]==undefined) $(this).remove();
 	});

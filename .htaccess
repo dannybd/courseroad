@@ -5,7 +5,13 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
-ErrorDocument 401 /index.php
+ErrorDocument 401 /index.php?hash=error
+</Files>
+
+<Files secure2.php>
+AuthType SSLCert
+Require valid-user
+ErrorDocument 401 /index2.php?hash=error
 </Files>
 
 RewriteCond %{REQUEST_URI} !^blog
