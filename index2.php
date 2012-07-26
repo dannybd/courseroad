@@ -25,12 +25,19 @@
 /******************************************************************/
 
 if(isset($_GET['hash'])){
-	header("Location: /index2.php#".$_GET['hash']);
+	header("Location: https://courseroad.mit.edu/index2.php#".$_GET['hash']);
 	die();
 }
 
 require("connect.php"); //connect to database
 session_start();
+
+if(isset($_GET['triedlogin'])){
+	$hash = "";
+	if(isset($_SESSION['crhash'])) $hash = $_SESSION['crhash'];
+	header("Location: https://courseroad.mit.edu/index2.php#$hash");
+	die();
+}
 
 //autocomplete business
 if(isset($_GET['term'])){
@@ -214,6 +221,7 @@ if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //Uncomment fo
 if(isset($_POST['gethash'])){
 	header("Content-type: text/javascript");
 	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
+	$_SESSION['crhash'] = $hash;
 	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
 	$query = mysql_query($sql);
 	$classes = '';
@@ -603,6 +611,15 @@ $(function(){
 		updateWires();
 	});
 	$(".flakyCSS").removeClass("flakyCSS");
+	$("#loginORusersettings").click(function(){
+		if(loggedin){
+			console.log("You should be logged in by now :D");
+			return false;
+		}else{
+			window.location.href = "https://courseroad.mit.edu:444/secure2.php";
+			return false;
+		}
+	});
 });
 </script>
 <div id="leftbar">

@@ -11,7 +11,7 @@ ErrorDocument 401 /index.php?hash=error
 <Files secure2.php>
 AuthType SSLCert
 Require valid-user
-ErrorDocument 401 /index2.php?hash=error
+ErrorDocument 401 /index2.php?triedlogin=1
 </Files>
 
 RewriteCond %{REQUEST_URI} !^blog
