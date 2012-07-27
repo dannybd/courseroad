@@ -32,13 +32,6 @@ if(isset($_GET['hash'])){
 require("connect.php"); //connect to database
 session_start();
 
-if(isset($_GET['triedlogin'])){
-	$hash = "";
-	if(isset($_SESSION['crhash'])) $hash = $_SESSION['crhash'];
-	header("Location: https://courseroad.mit.edu/index2.php#$hash");
-	die();
-}
-
 //autocomplete business
 if(isset($_GET['term'])){
 	$term = mysql_real_escape_string($_GET['term']);
@@ -99,7 +92,7 @@ EOD;
 	$row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
 	foreach($row['equiv_subjects'] as &$subj) $subj = rtrim($subj, 'J');
 	if(!$row['equiv_subjects'][0]) $row['equiv_subjects'] = false;
-	if($row['joint_subjects']) $row['divclasses'] .= " ".implode(' ',$row['joint_subjects']);
+	if($row['joint_subjects']) $row['divclasses'] .= " ".str_replace(".","_",implode(' ',$row['joint_subjects']));
 	if($row['gir'] and $row['gir'][0]=="H") $row['gir'] = "";
 	if($row['gir']) $row['divclasses'] .= " GIR ".$row['gir'];
 	if($row['ci']) $row['divclasses'] .= " CI ".$row['ci'];
@@ -247,10 +240,12 @@ if(isset($_POST['gethash'])){
 	die();
 }
 
-if(isset($_SESSION['trycert'])){
+if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
 	unset($_SESSION['trycert']);
+	if(!isset($_SERVER['HTTP_REFERER'])) $_SERVER['HTTP_REFERER']="index2.php";
+	if(!isset($_SESSION['crhash'])) $_SESSION['crhash']="error401";
 	header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['crhash']}");
 	die();
 }
