@@ -261,6 +261,7 @@ if(isset($_GET['savedroads'])){
 	echo "<th style=\"min-width:118px\">Added</th>";
 	echo "<th style=\"min-width:95px\">Major</th>";
 	echo "<th>Classes</th>";
+	echo "<th style=\"min-width:30px;max-width:120px;\">Comment</th>";
 	echo "<th>Delete?</th>";
 	echo "</tr>\n";
 	echo "<tr>";
@@ -268,7 +269,7 @@ if(isset($_GET['savedroads'])){
 	$numrows = mysql_fetch_array($numrows);
 	$numrows = $numrows[0];
 	echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"null\" ".($numrows?"":"checked=\"true\" ")."/></td>";
-	echo "<td colspan=\"4\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
+	echo "<td colspan=\"5\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
 	echo "</tr>\n";
 	while($row = mysql_fetch_array($query)){
 		$roadURL = "?hash=".stripslashes($row['hash']);
@@ -290,7 +291,10 @@ if(isset($_GET['savedroads'])){
 			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
-		echo "<td><strong class=\"deleteroad\">X</strong></td>";
+		echo "<td><span>{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span>";
+		echo "</td>";
+		//echo "<td><strong class=\"deleteroad\">X</strong></td>";
+		echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
 		echo "</tr>\n";
 	}
 	echo "</table>";
@@ -305,6 +309,17 @@ if(isset($_GET['choosesavedroad'])){
 	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
 	mysql_query("UPDATE `roads2` SET `public`='0' WHERE `hash` LIKE '$athena/%'");
 	if($hash!="null") mysql_query("UPDATE `roads2` SET `public`='1' WHERE `hash`='$hash'");
+	echo "ok";
+	die();
+}
+//And when the user adds a comment
+if(isset($_POST['commentonroad'])){
+	$hash = mysql_real_escape_string($_POST['commentonroad']);
+	$comment = mysql_real_escape_string(htmlentities(substr($_POST['commentforroad'],0,250)));
+	if(!$loggedin) die();
+	$hasharray = explode('/', $hash);
+	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
+	if($hash!="null") mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
 	echo "ok";
 	die();
 }
@@ -565,9 +580,18 @@ $(function(){
 	$("body").on("click", ".deleteroad", function(){
 		if(confirm("Are you sure you want to delete this road? This action cannot be undone.")){
 			var parent = $(this).parent().parent();
-			val = parent.find(":radio").val();
+			var val = parent.find(":radio").val();
 			$.get("?", {deleteroad: val}, function(data){
 				if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
+			});
+		}
+	});
+	$("body").on("click", ".saved-roads-edit-comment", function(){
+		var comment = prompt("Enter your comment for this saved road below (max. 250 characters):", $(this).prev().text());
+		if(comment){
+			var thisthis = $(this);
+			$.post("?", {commentonroad: thisthis.parent().parent().find(":radio").val(), commentforroad: comment}, function(){
+				thisthis.prev().text(comment);
 			});
 		}
 	});
