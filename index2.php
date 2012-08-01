@@ -252,7 +252,7 @@ if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 
 //Returns the desired table of saved roads when the user is logged in
 if(isset($_GET['savedroads'])){
-	if(!$loggedin) die();
+	if(!$loggedin) die("Sorry, you need to log in again.");
 	$sql = "SELECT * FROM `roads2` WHERE `hash` LIKE '$athena/%' ORDER BY `added` DESC";
 	$query = mysql_query($sql);
 	echo "<table>\n";
@@ -273,7 +273,7 @@ if(isset($_GET['savedroads'])){
 	echo "</tr>\n";
 	while($row = mysql_fetch_array($query)){
 		$roadURL = "?hash=".stripslashes($row['hash']);
-		echo "<tr>";
+		echo "<tr data-hash=\"".stripslashes($row['hash'])."\">";
 		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"".stripslashes($row['hash'])."\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
 		echo "<td><a href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
 		$major = stripslashes($row['major']);
@@ -291,7 +291,7 @@ if(isset($_GET['savedroads'])){
 			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
-		echo "<td><span>{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span>";
+		echo "<td><span class=\"saved-roads-comment\">{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span>";
 		echo "</td>";
 		//echo "<td><strong class=\"deleteroad\">X</strong></td>";
 		echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
@@ -315,7 +315,7 @@ if(isset($_GET['choosesavedroad'])){
 //And when the user adds a comment
 if(isset($_POST['commentonroad'])){
 	$hash = mysql_real_escape_string($_POST['commentonroad']);
-	$comment = mysql_real_escape_string(htmlentities(substr($_POST['commentforroad'],0,250)));
+	$comment = mysql_real_escape_string(htmlentities(substr($_POST['commentforroad'],0,100)));
 	if(!$loggedin) die();
 	$hasharray = explode('/', $hash);
 	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
@@ -345,302 +345,30 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 <!--[if IE 9]><html lang="en-us" class="ie ie9 lte9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us"><!--<![endif]-->
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>CourseRoad 2.0<?= $loggedin?": $athena":"" ?></title>
-<link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
-<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-<!--[if IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><? //This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly. ?>
-<script src="json2-min.js"></script>
-<script src="jquery.cookies.2.2.0.min.js"></script>
-<script src="wireit-min.js"></script>
-<script src="cr2.js<?= $nocache ?>"></script>
-<script>
-var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
-(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-g.src="https://ssl.google-analytics.com/ga.js";
-s.parentNode.insertBefore(g,s)}(document,"script"));
-</script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>CourseRoad 2.0<?= $loggedin?": $athena":"" ?></title>
+	<link rel="stylesheet" type="text/css" href="cr2.css<?= $nocache ?>">
+	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><? //Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. ?>
+	<script src="json2-min.js"></script>
+	<script src="jquery.cookies.2.2.0.min.js"></script>
+	<script src="wireit-min.js"></script>
+	<script src="cr2.js<?= $nocache ?>"></script>
+	<script>
+		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
+		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+		g.src="https://ssl.google-analytics.com/ga.js";
+		s.parentNode.insertBefore(g,s)}(document,"script"));
+		var loggedin = <?= intval($loggedin) ?>;
+		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
+		$(crSetup);
+	</script>
 </head>
 <body>
-<script type="text/javascript">
-var loggedin = <?= intval($loggedin) ?>;
-var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
-var userHashChange = true;
-var reasonToTrySave = false;
-var preventUpdateWires = false;
-window.onhashchange = function(){
-	//userHashChange means that if the user types in a new hash in the URL, 
-	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
-	if(userHashChange) window.location.reload(); 
-	userHashChange = true;
-}
-
-var totalUnits = 0;
-$(function(){
-	$("#getnewclass").tabs({collapsible: false, selected: <?= $loggedin?1:0 ?>});
-	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
-	if(window.location.hash){
-		//Load hash's classes on pageload
-		$("#loading").show();
-		$.post("?", {gethash:window.location.hash}, function(data){
-			$("#loading").hide();
-			if(data=="") return false;
-			var json = $.parseJSON(data);
-			var jsonmajors = json.pop();
-			$("select.majorminor").each(function(i){
-				$(this).val(jsonmajors[i]).attr("selected",true);
-			});
-			getClasses(json);
-			$(window).off("beforeunload", runBeforeUnload);
-		});
-	}
-	$('#getnewclassid').blur(function(){
-		$("#getnewclass .ui-autocomplete").hide();
-	}).focus();
-	$('#getnewclasssubmit').click(getClass);
-	$("body").on("click", ".classdivyear span", function(){
-		var par = $(this).parents(".classdiv");
-		if(par.data("changing")) return false;
-		par.data("changing", true);
-		$(this).replaceWith(function(){return par.data("otheryears");});
-		par.data("changing", false);
-		par.find(".classdivyear select").focus();
-	});
-	$("body").on("change blur mouseout mouseleave", ".classdivyear select", function(event){
-		var val = $(this).val();
-		var oldclass = $(this).parents(".classdiv");
-		if(oldclass.data("changing") || ($(this).is(":focus")&&((event.type=="mouseout")||(event.type=="mouseleave")))) return false;
-		oldclass.data("changing", true);
-		if(val==oldclass.data("year")){
-			$(this).replaceWith(function(){return oldclass.data("yearspan");});
-			oldclass.data("changing", false);
-			return false;
-		}
-		oldclass.addClass("classdivlow");
-		$.getJSON('?', {getclass:oldclass.data("subject_id"), getyear:val}, function(json){
-			if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
-			json.classterm = oldclass.data("classterm");
-			json.override = oldclass.data("override");
-			classFromJSON(json, 0, oldclass);
-			addAllWires();
-			unhighlightClasses();
-		});
-	});
-	$("body").on("click", ".classdiv", function(){
-		//Highlights the selected class, dims the others, and displays info on that class in the lower right
-		$(".classdiv").not($(this)).removeClass("classdivhigh");
-		$(".classdiv").removeClass("classdivlow");
-		$(this).toggleClass("classdivhigh");
-		if($('.classdivhigh').length==1){
-			$("#overrider span").css('opacity', 1);
-			$('.classdiv').not($(this)).addClass("classdivlow");
-			$('.WireIt-Wire').addClass("WireIt-Wire-low");
-			for(i in $(".classdivhigh").data("terminals").terminal.wires){
-				$($(".classdivhigh").data("terminals").terminal.wires[i].element).removeClass("WireIt-Wire-low");
-			}
-			$("#nowreading").html($('.classdivhigh').data("info"));
-			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
-			$("#overridercheck").prop("disabled", false).prop("checked", $('.classdivhigh').data('override'));
-		}else{
-			unhighlightClasses();
-		}
-	});
-	$("#overridercheck").change(function(){
-		$(".classdivhigh").data("override", $(this).prop("checked"));
-		$('.classdivhigh').toggleClass("classdivoverride");
-		addAllWires();
-	});
-	$(".term, .year").click(unhighlightClasses);
-	$("body").on("click", "canvas.WireIt-Wire", unhighlightClasses);
-	$(".term").sortable({
-		//Allows the classes to be draggable and sortable.
-		connectWith: '.term', 
-		containment: '#rightbar', 
-		cursor: 'default', 
-		distance: 20, 
-		items: '.classdiv',
-		opacity: 0.8, 
-		placeholder: 'ui-sortable-placeholder', 
-		scroll: true, 
-		zIndex: 99,
-		start: function(event, ui){
-			preventUpdateWires = true;
-			$('.WireIt-Wire').hide();
-		},
-		stop: function(event, ui){
-			preventUpdateWires = false;
-			$('.classdiv').removeAttr("style");
-			$('.WireIt-Wire').show();
-			addAllWires();
-		}
-	});
-	$("#rightbar").disableSelection();
-	$("#trash").droppable({
-		accept: '.classdiv',
-		hoverClass: 'drophover',
-		tolerance: 'touch',
-		activate: function(event, ui){
-			$(this).addClass('trashon', 'slow');
-		},
-		deactivate: function(event, ui){
-			$(this).removeClass('trashon', 'fast');
-		},
-		over: function(event, ui){
-			$(".trash").addClass('trashhover', 'fast');
-		},
-		out: function(event, ui){
-			$(".trash").removeClass('trashhover', 'fast');
-		},
-		drop: function(event, ui){
-			preventUpdateWires = false;
-			ui.draggable.remove();
-			$(".trash").removeClass('trashhover', 'fast');
-			addAllWires();
-		}
-	});
-	$("input[name='getnewclasstype']").change(function(){
-		$(".getnewclasstypes").toggleClass("visible").filter(".visible").find("input:first").focus();
-	});
-	$("#getnewclassid").autocomplete({
-		source: "#",
-		minLength: 2,
-		appendTo: "#getnewclass"
-	});
-	$(".getnewclasstypes input").keydown(function(event){
-		if(event.which==13) getClass();
-	});
-	$("button.changeclassterm").click(function(){
-		$('.getnewclasstypes.visible input:first').focus();
-		$("#getnewclassterm").val(Math.max(0, Math.min($("#getnewclassterm option").length-1, parseInt($("#getnewclassterm").val())+parseInt($(this).val()))));
-	});
-	$("#savemap").click(function(){
-		$.post("?", {classes: minclass(true), major: minmajors(true), trycert: loggedin}, function(data){
-			$(window).off("beforeunload", runBeforeUnload);
-			if(loggedin){
-				if(data=="**auth**"){
-					//This redirects us to the secure cert check.
-					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
-				}else{
-					//console.log("CERTS! "+data);
-					userHashChange = false;
-					window.location.hash = data;
-				}	
-			}else{
-				//console.log(data);
-				userHashChange = false;
-				window.location.hash = data;
-			}
-		});
-	});
-	if(!loggedin && triedlogin) $("#mapcerts").hide();
-	$("#mapcerts").click(function(){
-		if(loggedin){
-			$("#viewroads").dialog("open");
-		}else{
-			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
-				$(window).off("beforeunload", runBeforeUnload);
-				if(data=="**auth**"){
-					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
-				}else{
-					//console.log("CERTS! "+data);
-					userHashChange = false;
-					window.location.hash = data;
-				}
-			});
-		}
-	});
-	$("select.majorminor").on("change", function(){checkMajor(this);});
-	$("#viewroads").dialog({
-		autoOpen: false,
-		width: 800,
-		draggable: false,
-		resizeable: false,
-		modal: true,
-		open: function(event, ui){
-			$("#savedroads").html("Loading...");
-			$.get("?savedroads=1", null, function(data){
-				$("#savedroads").html(data);
-			});
-		}
-	});
-	$("#viewroads_close").click(function(){
-		$("#viewroads").dialog('close');
-	});
-	$("body").on("click", ".choosesavedroad", function(){
-		$.get("?", {choosesavedroad: $(this).val()}, function(data){
-			if(data=="ok"){
-				//console.log("It worked!");
-			}
-		});
-	});
-	$("body").on("click", ".deleteroad", function(){
-		if(confirm("Are you sure you want to delete this road? This action cannot be undone.")){
-			var parent = $(this).parent().parent();
-			var val = parent.find(":radio").val();
-			$.get("?", {deleteroad: val}, function(data){
-				if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
-			});
-		}
-	});
-	$("body").on("click", ".saved-roads-edit-comment", function(){
-		var comment = prompt("Enter your comment for this saved road below (max. 250 characters):", $(this).prev().text());
-		if(comment){
-			var thisthis = $(this);
-			$.post("?", {commentonroad: thisthis.parent().parent().find(":radio").val(), commentforroad: comment}, function(){
-				thisthis.prev().text(comment);
-			});
-		}
-	});
-	//Runs the help dialog down below
-	$("#help").dialog({
-		autoOpen: false,
-		width: 600,
-		draggable: false,
-		resizeable: false,
-		modal: true
-	});
-	$("#help_close").click(function(){
-		$("#help").dialog('close');
-	});
-	$("#accordion").accordion();
-	$("body").on("click", ".dummylink", function(e){
-		e.preventDefault();
-	});
-	$("#openhelp").click(function(){
-		$("#help").dialog('open').dialog('option', 'position', 'center');
-		$( "#accordion" ).accordion( "resize" );
-	});
-	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 2500);
-	$("select.majorminor option").each(function(){
-		if(majors[$(this).val()]==undefined) $(this).remove();
-	});
-	//$("#rightbar").css('width', $("#rightbar").width());
-	$(window).resize(function() {
-		updateWires();
-	});
-	$("#printroad").click(function(){
-		$("body, #rightbar, .term, .year").toggleClass("printing");
-		updateWires();
-		window.print();
-		$("body, #rightbar, .term, .year").toggleClass("printing");
-		updateWires();
-	});
-	$(".flakyCSS").removeClass("flakyCSS");
-	$("#loginORusersettings").click(function(){
-		if(loggedin){
-			console.log("You should be logged in by now :D");
-			return false;
-		}else{
-			window.location.href = "https://courseroad.mit.edu:444/secure2.php";
-			return false;
-		}
-	});
-});
-</script>
 <div id="leftbar">
 	<div id="getnewclass">
 		<ul>

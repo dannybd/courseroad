@@ -37,6 +37,11 @@ body{
 	padding-bottom: 4px;
 	text-align: center;
 }
+.saved-roads-comment{
+	word-wrap: break-word;
+	max-width: 100px;
+	display: inline-block;
+}
 .saved-roads-edit-comment, .deleteroad{
 	display: inline-block;
 }

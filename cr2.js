@@ -380,11 +380,12 @@ function addWires(div, addwires){
 			return ((($.inArray($(this).data("subject_id"), div.data("equiv_subjects"))!=-1) || $(this).hasClass(div.data("id"))) && (j<$(div).index(".classdiv")));
 		}).length) div.data("checkrepeat", false);
 	}
-	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat")) || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);
+	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat")) || div.data("override")) && (div.data("checkterm")) && (div.data("offered_this_year"))) || div.data("classterm")==0);
 	div.removeClass("classdivgood").removeAttr('title');
 	if(div.data("status")) div.addClass("classdivgood");
 	if(!div.data("checkrepeat")) div.attr('title', div.data("subject_id")+' is not counting for credit');
 	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term', 'in the Summer term'])[(div.data("classterm")-1)%4]);
+	if(!div.data("offered_this_year")) div.attr('title', div.data("subject_id")+' is not available in this year ('+div.data('year')+')');
 	if(div.data("override")) div.find(".coreqs").attr('title','OVERRIDE enabled');
 	if($('.classdivhigh').length==1){
 		$('.WireIt-Wire').addClass("WireIt-Wire-low");
@@ -504,4 +505,274 @@ function deltaDate(){
 
 function runBeforeUnload(){
 	return "Are you sure you want to close CourseRoad? You'll lose any unsaved changes you've made.";
+}
+
+var userHashChange = true;
+window.onhashchange = function(){
+	//userHashChange means that if the user types in a new hash in the URL, 
+	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
+	if(userHashChange) window.location.reload(); 
+	userHashChange = true;
+}
+
+var reasonToTrySave = preventUpdateWires = false;
+var totalUnits = 0;
+function crSetup(){
+	$("#getnewclass").tabs({collapsible: false, selected:(loggedin?1:0)});
+	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
+	if(window.location.hash){
+		//Load hash's classes on pageload
+		$("#loading").show();
+		$.post("?", {gethash:window.location.hash}, function(data){
+			$("#loading").hide();
+			if(data=="") return false;
+			var json = $.parseJSON(data);
+			var jsonmajors = json.pop();
+			$("select.majorminor").each(function(i){
+				$(this).val(jsonmajors[i]).attr("selected",true);
+			});
+			getClasses(json);
+			$(window).off("beforeunload", runBeforeUnload);
+		});
+	}
+	$('#getnewclassid').blur(function(){
+		$("#getnewclass .ui-autocomplete").hide();
+	}).focus();
+	$('#getnewclasssubmit').click(getClass);
+	$("body").on("click", ".classdivyear span", function(){
+		var par = $(this).parents(".classdiv");
+		if(par.data("changing")) return false;
+		par.data("changing", true);
+		$(this).replaceWith(function(){return par.data("otheryears");});
+		par.data("changing", false);
+		par.find(".classdivyear select").focus();
+	});
+	$("body").on("change blur", ".classdivyear select", function(event){
+		var val = $(this).val();
+		var oldclass = $(this).parents(".classdiv");
+		if(oldclass.data("changing")) return false;
+		oldclass.data("changing", true);
+		if(val==oldclass.data("year")){
+			$(this).replaceWith(function(){return oldclass.data("yearspan");});
+			oldclass.data("changing", false);
+			return false;
+		}
+		oldclass.addClass("classdivlow");
+		$.getJSON('?', {getclass:oldclass.data("subject_id"), getyear:val}, function(json){
+			if(jQuery.inArray(json,["error","noclass",""])!=-1) return false;
+			json.classterm = oldclass.data("classterm");
+			json.override = oldclass.data("override");
+			classFromJSON(json, 0, oldclass);
+			addAllWires();
+			unhighlightClasses();
+		});
+	});
+	$("body").on("click", ".classdiv", function(){
+		//Highlights the selected class, dims the others, and displays info on that class in the lower right
+		$(".classdiv").not($(this)).removeClass("classdivhigh");
+		$(".classdiv").removeClass("classdivlow");
+		$(this).toggleClass("classdivhigh");
+		if($('.classdivhigh').length==1){
+			$("#overrider span").css('opacity', 1);
+			$('.classdiv').not($(this)).addClass("classdivlow");
+			$('.WireIt-Wire').addClass("WireIt-Wire-low");
+			for(i in $(".classdivhigh").data("terminals").terminal.wires){
+				$($(".classdivhigh").data("terminals").terminal.wires[i].element).removeClass("WireIt-Wire-low");
+			}
+			$("#nowreading").html($('.classdivhigh').data("info"));
+			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
+			$("#overridercheck").prop("disabled", false).prop("checked", $('.classdivhigh').data('override'));
+		}else{
+			unhighlightClasses();
+		}
+	});
+	$("#overridercheck").change(function(){
+		$(".classdivhigh").data("override", $(this).prop("checked"));
+		$('.classdivhigh').toggleClass("classdivoverride");
+		addAllWires();
+	});
+	$(".term, .year").click(unhighlightClasses);
+	$("body").on("click", "canvas.WireIt-Wire", unhighlightClasses);
+	$(".term").sortable({
+		//Allows the classes to be draggable and sortable.
+		connectWith: '.term', 
+		containment: '#rightbar', 
+		cursor: 'default', 
+		distance: 20, 
+		items: '.classdiv',
+		opacity: 0.8, 
+		placeholder: 'ui-sortable-placeholder', 
+		scroll: true, 
+		zIndex: 99,
+		start: function(event, ui){
+			preventUpdateWires = true;
+			$('.WireIt-Wire').hide();
+		},
+		stop: function(event, ui){
+			preventUpdateWires = false;
+			$('.classdiv').removeAttr("style");
+			$('.WireIt-Wire').show();
+			addAllWires();
+		}
+	});
+	$("#rightbar").disableSelection();
+	$("#trash").droppable({
+		accept: '.classdiv',
+		hoverClass: 'drophover',
+		tolerance: 'touch',
+		activate: function(event, ui){
+			$(this).addClass('trashon', 'slow');
+		},
+		deactivate: function(event, ui){
+			$(this).removeClass('trashon', 'fast');
+		},
+		over: function(event, ui){
+			$(".trash").addClass('trashhover', 'fast');
+		},
+		out: function(event, ui){
+			$(".trash").removeClass('trashhover', 'fast');
+		},
+		drop: function(event, ui){
+			preventUpdateWires = false;
+			ui.draggable.remove();
+			$(".trash").removeClass('trashhover', 'fast');
+			addAllWires();
+		}
+	});
+	$("input[name='getnewclasstype']").change(function(){
+		$(".getnewclasstypes").toggleClass("visible").filter(".visible").find("input:first").focus();
+	});
+	$("#getnewclassid").autocomplete({
+		source: "#",
+		minLength: 2,
+		appendTo: "#getnewclass"
+	});
+	$(".getnewclasstypes input").keydown(function(event){
+		if(event.which==13) getClass();
+	});
+	$("button.changeclassterm").click(function(){
+		$('.getnewclasstypes.visible input:first').focus();
+		$("#getnewclassterm").val(Math.max(0, Math.min($("#getnewclassterm option").length-1, parseInt($("#getnewclassterm").val())+parseInt($(this).val()))));
+	});
+	$("#savemap").click(function(){
+		$.post("?", {classes: minclass(true), major: minmajors(true), trycert: loggedin}, function(data){
+			$(window).off("beforeunload", runBeforeUnload);
+			if(loggedin){
+				if(data=="**auth**"){
+					//This redirects us to the secure cert check.
+					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
+				}else{
+					//console.log("CERTS! "+data);
+					userHashChange = false;
+					window.location.hash = data;
+				}	
+			}else{
+				//console.log(data);
+				userHashChange = false;
+				window.location.hash = data;
+			}
+		});
+	});
+	if(!loggedin && triedlogin) $("#mapcerts").hide();
+	$("#mapcerts").click(function(){
+		if(loggedin){
+			$("#viewroads").dialog("open");
+		}else{
+			$.post("?", {classes: minclass(true), major: minmajors(true), trycert: true}, function(data){
+				$(window).off("beforeunload", runBeforeUnload);
+				if(data=="**auth**"){
+					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
+				}else{
+					//console.log("CERTS! "+data);
+					userHashChange = false;
+					window.location.hash = data;
+				}
+			});
+		}
+	});
+	$("select.majorminor").on("change", function(){checkMajor(this);});
+	$("#viewroads").dialog({
+		autoOpen: false,
+		width: 800,
+		draggable: false,
+		resizeable: false,
+		modal: true,
+		open: function(event, ui){
+			$("#savedroads").html("Loading...");
+			$.get("?savedroads=1", null, function(data){
+				$("#savedroads").html(data);
+			});
+		}
+	});
+	$("#viewroads_close").click(function(){
+		$("#viewroads").dialog('close');
+	});
+	$("body").on("click", ".choosesavedroad", function(){
+		$.get("?", {choosesavedroad: $(this).val()}, function(data){
+			if(data=="ok"){
+				//console.log("It worked!");
+			}
+		});
+	});
+	$("body").on("click", ".deleteroad", function(){
+		if(!confirm("Are you sure you want to delete this road? This action cannot be undone.")) return false;
+		var parent = $(this).parents("tr");
+		$.get("?", {deleteroad: parent.data("hash")}, function(data){
+			if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
+		});
+	});
+	$("body").on("click", ".saved-roads-edit-comment", function(){
+		var comment = prompt("Enter your comment for this saved road below (max. 100 characters):", $(this).prev().text());
+		if(comment===false) return false;
+		comment = comment.substr(0,100);
+		var prev = $(this).prev();
+		prev.css("color","grey");
+		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(){
+			prev.text(comment).removeAttr("style");
+		});
+	});
+	//Runs the help dialog down below
+	$("#help").dialog({
+		autoOpen: false,
+		width: 600,
+		draggable: false,
+		resizeable: false,
+		modal: true
+	});
+	$("#help_close").click(function(){
+		$("#help").dialog('close');
+	});
+	$("#accordion").accordion();
+	$("body").on("click", ".dummylink", function(e){
+		e.preventDefault();
+	});
+	$("#openhelp").click(function(){
+		$("#help").dialog('open').dialog('option', 'position', 'center');
+		$( "#accordion" ).accordion( "resize" );
+	});
+	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 2500);
+	$("select.majorminor option").each(function(){
+		if(majors[$(this).val()]==undefined) $(this).remove();
+	});
+	//$("#rightbar").css('width', $("#rightbar").width());
+	$(window).resize(function() {
+		updateWires();
+	});
+	$("#printroad").click(function(){
+		$("body, #rightbar, .term, .year").toggleClass("printing");
+		updateWires();
+		window.print();
+		$("body, #rightbar, .term, .year").toggleClass("printing");
+		updateWires();
+	});
+	$(".flakyCSS").removeClass("flakyCSS");
+	$("#loginORusersettings").click(function(){
+		if(loggedin){
+			console.log("You should be logged in by now :D");
+			return false;
+		}else{
+			window.location.href = "https://courseroad.mit.edu:444/secure2.php";
+			return false;
+		}
+	});
 }
