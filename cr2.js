@@ -93,7 +93,7 @@ function checkMajor(selector){
 	if(majors[val]==undefined) majors[val]=[0];
 	if(val=="m0") return false;
 	span.attr("data-value", $(selector).find("option:selected").text()).removeAttr("data-empty");
-	$(div).html(buildMajor(majors[val])).append("<br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.");
+	$(div).html(buildMajor(majors[val])).append("<span class=\"letmeknow\"><br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.<\/span>");
 	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 	if(reqs[0]) reqs[1] = "<strong>Congrats!<\/strong> You've fufilled this major or minor's requirements. (Or I haven't entered all of its data yet.)";
 	if(!reqs[0]) reqs[1] = "Still needed: "+reqs[1];
@@ -397,12 +397,11 @@ function addWires(div, addwires){
 }
 
 function addAllWires(){
+	var status = true;
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.removeAllWires();
 		$(this).data("classterm", $(this).parent().index(".term"));
-	});
-	var status = true;
-	$(".classdiv").each(function(){
+	}).each(function(){
 		if($(this).data("custom")) return true;
 		var temp = addWires($(this));
 		status = status && temp;
@@ -429,48 +428,50 @@ function checkClasses(){
 	});
 	$(".corecheck").addClass("unused");
 	$(".classdiv").each(function(i){
-		if(!$(this).data("checkrepeat")) return true;
+		var div = this;
+		if(!$(div).data("checkrepeat")) return true;
 		var forUnits = true;
-		if(!$(this).data("special")){
-			totalUnits += $(this).data("total_units");
+		if(!$(div).data("special")){
+			totalUnits += $(div).data("total_units");
 			return true;
 		}
-		if($(this).data("gir")){
-			var effect = "#COREchecker .corecheck.unused.GIR."+$(this).data("gir")+":first";
+		if($(div).data("gir")){
+			var effect = "#COREchecker .corecheck.unused.GIR."+$(div).data("gir")+":first";
 			if($(effect).length){
-				$(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
-				if($(this).data("gir")=="LAB") $(effect).removeClass('unused').addClass('used').attr('title', $(this).data("subject_id")).html('[X]');
+				$(effect).removeClass('unused').addClass('used').attr('title', $(div).data("subject_id")).html('[X]');
+				if($(div).data("gir")=="LAB") $(effect).removeClass('unused').addClass('used').attr('title', $(div).data("subject_id")).html('[X]');
 				forUnits = false;
 			}
 		}
-		if($(this).data("ci")){
-			var effect = "#COREchecker .corecheck.unused.CI."+$(this).data("ci")+":first";
+		var thisterm = $(div).data("classterm");
+		if($(div).data("ci") && !($(".classdiv.CI").not(div).filter(function(){ return ($(this).data("classterm")==$(div).data("classterm")) && ($(this).index(".classdiv")<i); }).length)){
+			var effect = "#COREchecker .corecheck.unused.CI."+$(div).data("ci")+":first";
 			if($(effect).length){
-				$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+				$(effect).removeClass('unused').addClass('used').attr('title',$(div).data("subject_id")).html('[X]');
 				forUnits = false;
 			}
 		}
-		if($(this).data("hass")){
-			var hass = [$(this).data("hass")];
+		if($(div).data("hass")){
+			var hass = [$(div).data("hass")];
 			if(hass[0].indexOf(",")!=-1){
 				hass = hass[0].split(",");
 			}
 			for(i in hass){
 				var effect = "#COREchecker .corecheck.unused.HASS."+hass[i]+":first";
 				if($(effect).length){
-					$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+					$(effect).removeClass('unused').addClass('used').attr('title',$(div).data("subject_id")).html('[X]');
 					forUnits = false;
 				}else{
 					if((hass.length>1)&&(i!=(hass.length-1))) continue;
 					var effect = "#COREchecker .corecheck.unused.HASS.HE:first";
 					if($(effect).length){
-						$(effect).removeClass('unused').addClass('used').attr('title',$(this).data("subject_id")).html('[X]');
+						$(effect).removeClass('unused').addClass('used').attr('title',$(div).data("subject_id")).html('[X]');
 						forUnits = false;
 					}
 				}
 			}
 		}
-		if(forUnits) totalUnits += $(this).data("total_units");
+		if(forUnits) totalUnits += $(div).data("total_units");
 	});
 	totalUnits = Math.round(100*totalUnits)/100;
 	$("#totalunits").html(totalUnits);
@@ -511,8 +512,7 @@ var userHashChange = true;
 window.onhashchange = function(){
 	//userHashChange means that if the user types in a new hash in the URL, 
 	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
-	if(userHashChange) window.location.reload(); 
-	userHashChange = true;
+	userHashChange = !userHashChange || window.location.reload(); 
 }
 
 var reasonToTrySave = preventUpdateWires = false;
@@ -523,6 +523,8 @@ function crSetup(){
 	if(window.location.hash){
 		//Load hash's classes on pageload
 		$("#loading").show();
+		userHashChange = false;
+		window.location.hash = window.location.hash.replace(/\/+$/,'');
 		$.post("?", {gethash:window.location.hash}, function(data){
 			$("#loading").hide();
 			if(data=="") return false;
@@ -535,10 +537,6 @@ function crSetup(){
 			$(window).off("beforeunload", runBeforeUnload);
 		});
 	}
-	$('#getnewclassid').blur(function(){
-		$("#getnewclass .ui-autocomplete").hide();
-	}).focus();
-	$('#getnewclasssubmit').click(getClass);
 	$("body").on("click", ".classdivyear span", function(){
 		var par = $(this).parents(".classdiv");
 		if(par.data("changing")) return false;
@@ -546,8 +544,7 @@ function crSetup(){
 		$(this).replaceWith(function(){return par.data("otheryears");});
 		par.data("changing", false);
 		par.find(".classdivyear select").focus();
-	});
-	$("body").on("change blur", ".classdivyear select", function(event){
+	}).on("change blur", ".classdivyear select", function(event){
 		var val = $(this).val();
 		var oldclass = $(this).parents(".classdiv");
 		if(oldclass.data("changing")) return false;
@@ -566,8 +563,7 @@ function crSetup(){
 			addAllWires();
 			unhighlightClasses();
 		});
-	});
-	$("body").on("click", ".classdiv", function(){
+	}).on("click", ".classdiv", function(){
 		//Highlights the selected class, dims the others, and displays info on that class in the lower right
 		$(".classdiv").not($(this)).removeClass("classdivhigh");
 		$(".classdiv").removeClass("classdivlow");
@@ -585,14 +581,20 @@ function crSetup(){
 		}else{
 			unhighlightClasses();
 		}
+	}).on("click", "canvas.WireIt-Wire", unhighlightClasses).keydown(function(event){
+		var cls = $(".classdiv.classdivhigh");
+		if(event.which==46 && cls.length && confirm("Are you sure you want to delete "+cls.data("subject_id")+"?")){
+			cls.remove();
+			unhighlightClasses();
+			addAllWires();
+		}
 	});
 	$("#overridercheck").change(function(){
 		$(".classdivhigh").data("override", $(this).prop("checked"));
 		$('.classdivhigh').toggleClass("classdivoverride");
 		addAllWires();
 	});
-	$(".term, .year").click(unhighlightClasses);
-	$("body").on("click", "canvas.WireIt-Wire", unhighlightClasses);
+	$(".term, .year, #getnewclass, #getnewclass>ul *").click(unhighlightClasses);
 	$(".term").sortable({
 		//Allows the classes to be draggable and sortable.
 		connectWith: '.term', 
@@ -639,6 +641,8 @@ function crSetup(){
 			addAllWires();
 		}
 	});
+	$('#getnewclassid').blur(function(){ $("#getnewclass .ui-autocomplete").hide();	}).focus();
+	$('#getnewclasssubmit').click(getClass);
 	$("input[name='getnewclasstype']").change(function(){
 		$(".getnewclasstypes").toggleClass("visible").filter(".visible").find("input:first").focus();
 	});
@@ -713,15 +717,13 @@ function crSetup(){
 				//console.log("It worked!");
 			}
 		});
-	});
-	$("body").on("click", ".deleteroad", function(){
+	}).on("click", ".deleteroad", function(){
 		if(!confirm("Are you sure you want to delete this road? This action cannot be undone.")) return false;
 		var parent = $(this).parents("tr");
 		$.get("?", {deleteroad: parent.data("hash")}, function(data){
 			if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
 		});
-	});
-	$("body").on("click", ".saved-roads-edit-comment", function(){
+	}).on("click", ".saved-roads-edit-comment", function(){
 		var comment = prompt("Enter your comment for this saved road below (max. 100 characters):", $(this).prev().text());
 		if(comment===false) return false;
 		comment = comment.substr(0,100);

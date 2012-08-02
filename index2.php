@@ -257,7 +257,7 @@ if(isset($_GET['savedroads'])){
 	$query = mysql_query($sql);
 	echo "<table>\n";
 	echo "<tr>";
-	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/{$_SESSION['athena']}\">Public</th>";
+	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/index.php#{$_SESSION['athena']}\">Public</th>";
 	echo "<th style=\"min-width:118px\">Added</th>";
 	echo "<th style=\"min-width:95px\">Major</th>";
 	echo "<th>Classes</th>";
@@ -353,9 +353,8 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><? //Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. ?>
+	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
 	<script src="json2-min.js"></script>
-	<script src="jquery.cookies.2.2.0.min.js"></script>
 	<script src="wireit-min.js"></script>
 	<script src="cr2.js<?= $nocache ?>"></script>
 	<script>
@@ -396,7 +395,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 			</div>
 			<div id="getnewclass-custom" class="getnewclasstypes">
 				<input id="getnewclassname" type="text" name="classname" placeholder="UROP">
-				&nbsp;(<input id="getnewclassunits" type="text" name="classunits" placeholder="12" pattern="[0-9\.]*"> units)
+				&nbsp;(<input id="getnewclassunits" type="text" name="classunits" placeholder="0" pattern="[0-9\.]*"> units)
 			</div>
 			<br>
 			&nbsp;to 
@@ -449,7 +448,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		REST <span id="REST" class="checkbox1 corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="checkbox1 corecheck GIR REST">[ ]</span><br>
 		LAB <span id="LAB" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH">[ ]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH">[ ]</span><br>
+		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH CIHW">[ ]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH CIHW">[ ]</span><br>
 		-----------------<br>
 		HASS:<br>
 		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[ ]</span>
@@ -703,7 +702,6 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<div>
 			Those lines appear between classes to show you the map of prerequisites and corequisites for your classes. Grey is for prereqs, black is for coreqs.<br>
 			<br>
-			<!-- insert two wires here -->
 			If you've added a class and all of its prereqs are satisfied by the classes you've already added, then it'll turn green. If you're still missing a class or two, it'll appear red and you can mouse over the part that says "Prereq: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester.
 		</div>
 		<h3><a href="#" class="dummylink">I have credit for X.XX. How do I show that?</a></h3>

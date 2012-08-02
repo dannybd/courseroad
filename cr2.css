@@ -4,7 +4,7 @@ html{
 body{
 	font-family: Arial;
 	font-size: 10pt;
-	background-color: #ddd;
+	background-color: #DDD;
 	margin: 0;
 	padding: 0;
 	min-width: 950px;
@@ -54,7 +54,7 @@ body{
 	opacity: 0.3;
 }
 .ui-accordion-header{
-	background-color: #ddd;
+	background-color: #DDD;
 	padding: 5px;
 	margin: 0;
 	border: 2px solid #B8B8B8;
@@ -125,15 +125,6 @@ body{
 
 .ui-button { display: inline-block; position: relative; padding: 0; margin: -3px -1px -5px; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; } /* the overflow property removes extra width in IE */
 
-/*button icon element(s) */
-/*.ui-button-icon-only .ui-icon, .ui-button-text-icon-primary .ui-icon, .ui-button-text-icon-secondary .ui-icon, .ui-button-text-icons .ui-icon, .ui-button-icons-only .ui-icon { position: absolute; top: 50%; margin-top: -8px; }
-.ui-button-icon-only .ui-icon { left: 50%; margin-left: -8px; }
-.ui-button-text-icon-primary .ui-button-icon-primary, .ui-button-text-icons .ui-button-icon-primary, .ui-button-icons-only .ui-button-icon-primary { left: .5em; }
-.ui-button-text-icon-secondary .ui-button-icon-secondary, .ui-button-text-icons .ui-button-icon-secondary, .ui-button-icons-only .ui-button-icon-secondary { right: .5em; }
-.ui-button-text-icons .ui-button-icon-secondary, .ui-button-icons-only .ui-button-icon-secondary { right: .5em; }
-*/
-/* workarounds */
-/*button.ui-button::-moz-focus-inner { border: 0; padding: 0; }*/ /* reset extra padding in Firefox */
 /* Icons ----------------------------------*/
 
 button.changeclassterm span{ display: block; }
@@ -283,8 +274,6 @@ button.changeclassterm span{ display: block; }
 .ui-icon-seek-prev { background-position: -48px -160px; }
 .ui-icon-seek-end { background-position: -64px -160px; }
 .ui-icon-seek-start { background-position: -80px -160px; }
-/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
-.ui-icon-seek-first { background-position: -80px -160px; }
 .ui-icon-stop { background-position: -96px -160px; }
 .ui-icon-eject { background-position: -112px -160px; }
 .ui-icon-volume-off { background-position: -128px -160px; }
@@ -334,7 +323,7 @@ button.changeclassterm span{ display: block; }
 	width: 100px;
 }
 #getnewclassunits{
-	width: 25px;
+	width: 16px;
 	text-align: center;
 }
 .getnewclasstypes{
@@ -432,7 +421,7 @@ div.majorminor ul{
 	border-top: 10px solid #444;
 }
 .year:nth-child(even){
-	background-color: #eee;
+	background-color: #EEE;
 }
 .supersenior.hidden{
 	display: none;
@@ -510,7 +499,7 @@ div.majorminor ul{
 	width: 45px;
 }
 .fall{
-	background-color: #feb;
+	background-color: #FEB;
 }
 .iap{
 	background-color: #E8F9FF;
@@ -521,7 +510,7 @@ div.majorminor ul{
 	width: 45px;
 }
 .spring{
-	background-color: #dfd;
+	background-color: #DFD;
 	border-top: 1px dotted #888;
 }
 .summer{
@@ -562,7 +551,6 @@ div.majorminor ul{
 	background-color: #CFC;
 }
 .custom{
-	//background-color: #CCF;
 	background-color: #B2B2FF;
 }
 .classdivlow{
@@ -660,7 +648,7 @@ div.WireIt-Terminal{
 	position: fixed;
 	top: 0;
 	height: 100%;
-	background-color: #ddd;
+	background-color: #DDD;
 	text-align: center;
 	z-index: 10;
 	float: right;
@@ -712,17 +700,21 @@ img.trashhover{
 }
 /*** Print CSS ***/
 @media print{
-	* { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
+	@page{ margin: 0.5cm; }
+/*
+	footer { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
+*/
 	body{ border: 1px solid black !important; }
 	#leftbar{ position: absolute !important; }
-	#leftbar>div{ position: initial !important; }
-	#getnewclass, #overrider, #nowreading, .WireIt-Wire, span.majorminor[data-empty], select.majorminor{ display: none !important; }
+	#leftbar>div{ position: absolute !important; }
+	#getnewclass, #overrider, #nowreading, .WireIt-Wire, span.majorminor[data-empty], select.majorminor, span.letmeknow{ display: none !important; }
 	#COREchecker{ display: block !important; height: auto !important; top: 0 !important; bottom: 0 !important; border: none !important; }
+	.checkbox1[title]:after{ content: " (" attr(title) ") "; }
 	span.majorminor[data-value]:after{ content: attr(data-value); font-weight: bold; }
 	.term:not(.credit){ border-left: 1px solid black !important; }
 	.term.credit{ border-bottom: 5px solid #444 !important; }
 	.year{ page-break-inside: avoid; border-top: 5px solid #444 !important; border-bottom: 5px solid #444 !important; }
-	@page{ margin: 0.5cm; }
+	.classdiv[title]:after{ content: "[" attr(title) "]"; font-size: 6pt; text-align: center; position: absolute; padding-top: 2px;}
 }
 /*** End Print CSS ***/
 
@@ -757,7 +749,7 @@ img.trashhover{
 .ie7 .ui-button { margin: -3px 0px -1px !important;}
 .ie7 #mapcerts{ width: 200px !important; }
 .lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
-	background-color: #eee;
+	background-color: #DDD;
 }
 .lte8 .yearname{
 	left: 250px;
