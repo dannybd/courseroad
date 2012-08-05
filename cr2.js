@@ -708,15 +708,11 @@ function crSetup(){
 			});
 		}
 	});
-	$("#viewroads_close").click(function(){
-		$("#viewroads").dialog('close');
+	$(".my-dialog-close").click(function(){
+		$(this).parents(".my-dialog").dialog('close');
 	});
 	$("body").on("click", ".choosesavedroad", function(){
-		$.get("?", {choosesavedroad: $(this).val()}, function(data){
-			if(data=="ok"){
-				//console.log("It worked!");
-			}
-		});
+		$.get("?", {choosesavedroad: $(this).val()});
 	}).on("click", ".deleteroad", function(){
 		if(!confirm("Are you sure you want to delete this road? This action cannot be undone.")) return false;
 		var parent = $(this).parents("tr");
@@ -732,6 +728,8 @@ function crSetup(){
 		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(){
 			prev.text(comment).removeAttr("style");
 		});
+	}).on("click", ".dummylink", function(e){
+		e.preventDefault();
 	});
 	//Runs the help dialog down below
 	$("#help").dialog({
@@ -741,13 +739,7 @@ function crSetup(){
 		resizeable: false,
 		modal: true
 	});
-	$("#help_close").click(function(){
-		$("#help").dialog('close');
-	});
 	$("#accordion").accordion();
-	$("body").on("click", ".dummylink", function(e){
-		e.preventDefault();
-	});
 	$("#openhelp").click(function(){
 		$("#help").dialog('open').dialog('option', 'position', 'center');
 		$( "#accordion" ).accordion( "resize" );
@@ -771,10 +763,30 @@ function crSetup(){
 	$("#loginORusersettings").click(function(){
 		if(loggedin){
 			console.log("You should be logged in by now :D");
-			return false;
+			$("#usersettings").dialog('open');
 		}else{
 			window.location.href = "https://courseroad.mit.edu:444/secure2.php";
-			return false;
 		}
+	});
+	$("#usersettings").dialog({
+		autoOpen: false,
+		draggable: false,
+		resizeable: false,
+		modal: true
+	});
+	$("#usersettings_save").click(function(){
+		var data = {
+			usersettings: 1, 
+			class_year: $("#usersettings_class_year").val(), 
+			view_req_lines: ($("#usersettings_view_req_lines").prop("checked")?1:0),
+			autocomplete: ($("#usersettings_autocomplete").prop("checked")?1:0)
+		};
+		$("#usersettings_div").load("?", data, function(){
+			user.classYear = parseInt($("#usersettings_class_year").val());
+			user.viewReqLines = ($("#usersettings_view_req_lines").prop("checked")?1:0);
+			user.autocomplete = ($("#usersettings_autocomplete").prop("checked")?1:0);
+			
+			$("#getnewclassid").autocomplete(user.autocomplete?"enable":"disable");
+		});
 	});
 }

@@ -17,16 +17,17 @@ if(!isset($_SERVER['SSL_CLIENT_S_DN_Email'])){
 $athena = explode("@", $_SERVER['SSL_CLIENT_S_DN_Email']);
 $athena = $athena[0];
 $fullname = $_SERVER['SSL_CLIENT_S_DN_CN']; //"Jack Florey";
-
+mysql_query("INSERT INTO `users`(`athena`) VALUES ('$athena')");
 $_SESSION['triedcert'] = true;
 $_SESSION['athena'] = $athena;
 $_SESSION['fullname'] = $fullname;
 $_SESSION['saveas'] = $_SESSION['crhash']."";
 if(isset($_SESSION['trycert'])){
 	$_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
-	$sql = "INSERT INTO `roads2` (`id`, `hash`, `user`, `classes`, `major`, `public`, `desc`, `ip`, `added`) (SELECT NULL, '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `public`, `desc`, `ip`, CURRENT_TIMESTAMP FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
+	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `comment`, `ip`) (SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
 	mysql_query($sql);
 }
 unset($_SESSION['trycert']);
 header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['saveas']}");
+echo $sql;
 ?>

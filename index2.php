@@ -184,6 +184,15 @@ if(isset($_GET['getcustom'])){
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
 $loggedin = isset($_SESSION['athena']);
 $athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
+$user = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1);
+if($loggedin){
+	$user = mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'");
+	$user = mysql_fetch_assoc($user);
+	if(!$user) die("Sorry, something went wrong. Please direct your hatemail to courseroad@mit.edu.");
+	unset($user['id']);
+	unset($user['advisors']);
+	unset($user['advisees']);
+}
 
 //This runs if the user has click "save road". It determines the login status of the user 
 //and sets the hash to be either random characters or something like username-20120504051511
@@ -203,7 +212,7 @@ if(isset($_POST['classes'])){
 		}
 	}
 	//id, hash, user, classes, major, public, desc, ip, added
-	$sql = "INSERT INTO `roads2` VALUES (NULL, '$hash', '$athena', '$classes', '$major', '0', '', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
+	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `ip`) VALUES ('$hash', '$athena', '$classes', '$major', '{$_SERVER['REMOTE_ADDR']}');";
 	mysql_query($sql);
 	echo isset($_SESSION['trycert'])?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
 	die();
@@ -333,6 +342,24 @@ if(isset($_GET['deleteroad'])){
 	echo "ok";
 	die();
 }
+
+if(isset($_POST['usersettings'])){
+	if(!$loggedin) die("You must be logged in!");
+	$class_year = intval(mysql_real_escape_string($_POST['class_year']));
+	if($class_year<=2005 or $class_year>=2020) $class_year = $user['class_year'];
+	$view_req_lines = ($_POST['view_req_lines']=="1")?1:0;
+	$autocomplete = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
+	mysql_query("UPDATE `users` SET `class_year`='$class_year', `view_req_lines`='$view_req_lines', `autocomplete`='$autocomplete' WHERE `athena`='$athena'");
+	$view_req_lines = $view_req_lines?'checked="checked"':'';
+	$autocomplete = $autocomplete?'checked="checked"':'';
+	echo <<<EOD
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="$class_year"><br>
+		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" $view_req_lines><br>
+		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" $autocomplete><br>
+EOD;
+	die();
+}
+
 mysql_close($connect);
 
 $nocache = isset($_GET['nocache']);
@@ -364,6 +391,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		s.parentNode.insertBefore(g,s)}(document,"script"));
 		var loggedin = <?= intval($loggedin) ?>;
 		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
+		var user = {classYear:<?= $user['class_year'] ?>, viewReqLines:<?= $user['view_req_lines'] ?>, autocomplete:<?= $user['autocomplete'] ?>};
 		$(crSetup);
 	</script>
 </head>
@@ -734,5 +762,17 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		</div>
 	</div>
 </div>
+<? if($loggedin){ ?>
+<div id="usersettings" class="bubble my-dialog">
+	<div id="usersettings_close" class="my-dialog-close">Close this</div>
+	<h3 id="usersettings_header" class="my-dialog-header">User Settings for <?= $athena ?>:</h3>
+	<div id="usersettings_div">
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="<?= $user['class_year'] ?>"><br>
+		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $user['view_req_lines']?'checked="checked"':'' ?>><br>
+		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $user['autocomplete']?'checked="checked"':'' ?>><br>
+	</div>
+	<input id="usersettings_save" type="button" name="save" value="Save Settings">
+</div>
+<? } ?>
 </body>
 </html>

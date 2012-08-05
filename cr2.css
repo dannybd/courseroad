@@ -28,6 +28,9 @@ body{
 	margin: 0;
 	padding: 5px;
 }
+.ui-resizeable-handle{
+	display: none;
+}
 #savedroads{
 	height: 400px;
 	overflow-y: scroll;
@@ -67,6 +70,15 @@ body{
 }
 .ui-accordion-content{
 	padding: 5px;
+}
+#usersettings_div{
+	padding: 0px 10px;
+}
+#usersettings_class_year{
+	width: 30px;
+}
+#usersettings_save{
+	margin-left: 10px;
 }
 #leftbar{
 	position: fixed;
