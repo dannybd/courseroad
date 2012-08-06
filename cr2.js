@@ -183,12 +183,15 @@ function classFromJSON(json, loadspeed, replacediv){
 function getClass(){
 	//pulls down and interprets the class data
 	var classterm = $("#getnewclassterm").val();
+	user.supersenior = ($(".year.supersenior").is(":visible") || classterm>16)?1:0;
 	if($("input[name='getnewclasstype']:checked").val()=="custom"){
 		if(!$("#getnewclassname").val()) return false;
 		var data = {getcustom: $("#getnewclassname").val(), getunits: $("#getnewclassunits").val()||0};
 	}else{
 		if(!$("#getnewclassid").val()) return false;
-		var data = {getclass: $("#getnewclassid").val()};
+		var data = {getclass: $("#getnewclassid").val(), getyear:0};
+		data.getyear = user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
+		console.log(data.getyear);
 	}
 	$("#getnewclass .ui-autocomplete").hide();
 	$('.getnewclasstypes input').val('');
@@ -227,12 +230,14 @@ function newWire(from,to){
 		var options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqOK:true};
 	}
 	if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqOK:false};
-	if(dterm==1 || dterm==2){
-		var tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
-	}else{
-		var tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
+	if(user.viewReqLines){
+		if(dterm==1 || dterm==2){
+			var tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
+		}else{
+			var tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
+		}
+		from.data("terminals").wires.push(tempwire);
 	}
-	from.data("terminals").wires.push(tempwire);
 	return (options.reqOK);
 }
 
@@ -519,6 +524,7 @@ var reasonToTrySave = preventUpdateWires = false;
 var totalUnits = 0;
 function crSetup(){
 	$("#getnewclass").tabs({collapsible: false, selected:(loggedin?1:0)});
+	user.supersenior = $(".year.supersenior").is(":visible")?1:0;
 	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
 	if(window.location.hash){
 		//Load hash's classes on pageload
@@ -649,7 +655,8 @@ function crSetup(){
 	$("#getnewclassid").autocomplete({
 		source: "#",
 		minLength: 2,
-		appendTo: "#getnewclass"
+		appendTo: "#getnewclass",
+		disabled: !user.autocomplete
 	});
 	$(".getnewclasstypes input").keydown(function(event){
 		if(event.which==13) getClass();
@@ -786,7 +793,9 @@ function crSetup(){
 			user.viewReqLines = ($("#usersettings_view_req_lines").prop("checked")?1:0);
 			user.autocomplete = ($("#usersettings_autocomplete").prop("checked")?1:0);
 			
-			$("#getnewclassid").autocomplete(user.autocomplete?"enable":"disable");
+			$("body").toggleClass("no-wires", !user.viewReqLines);
+			addAllWires();
+			$("#getnewclassid").autocomplete("option", "disabled", !user.autocomplete);
 		});
 	});
 }

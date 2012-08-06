@@ -37,21 +37,19 @@ if(isset($_GET['term'])){
 	$term = mysql_real_escape_string($_GET['term']);
 	$temp = array();
 	$query = mysql_query("SELECT DISTINCT `subject_id` FROM `warehouse` WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6");
-	while($row = mysql_fetch_array($query)){
-		$temp[] = $row['subject_id'];
-	}
+	while($row = mysql_fetch_array($query)) $temp[] = $row['subject_id'];
 	mysql_close($connect);
 	echo json_encode($temp);
 	die();
 }
 
 function pullClass($class, $year=false, $classterm=0, $override=false){
-	$sql = "SELECT * FROM `warehouse` WHERE `subject_id`='$class' ".($year?"AND `year`='$year' ORDER BY `last_modified` DESC;":"ORDER BY `year` DESC, `last_modified` DESC;");
+	$sql = "SELECT * FROM `warehouse` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." `last_modified` DESC;";
 	//echo $sql."\n";
 	$query = mysql_query($sql);
 	if(!$query) die("error");
-	if(mysql_num_rows($query)==0) die("noclass");
 	$row = mysql_fetch_assoc($query);
+	if(!$row) die("noclass");
 //	die();
 	unset($row['id']);
 	unset($row['design_units']);

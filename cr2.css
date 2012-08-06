@@ -597,6 +597,9 @@ div.WireIt-Terminal{
 	filter: alpha(opacity=10);
 	opacity: 0.1;
 }
+body.no-wires .WireIt-Wire{
+	display: none !important;
+}
 .classdivlabel{
 	white-space: nowrap;
 	padding: 2px;
