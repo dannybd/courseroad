@@ -28,8 +28,8 @@ body{
 	margin: 0;
 	padding: 5px;
 }
-.ui-resizeable-handle{
-	display: none;
+.ui-resizable-handle{
+	display: none !important;
 }
 #savedroads{
 	height: 400px;
@@ -326,7 +326,7 @@ button.changeclassterm span{ display: block; }
 
 .infotabs-about-header{ font-size: 14pt !important; }
 .infotabs-about-subheader{ font-size: 8pt !important; padding-bottom: 5px; }
-#loginORusersettings{ margin-top: 5px; }
+#userlogin, #showusersettings{ margin-top: 5px; }
 
 #getnewclassid{
 	width: 60px;

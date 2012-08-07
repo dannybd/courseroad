@@ -594,6 +594,8 @@ function crSetup(){
 			unhighlightClasses();
 			addAllWires();
 		}
+	}).on("click", ".my-dialog-close, .ui-widget-overlay", function(){
+		$(".my-dialog").dialog('close');
 	});
 	$("#overridercheck").change(function(){
 		$(".classdivhigh").data("override", $(this).prop("checked"));
@@ -715,9 +717,6 @@ function crSetup(){
 			});
 		}
 	});
-	$(".my-dialog-close").click(function(){
-		$(this).parents(".my-dialog").dialog('close');
-	});
 	$("body").on("click", ".choosesavedroad", function(){
 		$.get("?", {choosesavedroad: $(this).val()});
 	}).on("click", ".deleteroad", function(){
@@ -756,9 +755,7 @@ function crSetup(){
 		if(majors[$(this).val()]==undefined) $(this).remove();
 	});
 	//$("#rightbar").css('width', $("#rightbar").width());
-	$(window).resize(function() {
-		updateWires();
-	});
+	$(window).resize(updateWires);
 	$("#printroad").click(function(){
 		$("body, #rightbar, .term, .year").toggleClass("printing");
 		updateWires();
@@ -767,13 +764,11 @@ function crSetup(){
 		updateWires();
 	});
 	$(".flakyCSS").removeClass("flakyCSS");
-	$("#loginORusersettings").click(function(){
-		if(loggedin){
-			console.log("You should be logged in by now :D");
-			$("#usersettings").dialog('open');
-		}else{
-			window.location.href = "https://courseroad.mit.edu:444/secure2.php";
-		}
+	$("#userlogin").click(function(){
+		window.location.href = "https://courseroad.mit.edu:444/secure2.php";
+	});
+	$("#showusersettings").click(function(){
+		$("#usersettings").dialog('open');
 	});
 	$("#usersettings").dialog({
 		autoOpen: false,

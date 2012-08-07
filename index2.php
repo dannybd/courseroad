@@ -182,14 +182,14 @@ if(isset($_GET['getcustom'])){
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
 $loggedin = isset($_SESSION['athena']);
 $athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
-$user = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1);
+if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1);
 if($loggedin){
-	$user = mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'");
-	$user = mysql_fetch_assoc($user);
-	if(!$user) die("Sorry, something went wrong. Please direct your hatemail to courseroad@mit.edu.");
-	unset($user['id']);
-	unset($user['advisors']);
-	unset($user['advisees']);
+	$_SESSION['user'] = mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'");
+	$_SESSION['user'] = mysql_fetch_assoc($_SESSION['user']);
+	if(!$_SESSION['user']) die("Sorry, something went wrong. Please direct your hatemail to courseroad@mit.edu.");
+	unset($_SESSION['user']['id']);
+	unset($_SESSION['user']['advisors']);
+	unset($_SESSION['user']['advisees']);
 }
 
 //This runs if the user has click "save road". It determines the login status of the user 
@@ -198,7 +198,6 @@ if(isset($_POST['classes'])){
 	$classes = mysql_real_escape_string($_POST['classes']);
 	$major = mysql_real_escape_string($_POST['major']);
 	$hash = substr(strtr(base64_encode(md5($classes.$major)), '+/=', '-_,'),0,5);
-	$user = "";
 	$_SESSION['crhash'] = $hash;
 	$trycert = false;
 	if($_POST['trycert']){
@@ -342,16 +341,15 @@ if(isset($_GET['deleteroad'])){
 }
 
 if(isset($_POST['usersettings'])){
-	if(!$loggedin) die("You must be logged in!");
-	$class_year = intval(mysql_real_escape_string($_POST['class_year']));
-	if($class_year<=2005 or $class_year>=2020) $class_year = $user['class_year'];
-	$view_req_lines = ($_POST['view_req_lines']=="1")?1:0;
-	$autocomplete = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
-	mysql_query("UPDATE `users` SET `class_year`='$class_year', `view_req_lines`='$view_req_lines', `autocomplete`='$autocomplete' WHERE `athena`='$athena'");
-	$view_req_lines = $view_req_lines?'checked="checked"':'';
-	$autocomplete = $autocomplete?'checked="checked"':'';
+	$_SESSION['user']['class_year'] = intval(mysql_real_escape_string($_POST['class_year']));
+//	if($class_year<=2005 or $class_year>=2020) $class_year = $_SESSION['user']['class_year'];
+	$_SESSION['user']['view_req_lines'] = ($_POST['view_req_lines']=="1")?1:0;
+	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
+	if($loggedin) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
+	$view_req_lines = $_SESSION['user']['view_req_lines']?'checked="checked"':'';
+	$autocomplete = $_SESSION['user']['autocomplete']?'checked="checked"':'';
 	echo <<<EOD
-		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="$class_year"><br>
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="{$_SESSION['user']['class_year']}"><br>
 		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" $view_req_lines><br>
 		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" $autocomplete><br>
 EOD;
@@ -389,7 +387,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		s.parentNode.insertBefore(g,s)}(document,"script"));
 		var loggedin = <?= intval($loggedin) ?>;
 		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
-		var user = {classYear:<?= $user['class_year'] ?>, viewReqLines:<?= $user['view_req_lines'] ?>, autocomplete:<?= $user['autocomplete'] ?>};
+		var user = {classYear:<?= $_SESSION['user']['class_year'] ?>, viewReqLines:<?= $_SESSION['user']['view_req_lines'] ?>, autocomplete:<?= $_SESSION['user']['autocomplete'] ?>};
 		$(crSetup);
 	</script>
 </head>
@@ -406,8 +404,8 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 			<div class="infotabs-about-subheader flakyCSS">A four-year planner for the MIT community.</div>
 			<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a>
 			<br>
-			<?= $loggedin?"Hello, <strong>$athena</strong>! ":"" ?>
-			<input type="button" id="loginORusersettings" class="bubble loaders" value="<?= $loggedin?"User Settings":"Log In" ?>">
+			<?= $loggedin?"Hello, <strong>$athena</strong>! ":"<input type=\"button\" id=\"userlogin\" class=\"bubble loaders\" value=\"Login\">" ?>
+			<input type="button" id="showusersettings" class="bubble loaders" value="User Settings">
 		</div>
 		<div id="infotabs-add" class="ui-corner-all leftbarholder">
 			Class Type:&nbsp;
@@ -760,17 +758,15 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		</div>
 	</div>
 </div>
-<? if($loggedin){ ?>
 <div id="usersettings" class="bubble my-dialog">
 	<div id="usersettings_close" class="my-dialog-close">Close this</div>
-	<h3 id="usersettings_header" class="my-dialog-header">User Settings for <?= $athena ?>:</h3>
+	<h3 id="usersettings_header" class="my-dialog-header">User Settings<?= $athena?" for $athena":"" ?>:</h3>
 	<div id="usersettings_div">
-		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="<?= $user['class_year'] ?>"><br>
-		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $user['view_req_lines']?'checked="checked"':'' ?>><br>
-		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $user['autocomplete']?'checked="checked"':'' ?>><br>
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="<?= $_SESSION['user']['class_year'] ?>"><br>
+		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $_SESSION['user']['view_req_lines']?'checked="checked"':'' ?>><br>
+		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $_SESSION['user']['autocomplete']?'checked="checked"':'' ?>><br>
 	</div>
 	<input id="usersettings_save" type="button" name="save" value="Save Settings">
 </div>
-<? } ?>
 </body>
 </html>
