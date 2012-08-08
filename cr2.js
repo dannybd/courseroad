@@ -191,7 +191,6 @@ function getClass(){
 		if(!$("#getnewclassid").val()) return false;
 		var data = {getclass: $("#getnewclassid").val(), getyear:0};
 		data.getyear = user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
-		console.log(data.getyear);
 	}
 	$("#getnewclass .ui-autocomplete").hide();
 	$('.getnewclasstypes input').val('');
@@ -675,12 +674,10 @@ function crSetup(){
 					//This redirects us to the secure cert check.
 					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
 				}else{
-					//console.log("CERTS! "+data);
 					userHashChange = false;
 					window.location.hash = data;
 				}	
 			}else{
-				//console.log(data);
 				userHashChange = false;
 				window.location.hash = data;
 			}
@@ -696,7 +693,6 @@ function crSetup(){
 				if(data=="**auth**"){
 					window.location.href = "https://courseroad.mit.edu:444/secure2.php";
 				}else{
-					//console.log("CERTS! "+data);
 					userHashChange = false;
 					window.location.hash = data;
 				}
@@ -706,7 +702,7 @@ function crSetup(){
 	$("select.majorminor").on("change", function(){checkMajor(this);});
 	$("#viewroads").dialog({
 		autoOpen: false,
-		width: 800,
+		width: 900,
 		draggable: false,
 		resizeable: false,
 		modal: true,
@@ -724,15 +720,30 @@ function crSetup(){
 		var parent = $(this).parents("tr");
 		$.get("?", {deleteroad: parent.data("hash")}, function(data){
 			if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
+			if(window.location.hash.substr(1)==parent.data("hash")) $(window).on("beforeunload", runBeforeUnload);
+		});
+	}).on("click", ".saved-roads-edit-hash", function(){
+		var newhash2 = prompt("Enter a new hash for this saved road below (max. 36 characters, letters, numbers, and hyphens only):", $(this).prev().text());
+		if(newhash2===false) return false;
+		newhash2 = newhash2.substr(0,36);
+		var prev = $(this).prev();
+		prev.addClass("newload");
+		$.post("?", {changeroadhash: $(this).parents("tr").data("hash"), newhash: newhash2}, function(data){
+			console.log(data, window.location.hash, prev.parents("tr").data("hash"), window.location.hash==prev.parents("tr").data("hash"));
+			if(window.location.hash.substr(1)==prev.parents("tr").data("hash")){
+				userHashChange = false;
+				window.location.hash = data;
+			}
+			prev.text(data.substr(data.indexOf("/")+1)).removeClass("newload").parents("tr").data("hash", data).attr("data-hash", data).find(":radio").val(data).parents("tr").find("a.hashlink").attr("href", "?hash="+data);
 		});
 	}).on("click", ".saved-roads-edit-comment", function(){
 		var comment = prompt("Enter your comment for this saved road below (max. 100 characters):", $(this).prev().text());
 		if(comment===false) return false;
 		comment = comment.substr(0,100);
 		var prev = $(this).prev();
-		prev.css("color","grey");
-		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(){
-			prev.text(comment).removeAttr("style");
+		prev.addClass("newload");
+		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(data){
+			prev.text(data).removeClass("newload");
 		});
 	}).on("click", ".dummylink", function(e){
 		e.preventDefault();
@@ -787,10 +798,11 @@ function crSetup(){
 			user.classYear = parseInt($("#usersettings_class_year").val());
 			user.viewReqLines = ($("#usersettings_view_req_lines").prop("checked")?1:0);
 			user.autocomplete = ($("#usersettings_autocomplete").prop("checked")?1:0);
-			
+			$("#usersettings_saved").show().delay(1000).fadeOut("slow");
 			$("body").toggleClass("no-wires", !user.viewReqLines);
 			addAllWires();
 			$("#getnewclassid").autocomplete("option", "disabled", !user.autocomplete);
+			$(window).off("beforeunload", runBeforeUnload);
 		});
 	});
 }

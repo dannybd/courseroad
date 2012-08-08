@@ -39,18 +39,14 @@ if(isset($_GET['term'])){
 	$query = mysql_query("SELECT DISTINCT `subject_id` FROM `warehouse` WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6");
 	while($row = mysql_fetch_array($query)) $temp[] = $row['subject_id'];
 	mysql_close($connect);
-	echo json_encode($temp);
-	die();
+	die(json_encode($temp));
 }
 
 function pullClass($class, $year=false, $classterm=0, $override=false){
-	$sql = "SELECT * FROM `warehouse` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." `last_modified` DESC;";
-	//echo $sql."\n";
-	$query = mysql_query($sql);
-	if(!$query) die("error");
-	$row = mysql_fetch_assoc($query);
+	$exception = (mysql_num_rows(mysql_query("SELECT * FROM `warehouse_exceptions` WHERE `subject_id`='$class'".($year?" AND `year`='$year'":"")." ORDER BY `year` DESC, `last_modified` DESC;"))!=0);
+	$sql = "SELECT * FROM `warehouse".($exception?"_exceptions":"")."` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." `last_modified` DESC;";
+	$row = mysql_fetch_assoc(mysql_query($sql));
 	if(!$row) die("noclass");
-//	die();
 	unset($row['id']);
 	unset($row['design_units']);
 	unset($row['tuition_attr']);
@@ -95,14 +91,16 @@ EOD;
 	if($row['gir']) $row['divclasses'] .= " GIR ".$row['gir'];
 	if($row['ci']) $row['divclasses'] .= " CI ".$row['ci'];
 	if($row['hass']) $row['divclasses'] .= " HASS ".$row['hass'];
+	if($row['extraclasses']) $row['divclasses'] .= " ".str_replace(".","_",$row['extraclasses']);
+	
 	$row['special'] = ($row['gir'] or $row['ci'] or $row['hass']);
 	$row['classterm'] = $classterm;
 	$row['override'] = $override;
 	$row['custom'] = false;
 	
-	$query2 = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
 	$row['otheryears'] = "<select>";
-	while($row2 = mysql_fetch_assoc($query2)){
+	$query = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
+	while($row2 = mysql_fetch_assoc($query)){
 		$year2 = $row2['year'];
 		$row['otheryears'] .= "\n\t<option value='$year2'";
 		$row['otheryears'] .= ($year2==$row['year'])?" selected='true'>":">";
@@ -123,8 +121,6 @@ EOD;
 	</div>
 </div>
 EOD;
-	//print_r($row);
-	//echo "\n\n\n";
 	return $row;
 }
 
@@ -166,16 +162,14 @@ if(isset($_GET['getclass'])){
 	$class = mysql_real_escape_string($_GET['getclass']);
 	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
 	//echo $class;
-	echo json_encode(pullClass($class, $year));
-	die();
+	die(json_encode(pullClass($class, $year)));
 }
 
 if(isset($_GET['getcustom'])){
 	header("Content-type: text/javascript");
 	$name = htmlentities($_GET['getcustom']);
 	$units = isset($_GET['getunits'])?floatval($_GET['getunits']):false;
-	echo json_encode(pullCustom($name, $units));
-	die();
+	die(json_encode(pullCustom($name, $units)));
 }
 
 //For certification purposes.
@@ -184,12 +178,13 @@ $loggedin = isset($_SESSION['athena']);
 $athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
 if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1);
 if($loggedin){
-	$_SESSION['user'] = mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'");
-	$_SESSION['user'] = mysql_fetch_assoc($_SESSION['user']);
-	if(!$_SESSION['user']) die("Sorry, something went wrong. Please direct your hatemail to courseroad@mit.edu.");
-	unset($_SESSION['user']['id']);
-	unset($_SESSION['user']['advisors']);
-	unset($_SESSION['user']['advisees']);
+	$tempuser = mysql_fetch_assoc(mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'"));
+	if($tempuser){
+		$_SESSION['user']['class_year'] = $tempuser['class_year'];
+		$_SESSION['user']['view_req_lines'] = $tempuser['view_req_lines'];
+		$_SESSION['user']['autocomplete'] = $tempuser['autocomplete'];
+		unset($tempuser);
+	}
 }
 
 //This runs if the user has click "save road". It determines the login status of the user 
@@ -211,8 +206,7 @@ if(isset($_POST['classes'])){
 	//id, hash, user, classes, major, public, desc, ip, added
 	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `ip`) VALUES ('$hash', '$athena', '$classes', '$major', '{$_SERVER['REMOTE_ADDR']}');";
 	mysql_query($sql);
-	echo isset($_SESSION['trycert'])?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
-	die();
+	die(isset($_SESSION['trycert'])?"**auth**":$hash); //The **auth** lets the user's browser know to try to log in
 }
 
 if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //Uncomment for development
@@ -241,9 +235,7 @@ if(isset($_POST['gethash'])){
 		}
 	}
 	$json[] = $major;
-	//print_r($json);
-	echo json_encode($json);
-	die();
+	die(json_encode($json));
 }
 
 if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
@@ -259,11 +251,12 @@ if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 //Returns the desired table of saved roads when the user is logged in
 if(isset($_GET['savedroads'])){
 	if(!$loggedin) die("Sorry, you need to log in again.");
-	$sql = "SELECT * FROM `roads2` WHERE `hash` LIKE '$athena/%' ORDER BY `added` DESC";
+	$sql = "SELECT * FROM `roads2` WHERE `user`='$athena' ORDER BY `added` DESC";
 	$query = mysql_query($sql);
 	echo "<table>\n";
 	echo "<tr>";
 	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/index.php#{$_SESSION['athena']}\">Public</th>";
+	echo "<th style=\"min-width:118px\">Hash</th>";
 	echo "<th style=\"min-width:118px\">Added</th>";
 	echo "<th style=\"min-width:95px\">Major</th>";
 	echo "<th>Classes</th>";
@@ -275,20 +268,21 @@ if(isset($_GET['savedroads'])){
 	$numrows = mysql_fetch_array($numrows);
 	$numrows = $numrows[0];
 	echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"null\" ".($numrows?"":"checked=\"true\" ")."/></td>";
-	echo "<td colspan=\"5\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
+	echo "<td colspan=\"6\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
 	echo "</tr>\n";
 	while($row = mysql_fetch_array($query)){
-		$roadURL = "?hash=".stripslashes($row['hash']);
-		echo "<tr data-hash=\"".stripslashes($row['hash'])."\">";
-		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"".stripslashes($row['hash'])."\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
-		echo "<td><a href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
+		$hash = stripslashes($row['hash']);
+		$roadURL = "?hash=$hash";
+		echo "<tr data-hash=\"$hash\">";
+		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"$hash\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
+		echo "<td><span class=\"saved-roads-hash\">".substr(strstr($hash, "/"),1)."</span><span class=\"saved-roads-edit-hash ui-icon ui-icon-pencil\"></span></td>";
+		echo "<td><a class=\"hashlink\" href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
 		$major = stripslashes($row['major']);
 		if($major[0]!='[') $major = "[\"$major\"]";
 		$major = str_replace(',"m0"','',$major);
 		$major = implode(",<br>\n", json_decode($major));
 		echo "<td>$major</td>";
 		$classes = json_decode($row['classes'], true);
-		//echo $row['classes'];
 		$classes2 = array();
 		foreach($classes as &$class2){
 			if(isset($class2["custom"])) $class2["id"] = '('.$class2["name"].')';
@@ -297,9 +291,7 @@ if(isset($_GET['savedroads'])){
 			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
-		echo "<td><span class=\"saved-roads-comment\">{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span>";
-		echo "</td>";
-		//echo "<td><strong class=\"deleteroad\">X</strong></td>";
+		echo "<td><span class=\"saved-roads-comment\">{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span></td>";
 		echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
 		echo "</tr>\n";
 	}
@@ -311,38 +303,40 @@ if(isset($_GET['savedroads'])){
 if(isset($_GET['choosesavedroad'])){
 	$hash = mysql_real_escape_string($_GET['choosesavedroad']);
 	if(!$loggedin) die();
-	$hasharray = explode('/', $hash);
-	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
-	mysql_query("UPDATE `roads2` SET `public`='0' WHERE `hash` LIKE '$athena/%'");
-	if($hash!="null") mysql_query("UPDATE `roads2` SET `public`='1' WHERE `hash`='$hash'");
-	echo "ok";
-	die();
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
+	mysql_query("UPDATE `roads2` SET `public`= CASE WHEN `hash`='$hash' THEN '1' ELSE '0' END WHERE `user`='$athena'");
+	die("ok");
+}
+//When the user changes a road's hash
+if(isset($_POST['changeroadhash'])){
+	$hash = mysql_real_escape_string($_POST['changeroadhash']);
+	$newhash = mysql_real_escape_string($athena."/".htmlentities(substr($_POST['newhash'],0,36)));
+	if(!$loggedin or preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) or !strlen($_POST['newhash'])) die($hash);
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die($hash);
+	if(mysql_num_rows(mysql_query("SELECT * FROM `roads2` WHERE `hash`='$newhash'"))) die($hash);
+	mysql_query("UPDATE `roads2` SET `hash`='$newhash' WHERE `hash`='$hash'");
+	die($newhash);
 }
 //And when the user adds a comment
 if(isset($_POST['commentonroad'])){
 	$hash = mysql_real_escape_string($_POST['commentonroad']);
 	$comment = mysql_real_escape_string(htmlentities(substr($_POST['commentforroad'],0,100)));
-	if(!$loggedin) die();
-	$hasharray = explode('/', $hash);
-	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
-	if($hash!="null") mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
-	echo "ok";
-	die();
+	if(!$loggedin) die($hash);
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
+	mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
+	die($comment);
 }
 //Similarly, runs when the user deletes a road.
 if(isset($_GET['deleteroad'])){
 	$hash = mysql_real_escape_string($_GET['deleteroad']);
 	if(!$loggedin) die();
-	$hasharray = explode('/', $hash);
-	if(($athena!=$hasharray[0]) and ($hash!="null")) die();
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
 	if($hash!="null") mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
-	echo "ok";
-	die();
+	die("ok");
 }
 
 if(isset($_POST['usersettings'])){
 	$_SESSION['user']['class_year'] = intval(mysql_real_escape_string($_POST['class_year']));
-//	if($class_year<=2005 or $class_year>=2020) $class_year = $_SESSION['user']['class_year'];
 	$_SESSION['user']['view_req_lines'] = ($_POST['view_req_lines']=="1")?1:0;
 	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
 	if($loggedin) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
@@ -766,7 +760,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $_SESSION['user']['view_req_lines']?'checked="checked"':'' ?>><br>
 		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $_SESSION['user']['autocomplete']?'checked="checked"':'' ?>><br>
 	</div>
-	<input id="usersettings_save" type="button" name="save" value="Save Settings">
+	<input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
 </body>
 </html>

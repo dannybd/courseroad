@@ -7,6 +7,11 @@ require("connect.php");
 
 header("Content-type: text/javascript");
 
+/*
+	TO COPY FROM WAREHOUSE TO THE EXCEPTIONS TABLE:
+	"INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `id`='25')"
+	INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `subject_id` LIKE '18.100%' AND `subject_number`!='100')
+//*/
 //$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
 
 $sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 0,10000";
