@@ -176,7 +176,7 @@ if(isset($_GET['getcustom'])){
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
 $loggedin = isset($_SESSION['athena']);
 $athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
-if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1);
+if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1,'edited'=>0);
 if($loggedin){
 	$tempuser = mysql_fetch_assoc(mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'"));
 	if($tempuser){
@@ -339,6 +339,7 @@ if(isset($_POST['usersettings'])){
 	$_SESSION['user']['class_year'] = intval(mysql_real_escape_string($_POST['class_year']));
 	$_SESSION['user']['view_req_lines'] = ($_POST['view_req_lines']=="1")?1:0;
 	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
+	$_SESSION['user']['edited'] = $loggedin?0:1;
 	if($loggedin) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
 	$view_req_lines = $_SESSION['user']['view_req_lines']?'checked="checked"':'';
 	$autocomplete = $_SESSION['user']['autocomplete']?'checked="checked"':'';
@@ -705,50 +706,79 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<div>
 			CourseRoad allows you to plan out your classes over your MIT undergrad career.<br>
 			<br>
-			Enter classes you have taken and want to take, and CourseRoad will tell you all about how you're doing on class prerequisites, General Institute Requirements (GIRs), and your major's requirements.<br>
+			Enter classes you have taken and want to take, and CourseRoad will tell you all about how you're doing on class prerequisites, General Institute Requirements (GIRs), and requirements for majors and minors.<br>
 			You can even save course mappings to share with friends and advisors to get feedback!
 		</div>
 		<h3><a href="#" class="dummylink">How do I add/move/delete classes?</a></h3>
 		<div>
-			In the upper-left, you can enter the course numbers of your classes, choose the semester you took them/want to take them, and click "Add Class." 
+			In the upper-left, click the "Add" tab, where you can enter the course numbers of your classes and choose the semester you took them/want to take them.
 			You'll see that class added on the main timeline on the right-hand side of the page. This area gets filled with the classes you choose.<br>
 			<br>
 			If you want to move a class around, simply drag and drop it to another semester.<br><br>
-			If you want to delete the class, drag it to the upper-right and drop it on the the black X that appears.
+			If you want to delete the class, drag it to the right-hand and drop it on the the black X that appears, or select the class and hit Delete.
+		</div>
+		<h3><a href="#" class="dummylink">How do I add a UROP/elective/PE class/thing that isn't an MIT class? (New!)</a></h3>
+		<div>
+			When you click the "Add" tab in the upper-left, change "Class Type" from Subject to Custom: from there, type the subject's name and units, and proceed as you would normally for a class.
 		</div>
 		<h3><a href="#" class="dummylink">What are those weird lines everywhere? Why are some classes red?</a></h3>
 		<div>
 			Those lines appear between classes to show you the map of prerequisites and corequisites for your classes. Grey is for prereqs, black is for coreqs.<br>
 			<br>
-			If you've added a class and all of its prereqs are satisfied by the classes you've already added, then it'll turn green. If you're still missing a class or two, it'll appear red and you can mouse over the part that says "Prereq: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester.
+			If you've added a class and all of its requisites are satisfied by the classes you've already added, then it'll turn green. If you're still missing reqs, it'll appear red and you can mouse over the part that says "Reqs: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester, isn't counting for credit, or isn't available in that year.
 		</div>
-		<h3><a href="#" class="dummylink">I have credit for X.XX. How do I show that?</a></h3>
+		<h3><a href="#" class="dummylink">I have permission to override the requisites for X.XX. How do I show that?</a></h3>
 		<div>
-			If you've received credit for or permission to attend a class without taking its prereqs, you can let CourseRoad know that by clicking once on the class (this should select the class in pink) and click "OVERRIDE REQS" in the lower-left. You can also read that course's description and other info in the lower-left as well.
+			If you've taken a class without taking its requisites (or if CourseRoad's acting up and not recognizing that you've completed said reqs), you can click once on the class (thus highlighting the class in pink) and click "OVERRIDE REQUISITES" in the lower-left. You can also read that course's description and other info in the lower-left as well.
+		</div>
+		<h3><a href="#" class="dummylink">What are the years displayed on each class? (New!)</a></h3>
+		<div>
+			The year attached to each class represents the <strong>catalog year from which that class' data was taken</strong>. It doesn't necessarily match the year in which you took the class: if the requisites and teachers are the same then and now, then you don't have to worry about it.<br>
+			<br>
+			If, however, you took (say) the 2009 version of a class, simply click the displayed year and choose "2009" from the dropdown. The class will automatically replace itself with the 2009 version.<br>
+			<br>
+			If you're entering a lot of classes and this seems like an issue, try clicking the "About" tab and choosing "User Settings": if you update your class year in that field, CourseRoad will try to add the classes to semesters using data from the year in which you took said classes.
 		</div>
 		<h3><a href="#" class="dummylink">What is that checklist for?</a></h3>
 		<div>
-			The checklist on the left-hand side lets you keep track of all of your GIRs and major requirements. If you choose a major from the dropdown, then you'll also see how you're doing on that major's requirements as well.
+			The checklist on the left-hand side lets you keep track of all of your GIRs and major/minor requirements. If you choose majors and minors from the dropdowns, then you'll also see how you're doing on their respective requirements as well.
 		</div>
-		<h3><a href="#" class="dummylink">How do I save classes for later or to share with others?</a></h3>
+		<h3><a href="#" class="dummylink">How do I save a "road" for later or to share with others?</a></h3>
 		<div>
-			If you want to save your course map for later, simply click the "Save Classes" button in the upper-left. The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.
+			If you want to save your course map for later, simply click the "Save" tab in the upper-left, and click "Save Classes". The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.<br>
+			<br>
+			You can also click "Save with Login" to save the road while connecting it to your Kerberos username (i.e. the <em>username</em> in <em>username</em>@mit.edu). Note: this requires that you have certificates installed and enabled on the browser you're using.
+		</div>
+		<h3><a href="#" class="dummylink">What good does logging in do? (New!)</a></h3>
+		<div>
+			Logging in allows you to:
+			<ul>
+				<li>Save your roads attached to your account and manage them later (go to the "Save" tab and click "View Saved Roads")</li>
+				<li>Save user settings such as class year and toggling CourseRoad features</li>
+				<li>Choose custom save hashes for your roads (e.g. "<em>username</em>/with-energy-minor", and even choose a "public" road to be visible at courseroad.mit.edu/<em>username</em></li>
+			</ul>
+			and more!
 		</div>
 		<h3><a href="#" class="dummylink">What about privacy?</a></h3>
 		<div>
-			When you aren't signed in, the links you generate are random and don't contain any information about you, specifically. On my end in those cases, the database is only storing your IP address, your classes, and a timestamp.<br>
+			When you aren't signed in, the save hashes you generate (the stuff after the "#" in the URL) are random and don't contain any information about you, specifically. On my end in those cases, the database is only storing your IP address, the classes and majors/minors you added, and a timestamp.<br>
 			<br>
-			If you save roads while signed in, the road will be attached to your athena username with a timestamp, thus hiding the link from being easily discoverable. You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<i>yourusername</i>.<br>
+			If you save roads while signed in, the road will be attached to your athena username with a timestamp, thus hiding the link from being easily discoverable.<br>
+			You can personally choose to change these hashes by clicking the "Save" tab, clicking "View Saved Roads", and editing the hash from there.<br>
+			You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<em>username</em>. 
+			<br>
+			You'll also have the option to supply your graduation year to CourseRoad, in case you want the class year versions to be accurate (see above in "What are the years displayed on each class?").
+			<br>
 			<br>
 			tl;dr: don't worry, you're safe :)
 		</div>
 		<h3><a href="#" class="dummylink">Further help, who's behind this, and why?</a></h3>
 		<div>
-			First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/alternate history fiction.<br>
+			First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/cool historical maps.<br>
 			<br>
-			CourseRoad is the brainchild of Danny Ben-David '15, and was the Grand Prize Winner in the 2012 <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT last August, I've been bothered at how unintuitive the course and major structures are when laid out as they are in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
+			CourseRoad is the brainchild of Danny Ben-David '15, and was the Grand Prize Winner in the 2012 <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT last year, I've been bothered at how unintuitive the course and major structures are as laid out in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
 			<br>
-			Special thanks to the awesome folks in <a href="http://sipb.mit.edu">SIPB</a> for their litany of services and helpful insights.
+			Special thanks to <a href="http://oeit.mit.edu">OEIT<a> for funding and guiding me through the spring and summer, and to the awesome folks at <a href="http://sipb.mit.edu">SIPB</a> for their litany of services and helpful insights.
 		</div>
 	</div>
 </div>

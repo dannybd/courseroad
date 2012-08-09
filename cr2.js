@@ -756,7 +756,15 @@ function crSetup(){
 		resizeable: false,
 		modal: true
 	});
-	$("#accordion").accordion();
+	$("#accordion").accordion({
+		autoHeight: false,
+		collapsible: true,
+		change: function(event, ui){
+			var temp = (ui.newContent.length&&ui.newContent.position().top)||0;
+			//$(this).scrollTop(temp);
+			//console.log(temp);
+		}
+	});
 	$("#openhelp").click(function(){
 		$("#help").dialog('open').dialog('option', 'position', 'center');
 		$( "#accordion" ).accordion( "resize" );

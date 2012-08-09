@@ -59,6 +59,11 @@ span.newload{
 	filter: alpha(opacity=30);
 	opacity: 0.3;
 }
+#accordion{
+	max-height: 500px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
 .ui-accordion-header{
 	background-color: #DDD;
 	padding: 5px;

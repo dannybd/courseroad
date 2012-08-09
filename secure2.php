@@ -17,7 +17,7 @@ if(!isset($_SERVER['SSL_CLIENT_S_DN_Email'])){
 $athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], "@", true);
 $fullname = $_SERVER['SSL_CLIENT_S_DN_CN']; //"Jack Florey";
 mysql_query("INSERT INTO `users`(`athena`) VALUES ('$athena')");
-mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
+if($_SESSION['user']['edited']) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
 $_SESSION['triedcert'] = true;
 $_SESSION['athena'] = $athena;
 $_SESSION['fullname'] = $fullname;
