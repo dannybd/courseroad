@@ -78,6 +78,10 @@ majors["mCMS"] = [0, "21L.011", "CMS.100", [1, "CMS.400", "CMS.403", "CMS.405", 
 majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008", "STS.009", "STS.010", "STS.011"], [1, "STS.025-STS.090"], "STS.091", "STS.THT", "STS.THU", [5, "Coherent group of subjects in STS"]];
 //majors["mWGS"] = [0];
 
+majors["mi"] = [0];
+majors["miArchitecture"] = [0, "4.111", "4.112", "4.605", [1, [2, "4.113", "4.114"], [{count:3,desc:"(up to two from each group A-D, and no more than one from group E) from",special:false}, {id:"4.122",desc:" [Group A]"}, {id:"4.170",desc:" [Group A]"}, {id:"4.211",desc:" [Group A]"}, {id:"4.231",desc:" [Group A]"}, {id:"4.233",desc:" [Group A]"}, {id:"4.250",desc:" [Group A]"}, {id:"",desc:"",skip:true}, {id:"4.301",desc:" [Group B]"}, {id:"4.312",desc:" [Group B]"}, {id:"4.314",desc:" [Group B]"}, {id:"4.322",desc:" [Group B]"}, {id:"4.330",desc:" [Group B]"}, {id:"4.332",desc:" [Group B]"}, {id:"4.341",desc:" [Group B]"}, {id:"4.351",desc:" [Group B]"}, {id:"4.352",desc:" [Group B]"}, {id:"4.361",desc:" [Group B]"}, {id:"4.366",desc:" [Group B]"}, {id:"4.368",desc:" [Group B]"}, {id:"4.371",desc:" [Group B]"}, {id:"",desc:"",skip:true}, {id:"4.401",desc:" [Group C]"}, {id:"4.411",desc:" [Group C]"}, {id:"4.42",desc:" [Group C]"}, {id:"4.440",desc:" [Group C]"}, {id:"4.444",desc:" [Group C]"}, {id:"4.472",desc:" [Group C]"}, {id:"4.474",desc:" [Group C]"}, {id:"",desc:""}, {id:"4.500",desc:" [Group D]"}, {id:"4.501",desc:" [Group D]"}, {id:"4.503",desc:" [Group D]"}, {id:"4.504",desc:" [Group D]"}, {id:"4.520",desc:" [Group D]"}, {id:"4.522",desc:" [Group D]"}, {id:"",desc:"",skip:true}, {id:"4.601",desc:" [Group E]"}, {id:"4.602",desc:" [Group E]"}, {id:"4.603",desc:" [Group E]"}, {id:"4.606",desc:" [Group E]"}, {id:"4.609",desc:" [Group E]"}, {id:"4.613",desc:" [Group E]"}, {id:"4.614",desc:" [Group E]"}, {id:"4.615",desc:" [Group E]"}, {id:"4.635",desc:" [Group E]"}, {id:"4.641",desc:" [Group E]"}, {id:"4.651",desc:" [Group E]"}, {id:"4.671",desc:" [Group E]"}, {id:"4.67",desc:" [Group E]"}]]];
+majors["miHist_Architecture_Art"] = [0, [1, "4.601", "4.602"], [1, "4.605", "4.614"], [{count:3,desc:"(no more than two subjects from either the history of art or the history of architecture) from",special:false}, "4.603", "4.606", "4.613", "4.615", "4.635", "4.641", "4.645", "4.651", "4.671", "4.673"], [1, "4.609", "Other advanced seminar in the history of art and/or architecture, incl. offerings from Harvard or Wellsley"]];
+
 //majors["miApplied_international"] = [0];
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], "Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor."];
 majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", "An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22"], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "20.340-20.499"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.520-HST.529"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"], [1, "HST.540-HST.549"]]]];
@@ -91,7 +95,7 @@ function checkMajor(selector){
 	var span = $(selector).prev("span.majorminor");
 	span.attr("data-empty",1).removeAttr("data-value");
 	if(majors[val]==undefined) majors[val]=[0];
-	if(val=="m0") return false;
+	if(val=="m0") return $(div).html("")&&false;
 	span.attr("data-value", $(selector).find("option:selected").text()).removeAttr("data-empty");
 	$(div).html(buildMajor(majors[val])).append("<span class=\"letmeknow\"><br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.<\/span>");
 	var reqs = checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
@@ -102,7 +106,7 @@ function checkMajor(selector){
 }
 
 function checkOff(majordiv, lvl, cls){ 
-	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",cls.div.data("subject_id")); 
+	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",$.isArray(cls.div)?'':cls.div.data("subject_id")); 
 	return true;
 }
 
@@ -133,12 +137,12 @@ function buildMajor(arr, level){
 		if(newarr.id.indexOf("-")!=-1){
 			var innertempstr = "";
 			for(var j=0;j<holdobj.count;j++){
-				innertempstr += "<span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span>";
+				innertempstr += "<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[ ]<\/span>";
 			}
 			return "<li>"+innertempstr+" "+holdobj.count+" from the range "+newarr.id+newarr.desc+"<\/li>\n";
 		}
 		//Now only strings
-		tempstr += "<li><span class='majorchk majorchk_"+(level.concat([i])).join("_")+" checkbox1'>[ ]<\/span> "+newarr.id+newarr.desc+"<\/li>\n";
+		tempstr += "<li><span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[ ]<\/span> "+newarr.id+newarr.desc+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(holdobj.special){
@@ -147,7 +151,7 @@ function buildMajor(arr, level){
 		tempstr = ""+holdobj.count+" "+holdobj.desc+":\n"+tempstr; //the != part find the "2 from following" strings
 	}
 	if(!level.length) return "<strong>Requirements:<\/strong><br>\n"+tempstr;
-	return "<li>"+tempstr+"<\/li>\n";
+	return "<li><span class='majorchk majorchk_"+level.join("_")+" checkbox1'>[ ]<\/span> "+tempstr+"<\/li>\n";
 }
 
 function unhighlightClasses(){
@@ -173,10 +177,7 @@ function classFromJSON(json, loadspeed, replacediv){
 	json.reqstatus = true;
 	if(json.override) newdiv.addClass('classdivoverride');
 	for(attr in json) newdiv.data(attr, json[attr]);
-	newdiv.data("terminals", {
-		terminal: new WireIt.Terminal(newdiv[0], {editable: false }),
-		wires: []
-	});
+	newdiv.data("terminals", { terminal: new WireIt.Terminal(newdiv[0], {editable: false }), wires: [] });
 	return newdiv;
 }
 
@@ -256,7 +257,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		var matched = {count:(0+arr[0]),special:false};
 	}else{
 		var matched = $.extend({}, arr[0]);
-		matched.special = true;
+		if(matched.special==undefined) matched.special = true;
 	}
 	if(matched.desc==undefined) matched.desc = "from";
 	matched.matches = [];
@@ -267,14 +268,13 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			var req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
 			//console.log($(req).eq(0).data("id"));
 			if(req[0]){ //If the sub-branch matched its requirements
-				//console.log(req[2]);
-				if(matched.special){
-					$(req[2]).each(function(){
-						matched.count -= $(this).data(matched.type);
-					});
-				}else{
-					matched.count--;
-				}
+				matched.special ? $(req[2]).each(function(){ matched.count -= $(this).data(matched.type); }) : matched.count--;
+				var tempargs = callbackargs.slice();
+				var clspos = $.inArray("cls", tempargs);
+				if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:arr[i]});
+				var lvlpos = jQuery.inArray("lvl", tempargs);
+				if(lvlpos!=-1) tempargs[lvlpos] = level.concat([i]);
+				var temp2 = callback.apply(null, tempargs);
 			}else{
 				tempstr.push(req[1]);
 			}
@@ -287,6 +287,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			var newarr = {id:arr[i]};
 		}
 		if(newarr.desc==undefined) newarr.desc = "";
+		if(newarr.skip) continue;
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
 		if(newarr.id.indexOf("-")!=-1){
 			var rangematches = $(".classdiv").filter(function(index){
@@ -298,11 +299,12 @@ function checkReqs(arr, callback, callbackargs, level, test){
 				if($.inArray(this, globalmatches)!=-1) return true;
 				var tempargs = callbackargs.slice();
 				var clspos = $.inArray("cls", tempargs);
-				if(clspos!=-1){
+				if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:$(this)});
+/* 				if(clspos!=-1){
 					tempargs[clspos] = $.extend({},newarr);
 					tempargs[clspos].div = $(this);
 				}
-				var lvlpos = jQuery.inArray("lvl", tempargs);
+ */				var lvlpos = jQuery.inArray("lvl", tempargs);
 				if(lvlpos!=-1) tempargs[lvlpos] = level.concat([i]);
 				var temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
 				if(temp2){
@@ -321,10 +323,11 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			if($.inArray(this, globalmatches)!=-1) return true;
 			var tempargs = callbackargs.slice();
 			var clspos = $.inArray("cls", tempargs);
-			if(clspos!=-1){
+			if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:$(this)});
+/* 			if(clspos!=-1){
 				tempargs[clspos] = $.extend({},newarr);
 				tempargs[clspos].div = $(this);
-			}
+			} */
 			var lvlpos = jQuery.inArray("lvl", tempargs);
 			if(lvlpos!=-1) tempargs[lvlpos] = level.concat([i]);
 			var temp2 = callback.apply(null, tempargs); //calls callback with tempargs as its arguments. In Python this would be callback(*tempargs)
@@ -363,6 +366,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 
 function addWires(div, addwires){
 	//Frankly, this function has outgrown its name. addWires adds everything for a given class and updates its status.
+	if($.isArray(div)) return true;
 	if(addwires==undefined) var addwires=true;
 	div.data("terminals").wires = [];
 	div.data("reqstatus", true);
@@ -760,7 +764,7 @@ function crSetup(){
 		autoHeight: false,
 		collapsible: true,
 		change: function(event, ui){
-			var temp = (ui.newContent.length&&ui.newContent.position().top)||0;
+			var temp = ui.newContent.length?ui.newContent.position().top:0;
 			//$(this).scrollTop(temp);
 			//console.log(temp);
 		}

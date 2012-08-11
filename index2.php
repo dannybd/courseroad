@@ -630,6 +630,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miArchitecture">Minor in Architecture</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
@@ -640,6 +641,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miArchitecture">Minor in Architecture</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
