@@ -218,6 +218,7 @@ function newWire(from,to){
 	//Defines new wire's properties (black/grey, straight/curved) 
 	//partially based on the relative semesters and terms of the two would-be connected classes.
 	//from is $() div, to is object with to.div as $() div.
+	if($.isArray(to.div)) return true;
 	var fromid = from.attr("id");
 	var toid = to.div.attr("id");
 	var fromterm = from.data("classterm")+0;
@@ -366,7 +367,6 @@ function checkReqs(arr, callback, callbackargs, level, test){
 
 function addWires(div, addwires){
 	//Frankly, this function has outgrown its name. addWires adds everything for a given class and updates its status.
-	if($.isArray(div)) return true;
 	if(addwires==undefined) var addwires=true;
 	div.data("terminals").wires = [];
 	div.data("reqstatus", true);
