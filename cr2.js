@@ -78,9 +78,16 @@ majors["mCMS"] = [0, "21L.011", "CMS.100", [1, "CMS.400", "CMS.403", "CMS.405", 
 majors["mSTS"] = [0, [1, "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008", "STS.009", "STS.010", "STS.011"], [1, "STS.025-STS.090"], "STS.091", "STS.THT", "STS.THU", [5, "Coherent group of subjects in STS"]];
 //majors["mWGS"] = [0];
 
-majors["mi"] = [0];
 majors["miArchitecture"] = [0, "4.111", "4.112", "4.605", [1, [2, "4.113", "4.114"], [{count:3,desc:"(up to two from each group A-D, and no more than one from group E) from",special:false}, {id:"4.122",desc:" [Group A]"}, {id:"4.170",desc:" [Group A]"}, {id:"4.211",desc:" [Group A]"}, {id:"4.231",desc:" [Group A]"}, {id:"4.233",desc:" [Group A]"}, {id:"4.250",desc:" [Group A]"}, {id:"",desc:"",skip:true}, {id:"4.301",desc:" [Group B]"}, {id:"4.312",desc:" [Group B]"}, {id:"4.314",desc:" [Group B]"}, {id:"4.322",desc:" [Group B]"}, {id:"4.330",desc:" [Group B]"}, {id:"4.332",desc:" [Group B]"}, {id:"4.341",desc:" [Group B]"}, {id:"4.351",desc:" [Group B]"}, {id:"4.352",desc:" [Group B]"}, {id:"4.361",desc:" [Group B]"}, {id:"4.366",desc:" [Group B]"}, {id:"4.368",desc:" [Group B]"}, {id:"4.371",desc:" [Group B]"}, {id:"",desc:"",skip:true}, {id:"4.401",desc:" [Group C]"}, {id:"4.411",desc:" [Group C]"}, {id:"4.42",desc:" [Group C]"}, {id:"4.440",desc:" [Group C]"}, {id:"4.444",desc:" [Group C]"}, {id:"4.472",desc:" [Group C]"}, {id:"4.474",desc:" [Group C]"}, {id:"",desc:""}, {id:"4.500",desc:" [Group D]"}, {id:"4.501",desc:" [Group D]"}, {id:"4.503",desc:" [Group D]"}, {id:"4.504",desc:" [Group D]"}, {id:"4.520",desc:" [Group D]"}, {id:"4.522",desc:" [Group D]"}, {id:"",desc:"",skip:true}, {id:"4.601",desc:" [Group E]"}, {id:"4.602",desc:" [Group E]"}, {id:"4.603",desc:" [Group E]"}, {id:"4.606",desc:" [Group E]"}, {id:"4.609",desc:" [Group E]"}, {id:"4.613",desc:" [Group E]"}, {id:"4.614",desc:" [Group E]"}, {id:"4.615",desc:" [Group E]"}, {id:"4.635",desc:" [Group E]"}, {id:"4.641",desc:" [Group E]"}, {id:"4.651",desc:" [Group E]"}, {id:"4.671",desc:" [Group E]"}, {id:"4.67",desc:" [Group E]"}]]];
 majors["miHist_Architecture_Art"] = [0, [1, "4.601", "4.602"], [1, "4.605", "4.614"], [{count:3,desc:"(no more than two subjects from either the history of art or the history of architecture) from",special:false}, "4.603", "4.606", "4.613", "4.615", "4.635", "4.641", "4.645", "4.651", "4.671", "4.673"], [1, "4.609", "Other advanced seminar in the history of art and/or architecture, incl. offerings from Harvard or Wellsley"]];
+majors["miArt_culture_tech"] = [0, [1, "4.301", "4.302"], [1, "4.601", "4.602", "4.606", "4.641", "4.651", "4.671", "4.673"], [2, "4.322", "4.330", "4.341", "4.351"], [2, "4.312", "4.314", "4.332", "4.352", "4.361", "4.366", "4.368", "4.371"]];
+majors["miUrban_studies_and_planning"] = [0, "11.001", "11.002", [3, "11.005", "11.011", "11.013", "11.014", "11.016", "11.021", "11.022", "11.025", "11.026", "11.122", "11.126", "11.162", "11.165", "11.166", "11.168"], "11.123"];
+majors["miInternational_development"] = [0, [2, "11.005", "11.025", "11.140"], [4, "4.233", "11.002", "11.027", "11.122", "11.147", "11.164", "11.165", "11.166", "11.167", "EC.715"]];
+majors["miToxicology_and_enviro_health"] = [0, "20.102", "20.104", "20.106", [1, "20.109", "5.310", "7.02", "10.702"], [1, "20.URG", "1.080", "1.725", "1.89", "5.07", "7.05", "7.06", "7.28", "22.01"]];
+majors["miCivil_Engineering"] = [0, "1.050", "1.060", "1.101", "1.102", "1.035", [1, "1.041", "1.036"]];
+majors["miEnvrio_Engineering_Science"] = [0, "1.018", "1.020", "1.101", "1.102", "1.080", "1.107", "1.801", "11.002", "11.122", "14.01"];
+majors["mi"] = [0];
+majors["mi"] = [0];
 
 //majors["miApplied_international"] = [0];
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], "Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor."];
@@ -106,7 +113,7 @@ function checkMajor(selector){
 }
 
 function checkOff(majordiv, lvl, cls){ 
-	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",$.isArray(cls.div)?'':cls.div.data("subject_id")); 
+	$(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first").addClass("chk").html("[X]").attr("title",$.isArray(cls.div)?null:cls.div.data("subject_id")); 
 	return true;
 }
 
@@ -544,6 +551,7 @@ function crSetup(){
 			});
 			getClasses(json);
 			$(window).off("beforeunload", runBeforeUnload);
+			userHashChange = true;
 		});
 	}
 	$("body").on("click", ".classdivyear span", function(){
