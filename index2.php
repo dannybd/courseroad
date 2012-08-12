@@ -24,6 +24,8 @@
 //	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /******************************************************************/
 
+if(isset($_GET['devel'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
+
 if(isset($_GET['hash'])){
 	header("Location: https://courseroad.mit.edu/index2.php#".$_GET['hash']);
 	die();
@@ -33,12 +35,11 @@ require("connect.php"); //connect to database
 session_start();
 
 //autocomplete business
-if(isset($_GET['term'])){
-	$term = mysql_real_escape_string($_GET['term']);
+if(isset($_POST['autocomplete'])){
+	$term = mysql_real_escape_string($_POST['autocomplete']);
 	$temp = array();
 	$query = mysql_query("SELECT DISTINCT `subject_id` FROM `warehouse` WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6");
 	while($row = mysql_fetch_array($query)) $temp[] = $row['subject_id'];
-	mysql_close($connect);
 	die(json_encode($temp));
 }
 
@@ -157,19 +158,47 @@ EOD;
 }
 
 //loads class data from the database and serves up the JSON CourseRoad requires to load that class.
-if(isset($_GET['getclass'])){
+if(isset($_POST['getclass'])){
 	header("Content-type: text/javascript");
-	$class = mysql_real_escape_string($_GET['getclass']);
-	$year = isset($_GET['getyear'])?mysql_real_escape_string($_GET['getyear']):false;
+	$class = mysql_real_escape_string($_POST['getclass']);
+	$year = isset($_POST['getyear'])?mysql_real_escape_string($_POST['getyear']):false;
 	//echo $class;
 	die(json_encode(pullClass($class, $year)));
 }
 
-if(isset($_GET['getcustom'])){
+if(isset($_POST['getcustom'])){
 	header("Content-type: text/javascript");
-	$name = htmlentities($_GET['getcustom']);
-	$units = isset($_GET['getunits'])?floatval($_GET['getunits']):false;
+	$name = htmlentities($_POST['getcustom']);
+	$units = isset($_POST['getunits'])?floatval($_POST['getunits']):false;
 	die(json_encode(pullCustom($name, $units)));
+}
+
+//Returns the desired hash's class and major data
+if(isset($_POST['gethash'])){
+	header("Content-type: text/javascript");
+	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
+	$_SESSION['crhash'] = $hash;
+	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
+	$query = mysql_query($sql);
+	$classes = '';
+	$major = '';
+	while($row = mysql_fetch_array($query)){
+		$classes = json_decode($row['classes'], true);
+		$major = stripslashes($row['major']);
+	}
+	if($classes=='') die();
+	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
+	$major = json_decode($major, true);
+	$json = array();
+	foreach($classes as $class){
+		if(isset($class["custom"])){
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
+		}else{
+			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+		}
+	}
+	$json[] = $major;
+	die(json_encode($json));
 }
 
 //For certification purposes.
@@ -209,35 +238,6 @@ if(isset($_POST['classes'])){
 	die(isset($_SESSION['trycert'])?"**auth**":$hash); //The **auth** lets the user's browser know to try to log in
 }
 
-if(isset($_GET['gethash'])) $_POST['gethash'] = $_GET['gethash']; //Uncomment for development
-//Returns the desired hash's class and major data
-if(isset($_POST['gethash'])){
-	header("Content-type: text/javascript");
-	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
-	$_SESSION['crhash'] = $hash;
-	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
-	$query = mysql_query($sql);
-	$classes = '';
-	$major = '';
-	while($row = mysql_fetch_array($query)){
-		$classes = json_decode($row['classes'], true);
-		$major = stripslashes($row['major']);
-	}
-	if($classes=='') die();
-	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
-	$major = json_decode($major, true);
-	$json = array();
-	foreach($classes as $class){
-		if(isset($class["custom"])){
-			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
-		}else{
-			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
-		}
-	}
-	$json[] = $major;
-	die(json_encode($json));
-}
-
 if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
@@ -249,7 +249,7 @@ if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 }
 
 //Returns the desired table of saved roads when the user is logged in
-if(isset($_GET['savedroads'])){
+if(isset($_POST['savedroads'])){
 	if(!$loggedin) die("Sorry, you need to log in again.");
 	$sql = "SELECT * FROM `roads2` WHERE `user`='$athena' ORDER BY `added` DESC";
 	$query = mysql_query($sql);
@@ -300,8 +300,8 @@ if(isset($_GET['savedroads'])){
 }
 
 //Runs when the user sets one of their roads to be their public road
-if(isset($_GET['choosesavedroad'])){
-	$hash = mysql_real_escape_string($_GET['choosesavedroad']);
+if(isset($_POST['choosesavedroad'])){
+	$hash = mysql_real_escape_string($_POST['choosesavedroad']);
 	if(!$loggedin) die();
 	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
 	mysql_query("UPDATE `roads2` SET `public`= CASE WHEN `hash`='$hash' THEN '1' ELSE '0' END WHERE `user`='$athena'");
@@ -327,8 +327,8 @@ if(isset($_POST['commentonroad'])){
 	die($comment);
 }
 //Similarly, runs when the user deletes a road.
-if(isset($_GET['deleteroad'])){
-	$hash = mysql_real_escape_string($_GET['deleteroad']);
+if(isset($_POST['deleteroad'])){
+	$hash = mysql_real_escape_string($_POST['deleteroad']);
 	if(!$loggedin) die();
 	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
 	if($hash!="null") mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
@@ -350,8 +350,6 @@ if(isset($_POST['usersettings'])){
 EOD;
 	die();
 }
-
-mysql_close($connect);
 
 $nocache = isset($_GET['nocache']);
 $nocache = true; //Uncomment during development
