@@ -523,6 +523,7 @@ window.onhashchange = function(){
 var reasonToTrySave = preventUpdateWires = false;
 var totalUnits = 0;
 var crSetup = function(){
+	crSetup = undefined;
 	$("#getnewclass").tabs({collapsible: false, selected:(loggedin?1:0)});
 	user.supersenior = $(".year.supersenior").is(":visible")?1:0;
 	setInterval('updateWires();', 10000); //Assures regular updating of the window, should anything change
@@ -817,5 +818,4 @@ var crSetup = function(){
 			$(window).off("beforeunload", runBeforeUnload);
 		});
 	});
-	crSetup = undefined;
 };

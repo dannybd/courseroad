@@ -758,7 +758,8 @@ img.trashhover{
 	display: none;
 }
 .ie7 #getnewclass>div{
-	display: inline-block !important;
+	display: inline !important;
+	zoom: 1;
 	border: none !important;
 	padding: 0px !important;
 	background: none !important;
@@ -790,5 +791,9 @@ img.trashhover{
 }
 .lte8 .termname span{
 	margin-top: 0px;
+}
+.ie7 .classdiv{
+	display: inline !important;
+	zoom: 1;
 }
 /*** End IE CSS ***/

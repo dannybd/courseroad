@@ -24,7 +24,7 @@
 //	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /******************************************************************/
 
-if(isset($_GET['devel'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
+if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
 	header("Location: https://courseroad.mit.edu/index2.php#".$_GET['hash']);
@@ -33,6 +33,15 @@ if(isset($_GET['hash'])){
 
 require("connect.php"); //connect to database
 session_start();
+
+if(isset($_POST['loadmajors'])){
+	header("Content-type: text/javascript");
+	$name = $_POST['name'];
+	$reqs = json_decode($_POST['reqs'], true);
+	echo "$name\n";
+	print_r($reqs);
+	die("\n\nworking!");
+}
 
 //autocomplete business
 if(isset($_POST['autocomplete'])){
