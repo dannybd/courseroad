@@ -637,8 +637,8 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
-			<option value="miArchitecture">Minor in Architechture</option>
-			<option value="miHist_Architecture_Art">Minor in the History of Architechture and Art</option>
+			<option value="miArchitecture">Minor in Architecture</option>
+			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
 			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
 			<option value="miUrban_studies_and_planning">Minor in Urban Studies and Planning</option>
 			<option value="miInternational_development">Minor in International Development</option>
@@ -684,8 +684,8 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
-			<option value="miArchitecture">Minor in Architechture</option>
-			<option value="miHist_Architecture_Art">Minor in the History of Architechture and Art</option>
+			<option value="miArchitecture">Minor in Architecture</option>
+			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
 			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
 			<option value="miUrban_studies_and_planning">Minor in Urban Studies and Planning</option>
 			<option value="miInternational_development">Minor in International Development</option>
