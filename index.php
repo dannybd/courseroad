@@ -1,7 +1,7 @@
 <?php
 /******************************************************************/
-//	CourseRoad: Map your Major and Plan your Prereqs
-//	May 4, 2012
+//	CourseRoad: A Four-Year Planner for the MIT Undergraduate Community
+//	August 17, 2012
 //	By: Danny Ben-David (dannybd@mit.edu)
 //	
 //	CourseRoad is published under the MIT License, as follows:
@@ -24,66 +24,206 @@
 //	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /******************************************************************/
 
+if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
+
 if(isset($_GET['hash'])){
-	header("Location: /#".urldecode($_GET['hash']));
+	header("Location: https://courseroad.mit.edu/index.php#".$_GET['hash']);
 	die();
 }
+
 require("connect.php"); //connect to database
-
-
 session_start();
-//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
-if(isset($_GET['getclass'])){
-	$class = mysql_real_escape_string($_GET['getclass']);
-	//echo $class;
-	$query = mysql_query("SELECT * FROM `catalog` WHERE `course`='$class' ORDER BY `id` DESC");
-	if(!$query) die("error");
-	if(mysql_num_rows($query)==0) die("noclass");
-	$row = mysql_fetch_assoc($query);
-	unset($row['added']);
-	$row['id'] = str_replace('.','_',$row['course']);
-	$row['permission'] = (strpos($row['prereq'],'Permission')!=false);
-	$row['prereq'] = str_replace('J"', '"', $row['prereq']);
-	$row['coreq'] = str_replace('J"', '"', $row['coreq']);
-	$row['prereq'] = json_decode($row['prereq']);
-	$row['coreq'] = json_decode($row['coreq']);
-	$reqs = "";
-	if($row['prereq']) $reqs .= "<span class='prereqs'>Prereqs: [X]</span>&nbsp;";
-	if($row['coreq']) $reqs .= "<span class='coreqs'>Coreqs: [X]</span>";
-	if($reqs=="") $reqs = "No reqs :D";
-	$row['imgdata'] = json_decode($row['imgdata']);
-	if($row['reqstr']){
-		$row['reqstr'] = "Prereqs: ".$row['reqstr']."<br>";
-		$row['reqstr'] = preg_replace("/<\/?a.*?>/s","",$row['reqstr']);
-	}
-	if($row['units']=="0") $row['units'] = "12";
+
+if(isset($_POST['loadmajors'])){
+	header("Content-type: text/javascript");
+	$name = $_POST['name'];
+	$reqs = json_decode($_POST['reqs'], true);
+	echo "$name\n";
+	print_r($reqs);
+	die("\n\nworking!");
+}
+
+//autocomplete business
+if(isset($_POST['autocomplete'])){
+	$term = mysql_real_escape_string($_POST['autocomplete']);
+	$temp = array();
+	$query = mysql_query("SELECT DISTINCT `subject_id` FROM `warehouse` WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6");
+	while($row = mysql_fetch_array($query)) $temp[] = $row['subject_id'];
+	die(json_encode($temp));
+}
+
+function pullClass($class, $year=false, $classterm=0, $override=false){
+	$exception = (mysql_num_rows(mysql_query("SELECT * FROM `warehouse_exceptions` WHERE `subject_id`='$class'".($year?" AND `year`='$year'":"")." ORDER BY `year` DESC, `last_modified` DESC;"))!=0);
+	$sql = "SELECT * FROM `warehouse".($exception?"_exceptions":"")."` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." `last_modified` DESC;";
+	$row = mysql_fetch_assoc(mysql_query($sql));
+	if(!$row) die("noclass");
+	unset($row['id']);
+	unset($row['design_units']);
+	unset($row['tuition_attr']);
+	unset($row['supervisor_attr']);
+	unset($row['hgn_code']);
+	unset($row['hgn_except']);
+	unset($row['last_modified']);
+	unset($row['notes']);
+	$row['id'] = str_replace('.','_',$row['subject_id']);
+	$row['divid'] = $row['id']."__".rand();
+	$row['is_variable_units'] = ($row['is_variable_units']=='1');
+	$row['offered_this_year'] = ($row['offered_this_year']=='1');
+	$row['fall'] = ($row['fall']=='1');
+	$row['iap'] = ($row['iap']=='1');
+	$row['spring'] = ($row['spring']=='1');
+	$row['summer'] = ($row['summer']=='1');
+	$row['permission'] = (strpos($row['reqs'],'Permission')!=false);
+	$row['reqs'] = json_decode($row['reqs']);
+	$reqs = $row['reqs']?"Reqs: [X]":"No reqs :D";
+	if($row['reqstr']) $row['reqstr'] = "Requisites: ".$row['reqstr']."<br>";
+	$row['total_units'] = floatval($row['total_units']);
+	if(!$row['total_units']) $row['total_units'] = 12;
 	$row['info'] = <<<EOD
-Additional info for <strong>{$row['course']}</strong>:<br>
-<strong>{$row['title']}</strong><br>
-<a href="http://student.mit.edu/catalog/search.cgi?search={$row['course']}" target="_blank">Course Catalog</a> &#149;
-<a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode={$row['course']}" target="_blank">Class Evalutions</a><br>
+Additional info for <strong>{$row['subject_id']}</strong>:<br>
+<strong>{$row['subject_title']}</strong><br>
+<a href="http://student.mit.edu/catalog/search.cgi?search={$row['subject_id']}" target="_blank">Course Catalog</a> &#149;
+<a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode={$row['subject_id']}" target="_blank">Class Evalutions</a><br>
 {$row['reqstr']}
-<p class='infounits'>{$row['unitload']} ({$row['units']} units)</p><br>
+<p class='infounits'>{$row['unitload']} ({$row['total_units']} units)</p><br>
 <p class='infoinfo'>{$row['desc']}</p>
 EOD;
+	$row['divclasses']  = "classdiv bubble";
+	$row['divclasses'] .= " ".$row['id'];
+	$row['joint_subjects'] = explode(', ', $row['joint_subjects']);
+	foreach($row['joint_subjects'] as &$subj) $subj = rtrim($subj, 'J');
+	if(!$row['joint_subjects'][0]) $row['joint_subjects'] = false;
+	$row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
+	foreach($row['equiv_subjects'] as &$subj) $subj = rtrim($subj, 'J');
+	if(!$row['equiv_subjects'][0]) $row['equiv_subjects'] = false;
+	if($row['joint_subjects']) $row['divclasses'] .= " ".str_replace(".","_",implode(' ',$row['joint_subjects']));
+	if($row['gir'] and $row['gir'][0]=="H") $row['gir'] = "";
+	if($row['gir']) $row['divclasses'] .= " GIR ".$row['gir'];
+	if($row['ci']) $row['divclasses'] .= " CI ".$row['ci'];
+	if($row['hass']) $row['divclasses'] .= " HASS ".$row['hass'];
+	if($row['extraclasses']) $row['divclasses'] .= " ".str_replace(".","_",$row['extraclasses']);
+	
+	$row['special'] = ($row['gir'] or $row['ci'] or $row['hass']);
+	$row['classterm'] = $classterm;
+	$row['override'] = $override;
+	$row['custom'] = false;
+	
+	$row['otheryears'] = "<select>";
+	$query = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
+	while($row2 = mysql_fetch_assoc($query)){
+		$year2 = $row2['year'];
+		$row['otheryears'] .= "\n\t<option value='$year2'";
+		$row['otheryears'] .= ($year2==$row['year'])?" selected='true'>":">";
+		$row['otheryears'] .= "$year2</option>";
+	}
+	$row['yearspan'] = "<span title=\"The data for this class is from the {$row['year']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['year']}</span>";
+	$row['otheryears'] .= "\n<select>";	
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
-<div id='{$row['id']}' class='classdiv bubble'>
-	<div class='classdivlabel'>
-		<div class='classdivcourse'>{$row['course']}:&nbsp;</div>
-		<div class='classdivtitle' title='{$row['title']}'>{$row['title']}</div>
+<div id="{$row['divid']}" class="{$row['divclasses']}">
+	<div class="classdivlabel">
+		<div class="classdivcourse">{$row['subject_id']}:&nbsp;</div>
+		<div class="classdivtitle" title="{$row['subject_title']}">{$row['subject_title']}</div>
 	</div>
-	<div class='classdivinfo'>
-		$reqs
+	<div class="classdivinfo">
+		<div class="classdivyear">{$row['yearspan']}</div>
+		<div class="reqs">$reqs</div>
 	</div>
 </div>
 EOD;
-	echo json_encode($row);
-	die();
+	return $row;
+}
+
+function pullCustom($name, $units, $classterm=0, $override=false){
+	$row = array();
+	$row['year'] = "0";
+	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
+	$row['divid'] = $row['id']."__".rand();
+	$row['subject_title'] = $name;
+	$row['total_units'] = floatval($units);
+	if(!$row['total_units']) $row['total_units'] = 0;
+	$row['info'] = <<<EOD
+<strong>{$row['subject_title']}</strong><br>
+<p class='infounits'>({$row['total_units']} units)</p><br>
+<p class='infoinfo'>[This is a user-defined subject.]</p>
+EOD;
+	$row['divclasses']  = "classdiv bubble custom";
+	$row['classterm'] = $classterm;
+	$row['checkrepeat'] = true;
+	$row['override'] = $override;
+	$row['custom'] = true;
+	//the $row['div'] actually stores the HTML of the class bubble.
+	$row['div'] = <<<EOD
+<div id="{$row['divid']}" class="{$row['divclasses']}">
+	<div class="classdivlabel">
+		<div class="classdivtitle" title="{$row['subject_title']}">{$row['subject_title']}</div>
+	</div>
+	<div class="classdivinfo">
+		<div>({$row['total_units']} units)</div>
+	</div>
+</div>
+EOD;
+	return $row;
+}
+
+//loads class data from the database and serves up the JSON CourseRoad requires to load that class.
+if(isset($_POST['getclass'])){
+	header("Content-type: text/javascript");
+	$class = mysql_real_escape_string($_POST['getclass']);
+	$year = isset($_POST['getyear'])?mysql_real_escape_string($_POST['getyear']):false;
+	//echo $class;
+	die(json_encode(pullClass($class, $year)));
+}
+
+if(isset($_POST['getcustom'])){
+	header("Content-type: text/javascript");
+	$name = htmlentities($_POST['getcustom']);
+	$units = isset($_POST['getunits'])?floatval($_POST['getunits']):false;
+	die(json_encode(pullCustom($name, $units)));
+}
+
+//Returns the desired hash's class and major data
+if(isset($_POST['gethash'])){
+	header("Content-type: text/javascript");
+	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
+	$_SESSION['crhash'] = $hash;
+	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
+	$query = mysql_query($sql);
+	$classes = '';
+	$major = '';
+	while($row = mysql_fetch_array($query)){
+		$classes = json_decode($row['classes'], true);
+		$major = stripslashes($row['major']);
+	}
+	if($classes=='') die();
+	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
+	$major = json_decode($major, true);
+	$json = array();
+	foreach($classes as $class){
+		if(isset($class["custom"])){
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
+		}else{
+			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+		}
+	}
+	$json[] = $major;
+	die(json_encode($json));
 }
 
 //For certification purposes.
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
+$loggedin = isset($_SESSION['athena']);
+$athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
+if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1,'edited'=>0);
+if($loggedin){
+	$tempuser = mysql_fetch_assoc(mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'"));
+	if($tempuser){
+		$_SESSION['user']['class_year'] = $tempuser['class_year'];
+		$_SESSION['user']['view_req_lines'] = $tempuser['view_req_lines'];
+		$_SESSION['user']['autocomplete'] = $tempuser['autocomplete'];
+		unset($tempuser);
+	}
+}
 
 //This runs if the user has click "save road". It determines the login status of the user 
 //and sets the hash to be either random characters or something like username-20120504051511
@@ -91,479 +231,262 @@ if(isset($_POST['classes'])){
 	$classes = mysql_real_escape_string($_POST['classes']);
 	$major = mysql_real_escape_string($_POST['major']);
 	$hash = substr(strtr(base64_encode(md5($classes.$major)), '+/=', '-_,'),0,5);
-	$user = "";
 	$_SESSION['crhash'] = $hash;
 	$trycert = false;
 	if($_POST['trycert']){
-		if(isset($_SESSION['athena'])){
+		if($loggedin){
 			$saveas = date("YmdHis");
-			$hash = $_SESSION['athena'].'/'.$saveas;
-			$user = $_SESSION['athena'];
+			$hash = $athena.'/'.$saveas;
 		}else if(!$_SESSION['triedcert']){
-			$trycert = true;
 			$_SESSION['trycert'] = true;
 		}
 	}
-	$sql = "INSERT INTO `roads` VALUES (NULL, '$hash', '$user', '$classes', '$major', '0', '{$_SERVER['REMOTE_ADDR']}', CURRENT_TIMESTAMP);";
+	//id, hash, user, classes, major, public, desc, ip, added
+	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `ip`) VALUES ('$hash', '$athena', '$classes', '$major', '{$_SERVER['REMOTE_ADDR']}');";
 	mysql_query($sql);
-	echo $trycert?"**auth**":$hash; //The **auth** lets the user's browser know to try to log in
-	die();
+	die(isset($_SESSION['trycert'])?"**auth**":$hash); //The **auth** lets the user's browser know to try to log in
 }
 
-//Returns the desired hash's class and major data
-if(isset($_POST['hash'])){
-	$hash = mysql_real_escape_string(substr($_POST['hash'],1));
-	$sql = "SELECT `classes`,`major` FROM `roads` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
-	$query = mysql_query($sql);
-	$classes = '';
-	$major = '';
-	while($row = mysql_fetch_array($query)){
-		$classes = stripslashes($row['classes']);
-		$major = stripslashes($row['major']);
-	}
-	echo json_encode(array($classes, $major));
-	die();
-}
-if(isset($_SESSION['trycert'])){
+if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
 	unset($_SESSION['trycert']);
-	header("Location: /#".$_SESSION['crhash']);
+	if(!isset($_SERVER['HTTP_REFERER'])) $_SERVER['HTTP_REFERER']="index.php";
+	if(!isset($_SESSION['crhash'])) $_SESSION['crhash']="error401";
+	header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['crhash']}");
 	die();
 }
-function sortsaved($a, $b){
-    if($a[1]<$b[1]) return -1;
-    if($a[1]>$b[1]) return 1;
-    if($a[0]<$b[0]) return -1;
-    if($a[0]>$b[0]) return 1;
-    return 0;
-}
+
 //Returns the desired table of saved roads when the user is logged in
-if(isset($_GET['savedroads'])){
-	if(!isset($_SESSION['athena'])) die();
-	$hash = mysql_real_escape_string($_SESSION['athena']);
-	$sql = "SELECT * FROM `roads` WHERE `hash` LIKE '$hash/%' ORDER BY `added` DESC";
+if(isset($_POST['savedroads'])){
+	if(!$loggedin) die("Sorry, you need to log in again.");
+	$sql = "SELECT * FROM `roads2` WHERE `user`='$athena' ORDER BY `added` DESC";
 	$query = mysql_query($sql);
 	echo "<table>\n";
 	echo "<tr>";
-	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/{$_SESSION['athena']}\">Public</th>";
+	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/index.php#{$_SESSION['athena']}\">Public</th>";
+	echo "<th style=\"min-width:118px\">Hash</th>";
 	echo "<th style=\"min-width:118px\">Added</th>";
 	echo "<th style=\"min-width:95px\">Major</th>";
 	echo "<th>Classes</th>";
+	echo "<th style=\"min-width:30px;max-width:120px;\">Comment</th>";
 	echo "<th>Delete?</th>";
 	echo "</tr>\n";
 	echo "<tr>";
-	$numrows = mysql_query("SELECT COUNT(*) FROM `roads` WHERE `hash` LIKE '$hash/%' AND `public`='1'");
+	$numrows = mysql_query("SELECT COUNT(*) FROM `roads2` WHERE `hash` LIKE '$athena/%' AND `public`='1'");
 	$numrows = mysql_fetch_array($numrows);
 	$numrows = $numrows[0];
 	echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"null\" ".($numrows?"":"checked=\"true\" ")."/></td>";
-	echo "<td colspan=\"4\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
+	echo "<td colspan=\"6\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
 	echo "</tr>\n";
 	while($row = mysql_fetch_array($query)){
-		$roadURL = "?hash=".stripslashes($row['hash']);
-		echo "<tr>";
-		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"".stripslashes($row['hash'])."\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
-		echo "<td><a href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
-		echo "<td>".stripslashes($row['major'])."</td>";
-		$classes = json_decode(stripslashes($row['classes']), true);
-		usort($classes, "sortsaved");
-		//print_r($classes);
+		$hash = stripslashes($row['hash']);
+		$roadURL = "?hash=$hash";
+		echo "<tr data-hash=\"$hash\">";
+		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"$hash\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
+		echo "<td><span class=\"saved-roads-hash\">".substr(strstr($hash, "/"),1)."</span><span class=\"saved-roads-edit-hash ui-icon ui-icon-pencil\"></span></td>";
+		echo "<td><a class=\"hashlink\" href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
+		$major = stripslashes($row['major']);
+		if($major[0]!='[') $major = "[\"$major\"]";
+		$major = str_replace(',"m0"','',$major);
+		$major = implode(",<br>\n", json_decode($major));
+		echo "<td>$major</td>";
+		$classes = json_decode($row['classes'], true);
 		$classes2 = array();
 		foreach($classes as &$class2){
-			if($class2[2]) $class2[0] .= "*";
-			$classes2[] = $class2[0];
+			if(isset($class2["custom"])) $class2["id"] = '('.$class2["name"].')';
+			if(!isset($class2["id"])) continue;
+			if($class2["override"]) $class2["id"] .= "*";
+			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
-		echo "<td><strong class=\"deleteroad\">X</strong></td>";
+		echo "<td><span class=\"saved-roads-comment\">{$row['comment']}</span><span class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span></td>";
+		echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
 		echo "</tr>\n";
 	}
 	echo "</table>";
 	die();
 }
-//Runs when the user sets one fo their roads to be their public road
-if(isset($_GET['choosesavedroad'])){
-	$hash = mysql_real_escape_string($_GET['choosesavedroad']);
-	if(!isset($_SESSION['athena'])) die();
-	$hasharray = explode('/', $hash);
-	if(($_SESSION['athena']!=$hasharray[0]) and ($hash!="null")) die();
-	mysql_query("UPDATE `roads` SET `public`='0' WHERE `hash` LIKE '{$_SESSION['athena']}/%'");
-	if($hash!="null") mysql_query("UPDATE `roads` SET `public`='1' WHERE `hash`='$hash'");
-	echo "ok";
-	die();
+
+//Runs when the user sets one of their roads to be their public road
+if(isset($_POST['choosesavedroad'])){
+	$hash = mysql_real_escape_string($_POST['choosesavedroad']);
+	if(!$loggedin) die();
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
+	mysql_query("UPDATE `roads2` SET `public`= CASE WHEN `hash`='$hash' THEN '1' ELSE '0' END WHERE `user`='$athena'");
+	die("ok");
+}
+//When the user changes a road's hash
+if(isset($_POST['changeroadhash'])){
+	$hash = mysql_real_escape_string($_POST['changeroadhash']);
+	$newhash = mysql_real_escape_string($athena."/".htmlentities(substr($_POST['newhash'],0,36)));
+	if(!$loggedin or preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) or !strlen($_POST['newhash'])) die($hash);
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die($hash);
+	if(mysql_num_rows(mysql_query("SELECT * FROM `roads2` WHERE `hash`='$newhash'"))) die($hash);
+	mysql_query("UPDATE `roads2` SET `hash`='$newhash' WHERE `hash`='$hash'");
+	die($newhash);
+}
+//And when the user adds a comment
+if(isset($_POST['commentonroad'])){
+	$hash = mysql_real_escape_string($_POST['commentonroad']);
+	$comment = mysql_real_escape_string(htmlentities(substr($_POST['commentforroad'],0,100)));
+	if(!$loggedin) die($hash);
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
+	mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
+	die($comment);
 }
 //Similarly, runs when the user deletes a road.
-if(isset($_GET['deleteroad'])){
-	$hash = mysql_real_escape_string($_GET['deleteroad']);
-	if(!isset($_SESSION['athena'])) die();
-	$hasharray = explode('/', $hash);
-	if(($_SESSION['athena']!=$hasharray[0]) and ($hash!="null")) die();
-	if($hash!="null") mysql_query("DELETE FROM `roads` WHERE `hash`='$hash'");
-	echo "ok";
+if(isset($_POST['deleteroad'])){
+	$hash = mysql_real_escape_string($_POST['deleteroad']);
+	if(!$loggedin) die();
+	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
+	if($hash!="null") mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
+	die("ok");
+}
+
+if(isset($_POST['usersettings'])){
+	$_SESSION['user']['class_year'] = intval(mysql_real_escape_string($_POST['class_year']));
+	$_SESSION['user']['view_req_lines'] = ($_POST['view_req_lines']=="1")?1:0;
+	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
+	$_SESSION['user']['edited'] = $loggedin?0:1;
+	if($loggedin) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
+	$view_req_lines = $_SESSION['user']['view_req_lines']?'checked="checked"':'';
+	$autocomplete = $_SESSION['user']['autocomplete']?'checked="checked"':'';
+	echo <<<EOD
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="{$_SESSION['user']['class_year']}"><br>
+		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" $view_req_lines><br>
+		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" $autocomplete><br>
+EOD;
 	die();
 }
-mysql_close($connect);
-$nocache = isset($_GET['nocache']);
-$nocache = true;
-$nocache = $nocache?"?nocacher=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<title>CourseRoad<?= isset($_SESSION['athena'])?": {$_SESSION['athena']}":""; ?></title>
-<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
-<link rel="stylesheet" type="text/css" href="print.css<?= $nocache ?>" <?= isset($_GET['print'])?"":"media=\"print\""?>>
-<!--[if lt IE 9]>
-	<link rel="stylesheet" type="text/css" href="cr-ie.css<?= $nocache ?>">
-	<script type="text/javascript" src="excanvas.compiled.js"></script>
-<![endif]-->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-<!--This lies to YUI 2.9.0, spoofing IE9 as Firefox, so the wires render properly.-->
-<!--[if IE 9]><script type="text/javascript">YAHOO.env.ua.ie=0;</script><![endif]-->
-<script type="text/javascript" src="jquery.cookies.2.2.0.min.js"></script>
-<script type="text/javascript" src="wireit-min.js"></script>
-<script type="text/javascript" src="cr.js<?= $nocache ?>"></script>
-<!--script type="text/javascript" src="http://intralife.researchstudio.at:8080/api-js/easyrec.js"></script-->
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-31018454-1']);
-_gaq.push(['_trackPageview']);
 
-(function() {
-	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
+$nocache = isset($_GET['nocache']);
+$nocache = true; //Uncomment during development
+$nocache = $nocache?"?nocache=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
+?>
+<!DOCTYPE html>
+<!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8"><![endif]-->
+<!--[if IE 8]><html lang="en-us" class="ie ie8 lte9 lte8"><![endif]-->
+<!--[if IE 9]><html lang="en-us" class="ie ie9 lte9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>CourseRoad 2.0<?= $loggedin?": $athena":"" ?></title>
+	<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
+	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
+	<script src="json2-min.js"></script>
+	<script src="wireit-min.js"></script>
+	<script src="cr.js<?= $nocache ?>"></script>
+	<script>
+		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
+		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+		g.src="https://ssl.google-analytics.com/ga.js";
+		s.parentNode.insertBefore(g,s)}(document,"script"));
+		var loggedin = <?= intval($loggedin) ?>;
+		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
+		var user = {classYear:<?= $_SESSION['user']['class_year'] ?>, viewReqLines:<?= $_SESSION['user']['view_req_lines'] ?>, autocomplete:<?= $_SESSION['user']['autocomplete'] ?>};
+		$(crSetup);
+	</script>
 </head>
 <body>
-<script type="text/javascript">
-//var apiKey = "cd2cfd891944811e690fc5c56acb0660";
-//var tenantId = "CourseRoad";
-//var USERID = SESSIONID = "<?= session_id(); ?>"; //These date to a prior feature testing; ignore...for now
-var loggedin = <?= isset($_SESSION['athena'])?"1":"0"; ?>;
-var triedlogin = <?= $_SESSION['triedcert']?"1":"0"; ?>; //These are not trusted variables, but they do aid in displaying different things based on login status.
-var userhashchange = true;
-window.onhashchange = function(){
-	//userhashchange means that if the user types in a new hash in the URL, 
-	//the browser will reload, but if the has changes do to saving a new version or something it won't.
-	if(userhashchange) window.location.reload(); 
-}
-
-var classes = {}; //An object to hold each classes' data.
-var terminals = {}; //An object to hold the wire terminals that allow CourseRoad to display wires.
-var sortstartterms;
-var loadingclasses = 0;
-var gir = {};
-gir.SCI = {};
-gir.CI = [];
-gir.REST = [];
-gir.LAB = [];
-gir.HASS = {};
-gir.HASS2 = [];
-gir.totalUnits = 0;
-var SCIgirs = ["Calculus I", "Calculus II", "Physics I", "Physics II", "Biology", "Chemistry"];
-$(function(){
-	$(window).bind("beforeunload", function(){
-		//Still a work in progress
-		if(!userhashchange){
-			return "Are you sure you want to leave? You'll lose any unsaved courses you've added.";
-		}
-	});
-	setInterval('addAllWires();', 5000); //Assures regular updating of the window, should anything change
-	$('#getnewclassid').blur(function(){
-		$("#getnewclass .ui-autocomplete").hide();
-	}).focus();
-	$('#getnewclasssubmit').click(function(){
-		//Adds the class
-		getClass($('#getnewclassid').val(), $('#getnewclassterm').val());
-		$('#getnewclassid').val('');
-	});
-	$("#getnewclass form").submit(function(){
-		return false;
-	});
-	$("body").on("click", ".classdiv", function(){
-		//Highlights the selected class, dims the others, adn displays info on that class in the lower right
-		$(".classdiv").not($(this)).removeClass("classdivhigh");
-		$(".classdiv").removeClass("classdivlow");
-		$(this).toggleClass("classdivhigh");
-		if($('.classdivhigh').length==1){
-			$("#overrider span").css('opacity', 1);
-			$('.classdiv').not($(this)).addClass("classdivlow");
-			$('.WireIt-Wire').addClass("WireIt-Wire-low");
-			for(i in terminals[$(".classdivhigh").attr("id")].terminal.wires){
-				$(terminals[$(".classdivhigh").attr("id")].terminal.wires[i].element).removeClass("WireIt-Wire-low");
-			}
-			$("#nowreading").html(classes[$('.classdivhigh').attr('id')].info);
-			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
-			$("#overridercheck").prop("disabled", false).prop("checked", classes[$('.classdivhigh').attr('id')].override);
-		}else{
-			$("#overrider span").css('opacity', 0);
-			$("#overridercheck").prop("disabled", true);
-			$(".classdiv").removeClass("classdivlow");
-			$('.WireIt-Wire').removeClass("WireIt-Wire-low");
-			$("#nowreading").html('Click on a class to see more info.');
-		}
-	});
-	$("#overridercheck").change(function(){
-		classes[$('.classdivhigh').attr('id')].override = $(this).prop("checked");
-		$('.classdivhigh').toggleClass("classdivoverride");
-		addAllWires();
-	});
-	$(".term, .year").click(function(){
-		//Un-select a class
-		$("#overridercheck").prop("disabled", true);
-		$("#overrider span").css('opacity', 0);
-		$(".classdivhigh").removeClass("classdivhigh");
-		$(".classdiv").removeClass("classdivlow");
-		$('.WireIt-Wire').removeClass("WireIt-Wire-low");
-		$("#nowreading").html('Click on a class to see more info.');
-	});
-	$("body").on("click", "canvas.WireIt-Wire", function(){
-		$(".term:first").click();
-	});
-	$(".term").sortable({
-		//Allows the classes to be draggable and sortable.
-		connectWith: '.term', 
-		containment: '#rightbar', 
-		cursor: 'default', 
-		distance: 20, 
-		items: '.classdiv',
-		opacity: 0.8, 
-		placeholder: 'ui-sortable-placeholder', 
-		scroll: true, 
-		zIndex: 99,
-		start: function(event, ui){
-			$('.WireIt-Wire').hide();
-		},
-		stop: function(event, ui){
-			$('.classdiv').removeAttr("style");
-			$('.WireIt-Wire').show();
-			addAllWires();
-		}
-	});
-	$("#rightbar").disableSelection();
-	$("#trash").droppable({
-		accept: '.classdiv',
-		hoverClass: 'drophover',
-		tolerance: 'touch',
-		activate: function(event, ui){
-			$(this).addClass('trashon', 'slow');
-		},
-		deactivate: function(event, ui){
-			$(this).removeClass('trashon', 'fast');
-		},
-		over: function(event, ui){
-			$(this).addClass('trashhover', 'fast');
-		},
-		out: function(event, ui){
-			$(this).removeClass('trashhover', 'fast');
-		},
-		drop: function(event, ui){
-			trashed = ui.draggable.attr("id");
-			console.log(trashed,' ',(new Date()).getTime());
-			delete classes[trashed];
-			console.log(trashed,' ',(new Date()).getTime());
-			ui.draggable.remove();
-			console.log(trashed,' ',(new Date()).getTime());
-			//$(".ui-sortable-placeholder").remove();
-			$(this).removeClass('trashhover', 'fast');
-			console.log(trashed,' ',(new Date()).getTime());
-			addAllWires();
-			console.log(trashed,' ',(new Date()).getTime());
-		}
-	});
-	$("#getnewclassid").autocomplete({
-		source: "autocomplete.php",
-		minLength: 2,
-		appendTo: "#getnewclass"
-	});
-	$("#savemap").click(function(){
-		$.post("?", {classes: minclass(true), major: $("#choosemajor").val(), trycert: loggedin}, function(data){
-			if(loggedin){
-				if(data=="**auth**"){
-					//This redirects us to the secure cert check.
-					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
-				}else{
-					console.log("CERTS! "+data);
-					userhashchange = false;
-					window.location.hash = data;
-					setTimeout(function(){userhashchange = true;}, 1000);
-				}	
-			}else{
-				console.log(data);
-				userhashchange = false;
-				window.location.hash = data;
-				setTimeout(function(){userhashchange = true;}, 1000);
-			}
-		});
-	});
-	if(!loggedin && triedlogin) $("#mapcerts").hide();
-	$("#mapcerts").click(function(){
-		if(loggedin){
-			$("#viewroads").dialog("open");
-		}else{
-			$.post("?", {classes: minclass(true), major: $("#choosemajor").val(), trycert: true}, function(data){
-				if(data=="**auth**"){
-					window.location.href = "https://"+window.location.hostname+":444"+window.location.pathname.split("/").splice(0, window.location.pathname.split("/").length-1).join("/")+"/secure.php";
-				}else{
-					console.log("CERTS! "+data);
-					userhashchange = false;
-					window.location.hash = data;
-					setTimeout(function(){userhashchange = true;}, 1000);
-				}
-			});
-		}
-	});
-	if(window.location.hash){
-		//Load hash's classes on pageload
-		$.post("?", {hash: window.location.hash}, function(data){
-			temp = eval(data);
-			$("#choosemajor").val(temp[1]).attr("selected",true);
-			if(temp[0]=="") return false;
-			getClasses(eval(temp[0]));
-		});
-	}
-	//$("#choosemajor").change(checkMajor);
-	$("select.majorminor").on("change", function(){checkMajor(this);});
-	$("#viewroads").dialog({
-		autoOpen: false,
-		width: 800,
-		draggable: false,
-		resizeable: false,
-		modal: true,
-		open: function(event, ui){
-			$("#savedroads").html("Loading...");
-			$.get("?savedroads=1", null, function(data){
-				$("#savedroads").html(data);
-			});
-		}
-	});
-	$("#viewroads_close").click(function(){
-		$("#viewroads").dialog('close');
-	});
-	$("body").on("click", ".choosesavedroad", function(){
-		$.get("?", {choosesavedroad: $(this).val()}, function(data){
-			if(data=="ok"){
-				console.log("It worked!");
-			}
-		});
-	});
-	$("body").on("click", ".deleteroad", function(){
-		if(confirm("Are you sure you want to delete this road? This action cannot be undone.")){
-			var parent = $(this).parent().parent();
-			val = parent.find(":radio").val();
-			parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
-			$.get("?", {deleteroad: val}, function(data){
-				if(data=="ok"){
-					console.log("Class deleted.");
-				}
-			});
-		}
-	});
-	//Runs the help dialog down below
-	<?= isset($_GET['modal'])?"$.cookies.del('modalhelp');\n":"\n" ?>
-	$("#help").dialog({
-		autoOpen: ($.cookies.get('modalhelp')==null),
-		width: 600,
-		draggable: false,
-		resizeable: false,
-		modal: true
-	});
-	$("#help_close").click(function(){
-		$("#help").dialog('close');
-	});
-	$("#accordion").accordion();
-	$(".dummylink").click(function(e){
-		e.preventDefault();
-	});
-	$("#openhelp").click(function(){
-		$("#help").dialog('open').dialog('option', 'position', 'center');
-		$( "#accordion" ).accordion( "resize" );
-	});
-	setTimeout(function(){$("#help").dialog('option', 'position', 'center');$( "#accordion" ).accordion( "resize" );}, 500);
-	if($.cookies.get('modalhelp')==null){
-		$.cookies.set('modalhelp','1',{expiresAt: deltaDate(0, 0, 14)});
-	}
-	$("#choosemajor option").each(function(){
-		if(majors[$(this).val()]==undefined) $(this).remove();
-	});
-	//$("#rightbar").css('width', $("#rightbar").width());
-	$(window).resize(function() {
-		//$("#rightbar").css('width', 'auto');
-		//addAllWires();
-		//$("#rightbar").css('width', $("#rightbar").width());
-	});
-	$("#printroad").click(function(){
-		$("body, #rightbar, .term, .year").toggleClass("printing");
-		addAllWires();
-		window.print();
-		$("body, #rightbar, .term, .year").toggleClass("printing");
-		addAllWires();
-	});
-});
-</script>
 <div id="leftbar">
 	<div id="getnewclass">
-		<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog (new!)</a><br><br>
-		<?
-		if(isset($_SESSION['athena'])){
-			echo "Welcome, <strong>{$_SESSION['athena']}</strong>!";
-		}
-		?>
-		<br><br>
-		<form action="" method="POST">
+		<ul>
+			<li><a href="#infotabs-about">About</a></li>
+			<li><a href="#infotabs-add">Add</a></li>
+			<li><a href="#infotabs-save">Save</a></li>
+		</ul>
+		<div id="infotabs-about" class="ui-corner-all leftbarholder">
+			<div class="infotabs-about-header flakyCSS">Welcome to CourseRoad!</div>
+			<div class="infotabs-about-subheader flakyCSS">A four-year planner for the MIT community.</div>
+			<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a>
+			<br>
+			<?= $loggedin?"Hello, <strong>$athena</strong>! ":"<input type=\"button\" id=\"userlogin\" class=\"bubble loaders\" value=\"Login\">" ?>
+			<input type="button" id="showusersettings" class="bubble loaders" value="User Settings">
+		</div>
+		<div id="infotabs-add" class="ui-corner-all leftbarholder">
+			Class Type:&nbsp;
+			<input type="radio" name="getnewclasstype" id="getnewclasstype-subject" value="subject" checked><label for="getnewclasstype-subject" title="18.01, CMS.631, etc.">Subject</label>
+			&nbsp;
+			<input type="radio" name="getnewclasstype" id="getnewclasstype-custom" value="custom"><label for="getnewclasstype-custom" title="Summer UROP, Lab Assistant, etc.">Custom</label>
+			<br>
 			<span>Add</span>
-			<input id="getnewclassid" type="text" size="5" name="classname"> to 
-			<select id="getnewclassterm" name="classterm" style="width: 111px;">
+			<div id="getnewclass-class"  class="getnewclasstypes visible">
+				<input id="getnewclassid" type="text" name="classid" placeholder="18.01" pattern="[A-Za-z0-9\.]*" autofocus>
+			</div>
+			<div id="getnewclass-custom" class="getnewclasstypes">
+				<input id="getnewclassname" type="text" name="classname" placeholder="UROP">
+				&nbsp;(<input id="getnewclassunits" type="text" name="classunits" placeholder="0" pattern="[0-9\.]*"> units)
+			</div>
+			<br>
+			&nbsp;to 
+			<select id="getnewclassterm" name="classterm">
 				<option value="0">Prior Credit</option>
 				<option value="1">Freshman Fall</option>
 				<option value="2">Freshman IAP</option>
 				<option value="3">Freshman Spring</option>
-				<option value="4">Sophomore Fall</option>
-				<option value="5">Sophomore IAP</option>
-				<option value="6">Sophomore Spring</option>
-				<option value="7">Junior Fall</option>
-				<option value="8">Junior IAP</option>
-				<option value="9">Junior Spring</option>
-				<option value="10">Senior Fall</option>
-				<option value="11">Senior IAP</option>
-				<option value="12">Senior Spring</option>
-			</select><br> 
-			<input id="getnewclasssubmit" class="bubble loaders" onclick="return false;" type="submit" value="Add Class">
+				<option value="4">Freshman Summer</option>
+				<option value="5">Sophomore Fall</option>
+				<option value="6">Sophomore IAP</option>
+				<option value="7">Sophomore Spring</option>
+				<option value="8">Sophomore Summer</option>
+				<option value="9">Junior Fall</option>
+				<option value="10">Junior IAP</option>
+				<option value="11">Junior Spring</option>
+				<option value="12">Junior Summer</option>
+				<option value="13">Senior Fall</option>
+				<option value="14">Senior IAP</option>
+				<option value="15">Senior Spring</option>
+				<option value="16">Senior Summer</option>
+				<option value="17">Super-Senior Fall</option>
+				<option value="18">Super-Senior IAP</option>
+				<option value="19">Super-Senior Spring</option>
+				<option value="20">Super-Senior Summer</option>
+			</select>
+				<button type="button" id="changeclassterm-up" class="bubble loaders changeclassterm ui-button" value="-1">
+					<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-n"></span>
+				</button>
+				<button type="button" id="changeclassterm-down" class="bubble loaders changeclassterm ui-button" value="1">
+					<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>
+				</button>
+			<br> 
+			<input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
+		</div>
+		<div id="infotabs-save" class="ui-corner-all leftbarholder">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
 			<input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
-			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road"> <!-- soon! -->
-		</form>
-		<br>
-		<br>
+			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road">--><!-- soon! -->
+		</div>
 	</div>
-	<div id="COREchecker">
+	<div id="COREchecker" class="leftbarholder">
 	<strong>General Institute Requirements:</strong><br>
-		Physics I: <span id="Physics_I" class="coreSCI">[ ]</span><br>
-		Physics II: <span id="Physics_II" class="coreSCI">[ ]</span><br>
-		Calculus I: <span id="Calculus_I" class="coreSCI">[ ]</span><br>
-		Calculus II: <span id="Calculus_II" class="coreSCI">[ ]</span><br>
-		Chemistry: <span id="Chemistry" class="coreSCI">[ ]</span><br>
-		Biology: <span id="Biology" class="coreSCI">[ ]</span><br>
+		Physics I: <span id="Physics_I" class="checkbox1 corecheck GIR PHY1">[ ]</span><br>
+		Physics II: <span id="Physics_II" class="checkbox1 corecheck GIR PHY2">[ ]</span><br>
+		Calculus I: <span id="Calculus_I" class="checkbox1 corecheck GIR CAL1">[ ]</span><br>
+		Calculus II: <span id="Calculus_II" class="checkbox1 corecheck GIR CAL2">[ ]</span><br>
+		Chemistry: <span id="Chemistry" class="checkbox1 corecheck GIR CHEM">[ ]</span><br>
+		Biology: <span id="Biology" class="checkbox1 corecheck GIR BIOL">[ ]</span><br>
+		REST <span id="REST" class="checkbox1 corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="checkbox1 corecheck GIR REST">[ ]</span><br>
+		LAB <span id="LAB" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="coreCI">[ ]</span>&nbsp;<span id="CI_H2" class="coreCI">[ ]</span><br>
-		REST <span id="REST" class="coreREST">[ ]</span>&nbsp;<span id="REST2" class="coreREST">[ ]</span><br>
-		LAB <span id="LAB" class="coreLAB">[ ]</span>&nbsp;<span id="LAB2" class="coreLAB">[ ]</span><br>
+		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH CIHW">[ ]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH CIHW">[ ]</span><br>
 		-----------------<br>
 		HASS:<br>
-		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="coreHASS">[ ]</span>
-					&nbsp;H <span id="HASS_Humanities" class="coreHASS">[ ]</span>
-					&nbsp;S <span id="HASS_Social_Sciences" class="coreHASS">[ ]</span><br>
+		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[ ]</span>
+					&nbsp;H <span id="HASS_Humanities" class="checkbox1 corecheck HASS HH">[ ]</span>
+					&nbsp;S <span id="HASS_Social_Sciences" class="checkbox1 corecheck HASS HS">[ ]</span><br>
 		&nbsp;&nbsp;&nbsp;Other HASS: 
-		<span id="HASS_E"  class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E2" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E3" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E4" class="coreHASS coreHASSE">[ ]</span>
-		<span id="HASS_E5" class="coreHASS coreHASSE">[ ]</span><br>
-		-----------------<br>
+		<span id="HASS_E"  class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E2" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E3" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E4" class="checkbox1 corecheck HASS HE">[ ]</span>
+		<span id="HASS_E5" class="checkbox1 corecheck HASS HE">[ ]</span><br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="choosemajor" name="choosemajor" class="majorminor" data-div="#majorreqs">
 			<option value="m0">---Select a Major---</option>
 			<option value="m1_A">1A -- Engineering</option>
@@ -637,7 +560,7 @@ $(function(){
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
 		<div id="majorreqs" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="choosemajor2" name="choosemajor2" class="majorminor" data-div="#majorreqs2">
 			<option value="m0">---Select a Major---</option>
 			<option value="m1_A">1A -- Engineering</option>
@@ -711,9 +634,46 @@ $(function(){
 			<option value="mWGS">WGS -- Women's and Gender Studies</option>
 		</select><br>
 		<div id="majorreqs2" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miArchitecture">Minor in Architecture</option>
+			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
+			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
+			<option value="miUrban_studies_and_planning">Minor in Urban Studies and Planning</option>
+			<option value="miInternational_development">Minor in International Development</option>
+			<option value="miToxicology_and_enviro_health">Minor in Toxicology and Environmental Health</option>
+			<option value="miCivil_Engineering">Minor in Civil Engineering</option>
+			<option value="miEnvrio_Engineering_Science">Minor in Environmental Engineering Science</option>
+			<option value="miAnthropology">Minor in Anthropology</option>
+			<option value="miCMS">Minor in Comparative Media Studies</option>
+			<option value="miBiology">Minor in Biology</option>
+			<option value="miBrain_Cog_Sci">Minor in Brain and Cognitive Sciences</option>
+			<option value="miChemistry">Minor in Chemistry</option>
+			<option value="miEarth_Atmos_Planetary">Minor in Earth, Atmospheric, and Planetary Sciences</option>
+			<option value="miEcon">Minor in Economics</option>
+			<option value="miWriting">Minor in Writing</option>
+			<option value="miManagement">Minor in Management</option>
+			<option value="miManagement_science">Minor in Management Science</option>
+			<option value="miSTS">Minor in Science, Technology, and Society</option>
+			<option value="miMusic">Minor in Music</option>
+			<option value="miTheater_arts">Minor in Theater Arts</option>
+			<option value="miPhilosophy">Minor in Philosophy</option>
+			<option value="miLinguistics">Minor in Linguistics</option>
+			<option value="miMSE">Minor in Material Science and Engineering</option>
+			<option value="miArchaeology">Minor in Archaeology and Materials</option>
+			<option value="miMathematics">Minor in Mathematics</option>
+			<option value="miMechE">Minor in Mechanical Engineering</option>
+			<option value="miNuclear_science">Minor in Nuclear Science and Engineering</option>
+			<option value="miPhysics">Minor in Physics</option>
+			<option value="miPolitical_science">Minor in Political Science</option>
+			<option value="miChinese">Minor in Chinese</option>
+			<option value="miFrench">Minor in French</option>
+			<option value="miGerman">Minor in German</option>
+			<option value="miSpanish">Minor in Spanish</option>
+			<option value="miJapanese">Minor in Japanese</option>
+			<option value="miHistory">Minor in History</option>
+			<option value="miLiterature">Minor in Literature</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
@@ -721,9 +681,46 @@ $(function(){
 			<option value="miPublic_policy">Minor in Public Policy</option>
 		</select><br>
 		<div id="minorreqs" class="majorminor"></div>
-		-----------------<br>
+		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miArchitecture">Minor in Architecture</option>
+			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
+			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
+			<option value="miUrban_studies_and_planning">Minor in Urban Studies and Planning</option>
+			<option value="miInternational_development">Minor in International Development</option>
+			<option value="miToxicology_and_enviro_health">Minor in Toxicology and Environmental Health</option>
+			<option value="miCivil_Engineering">Minor in Civil Engineering</option>
+			<option value="miEnvrio_Engineering_Science">Minor in Environmental Engineering Science</option>
+			<option value="miAnthropology">Minor in Anthropology</option>
+			<option value="miCMS">Minor in Comparative Media Studies</option>
+			<option value="miBiology">Minor in Biology</option>
+			<option value="miBrain_Cog_Sci">Minor in Brain and Cognitive Sciences</option>
+			<option value="miChemistry">Minor in Chemistry</option>
+			<option value="miEarth_Atmos_Planetary">Minor in Earth, Atmospheric, and Planetary Sciences</option>
+			<option value="miEcon">Minor in Economics</option>
+			<option value="miWriting">Minor in Writing</option>
+			<option value="miManagement">Minor in Management</option>
+			<option value="miManagement_science">Minor in Management Science</option>
+			<option value="miSTS">Minor in Science, Technology, and Society</option>
+			<option value="miMusic">Minor in Music</option>
+			<option value="miTheater_arts">Minor in Theater Arts</option>
+			<option value="miPhilosophy">Minor in Philosophy</option>
+			<option value="miLinguistics">Minor in Linguistics</option>
+			<option value="miMSE">Minor in Material Science and Engineering</option>
+			<option value="miArchaeology">Minor in Archaeology and Materials</option>
+			<option value="miMathematics">Minor in Mathematics</option>
+			<option value="miMechE">Minor in Mechanical Engineering</option>
+			<option value="miNuclear_science">Minor in Nuclear Science and Engineering</option>
+			<option value="miPhysics">Minor in Physics</option>
+			<option value="miPolitical_science">Minor in Political Science</option>
+			<option value="miChinese">Minor in Chinese</option>
+			<option value="miFrench">Minor in French</option>
+			<option value="miGerman">Minor in German</option>
+			<option value="miSpanish">Minor in Spanish</option>
+			<option value="miJapanese">Minor in Japanese</option>
+			<option value="miHistory">Minor in History</option>
+			<option value="miLiterature">Minor in Literature</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
@@ -734,100 +731,147 @@ $(function(){
 		-----------------<br>
 		<strong>Total Units: <span id="totalunits">0</span></strong>
 	</div>
-	<div id="overrider"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQS: </label><input id="overridercheck" type="checkbox"></span></div>
-	<div id="nowreading">Click on a class to see more info.</div>
+	<div id="overrider" class="leftbarholder"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQUISITES: </label><input id="overridercheck" type="checkbox"></span></div>
+	<div id="nowreading" class="leftbarholder">Click on a class to see more info.</div>
 </div>
 <div id="rightbar">
-	<div class="term credit"><div class="termname">Prior<br>Credit</div></div>
-	<div id="freshman" class="year">
-		<div class="yearname">Freshman Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
+	<div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>
+	<div class="year freshman">
+		<div class="yearname"><span>Freshman Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div id="sophomore" class="year">
-		<div class="yearname">Sophomore Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
+	<div class="year sophomore">
+		<div class="yearname"><span>Sophomore Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div id="junior" class="year">
-		<div class="yearname">Junior Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
+	<div class="year junior">
+		<div class="yearname"><span>Junior Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div id="senior" class="year">
-		<div class="yearname">Senior Year</div>
-		<div class="term fall"><div class="termname">Fall</div></div>
-		<div class="term iap"><div class="termname">Iap</div></div>
-		<div class="term spring"><div class="termname">Spring</div></div>
+	<div class="year senior">
+		<div class="yearname"><span>Senior Year</span></div>
+		<div class="term fall"><div class="termname"><span>Fall</span></div></div>
+		<div class="term iap"><div class="termname"><span>Iap</span></div></div>
+		<div class="term spring"><div class="termname"><span>Spring</span></div></div>
+		<div class="term summer"><div class="termname"><span>Summer</span></div></div>
 	</div>
-	<div id="trash" class="trashdefault"><img src="trashx.png" alt=""></div>
+	<div class="year supersenior hidden">
+		<div class="yearname supersenior hidden"><span>Super-senior Year</span></div>
+		<div class="term fall supersenior hidden"><div class="termname supersenior hidden"><span>Fall</span></div></div>
+		<div class="term iap supersenior hidden"><div class="termname supersenior hidden"><span>Iap</span></div></div>
+		<div class="term spring supersenior hidden"><div class="termname supersenior hidden"><span>Spring</span></div></div>
+		<div class="term summer supersenior hidden"><div class="termname supersenior hidden"><span>Summer</span></div></div>
+	</div>
 </div>
-<div id="viewroads" class="bubble">
-	<div id="viewroads_close">Close this</div>
-	<h3 id="viewroads_header">Your saved roads:</h2>
-	<div id="savedroads">
-	
-	</div>
+<div id="trash" class="trash trashdefault"><img src="trashx.png" alt="" class="trash"></div>
+<div id="loading" class="bubble"><h1>Loading...</h1></div>
+<div id="viewroads" class="bubble my-dialog">
+	<div id="viewroads_close" class="my-dialog-close">Close this</div>
+	<h3 id="viewroads_header" class="my-dialog-header">Your saved roads:</h3>
+	<div id="savedroads">Loading...</div>
 </div>
-<div id="help" class="bubble">
-	<div id="help_close">Close this</div>
-	<h2 id="help_welcome">Welcome to CourseRoad!</h2>
+<div id="help" class="bubble my-dialog">
+	<div id="help_close" class="my-dialog-close">Close this</div>
+	<h2 id="help_welcome" class="my-dialog-header">CourseRoad Help</h2>
 	<div id="accordion">
 		<h3><a href="#" class="dummylink">What is CourseRoad?</a></h3>
 		<div>
 			CourseRoad allows you to plan out your classes over your MIT undergrad career.<br>
 			<br>
-			Enter classes you have taken and want to take, and CourseRoad will tell you all about how you're doing on class prerequisites, General Institute Requirements (GIRs), and your major's requirements.<br>
+			Enter classes you have taken and want to take, and CourseRoad will tell you all about how you're doing on class prerequisites, General Institute Requirements (GIRs), and requirements for majors and minors.<br>
 			You can even save course mappings to share with friends and advisors to get feedback!
 		</div>
 		<h3><a href="#" class="dummylink">How do I add/move/delete classes?</a></h3>
 		<div>
-			In the upper-left, you can enter the course numbers of your classes, choose the semester you took them/want to take them, and click "Add Class." 
+			In the upper-left, click the "Add" tab, where you can enter the course numbers of your classes and choose the semester you took them/want to take them.
 			You'll see that class added on the main timeline on the right-hand side of the page. This area gets filled with the classes you choose.<br>
 			<br>
 			If you want to move a class around, simply drag and drop it to another semester.<br><br>
-			If you want to delete the class, drag it to the upper-right and drop it on the the black X that appears.
+			If you want to delete the class, drag it to the right-hand and drop it on the the black X that appears, or select the class and hit Delete.
+		</div>
+		<h3><a href="#" class="dummylink">How do I add a UROP/elective/PE class/thing that isn't an MIT class? (New!)</a></h3>
+		<div>
+			When you click the "Add" tab in the upper-left, change "Class Type" from Subject to Custom: from there, type the subject's name and units, and proceed as you would normally for a class.
 		</div>
 		<h3><a href="#" class="dummylink">What are those weird lines everywhere? Why are some classes red?</a></h3>
 		<div>
 			Those lines appear between classes to show you the map of prerequisites and corequisites for your classes. Grey is for prereqs, black is for coreqs.<br>
 			<br>
-			<!-- insert two wires here -->
-			If you've added a class and all of its prereqs are satisfied by the classes you've already added, then it'll turn green. If you're still missing a class or two, it'll appear red and you can mouse over the part that says "Prereq: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester.
+			If you've added a class and all of its requisites are satisfied by the classes you've already added, then it'll turn green. If you're still missing reqs, it'll appear red and you can mouse over the part that says "Reqs: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester, isn't counting for credit, or isn't available in that year.
 		</div>
-		<h3><a href="#" class="dummylink">I have credit for X.XX. How do I show that?</a></h3>
+		<h3><a href="#" class="dummylink">I have permission to override the requisites for X.XX. How do I show that?</a></h3>
 		<div>
-			If you've received credit for or permission to attend a class without taking its prereqs, you can let CourseRoad know that by clicking once on the class (this should select the class in pink) and click "OVERRIDE REQS" in the lower-left. You can also read that course's description and other info in the lower-left as well.
+			If you've taken a class without taking its requisites (or if CourseRoad's acting up and not recognizing that you've completed said reqs), you can click once on the class (thus highlighting the class in pink) and click "OVERRIDE REQUISITES" in the lower-left. You can also read that course's description and other info in the lower-left as well.
+		</div>
+		<h3><a href="#" class="dummylink">What are the years displayed on each class? (New!)</a></h3>
+		<div>
+			The year attached to each class represents the <strong>catalog year from which that class' data was taken</strong>. It doesn't necessarily match the year in which you took the class: if the requisites and teachers are the same then and now, then you don't have to worry about it.<br>
+			<br>
+			If, however, you took (say) the 2009 version of a class, simply click the displayed year and choose "2009" from the dropdown. The class will automatically replace itself with the 2009 version.<br>
+			<br>
+			If you're entering a lot of classes and this seems like an issue, try clicking the "About" tab and choosing "User Settings": if you update your class year in that field, CourseRoad will try to add the classes to semesters using data from the year in which you took said classes.
 		</div>
 		<h3><a href="#" class="dummylink">What is that checklist for?</a></h3>
 		<div>
-			The checklist on the left-hand side lets you keep track of all of your GIRs and major requirements. If you choose a major from the dropdown, then you'll also see how you're doing on that major's requirements as well.
+			The checklist on the left-hand side lets you keep track of all of your GIRs and major/minor requirements. If you choose majors and minors from the dropdowns, then you'll also see how you're doing on their respective requirements as well.
 		</div>
-		<h3><a href="#" class="dummylink">How do I save classes for later or to share with others?</a></h3>
+		<h3><a href="#" class="dummylink">How do I save a "road" for later or to share with others?</a></h3>
 		<div>
-			If you want to save your course map for later, simply click the "Save Classes" button in the upper-left. The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.
-			</p>
+			If you want to save your course map for later, simply click the "Save" tab in the upper-left, and click "Save Classes". The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.<br>
+			<br>
+			You can also click "Save with Login" to save the road while connecting it to your Kerberos username (i.e. the <em>username</em> in <em>username</em>@mit.edu). Note: this requires that you have certificates installed and enabled on the browser you're using.
+		</div>
+		<h3><a href="#" class="dummylink">What good does logging in do? (New!)</a></h3>
+		<div>
+			Logging in allows you to:
+			<ul>
+				<li>Save your roads attached to your account and manage them later (go to the "Save" tab and click "View Saved Roads")</li>
+				<li>Save user settings such as class year and toggling CourseRoad features</li>
+				<li>Choose custom save hashes for your roads (e.g. "<em>username</em>/with-energy-minor", and even choose a "public" road to be visible at courseroad.mit.edu/<em>username</em></li>
+			</ul>
+			and more!
 		</div>
 		<h3><a href="#" class="dummylink">What about privacy?</a></h3>
 		<div>
-			When you aren't signed in, the links you generate are random and don't contain any information about you, specifically. On my end in those cases, the database is only storing your IP address, your classes, and a timestamp.<br>
+			When you aren't signed in, the save hashes you generate (the stuff after the "#" in the URL) are random and don't contain any information about you, specifically. On my end in those cases, the database is only storing your IP address, the classes and majors/minors you added, and a timestamp.<br>
 			<br>
-			If you save roads while signed in, the road will be attached to your athena username with a timestamp, thus hiding the link from being easily discoverable. You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<i>yourusername</i>.<br>
+			If you save roads while signed in, the road will be attached to your athena username with a timestamp, thus hiding the link from being easily discoverable.<br>
+			You can personally choose to change these hashes by clicking the "Save" tab, clicking "View Saved Roads", and editing the hash from there.<br>
+			You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<em>username</em>. 
+			<br>
+			You'll also have the option to supply your graduation year to CourseRoad, in case you want the class year versions to be accurate (see above in "What are the years displayed on each class?").
+			<br>
 			<br>
 			tl;dr: don't worry, you're safe :)
 		</div>
 		<h3><a href="#" class="dummylink">Further help, who's behind this, and why?</a></h3>
 		<div>
-			First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/alternate history fiction.<br>
+			First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/cool historical maps.<br>
 			<br>
-			CourseRoad is the brainchild of Danny Ben-David '15, as an entry in the <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT last August, I've been bothered at how unintuitive the course and major structures are when laid out as they are in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
+			CourseRoad is the brainchild of Danny Ben-David '15, and was the Grand Prize Winner in the 2012 <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT last year, I've been bothered at how unintuitive the course and major structures are as laid out in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
 			<br>
-			Special thanks to the awesome folks in <a href="http://sipb.mit.edu">SIPB</a> for their litany of services and helpful insights.
+			Special thanks to <a href="http://oeit.mit.edu">OEIT<a> for funding and guiding me through the spring and summer, and to the awesome folks at <a href="http://sipb.mit.edu">SIPB</a> for their litany of services and helpful insights.
 		</div>
 	</div>
+</div>
+<div id="usersettings" class="bubble my-dialog">
+	<div id="usersettings_close" class="my-dialog-close">Close this</div>
+	<h3 id="usersettings_header" class="my-dialog-header">User Settings<?= $athena?" for $athena":"" ?>:</h3>
+	<div id="usersettings_div">
+		<label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="<?= $_SESSION['user']['class_year'] ?>"><br>
+		<label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $_SESSION['user']['view_req_lines']?'checked="checked"':'' ?>><br>
+		<label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $_SESSION['user']['autocomplete']?'checked="checked"':'' ?>><br>
+	</div>
+	<input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
 </body>
 </html>
