@@ -27,7 +27,7 @@
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
-	header("Location: https://courseroad.mit.edu/index.php#".$_GET['hash']);
+	header("Location: /#".$_GET['hash']);
 	die();
 }
 
@@ -196,7 +196,6 @@ if(isset($_POST['gethash'])){
 		$major = stripslashes($row['major']);
 	}
 	if($classes=='') die();
-	if($major[0]!='[') $major = json_encode(array($major, "m0", "m0", "m0"));
 	$major = json_decode($major, true);
 	$json = array();
 	foreach($classes as $class){
@@ -372,7 +371,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>CourseRoad 2.0<?= $loggedin?": $athena":"" ?></title>
+	<title>CourseRoad<?= $loggedin?": $athena":"" ?></title>
 	<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
 	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

@@ -1,8 +1,7 @@
 <?php
 
-/*
 die();
-//*/
+
 require("connect.php");
 
 header("Content-type: text/javascript");
@@ -12,45 +11,39 @@ header("Content-type: text/javascript");
 	"INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `id`='25')"
 	INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `subject_id` LIKE '18.100%' AND `subject_number`!='100')
 //*/
-//$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
+$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
 
-$sql = "SELECT * FROM `roads2` WHERE 1 ORDER BY `added` DESC LIMIT 0,10000";
+//$sql = "SELECT * FROM `roads2` WHERE `id`>'5472' ORDER BY `id` ASC";
+//$sql = "SELECT DISTINCT `major` FROM `roads2` WHERE `major` NOT LIKE '[%'";
+$sql = "SELECT * FROM `roads2` WHERE `id`>'5714' ORDER BY `id` ASC";
 $query = mysql_query($sql);
 while($row = mysql_fetch_array($query)){
-	//print_r($row);
-	//echo $row['classes']."\n\n";
+	//$majors = mysql_real_escape_string(json_encode(array($row["major"],"m0","m0","m0")));
+	//echo "\n$majors";
+	/*
+	$hash = $row['hash'];
+	$user = $row['user'];
+	//*/
+	echo $row['classes']."\n\n";
 	$classes = json_decode(stripslashes($row['classes']), true);
 	foreach($classes as &$class){
-		if(!isset($class["custom"]) and !$class["id"]){
-			print_r($row);
-			continue;
-		}
-		/*
-		$temp = array();
-		if(is_array($class[0])){
-			$temp["name"] = $class[0]["name"];
-			$temp["units"] = $class[0]["units"];
-			$temp["term"] = $class[2];
-			$temp["custom"] = true;
-			$temp["override"] = ($class[3]=="1");
-		}else{
-			$temp["id"] = $class[0];
-			$temp["year"] = $class[1];
-			$temp["term"] = $class[2];
-			$temp["override"] = ($class[3]=="1");
-		}
-		$class = $temp;
-		//$class[2] = $map[$class[2]];
-		//*/
+		$class["term"] = $map[$class["term"]];
 	}
 	$classes = mysql_real_escape_string(json_encode($classes));
-	//echo $classes;
+	echo stripslashes($classes);
+	echo "\n";
+	//echo $majors;
+	//$public = $row['public'];
+	//$ip = $row['ip'];
+	//$added = $row['added'];
 	//print_r(json_decode(stripslashes($classes),true));
 	//echo json_encode($classes)==$row['classes'];
+	//*/
 	$sql = "UPDATE `roads2` SET `classes`='$classes' WHERE `id`='{$row['id']}'";
+	//$sql = "INSERT INTO `roads2`(`hash`, `user`, `classes`, `major`, `public`, `ip`, `added`) VALUES ('$hash','$user','$classes','$majors','$public','$ip','$added')";
 	//echo $sql;
 	//mysql_query($sql);
-	//echo "\n------------------------\n\n";
+	echo "\n------------------------\n\n";
 }
 echo "YAY";
 
