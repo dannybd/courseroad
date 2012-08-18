@@ -153,7 +153,7 @@ span.newload{
 
 button.changeclassterm span{ display: block; }
 
-.ui-icon { width: 16px; height: 16px; background-image: url(images/ui-icons_222222_256x240.png); }
+.ui-icon { width: 16px; height: 16px; background-image: url(/images/ui-icons_222222_256x240.png); }
 /*
 .ui-icon-triangle-1-n { background-position: 0 -16px; }
 .ui-icon-triangle-1-s { background-position: -64px -16px; }
@@ -356,7 +356,9 @@ button.changeclassterm span{ display: block; }
 .getnewclasstypes.visible{
 	display: inline-block !important;
 }
-
+#getnewclassterm{
+	width: 150px;
+}
 .ui-autocomplete{
 	list-style: none;
 	background-color: #FFF;
@@ -745,27 +747,11 @@ img.trashhover{
 
 /*** IE7/8 CSS ***/
 .lte8 #leftbar{ left: 0px; }
-.ie7 #getnewclass{
-	background-color: #E0E0E0 !important;
-	border: 1px solid #5E5E5E !important;
-	width: 240px !important;
-	height: 133px !important;
-	padding-top: 2px !important;
-	overflow-y: scroll;
-}
 .ie7 #getnewclass > ul, .ie7 .ui-tabs .ui-tabs-nav, .ie7 .ui-tabs .ui-tabs-nav .ui-state-default{
 	list-style-image: none;
-	display: none;
-}
-.ie7 #getnewclass>div{
-	display: inline !important;
+	display: inline;
 	zoom: 1;
-	border: none !important;
-	padding: 0px !important;
-	background: none !important;
-	height: auto !important;
 }
-.ie7 .getnewclasstypes.visible{ display: inline !important; }
 .ie7 .ui-button { margin: -3px 0px -1px !important;}
 .ie7 #mapcerts{ width: 200px !important; }
 .lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
@@ -792,7 +778,7 @@ img.trashhover{
 .lte8 .termname span{
 	margin-top: 0px;
 }
-.ie7 .classdiv{
+.ie7 .saved-roads-hash, .ie7 .saved-roads-comment, .ie7 .saved-roads-edit-hash, .ie7 .saved-roads-edit-comment, .ie7 .deleteroad, .ie7 .getnewclasstypes.visible, .ie7 .classdiv, .ie7 .ui-sortable-placeholder{
 	display: inline !important;
 	zoom: 1;
 }

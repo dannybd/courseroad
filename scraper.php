@@ -1,10 +1,17 @@
 <?php
 
+//die();
+
+echo "HERE:<br><pre>";
+print_r($_SERVER);
+echo "</pre>";
 die();
 
 require("connect.php");
 
-header("Content-type: text/javascript");
+//header("Content-type: text/javascript");
+
+
 
 /*
 	TO COPY FROM WAREHOUSE TO THE EXCEPTIONS TABLE:

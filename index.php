@@ -27,12 +27,13 @@
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
-	header("Location: /#".$_GET['hash']);
+	header("Location: https://courseroad.mit.edu/#".$_GET['hash']);
 	die();
 }
 
 require("connect.php"); //connect to database
 session_start();
+$_SESSION['wenttoindex'] = true;
 
 if(isset($_POST['loadmajors'])){
 	header("Content-type: text/javascript");
@@ -359,6 +360,8 @@ EOD;
 	die();
 }
 
+if(isset($_GET['user'])) die("user<br><pre>".print_r(@$_SESSION, true)."\n\n\n".print_r(@$_SERVER, true)."</pre>");
+
 $nocache = isset($_GET['nocache']);
 $nocache = true; //Uncomment during development
 $nocache = $nocache?"?nocache=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
@@ -372,15 +375,15 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>CourseRoad<?= $loggedin?": $athena":"" ?></title>
-	<link rel="stylesheet" type="text/css" href="cr.css<?= $nocache ?>">
-	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
+	<link rel="stylesheet" type="text/css" href="/css/cr.css<?= $nocache ?>">
+	<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
-	<script src="json2-min.js"></script>
-	<script src="wireit-min.js"></script>
-	<script src="cr.js<?= $nocache ?>"></script>
+	<script src="/js/json2-min.js"></script>
+	<script src="/js/wireit-min.js"></script>
+	<script src="/js/cr.js<?= $nocache ?>"></script>
 	<script>
 		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
 		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
@@ -771,7 +774,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<div class="term summer supersenior hidden"><div class="termname supersenior hidden"><span>Summer</span></div></div>
 	</div>
 </div>
-<div id="trash" class="trash trashdefault"><img src="trashx.png" alt="" class="trash"></div>
+<div id="trash" class="trash trashdefault"><img src="/images/trashx.png" alt="" class="trash"></div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble my-dialog">
 	<div id="viewroads_close" class="my-dialog-close">Close this</div>

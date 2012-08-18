@@ -1,24 +1,27 @@
 AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
 
-Options +FollowSymLinks
 RewriteEngine On
-RewriteBase /
-RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
-RewriteCond %{REQUEST_URI} !^/503.php [NC]
-RewriteRule .* /503.php
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
-ErrorDocument 401 /index.php?hash=error401
+ErrorDocument 401 /index.php?user
 </Files>
+
+RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
+RewriteCond %{REQUEST_URI} !^/secure.php [NC]
+RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
+RewriteCond %{REQUEST_URI} !^/503.php [NC]
+RewriteRule .* /503.php
 
 RewriteCond %{REQUEST_URI} !^blog
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ /index.php?hash=$1
+
+#ErrorDocument 401 /index.php?hash=error401
 ErrorDocument 403 /index.php?hash=error403
 ErrorDocument 404 /index.php?hash=error404
 ErrorDocument 500 /index.php?hash=error500
