@@ -28,6 +28,11 @@ require("connect.php"); //connect to database
 
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
+if(@$_GET['access']){ //Purely for beta-testing
+	header("Location: $baseURL/#welcome-back");
+	die();
+}
+
 if(isset($_GET['hash'])){
 	header("Location: $baseURL/#".$_GET['hash']);
 	die();
@@ -366,7 +371,7 @@ if(isset($_GET['user'])) die("user<br><pre>".print_r(@$_SESSION, true)."\n\n\n".
 
 $nocache = isset($_GET['nocache']);
 $nocache = true; //Uncomment during development
-$nocache = $nocache?"?nocache=".time():""; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
+$nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
 ?>
 <!DOCTYPE html>
 <!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8"><![endif]-->
@@ -410,7 +415,7 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 			<div class="infotabs-about-subheader flakyCSS">A four-year planner for the MIT community.</div>
 			<a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a>
 			<br>
-			<?= $loggedin?"Hello, <strong>$athena</strong>! ":"<input type=\"button\" id=\"userlogin\" class=\"bubble loaders\" value=\"Login\">" ?>
+			<?= $loggedin?"Hello, <strong>$athena</strong>! ":"<input type=\"button\" id=\"userlogin\" class=\"bubble loaders\" value=\"Login\"".($_SESSION['triedcert']?" disabled=\"disabled\" title=\"Sorry, we couldn't log you in. Try reopening your browser.\">":">") ?>
 			<input type="button" id="showusersettings" class="bubble loaders" value="User Settings">
 		</div>
 		<div id="infotabs-add" class="ui-corner-all leftbarholder">

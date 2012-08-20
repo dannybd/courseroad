@@ -7,23 +7,19 @@ and then pass the browser back to whence it came.
 require("connect.php");
 session_start();
 if(!@$_SESSION['wenttoindex']){
-	//header("Location: $baseURL/#soclose");
-	echo "soclose<br><pre>SERVER:\n";
-	print_r($_SERVER);
-	echo "\n\nSESSION:\n";
-	print_r($_SESSION);
+	header("Location: $baseURL/#soclose");
+	//echo "soclose<br><pre>SERVER:\n";
+	//print_r($_SERVER);
 	die();
 }
-//unset($_SESSION['wenttoindex']);
+unset($_SESSION['wenttoindex']);
 
 if(!isset($_SESSION['crhash'])) $_SESSION['crhash'] = "";
 
 if(!isset($_SERVER['SSL_CLIENT_S_DN_Email'])){
-	//header("Location: $baseURL/#-no-email");
-	echo "nocert<br><pre>SERVER:\n";
-	print_r($_SERVER);
-	echo "\n\nSESSION:\n";
-	print_r($_SESSION);
+	header("Location: $baseURL/#-no-email");
+	//echo "nocert<br><pre>SERVER:\n";
+	//print_r($_SERVER);
 	die();
 }
 $athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], "@", true);

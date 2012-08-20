@@ -57,7 +57,7 @@ span.newload{
 	left: 0;
 	background-color: #BBB;
 	filter: alpha(opacity=30);
-	opacity: 0.3;
+	opacity: 0.4;
 }
 #accordion{
 	max-height: 500px;

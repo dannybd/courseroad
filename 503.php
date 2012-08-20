@@ -2,7 +2,7 @@
 
 if(@$_GET['access']==md5("guest")){
 	setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
-	header("Location: /index.php?hash=welcome");
+	header("Location: https://courseroad.mit.edu/index.php?hash=welcome");
 	die();
 }
 

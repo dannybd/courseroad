@@ -7,12 +7,9 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
-ErrorDocument 401 /index.php?triedlogin=1
 </Files>
 
 RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
-RewriteCond %{REQUEST_URI} !^/secure.php [NC]
-RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/503.php [NC]
 RewriteRule .* /503.php
 
@@ -21,7 +18,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ /index.php?hash=$1
 
-#ErrorDocument 401 /index.php?hash=error401
+ErrorDocument 401 /index.php?triedlogin=1
 ErrorDocument 403 /index.php?hash=error403
 ErrorDocument 404 /index.php?hash=error404
 ErrorDocument 500 /index.php?hash=error500

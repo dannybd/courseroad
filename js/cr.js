@@ -38,12 +38,13 @@ majors["m4_computation"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401",
 majors["m4_history"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.601", "4.605", [1, "4.602", "4.641", "4.651"], [1, "4.613", "4.614"], "4.THT", "4.THU", {id:"3 Classes in History, Theory and Criticism",skip:1}, {id:"1 Class from Art, Culture and Technology",skip:1}];
 majors["m4_artculture"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.322", "4.341", "4.351", "4.601", "4.THT", "4.THU", {id:"3 Classes in Art, Culture and Technology",skip:1}, {id:"1 Class from History, Theory and Criticism",skip:1}];
 majors["m5"] = [0, "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36", "5.37", "5.38", "5.60", "5.61", [2, "5.04", "5.08", "5.43", "5.62"]];
+//majors["m5"] = [0, [3, {id:"8.03-8.07",range:1,dept:"8",from:"03",to:"07"}, "8.012", "8.022"]];
 majors["m6_1"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440"], [1, [1, {id:"6.100-6.182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}], [3, "6.002", "6.003", "6.004", "6.007"], [3, "6.011", "6.012", "6.013", "6.021"], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}, [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.033", "6.034", "6.046"], [1, "6.011", "6.012", "6.013", "6.021", "6.033", "6.034", "6.046"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-6.182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
 majors["m6_3"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], "6.042",  [1, "6.172", "6.035", "6.141", "6.813", "6.828"], [3, "6.004", "6.005", "6.006"], [3, "6.033", "6.034", "6.046"], [2, "6.022", "6.023", "6.035", "6.045", "6.047", "6.049", "6.061", "6.077", "6.111", "6.115", "6.131", "6.141", "6.142", "6.172", "6.173", "6.207", "6.301", "6.302", "6.336", "6.341", "6.434", "6.502", "6.503", "6.602", "6.608", "6.641", "6.701", "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.813", "6.814", "6.815", "6.824", "6.825", "6.837", "6.840", "6.854", "6.857", "6.858", "6.863", "6.867", "16.36"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_7"] = [0, [1, "18.03", "18.06"], "6.01", "6.042", "5.12", [1, "5.60", "7.10", "20.110"], [1, "7.02", "20.109"], "6.005", "6.006", "6.046", "7.03", "7.06", [1, "7.05", "5.07"], [1, "6.047", "6.048", "6.503", "6.802", "7.36"], [1, "7.20", "7.23", "7.27", "7.28", "7.33"], "6.UAP", "6.UAT"];
 majors["m7"] = [0, "5.12", [1, "20.110", "7.10", "5.60"], [1, "7.02", "20.109"], "7.03", [1, "7.05", "5.07"], "7.06", [3, {id:"7.08-7.37",range:1,dept:"7",from:"08",to:"37"}], [1, "7.13", "7.16", "7.18"]];
-majors["m8_flexible"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"], [1, "8.05", "8.20", "8.033"], [1, "8.13", {id:"another lab",skip:1}, "8.THU", {id:"an experimentally oriented summer internship",skip:1}], [1, {id:"8.03-8.999",range:1,dept:"8",from:"03",to:"999"}], {id:"3 Subjects forming a coherent unit in some area",skip:1}];
+majors["m8_flexible"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"], [1, "8.05", "8.20", "8.033"], [1, "8.13", "8.THU", {id:"another lab",skip:1}, {id:"an experimentally oriented summer internship",skip:1}], [1, {id:"8.03-8.999",range:1,dept:"8",from:"03",to:"999"}], {id:"3 Subjects forming a coherent unit in some area",skip:1}];
 majors["m8_focused"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", "8.033", "8.05", "8.06", "8.13", "8.14", "8.223", "8.THU", [1, {id:"18.04-18.999",range:1,dept:"18",from:"04",to:"999"}], [1, "8.07", "8.08", "8.09"], [1, {id:"8.03-8.999",range:1,dept:"8",from:"03",to:"999"}]];
 majors["m9"] = [0, "9.00", "9.01", "9.07", [6, "9.34", "9.37", "9.56", "9.57", "9.59", "9.65", "9.66", "9.85", "24.900", "9.10", "9.20", "9.22", "9.35", "9.71", "9.03", "9.04", "9.05", "9.09", "9.14", "9.15", "9.18", "9.24", "9.29", "9.31"], [1, "9.02", "9.12", "9.63"], [1, "9.URG", "9.02", "9.12", "9.41", "9.50", "9.63"]];
 majors["m10"] = [0, "5.12", [1, "5.07", "7.05"], "5.310", "5.60", "10.10", "10.213", [1, "10.28", "10.26", "10.27", "10.29"], "10.301", "10.302", "10.32", "10.37", "10.490", "10.491", [2, "10.492", "10.493", "10.494"], [1, "18.03", "18.034"], [1, [1, {id:"10.001-10.039",range:1,dept:"10",from:"001",to:"039"}], [1, {id:"10.401-10.791",range:1,dept:"10",from:"401",to:"791"}], [1, {id:"10.793-10.800",range:1,dept:"10",from:"793",to:"800"}], [1, {id:"10.817-10.899",range:1,dept:"10",from:"817",to:"899"}]], [1, "3.014", "5.36", "6.152", "10.28", "10.467", "10.702", "10.26", "10.27", "10.29"]];
@@ -196,7 +197,9 @@ function checkReqs(arr, callback, callbackargs, level, test){
 				}
 				if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 			});
-			return [false, "("+matched.count+" "+matched.desc+": "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+newarr.desc+")", level.length?matched.matches:globalmatches];
+			tempstr.push((newarr.coreq==1)?("["+newarr.id+newarr.desc+"]"):(newarr.id+newarr.desc));
+			continue;
+			//return [false, "("+matched.count+" "+matched.desc+": "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+newarr.desc+")", level.length?matched.matches:globalmatches];
 		}
 		//Now only bona fide classes
 		var classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
@@ -430,6 +433,7 @@ function getClass(){
 		classFromJSON(json);
 		addAllWires();
 		$('.getnewclasstypes.visible input:first').focus();
+		$("#getnewclass .ui-autocomplete").hide();
 		return true;
 	}, "json");
 }
@@ -484,15 +488,17 @@ function buildMajor(arr, level){
 		}
 		if(newarr.desc==undefined) newarr.desc = "";
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
-		if(newarr.id.indexOf("-")!=-1){
+		if(newarr.range){
 			var innertempstr = "";
 			for(var j=0;j<holdobj.count;j++){
-				innertempstr += "<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[ ]<\/span>";
+				innertempstr += "<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[&ensp;]<\/span>";
 			}
-			return "<li>"+innertempstr+" "+holdobj.count+" from the range "+newarr.id+newarr.desc+"<\/li>\n";
+			tempstr += "<li>"+innertempstr+" The range "+newarr.id+newarr.desc+"<\/li>\n";
+			//return "<li>"+innertempstr+" "+holdobj.count+" from the range "+newarr.id+newarr.desc+"<\/li>\n";
+			continue;
 		}
 		//Now only strings
-		tempstr += "<li>"+(newarr.skip?"-- ":"<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[ ]<\/span> ")+newarr.id+newarr.desc+"<\/li>\n";
+		tempstr += "<li>"+(newarr.skip?"&#x2015; ":"<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[&ensp;]<\/span> ")+newarr.id+newarr.desc+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(holdobj.special){
@@ -501,7 +507,7 @@ function buildMajor(arr, level){
 		tempstr = holdobj.count+" "+holdobj.desc+":\n"+tempstr; //the != part find the "2 from following" strings
 	}
 	if(!level.length) return "<strong>Requirements:<\/strong><br>\n"+tempstr;
-	return "<li><span class='majorchk majorchk_"+level.join("_")+" checkbox1'>[ ]<\/span> "+tempstr+"<\/li>\n";
+	return "<li><span class='majorchk majorchk_"+level.join("_")+" checkbox1'>[&ensp;]<\/span> "+tempstr+"<\/li>\n";
 }
 
 /*** Helper functions ***/
@@ -630,6 +636,40 @@ var crSetup = function(){
 		}
 	}).on("click", ".my-dialog-close, .ui-widget-overlay", function(){
 		$(".my-dialog").dialog('close');
+	}).on("click", ".choosesavedroad", function(){
+		$.post("?", {choosesavedroad: $(this).val()});
+	}).on("click", ".deleteroad", function(){
+		if(!confirm("Are you sure you want to delete this road? This action cannot be undone.")) return false;
+		var parent = $(this).parents("tr");
+		$.post("?", {deleteroad: parent.data("hash")}, function(data){
+			if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
+			if(window.location.hash.substr(1)==parent.data("hash")) $(window).on("beforeunload", runBeforeUnload);
+		});
+	}).on("click", ".saved-roads-edit-hash", function(){
+		var newhash2 = prompt("Enter a new hash for this saved road below (max. 36 characters, letters, numbers, and hyphens only):", $(this).prev().text());
+		if(newhash2===false) return false;
+		newhash2 = newhash2.substr(0,36);
+		var prev = $(this).prev();
+		prev.addClass("newload");
+		$.post("?", {changeroadhash: $(this).parents("tr").data("hash"), newhash: newhash2}, function(data){
+			console.log(data, window.location.hash, prev.parents("tr").data("hash"), window.location.hash==prev.parents("tr").data("hash"));
+			if(window.location.hash.substr(1)==prev.parents("tr").data("hash")){
+				userHashChange = false;
+				window.location.hash = data;
+			}
+			prev.text(data.substr(data.indexOf("/")+1)).removeClass("newload").parents("tr").data("hash", data).attr("data-hash", data).find(":radio").val(data).parents("tr").find("a.hashlink").attr("href", "?hash="+data);
+		});
+	}).on("click", ".saved-roads-edit-comment", function(){
+		var comment = prompt("Enter your comment for this saved road below (max. 100 characters):", $(this).prev().text());
+		if(comment===false) return false;
+		comment = comment.substr(0,100);
+		var prev = $(this).prev();
+		prev.addClass("newload");
+		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(data){
+			prev.text(data).removeClass("newload");
+		});
+	}).on("click", ".dummylink", function(e){
+		e.preventDefault();
 	});
 	$("#overridercheck").change(function(){
 		$(".classdivhigh").data("override", $(this).prop("checked"));
@@ -720,7 +760,7 @@ var crSetup = function(){
 			}
 		});
 	});
-	if(!loggedin && triedlogin) $("#mapcerts, #userlogin").hide();
+	if(!loggedin && triedlogin) $("#mapcerts").hide();
 	$("#mapcerts").click(function(){
 		if(loggedin){
 			$("#viewroads").dialog("open");
@@ -750,41 +790,6 @@ var crSetup = function(){
 			});
 		}
 	});
-	$("body").on("click", ".choosesavedroad", function(){
-		$.post("?", {choosesavedroad: $(this).val()});
-	}).on("click", ".deleteroad", function(){
-		if(!confirm("Are you sure you want to delete this road? This action cannot be undone.")) return false;
-		var parent = $(this).parents("tr");
-		$.post("?", {deleteroad: parent.data("hash")}, function(data){
-			if(data=="ok") parent.fadeOut('slow').delay(2000).queue(function(){$(this).remove();});
-			if(window.location.hash.substr(1)==parent.data("hash")) $(window).on("beforeunload", runBeforeUnload);
-		});
-	}).on("click", ".saved-roads-edit-hash", function(){
-		var newhash2 = prompt("Enter a new hash for this saved road below (max. 36 characters, letters, numbers, and hyphens only):", $(this).prev().text());
-		if(newhash2===false) return false;
-		newhash2 = newhash2.substr(0,36);
-		var prev = $(this).prev();
-		prev.addClass("newload");
-		$.post("?", {changeroadhash: $(this).parents("tr").data("hash"), newhash: newhash2}, function(data){
-			console.log(data, window.location.hash, prev.parents("tr").data("hash"), window.location.hash==prev.parents("tr").data("hash"));
-			if(window.location.hash.substr(1)==prev.parents("tr").data("hash")){
-				userHashChange = false;
-				window.location.hash = data;
-			}
-			prev.text(data.substr(data.indexOf("/")+1)).removeClass("newload").parents("tr").data("hash", data).attr("data-hash", data).find(":radio").val(data).parents("tr").find("a.hashlink").attr("href", "?hash="+data);
-		});
-	}).on("click", ".saved-roads-edit-comment", function(){
-		var comment = prompt("Enter your comment for this saved road below (max. 100 characters):", $(this).prev().text());
-		if(comment===false) return false;
-		comment = comment.substr(0,100);
-		var prev = $(this).prev();
-		prev.addClass("newload");
-		$.post("?", {commentonroad: $(this).parents("tr").data("hash"), commentforroad: comment}, function(data){
-			prev.text(data).removeClass("newload");
-		});
-	}).on("click", ".dummylink", function(e){
-		e.preventDefault();
-	});
 	//Runs the help dialog down below
 	$("#help").dialog({
 		autoOpen: false,
@@ -798,8 +803,6 @@ var crSetup = function(){
 		collapsible: true,
 		change: function(event, ui){
 			var temp = ui.newContent.length?ui.newContent.position().top:0;
-			//$(this).scrollTop(temp);
-			//console.log(temp);
 		}
 	});
 	$("#openhelp").click(function(){
@@ -810,7 +813,6 @@ var crSetup = function(){
 	$("select.majorminor option").each(function(){
 		if(majors[$(this).val()]==undefined) $(this).remove();
 	});
-	//$("#rightbar").css('width', $("#rightbar").width());
 	$(window).resize(updateWires);
 	$("#printroad").click(function(){
 		$("body, #rightbar, .term, .year").toggleClass("printing");
@@ -823,14 +825,14 @@ var crSetup = function(){
 	$("#userlogin").click(function(){
 		window.location.href = "https://courseroad.mit.edu:444/secure.php";
 	});
-	$("#showusersettings").click(function(){
-		$("#usersettings").dialog('open');
-	});
 	$("#usersettings").dialog({
 		autoOpen: false,
 		draggable: false,
 		resizeable: false,
 		modal: true
+	});
+	$("#showusersettings").click(function(){
+		$("#usersettings").dialog('open');
 	});
 	$("#usersettings_save").click(function(){
 		var data = {
