@@ -7,7 +7,7 @@ and then pass the browser back to whence it came.
 require("connect.php");
 session_start();
 if(!@$_SESSION['wenttoindex']){
-	//header("Location: https://courseroad.mit.edu/#soclose");
+	//header("Location: $baseURL/#soclose");
 	echo "soclose<br><pre>SERVER:\n";
 	print_r($_SERVER);
 	echo "\n\nSESSION:\n";
@@ -19,7 +19,7 @@ if(!@$_SESSION['wenttoindex']){
 if(!isset($_SESSION['crhash'])) $_SESSION['crhash'] = "";
 
 if(!isset($_SERVER['SSL_CLIENT_S_DN_Email'])){
-	//header("Location: https://courseroad.mit.edu/#-no-email");
+	//header("Location: $baseURL/#-no-email");
 	echo "nocert<br><pre>SERVER:\n";
 	print_r($_SERVER);
 	echo "\n\nSESSION:\n";
@@ -36,7 +36,7 @@ $_SESSION['fullname'] = $fullname;
 $_SESSION['saveas'] = $_SESSION['crhash']."";
 if(isset($_SESSION['trycert'])){
 	$_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
-	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `comment`, `ip`) (SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `major`, `comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
+	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `comment`, `ip`) (SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `majors`, `comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)";
 	mysql_query($sql);
 }
 /*
@@ -47,8 +47,8 @@ echo "\n\nSESSION:\n";
 print_r($_SESSION);
 unset($_SESSION['trycert']);
 echo "\n\n--------------</pre>";
-echo "<p><a href='https://courseroad.mit.edu/#{$_SESSION['saveas']}'>Click</a></p>";
+echo "<p><a href='$baseURL/#{$_SESSION['saveas']}'>Click</a></p>";
 /*/
-header("Location: https://courseroad.mit.edu/#{$_SESSION['saveas']}");
+header("Location: $baseURL/#{$_SESSION['saveas']}");
 //*/
 ?>

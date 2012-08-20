@@ -24,14 +24,15 @@
 //	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /******************************************************************/
 
+require("connect.php"); //connect to database
+
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
-	header("Location: https://courseroad.mit.edu/#".$_GET['hash']);
+	header("Location: $baseURL/#".$_GET['hash']);
 	die();
 }
 
-require("connect.php"); //connect to database
 session_start();
 $_SESSION['wenttoindex'] = true;
 
@@ -188,16 +189,16 @@ if(isset($_POST['gethash'])){
 	header("Content-type: text/javascript");
 	$hash = mysql_real_escape_string(substr($_POST['gethash'],1));
 	$_SESSION['crhash'] = $hash;
-	$sql = "SELECT `classes`,`major` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
+	$sql = "SELECT `classes`,`majors` FROM `roads2` WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
 	$query = mysql_query($sql);
 	$classes = '';
-	$major = '';
+	$majors = '';
 	while($row = mysql_fetch_array($query)){
-		$classes = json_decode($row['classes'], true);
-		$major = stripslashes($row['major']);
+		$classes = json_decode(decrypt($row['classes']), true);
+		$majors = stripslashes(decrypt($row['majors']));
 	}
 	if($classes=='') die();
-	$major = json_decode($major, true);
+	$majors = json_decode($majors, true);
 	$json = array();
 	foreach($classes as $class){
 		if(isset($class["custom"])){
@@ -206,7 +207,7 @@ if(isset($_POST['gethash'])){
 			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
 		}
 	}
-	$json[] = $major;
+	$json[] = $majors;
 	die(json_encode($json));
 }
 
@@ -228,9 +229,9 @@ if($loggedin){
 //This runs if the user has click "save road". It determines the login status of the user 
 //and sets the hash to be either random characters or something like username-20120504051511
 if(isset($_POST['classes'])){
-	$classes = mysql_real_escape_string($_POST['classes']);
-	$major = mysql_real_escape_string($_POST['major']);
-	$hash = substr(strtr(base64_encode(md5($classes.$major)), '+/=', '-_,'),0,5);
+	$classes = mysql_real_escape_string(encrypt($_POST['classes']));
+	$majors = mysql_real_escape_string(encrypt($_POST['majors']));
+	$hash = substr(strtr(base64_encode(md5($classes.$majors)), '+/=', '-_,'),0,5);
 	$_SESSION['crhash'] = $hash;
 	$trycert = false;
 	if($_POST['trycert']){
@@ -241,8 +242,8 @@ if(isset($_POST['classes'])){
 			$_SESSION['trycert'] = true;
 		}
 	}
-	//id, hash, user, classes, major, public, desc, ip, added
-	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `major`, `ip`) VALUES ('$hash', '$athena', '$classes', '$major', '{$_SERVER['REMOTE_ADDR']}');";
+	//id, hash, user, classes, majors, public, desc, ip, added
+	$sql = "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `ip`) VALUES ('$hash', '$athena', '$classes', '$majors', '{$_SERVER['REMOTE_ADDR']}');";
 	mysql_query($sql);
 	die(isset($_SESSION['trycert'])?"**auth**":$hash); //The **auth** lets the user's browser know to try to log in
 }
@@ -251,9 +252,8 @@ if(isset($_SESSION['trycert']) or isset($_GET['triedlogin'])){
 	//This only happens when the check has failed, and the user isn't authenticated.
 	$_SESSION['triedcert'] = true;
 	unset($_SESSION['trycert']);
-	if(!isset($_SERVER['HTTP_REFERER'])) $_SERVER['HTTP_REFERER']="index.php";
 	if(!isset($_SESSION['crhash'])) $_SESSION['crhash']="error401";
-	header("Location: {$_SERVER['HTTP_REFERER']}#{$_SESSION['crhash']}");
+	header("Location: $baseURL/#{$_SESSION['crhash']}");
 	die();
 }
 
@@ -267,7 +267,7 @@ if(isset($_POST['savedroads'])){
 	echo "<th style=\"min-width:50px\" title=\"Select if you'd like one of your saved roads to be available more easily at courseroad.mit.edu/index.php#{$_SESSION['athena']}\">Public</th>";
 	echo "<th style=\"min-width:118px\">Hash</th>";
 	echo "<th style=\"min-width:118px\">Added</th>";
-	echo "<th style=\"min-width:95px\">Major</th>";
+	echo "<th style=\"min-width:95px\">Major(s)</th>";
 	echo "<th>Classes</th>";
 	echo "<th style=\"min-width:30px;max-width:120px;\">Comment</th>";
 	echo "<th>Delete?</th>";
@@ -280,17 +280,19 @@ if(isset($_POST['savedroads'])){
 	echo "<td colspan=\"6\">Select this row to prevent any of your saved roads from being your publicly-facing road.</td>";
 	echo "</tr>\n";
 	while($row = mysql_fetch_array($query)){
+		$row['classes'] = decrypt($row['classes']);
+		$row['majors'] = decrypt($row['majors']);
 		$hash = stripslashes($row['hash']);
 		$roadURL = "?hash=$hash";
 		echo "<tr data-hash=\"$hash\">";
 		echo "<td><input type=\"radio\" name=\"choosesavedroad\" class=\"choosesavedroad\" value=\"$hash\" ".($row['public']=="1"?"checked=\"true\" ":"")."/></td>";
 		echo "<td><span class=\"saved-roads-hash\">".substr(strstr($hash, "/"),1)."</span><span class=\"saved-roads-edit-hash ui-icon ui-icon-pencil\"></span></td>";
 		echo "<td><a class=\"hashlink\" href=\"$roadURL\">".stripslashes($row['added'])."</a></td>";
-		$major = stripslashes($row['major']);
-		if($major[0]!='[') $major = "[\"$major\"]";
-		$major = str_replace(',"m0"','',$major);
-		$major = implode(",<br>\n", json_decode($major));
-		echo "<td>$major</td>";
+		$majors = stripslashes($row['majors']);
+		if($majors[0]!='[') $majors = "[\"$majors\"]";
+		$majors = str_replace(',"m0"','',$majors);
+		$majors = implode(",<br>\n", json_decode($majors));
+		echo "<td>$majors</td>";
 		$classes = json_decode($row['classes'], true);
 		$classes2 = array();
 		foreach($classes as &$class2){
@@ -462,7 +464,6 @@ $nocache = $nocache?"?nocache=".time():""; //This can help force through updates
 		<div id="infotabs-save" class="ui-corner-all leftbarholder">
 			<input type="button" id="savemap" class="bubble loaders" value="Save Courses">
 			<input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
-			<!--<input type="button" id="printroad" class="bubble loaders" value="Print Road">--><!-- soon! -->
 		</div>
 	</div>
 	<div id="COREchecker" class="leftbarholder">

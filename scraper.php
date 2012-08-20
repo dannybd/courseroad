@@ -1,36 +1,41 @@
 <?php
 
-//die();
-
+die();
+/*
 echo "HERE:<br><pre>";
 print_r($_SERVER);
 echo "</pre>";
 die();
-
+//*/
 require("connect.php");
 
-//header("Content-type: text/javascript");
-
-
+header("Content-type: text/javascript");
 
 /*
 	TO COPY FROM WAREHOUSE TO THE EXCEPTIONS TABLE:
 	"INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `id`='25')"
 	INSERT INTO `warehouse_exceptions` (SELECT * FROM `warehouse` WHERE `subject_id` LIKE '18.100%' AND `subject_number`!='100')
 //*/
-$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
+//$map = array(0, 1,2,3, 5,6,7, 9,10,11, 13,14,15);
 
 //$sql = "SELECT * FROM `roads2` WHERE `id`>'5472' ORDER BY `id` ASC";
-//$sql = "SELECT DISTINCT `major` FROM `roads2` WHERE `major` NOT LIKE '[%'";
-$sql = "SELECT * FROM `roads2` WHERE `id`>'5714' ORDER BY `id` ASC";
-$query = mysql_query($sql);
+//$sql = "SELECT DISTINCT `majors` FROM `roads2` WHERE `majors` NOT LIKE '[%'";
+//$sql = "SELECT * FROM `roads2` WHERE `id`>'5714' ORDER BY `id` ASC";
+//$sql = "SELECT * FROM `roads2` ORDER BY `id` DESC";
+//$query = mysql_query($sql);
+/*
 while($row = mysql_fetch_array($query)){
-	//$majors = mysql_real_escape_string(json_encode(array($row["major"],"m0","m0","m0")));
+	//echo print_r($row,true), "\n\n";
+	$classes = encrypt($row['classes']);
+	$majors = encrypt($row['majors']);
+	//echo $classes;
+	//$majors = mysql_real_escape_string(json_encode(array($row["majors"],"m0","m0","m0")));
 	//echo "\n$majors";
 	/*
 	$hash = $row['hash'];
 	$user = $row['user'];
 	//*/
+	/*
 	echo $row['classes']."\n\n";
 	$classes = json_decode(stripslashes($row['classes']), true);
 	foreach($classes as &$class){
@@ -39,22 +44,25 @@ while($row = mysql_fetch_array($query)){
 	$classes = mysql_real_escape_string(json_encode($classes));
 	echo stripslashes($classes);
 	echo "\n";
+	///
 	//echo $majors;
 	//$public = $row['public'];
 	//$ip = $row['ip'];
 	//$added = $row['added'];
 	//print_r(json_decode(stripslashes($classes),true));
 	//echo json_encode($classes)==$row['classes'];
-	//*/
-	$sql = "UPDATE `roads2` SET `classes`='$classes' WHERE `id`='{$row['id']}'";
-	//$sql = "INSERT INTO `roads2`(`hash`, `user`, `classes`, `major`, `public`, `ip`, `added`) VALUES ('$hash','$user','$classes','$majors','$public','$ip','$added')";
-	//echo $sql;
+	///
+	$sql = "UPDATE `roads2` SET `classes`='$classes', `majors`='$majors' WHERE `id`='{$row['id']}'";
+	//$sql = "INSERT INTO `roads2`(`hash`, `user`, `classes`, `majors`, `public`, `ip`, `added`) VALUES ('$hash','$user','$classes','$majors','$public','$ip','$added')";
+	echo $sql;
 	//mysql_query($sql);
 	echo "\n------------------------\n\n";
+	//break;
 }
 echo "YAY";
 
 die();
+//*/
 /*
 echo <<<EOD
 id
@@ -65,9 +73,9 @@ subject_number
 subject_title
 joint_subjects
 equiv_subjects
-GIR
-CI
-HASS
+gir
+ci
+hass
 is_variable_units [Y/N->1/0]
 unitload
 total_units
@@ -88,11 +96,17 @@ tuition_attr
 supervisor_attr
 hgn_code
 hgn_except
-added
+last_modified
+notes
+extraclasses
 
 EOD;//*/
 
-$handle = fopen('gitignore/full-catalog.csv', 'r');
+/*
+	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'08/18/2012';
+//*/
+
+$handle = fopen('archive/Warehouse-update-20120819.csv', 'r');
 $headers = fgetcsv($handle);
 foreach($headers as &$header){
 	$header = strtr(($header), ' ', '_');
@@ -113,10 +127,7 @@ for($i=33011;$i<53111;$i++){
 	echo "\tOUT: ".json_encode(parseReqs2($r))."\n\n";
 }
 //*/
-for($i=1;$i<11;$i++){
-	$course = fgetcsv($handle);
-}
-for($i=11;$i<56001;$i++){
+for($i=1;$i<=10000;$i++){
 	$course = fgetcsv($handle);
 	if(!$course) break;
 	$course = array_combine($headers, $course);
@@ -130,9 +141,9 @@ for($i=11;$i<56001;$i++){
 	$course2[] = $course['Subject_Title'];			//subject_title
 	$course2[] = $course['Joint_Subjects'];			//joint_subjects
 	$course2[] = $course['Equivalent_Subjects'];	//equiv_subjects
-	$course2[] = $course['Gir_Attribute'];			//GIR
-	$course2[] = $course['Comm_Req_Attribute'];		//CI
-	$course2[] = $course['Hass_Attribute'];			//HASS
+	$course2[] = $course['Gir_Attribute'];			//gir
+	$course2[] = $course['Comm_Req_Attribute'];		//ci
+	$course2[] = $course['Hass_Attribute'];			//hass
 	if(!$course['Is_Variable_Units']) $course['Is_Variable_Units']='Y';
 	$course2[] = strtr($course['Is_Variable_Units'], 'YN', '10');		//is_variable_units
 	$course2[] = intval($course['Lecture_Units']).'-'.intval($course['Lab_Units']).'-'.intval($course['Preparation_Units']);		//unitload
@@ -157,8 +168,9 @@ for($i=11;$i<56001;$i++){
 	$course2[] = $course['Hgn_Code'];				//hgn_code
 	$course2[] = $course['Hgn_Except'];				//hgn_except
 	
-	//print_r($course2);
-	$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '');";
+	
+	print_r($course2);
+	//$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
 	//mysql_query($sql);
 	echo "\n$sql\n\n";
 }
@@ -300,7 +312,7 @@ function parseReqs2($str){
 			if($course[0]=='[') $coreq = true;
 			if(substr($course, -1)==']') $endcoreq = true;
 			$course = rtrim(ltrim($course, '['), 'J]');
-			if(substr($course, 0, 4)=="GIR:") $course = strtr($course, ':', '.');
+			//if(substr($course, 0, 4)=="GIR:") $course = strtr($course, ':', '.');
 			$temp[] = req($course, $coreq);
 			if($endcoreq) $coreq = $endcoreq = false;
 		}

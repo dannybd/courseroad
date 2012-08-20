@@ -721,6 +721,7 @@ img.trashhover{
 .flakyCSS{
 	margin: 1px !important;
 }
+
 /*** Print CSS ***/
 @media print{
 	@page{ margin: 0.5cm; }

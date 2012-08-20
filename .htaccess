@@ -7,7 +7,7 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
-ErrorDocument 401 /index.php?user
+ErrorDocument 401 /index.php?triedlogin=1
 </Files>
 
 RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
