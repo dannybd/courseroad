@@ -115,15 +115,17 @@ EOD;
 	$row['override'] = $override;
 	$row['custom'] = false;
 	
+	$row['ayear'] = "'".substr($row['year']-1,-2)."-'".substr($row['year'],-2);
 	$row['otheryears'] = "<select>";
 	$query = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
 	while($row2 = mysql_fetch_assoc($query)){
 		$year2 = $row2['year'];
+		$ayear2 = "'".substr($year2-1,-2)."-'".substr($year2,-2);
 		$row['otheryears'] .= "\n\t<option value='$year2'";
 		$row['otheryears'] .= ($year2==$row['year'])?" selected='true'>":">";
-		$row['otheryears'] .= "$year2</option>";
+		$row['otheryears'] .= "$ayear2</option>";
 	}
-	$row['yearspan'] = "<span title=\"The data for this class is from the {$row['year']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['year']}</span>";
+	$row['yearspan'] = "<span title=\"The data for this class is from the {$row['ayear']} version of the subject. Click to use another year's version.\" href=\"#\" class=\"dummylink\">{$row['ayear']}</span>";
 	$row['otheryears'] .= "\n<select>";	
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
@@ -146,6 +148,7 @@ function pullCustom($name, $units, $classterm=0, $override=false){
 	$row['year'] = "0";
 	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
 	$row['divid'] = $row['id']."__".rand();
+	//$row['subject_id'] = '';
 	$row['subject_title'] = $name;
 	$row['total_units'] = floatval($units);
 	if(!$row['total_units']) $row['total_units'] = 0;
@@ -353,8 +356,8 @@ if(isset($_POST['deleteroad'])){
 
 if(isset($_POST['usersettings'])){
 	$_SESSION['user']['class_year'] = intval(mysql_real_escape_string($_POST['class_year']));
-	$_SESSION['user']['view_req_lines'] = ($_POST['view_req_lines']=="1")?1:0;
-	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['autocomplete'])==1)?1:0;
+	$_SESSION['user']['view_req_lines'] = ($_POST['toggle_view_req_lines']=="1")?1:0;
+	$_SESSION['user']['autocomplete'] = (mysql_real_escape_string($_POST['toggle_autocomplete'])==1)?1:0;
 	$_SESSION['user']['edited'] = $loggedin?0:1;
 	if($loggedin) mysql_query("UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', `view_req_lines`='{$_SESSION['user']['view_req_lines']}', `autocomplete`='{$_SESSION['user']['autocomplete']}' WHERE `athena`='$athena'");
 	$view_req_lines = $_SESSION['user']['view_req_lines']?'checked="checked"':'';

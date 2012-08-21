@@ -123,7 +123,11 @@ majors["miJapanese"] = [0, [1, [2, [1, "21F.503", "21F.573"], "21F.504"], [2, "2
 majors["miHistory"] = [0, "21H.390", {id:"Four undergraduate introductory or intermediate subjects from the history curriculum",skip:true}, {id:"At least one 21H seminar in addition to 21H.390",skip:true}, {id:"At least two temporal periods, one premodern (before 1700) and one modern, to be covered by the five subjects other than 21H.390",skip:true}];
 majors["miLiterature"] = [0, [1, {id:"21L.000-21L.044",range:1,dept:"21L",from:"000",to:"044"}], [2, {id:"21L.420-21L.522",range:1,dept:"21L",from:"420",to:"522"}], [1, [1, {id:"21L.000-21L.044",range:1,dept:"21L",from:"000",to:"044"}], [1, {id:"21L.420-21L.522",range:1,dept:"21L",from:"420",to:"522"}]], [2, {id:"21L.701-21L.715",range:1,dept:"21L",from:"701",to:"715"}]];
 
-//majors["miApplied_international"] = [0];
+/*
+majors["miApplied_international"] = [0, {id:"Proficiency in at least one language (minimum second-year college-level)",skip:1}, {id:"Two or three subjects in foreign language/culture (beyond first-year language) or anthropology. At least two of these subjects must focus on specific region or country",skip:1}, ];
+
+
+//*/
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], {id:"Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor.",skip:1}];
 majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", {id:"An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22",skip:1}], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, {id:"20.340-20.499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-20.499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-20.499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"HST.520-HST.529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-HST.529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-HST.529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.540-HST.549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-HST.549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-HST.549",range:1,dept:"HST",from:"540",to:"549"}]]]];
 majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:true}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
@@ -178,10 +182,14 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		if(newarr.skip) continue;
 		//Now check for ranges. These are strings of the form "X.XXX-X.XXX"
 		if(newarr.range){
-			var rangematches = $(".classdiv").filter(function(index){
+			var rangematches = $(".classdiv:not(.custom)").filter(function(index){
 				var rng = [newarr.dept, "."+newarr.from, "."+newarr.to];
-				var temp2 = [$(this).data("subject_code"), "."+$(this).data("subject_number")];
-				return ((temp2[0]==rng[0]) && (rng[1]<=temp2[1]) && (temp2[1]<=rng[2]));
+				var temp2 = [$(this).data("subject_id")].concat($(this).data("joint_subjects")?$(this).data("joint_subjects"):[]);
+				for(j in temp2){
+					var temp3 = [temp2[j].split(".")[0], "."+temp2[j].split(".")[1]];
+					if((temp3[0]==rng[0]) && (rng[1]<=temp3[1]) && (temp3[1]<=rng[2])) return true;
+				}
+				return false;
 			}).each(function(){
 				if($.inArray(this, globalmatches)!=-1) return true;
 				var tempargs = callbackargs.slice();
@@ -199,7 +207,6 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			});
 			tempstr.push((newarr.coreq==1)?("["+newarr.id+newarr.desc+"]"):(newarr.id+newarr.desc));
 			continue;
-			//return [false, "("+matched.count+" "+matched.desc+": "+((newarr.coreq==1)?"["+newarr.id+"]":newarr.id)+newarr.desc+")", level.length?matched.matches:globalmatches];
 		}
 		//Now only bona fide classes
 		var classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
@@ -226,15 +233,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 	//return two pieces of info: state and string
 	if(matched.count<=0) return [true, "", level.length?matched.matches:globalmatches];
 	var tempstr = tempstr.join(", ");
-	tempstr = tempstr.replace(/GIR:PHY1/g, "Physics I (GIR)");
-	tempstr = tempstr.replace(/GIR:PHY2/g, "Physics II (GIR)");
-	tempstr = tempstr.replace(/GIR:CAL1/g, "Calculus I (GIR)");
-	tempstr = tempstr.replace(/GIR:CAL2/g, "Calculus II (GIR)");
-	tempstr = tempstr.replace(/GIR:BIOL/g, "Biology (GIR)");
-	tempstr = tempstr.replace(/GIR:CHEM/g, "Chemistry (GIR)");
-	tempstr = tempstr.replace(/GIR:REST/g, "REST Requirement");
-	tempstr = tempstr.replace(/GIR:LAB/g, "LAB Requirement");
-	tempstr = tempstr.replace(/GIR:LAB2/g, "1/2 LAB Requirement");
+	tempstr = deGIR(tempstr);
 	if(matched.special){
 		tempstr = "("+matched.count+" "+matched.desc+": "+(JSON.stringify(arr.slice(1)))+")";
 	}else if(level.length || (!level.length && (arr[0]!=arr.length-1))){
@@ -254,22 +253,16 @@ function newWire(from,to){
 	var fromterm = from.data("classterm")+0;
 	var toterm = to.div.data("classterm")+0;
 	var dterm = Math.abs(fromterm - toterm);
-	if(to.coreq==1){
-		var options = {color: '#000000', bordercolor:"#000000", borderwidth: 1, width: 1, reqOK:true};
+	var options = {prereq:{color:"#888888",bordercolor:"#B8B8B8",borderwidth:1,width:2,OK:true},coreq:{color:"#000000",bordercolor:"#000000",borderwidth:1,width:1,OK:true},error:{color:"#ff0000",bordercolor:"#dd0000",borderwidth:1,width:1,OK:false}};
+	var option = "prereq";
+	if(to.coreq){
+		option = "coreq";
 	}else{
 		toterm += to.div.data("override")?0:1;
-		var options = {color: '#888888', bordercolor:"#B8B8B8", borderwidth: 1, width: 2, reqOK:true};
 	}
-	if(fromterm < toterm) options = {color: '#ff0000', bordercolor: '#dd0000', borderwidth: 1, width: 1, reqOK:false};
-	if(user.viewReqLines){
-		if(dterm==1 || dterm==2){
-			var tempwire = new WireIt.Wire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
-		}else{
-			var tempwire = new WireIt.BezierWire(from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options);
-		}
-		from.data("terminals").wires.push(tempwire);
-	}
-	return (options.reqOK);
+	if((fromterm < toterm) && (fromterm || dterm)) option = "error";
+	if(user.viewReqLines) from.data("terminals").wires.push(new WireIt[(dterm==1 || dterm==2)?"Wire":"BezierWire"](from.data("terminals").terminal, to.div.data("terminals").terminal, document.body, options[option]));
+	return (options[option].OK);
 }
 
 function addWires(div, addwires){
@@ -397,6 +390,7 @@ function classFromJSON(json, loadspeed, replacediv){
 	if(loadspeed==undefined) loadspeed = "slow";
 	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", loadspeed);
 	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn(loadspeed).parent().slideDown(loadspeed, function(){updateWires();}).siblings(".yearname").addClass("showsummer", loadspeed);
+	json.info = deGIR(json.info);
 	if(replacediv==undefined){
 		$('.term').eq(json.classterm).append(json.div);
 	}else{
@@ -461,6 +455,7 @@ function checkMajor(selector){
 	if(val=="m0") return $(div).html("")&&false;
 	span.attr("data-value", $(selector).find("option:selected").text()).removeAttr("data-empty");
 	$(div).html(buildMajor(majors[val])).append("<span class=\"letmeknow\"><br>See an error? Let me know <a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20"+val+"\">here<\/a>.<\/span>");
+	draggableChecklist();
 	checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
 }
 
@@ -498,7 +493,7 @@ function buildMajor(arr, level){
 			continue;
 		}
 		//Now only strings
-		tempstr += "<li>"+(newarr.skip?"&#x2015; ":"<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[&ensp;]<\/span> ")+newarr.id+newarr.desc+"<\/li>\n";
+		tempstr += "<li>"+(newarr.skip?"&#x2015; ":"<span class='majorchk majorchk_"+level.concat([i]).join("_")+" checkbox1'>[&ensp;]<\/span> ")+(newarr.skip?"":"<span class='checkbox1_text' data-id='"+newarr.id+"'>")+newarr.id+(newarr.skip?"":"</span>")+newarr.desc+"<\/li>\n";
 	}
 	tempstr = "<ul>\n"+tempstr+"<\/ul>\n";
 	if(holdobj.special){
@@ -510,6 +505,21 @@ function buildMajor(arr, level){
 	return "<li><span class='majorchk majorchk_"+level.join("_")+" checkbox1'>[&ensp;]<\/span> "+tempstr+"<\/li>\n";
 }
 
+function draggableChecklist(){
+	$(".checkbox1_text").draggable({
+		appendTo: "#rightbar", 
+		containment: "body",
+		distance: 30, 
+		helper: "clone",
+		start: function(event, ui){
+			ui.helper.attr("data-term","(none)");
+			$(".term").addClass("notOKterm");
+		},
+		revert: "invalid",
+		zIndex: 2700
+	});
+}
+
 /*** Helper functions ***/
 function unhighlightClasses(){
 	$("#overridercheck").prop("disabled", true);
@@ -517,6 +527,19 @@ function unhighlightClasses(){
 	$(".classdiv").removeClass("classdivhigh classdivlow");
 	$('.WireIt-Wire').removeClass("WireIt-Wire-low");
 	$("#nowreading").html('Click on a class to see more info.');
+}
+
+function deGIR(str){
+	str = str.replace(/GIR:PHY1/g, "Physics I (GIR)");
+	str = str.replace(/GIR:PHY2/g, "Physics II (GIR)");
+	str = str.replace(/GIR:CAL1/g, "Calculus I (GIR)");
+	str = str.replace(/GIR:CAL2/g, "Calculus II (GIR)");
+	str = str.replace(/GIR:BIOL/g, "Biology (GIR)");
+	str = str.replace(/GIR:CHEM/g, "Chemistry (GIR)");
+	str = str.replace(/GIR:REST/g, "REST Requirement");
+	str = str.replace(/GIR:LAB/g, "LAB Requirement");
+	str = str.replace(/GIR:LAB2/g, "1/2 LAB Requirement");
+	return str;
 }
 
 function minclass(stringify){
@@ -683,7 +706,7 @@ var crSetup = function(){
 		containment: '#rightbar', 
 		cursor: 'default', 
 		distance: 20, 
-		items: '.classdiv',
+		items: '.classdiv:not(.placeholder)',
 		opacity: 0.8, 
 		placeholder: 'ui-sortable-placeholder', 
 		scroll: true, 
@@ -691,12 +714,39 @@ var crSetup = function(){
 		start: function(event, ui){
 			preventUpdateWires = true;
 			$('.WireIt-Wire').hide();
+			var terms = ["fall","iap","spring","summer"];
+			for(s in terms) $("."+terms[s]).addClass(ui.item.data(terms[s])?"OKterm":"notOKterm");
 		},
 		stop: function(event, ui){
 			preventUpdateWires = false;
 			$('.classdiv').removeAttr("style");
 			$('.WireIt-Wire').show();
+			$(".term").removeClass("OKterm notOKterm");
 			addAllWires();
+		}
+	}).droppable({
+		accept: ".checkbox1_text",
+		over: function(event, ui){
+			$(".term").not(this).addClass("notOKterm");
+			$(this).removeClass("notOKterm");
+			ui.helper.attr("data-term",$("#getnewclassterm option").eq($(this).index(".term")).text());
+		},
+		out: function(event, ui){
+			$(this).addClass("notOKterm");
+		},
+		drop: function(event, ui){
+			$(".term").removeClass("notOKterm");
+			classterm = $(this).index(".term");
+			var data = {getclass: event.target.innerHTML, getyear:0};
+			data.getyear = user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
+			$.post('?', data, function(json){
+				if($.inArray(json,["error","noclass",""])!=-1) return false;
+				json.classterm = classterm;
+				json.override = false;
+				classFromJSON(json);
+				addAllWires();
+			}, "json");
+			draggableChecklist();
 		}
 	});
 	$("#rightbar").disableSelection();
@@ -838,8 +888,8 @@ var crSetup = function(){
 		var data = {
 			usersettings: 1, 
 			class_year: $("#usersettings_class_year").val(), 
-			view_req_lines: ($("#usersettings_view_req_lines").prop("checked")?1:0),
-			autocomplete: ($("#usersettings_autocomplete").prop("checked")?1:0)
+			toggle_view_req_lines: ($("#usersettings_view_req_lines").prop("checked")?1:0),
+			toggle_autocomplete: ($("#usersettings_autocomplete").prop("checked")?1:0)
 		};
 		$("#usersettings_div").load("?", data, function(){
 			user.classYear = parseInt($("#usersettings_class_year").val());
