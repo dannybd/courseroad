@@ -148,7 +148,6 @@ function pullCustom($name, $units, $classterm=0, $override=false){
 	$row['year'] = "0";
 	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
 	$row['divid'] = $row['id']."__".rand();
-	//$row['subject_id'] = '';
 	$row['subject_title'] = $name;
 	$row['total_units'] = floatval($units);
 	if(!$row['total_units']) $row['total_units'] = 0;

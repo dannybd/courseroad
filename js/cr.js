@@ -209,7 +209,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			continue;
 		}
 		//Now only bona fide classes
-		var classmatches = $(".classdiv."+(newarr.id.replace('.','_').replace(':','.')));
+		var classmatches = $(".classdiv."+(newarr.id.toUpperCase().replace('.','_').replace(':','.')));
 		classmatches.each(function(){
 			if($.inArray(this, globalmatches)!=-1) return true;
 			var tempargs = callbackargs.slice();
@@ -293,7 +293,7 @@ function addWires(div, addwires){
 	if(div.data("status")) div.addClass("classdivgood");
 	if(!div.data("checkrepeat")) div.attr('title', div.data("subject_id")+' is not counting for credit');
 	if(!div.data("checkterm")) div.attr('title', div.data("subject_id")+' is not available '+(['in the Fall term', 'during IAP', 'in the Spring term', 'in the Summer term'])[(div.data("classterm")-1)%4]);
-	if(!div.data("offered_this_year")) div.attr('title', div.data("subject_id")+' is not available in this year ('+div.data('year')+')');
+	if(!div.data("offered_this_year")) div.attr('title', div.data("subject_id")+' is not available in this year ('+div.data('ayear')+')');
 	if(div.data("override")) div.find(".coreqs").attr('title','OVERRIDE enabled');
 	if($('.classdivhigh').length==1){
 		$('.WireIt-Wire').addClass("WireIt-Wire-low");
@@ -508,12 +508,18 @@ function buildMajor(arr, level){
 function draggableChecklist(){
 	$(".checkbox1_text").draggable({
 		appendTo: "#rightbar", 
-		containment: "body",
-		distance: 30, 
+		//containment: "body",
+		//distance: 30, 
 		helper: "clone",
 		start: function(event, ui){
 			ui.helper.attr("data-term","(none)");
 			$(".term").addClass("notOKterm");
+			$(".WireIt-Wire").addClass("WireIt-Wire-low");
+		},
+		stop: function(event, ui){
+			$(".term").removeClass("notOKterm");
+			unhighlightClasses();
+			$(".WireIt-Wire").removeClass("WireIt-Wire-low");
 		},
 		revert: "invalid",
 		zIndex: 2700
@@ -706,7 +712,7 @@ var crSetup = function(){
 		containment: '#rightbar', 
 		cursor: 'default', 
 		distance: 20, 
-		items: '.classdiv:not(.placeholder)',
+		items: '.classdiv',
 		opacity: 0.8, 
 		placeholder: 'ui-sortable-placeholder', 
 		scroll: true, 
