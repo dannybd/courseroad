@@ -1,5 +1,9 @@
 <?php
 
+header("Location: https://courseroad.mit.edu/");
+die();
+
+
 if(@$_GET['access']==md5("guest")){
 	setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
 	header("Location: https://courseroad.mit.edu/index.php?hash=welcome");

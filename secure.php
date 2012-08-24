@@ -7,7 +7,7 @@ and then pass the browser back to whence it came.
 require("connect.php");
 session_start();
 if(!@$_SESSION['wenttoindex']){
-	header("Location: $baseURL/#soclose");
+	header("Location: $baseURL/");
 	//echo "soclose<br><pre>SERVER:\n";
 	//print_r($_SERVER);
 	die();

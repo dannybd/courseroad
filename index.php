@@ -26,12 +26,7 @@
 
 require("connect.php"); //connect to database
 
-if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
-
-if(@$_GET['access']){ //Purely for beta-testing
-	header("Location: $baseURL/#welcome-back");
-	die();
-}
+//if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
 	header("Location: $baseURL/#".$_GET['hash']);
@@ -40,15 +35,6 @@ if(isset($_GET['hash'])){
 
 session_start();
 $_SESSION['wenttoindex'] = true;
-
-if(isset($_POST['loadmajors'])){
-	header("Content-type: text/javascript");
-	$name = $_POST['name'];
-	$reqs = json_decode($_POST['reqs'], true);
-	echo "$name\n";
-	print_r($reqs);
-	die("\n\nworking!");
-}
 
 //autocomplete business
 if(isset($_POST['autocomplete'])){
