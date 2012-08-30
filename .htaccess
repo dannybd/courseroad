@@ -2,6 +2,7 @@ AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml appl
 
 RewriteEngine On
 RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 
 <Files secure.php>

@@ -208,13 +208,14 @@ if(isset($_POST['gethash'])){
 if(!isset($_SESSION['triedcert'])) $_SESSION['triedcert'] = false;
 $loggedin = isset($_SESSION['athena']);
 $athena = $loggedin?mysql_real_escape_string($_SESSION['athena']):false;
-if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1,'edited'=>0);
+if(!isset($_SESSION['user'])) $_SESSION['user'] = array('class_year'=>'2016','view_req_lines'=>1,'autocomplete'=>1,'need_permission'=>0,'edited'=>0);
 if($loggedin){
 	$tempuser = mysql_fetch_assoc(mysql_query("SELECT * FROM `users` WHERE `athena`='$athena'"));
 	if($tempuser){
 		$_SESSION['user']['class_year'] = $tempuser['class_year'];
 		$_SESSION['user']['view_req_lines'] = $tempuser['view_req_lines'];
 		$_SESSION['user']['autocomplete'] = $tempuser['autocomplete'];
+		$_SESSION['user']['need_permission'] = $tempuser['need_permission'];
 		unset($tempuser);
 	}
 }
@@ -369,6 +370,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
 	<title>CourseRoad<?= $loggedin?": $athena":"" ?></title>
 	<link rel="stylesheet" type="text/css" href="/css/cr.css<?= $nocache ?>">
 	<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
@@ -380,13 +382,13 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 	<script src="/js/wireit-min.js"></script>
 	<script src="/js/cr.js<?= $nocache ?>"></script>
 	<script>
-		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview"]];
+		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview",location.pathname+location.search+location.hash]];
 		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
 		g.src="https://ssl.google-analytics.com/ga.js";
 		s.parentNode.insertBefore(g,s)}(document,"script"));
 		var loggedin = <?= intval($loggedin) ?>;
 		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
-		var user = {classYear:<?= $_SESSION['user']['class_year'] ?>, viewReqLines:<?= $_SESSION['user']['view_req_lines'] ?>, autocomplete:<?= $_SESSION['user']['autocomplete'] ?>};
+		var user = {classYear:<?= $_SESSION['user']['class_year'] ?>, viewReqLines:<?= $_SESSION['user']['view_req_lines'] ?>, autocomplete:<?= $_SESSION['user']['autocomplete'] ?>, needPermission:<?= $_SESSION['user']['need_permission'] ?>};
 		$(crSetup);
 	</script>
 </head>
@@ -461,27 +463,27 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 	</div>
 	<div id="COREchecker" class="leftbarholder">
 	<strong>General Institute Requirements:</strong><br>
-		Physics I: <span id="Physics_I" class="checkbox1 corecheck GIR PHY1">[ ]</span><br>
-		Physics II: <span id="Physics_II" class="checkbox1 corecheck GIR PHY2">[ ]</span><br>
-		Calculus I: <span id="Calculus_I" class="checkbox1 corecheck GIR CAL1">[ ]</span><br>
-		Calculus II: <span id="Calculus_II" class="checkbox1 corecheck GIR CAL2">[ ]</span><br>
-		Chemistry: <span id="Chemistry" class="checkbox1 corecheck GIR CHEM">[ ]</span><br>
-		Biology: <span id="Biology" class="checkbox1 corecheck GIR BIOL">[ ]</span><br>
-		REST <span id="REST" class="checkbox1 corecheck GIR REST">[ ]</span>&nbsp;<span id="REST2" class="checkbox1 corecheck GIR REST">[ ]</span><br>
-		LAB <span id="LAB" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span>&nbsp;<span id="LAB2" class="checkbox1 corecheck GIR LAB LAB2">[ ]</span><br>
+		Physics I: <span id="Physics_I" class="checkbox1 corecheck GIR PHY1">[<span>&#x2713;</span>]</span><br>
+		Physics II: <span id="Physics_II" class="checkbox1 corecheck GIR PHY2">[<span>&#x2713;</span>]</span><br>
+		Calculus I: <span id="Calculus_I" class="checkbox1 corecheck GIR CAL1">[<span>&#x2713;</span>]</span><br>
+		Calculus II: <span id="Calculus_II" class="checkbox1 corecheck GIR CAL2">[<span>&#x2713;</span>]</span><br>
+		Chemistry: <span id="Chemistry" class="checkbox1 corecheck GIR CHEM">[<span>&#x2713;</span>]</span><br>
+		Biology: <span id="Biology" class="checkbox1 corecheck GIR BIOL">[<span>&#x2713;</span>]</span><br>
+		REST <span id="REST" class="checkbox1 corecheck GIR REST">[<span>&#x2713;</span>]</span>&nbsp;<span id="REST2" class="checkbox1 corecheck GIR REST">[<span>&#x2713;</span>]</span><br>
+		LAB <span id="LAB" class="checkbox1 corecheck GIR LAB LAB2">[<span>&#x2713;</span>]</span>&nbsp;<span id="LAB2" class="checkbox1 corecheck GIR LAB LAB2">[<span>&#x2713;</span>]</span><br>
 		-----------------<br>
-		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH CIHW">[ ]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH CIHW">[ ]</span><br>
+		CI-H <span id="CI_H" class="checkbox1 corecheck CI CIH CIHW">[<span>&#x2713;</span>]</span>&nbsp;<span id="CI_H2" class="checkbox1 corecheck CI CIH CIHW">[<span>&#x2713;</span>]</span><br>
 		-----------------<br>
 		HASS:<br>
-		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[ ]</span>
-					&nbsp;H <span id="HASS_Humanities" class="checkbox1 corecheck HASS HH">[ ]</span>
-					&nbsp;S <span id="HASS_Social_Sciences" class="checkbox1 corecheck HASS HS">[ ]</span><br>
+		&nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[<span>&#x2713;</span>]</span>
+					&nbsp;H <span id="HASS_Humanities" class="checkbox1 corecheck HASS HH">[<span>&#x2713;</span>]</span>
+					&nbsp;S <span id="HASS_Social_Sciences" class="checkbox1 corecheck HASS HS">[<span>&#x2713;</span>]</span><br>
 		&nbsp;&nbsp;&nbsp;Other HASS: 
-		<span id="HASS_E"  class="checkbox1 corecheck HASS HE">[ ]</span>
-		<span id="HASS_E2" class="checkbox1 corecheck HASS HE">[ ]</span>
-		<span id="HASS_E3" class="checkbox1 corecheck HASS HE">[ ]</span>
-		<span id="HASS_E4" class="checkbox1 corecheck HASS HE">[ ]</span>
-		<span id="HASS_E5" class="checkbox1 corecheck HASS HE">[ ]</span><br>
+		<span id="HASS_E"  class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
+		<span id="HASS_E2" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
+		<span id="HASS_E3" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
+		<span id="HASS_E4" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
+		<span id="HASS_E5" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span><br>
 		<span class="majorminor">-----------------<br></span>
 		<select id="choosemajor" name="choosemajor" class="majorminor" data-div="#majorreqs">
 			<option value="m0">---Select a Major---</option>
@@ -506,6 +508,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="m6_3">6-3 -- Computer Science and Engineering</option>
 			<option value="m6_7">6-7 -- Computer Science and Molecular Biology</option>
 			<option value="m7">7 -- Biology</option>
+			<option value="m7a">7A -- Biology</option>
 			<option value="m8_flexible">8 -- Physics (Flexible)</option>
 			<option value="m8_focused">8 -- Physics (Focused)</option>
 			<option value="m9">9 -- Brain and Cognitive Sciences</option>
@@ -515,6 +518,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="m11_enviro">11 -- Urban and Environmental Policy and Planning</option>
 			<option value="m11_society">11 -- Urban Society, History, and Politics</option>
 			<option value="m11_regional">11 -- Urban and Regional Public Policy</option>
+			<option value="m11_international">11 -- Urban and International Development</option>
 			<option value="m12">12 -- Earth, Atmospheric, and Planetary Sciences</option>
 			<option value="m14">14 -- Economics</option>
 			<option value="m15">15 -- Management / Management Science</option>
@@ -580,6 +584,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="m6_3">6-3 -- Computer Science and Engineering</option>
 			<option value="m6_7">6-7 -- Computer Science and Molecular Biology</option>
 			<option value="m7">7 -- Biology</option>
+			<option value="m7a">7A -- Biology</option>
 			<option value="m8_flexible">8 -- Physics (Flexible)</option>
 			<option value="m8_focused">8 -- Physics (Focused)</option>
 			<option value="m9">9 -- Brain and Cognitive Sciences</option>
