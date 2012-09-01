@@ -237,8 +237,6 @@ function checkReqs(arr, callback, callbackargs, level, test){
 				matched.count -= matched.special?$(this).data(matched.type):1;
 				matched.matches.push(this);
 				if(!newarr.globalskip && !matched.globalskip) globalmatches.push(this);
-				if(newarr.globalskip) console.log("newarrskip", newarr, matched);
-				if(matched.globalskip) console.log("matchedskip", newarr, matched);
 				return false;
 			}
 		});
