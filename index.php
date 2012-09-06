@@ -29,7 +29,7 @@ require("connect.php"); //connect to database
 //if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
-	header("Location: $baseURL/#".$_GET['hash']);
+	header("Location: $baseURL/#".urldecode($_GET['hash']));
 	die();
 }
 

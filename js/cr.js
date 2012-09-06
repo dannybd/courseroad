@@ -41,14 +41,12 @@ majors["m5"] = [0, "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35"
 //majors["m5"] = [0, [3, {id:"8.03-07",range:1,dept:"8",from:"03",to:"07"}, "8.012", "8.022"]];
 majors["m6_1"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], [3, "6.002", "6.003", "6.004", "6.007"], [{count:3,globalskip:1}, "6.011", "6.012", "6.013", "6.021"], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}, [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.033", "6.034", "6.046"], [{count:1,globalskip:1}, "6.011", "6.012", "6.013", "6.021", "6.033", "6.034", "6.046"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
-majors["m6_3"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], "6.042",  [{count:1,globalskip:1}, "6.172", "6.035", "6.141", "6.813", "6.828"], [3, "6.004", "6.005", "6.006"], [{count:3,globalskip:1}, "6.033", "6.034", "6.046"], [2, "6.022", "6.023", "6.035", "6.045", "6.047", "6.049", "6.061", "6.077", "6.111", "6.115", "6.131", "6.141", "6.142", "6.172", "6.173", "6.207", "6.301", "6.302", "6.336", "6.341", "6.434", "6.502", "6.503", "6.602", "6.608", "6.641", "6.701", "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.813", "6.814", "6.815", "6.824", "6.825", "6.837", "6.840", "6.854", "6.857", "6.858", "6.863", "6.867", "16.36"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
+majors["m6_3"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], "6.042",  [{count:1,globalskip:1}, "6.172", "6.035", "6.141", "6.813", "6.828"], [3, "6.004", "6.005", "6.006"], [{count:3,globalskip:1}, "6.033", "6.034", "6.046"], [2, "6.022", "6.023", "6.035", "6.045", "6.047", "6.049", "6.061", "6.077", "6.111", "6.115", "6.131", "6.141", "6.142", "6.172", "6.173", "6.207", "6.301", "6.302", "6.336", "6.341", "6.434", "6.502", "6.503", "6.602", "6.608", "6.641", "6.701", "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.813", "6.814", "6.815", "6.824", "6.825", "6.837", "6.840", "6.854", "6.857", "6.858", "6.863", "6.867", "16.36"], [{count:1,desc:"(for CI-M) from"}, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_7"] = [0, [1, "18.03", "18.06"], "6.01", "6.042", "5.12", [1, "5.60", "7.10", "20.110"], [1, "7.02", "20.109"], "6.005", "6.006", "6.046", "7.03", "7.06", [1, "7.05", "5.07"], [1, "6.047", "6.048", "6.503", "6.802", "7.36"], [1, "7.20", "7.23", "7.27", "7.28", "7.33"], "6.UAP", "6.UAT"];
 majors["m7"] = [0, "5.12", [1, "20.110", "7.10", "5.60"], [1, "7.02", "20.109"], "7.03", [1, "7.05", "5.07"], "7.06", [3, {id:"7.08-37",range:1,dept:"7",from:"08",to:"37"}], [1, "7.13", "7.16", "7.18"]];
-
 majors["m7a"] = [0, [1, "5.111", "5.112", "3.091"], [1, "20.110", "7.10", "5.60"], [1, 
 "7.012", "7.013", "7.014"], [1, "7.02", "20.109"], "7.03", [1, "5.07", "7.05"], "7.06", [3, "7.08", "7.20", "7.21", "7.22", "7.23", "7.25", "7.26", "7.27", "7.28", "7.29", "7.30", "7.31", "7.32", "7.33", "7.35", "7.36", "7.37", "7.41", "7.49"], [1, "3.014", "5.36", "5.38", {id:"Note: CourseRoad doesn't currently recognize the 5.35-38 module behavior. Try using 0-unit custom classes to mark where the modules <em>should</em> be.",skip:1}, "7.19", "7.30", "7.49", "8.13", "9.02", "9.12", "10.26", "10.27", "10.28", "10.29", "20.380", "6.021"]];
-
-majors["m8_flexible"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"], [1, "8.05", "8.20", "8.033"], [{count:2,desc:"(CI-M) from",globalskip:1}, "8.06", "8.13", "8.225", "8.226", "8.287"], [1, "8.13", {id:"8.THU",desc:"*"}, {id:"another lab",desc:"*",skip:1}, {id:"an experimentally oriented summer internship",desc:"*",skip:1}, {id:"* = (plus permission of department)",skip:1}], [1, {id:"8.03-999",range:1,dept:"8",from:"03",to:"999"}], {id:"3 other subjects forming a coherent unit in some area (plus permission of department)",skip:1}];
+majors["m8_flexible"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"], [1, "8.05", "8.20", "8.033"], [1, "8.13", {id:"8.THU",desc:"*"}, {id:"another lab",desc:"*",skip:1}, {id:"an experimentally oriented summer internship",desc:"*",skip:1}, {id:"* = (plus permission of department)",skip:1}], [1, {id:"8.03-999",range:1,dept:"8",from:"03",to:"999"}], {id:"3 other subjects forming a coherent unit in some area (plus permission of department)",skip:1}, [{count:2,desc:"(CI-M) from",globalskip:1,globalignore:1}, "8.06", "8.13", "8.225", "8.226", "8.287"]];
 majors["m8_focused"] = [0, "8.03", [1, "18.03", "18.034"], "8.04", "8.044", "8.033", "8.05", {id:"8.06",desc:" (CI-13",desc:" (CI-M)"}, "8.14", "8.223", "8.THU", [1, {id:"18.04-999",range:1,dept:"18",from:"04",to:"999"}], [1, "8.07", "8.08", "8.09"], [1, {id:"8.03-999",range:1,dept:"8",from:"03",to:"999"}]];
 //majors["m9"] = [0, "9.00", "9.01", "9.07", [6, "9.34", "9.37", "9.56", "9.57", "9.59", "9.65", "9.66", "9.85", "24.900", "9.10", "9.20", "9.22", "9.35", "9.71", "9.03", "9.04", "9.05", "9.09", "9.14", "9.15", "9.18", "9.24", "9.29", "9.31"], [1, "9.02", "9.12", "9.63"], [1, "9.URG", "9.02", "9.12", "9.41", "9.50", "9.63"]];
 majors["m9"] = [0, "9.00", "9.01", "9.06", [1, "9.07", "18.05"], "6.00", [{count:5,desc:"(any combination is fine but but at least one subject must be in a second area) from"}, {id:"Cognitive Science:",skip:1}, "9.34", "9.37", "9.56", "9.57", "9.65", "9.66", "9.85", "24.900", {id:"Cognitive Neuroscience",skip:1}, "9.10", "9.20", "9.35", "9.71", {id:"Neuroscience:",skip:1}, "9.03", "9.04", "9.09", "9.14", "9.15", "9.18", "9.29", "9.31"], [1, "9.02", "9.12", "9.59", "9.63"], [1, "9.URG", "9.02", "9.12", "9.41", "9.50", "9.59", "9.61"], {id:"One relevant subject to be arranged with advisor",skip:1}];
@@ -137,11 +135,12 @@ majors["miApplied_international"] = [0, {id:"Proficiency in at least one languag
 //*/
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], {id:"Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor.",skip:1}];
 majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", {id:"An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22",skip:1}], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}]]]];
-majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:1}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
+//majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:1}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
+majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"], [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:1}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
 majors["miPsych"] = [0, "9.00", [2, {id:"Subject in experimental psychology",skip:1}, {id:"Subject in personality and social psychology",skip:1}, {id:"Subject in applied psychology",skip:1}], [3, {id:"Subject in experimental psychology",skip:1}, {id:"Subject in personality and social psychology",skip:1}, {id:"Subject in applied psychology",skip:1}]];
 majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], {id:"3 Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy",skip:1}];
 
-var countdefault = {count:0,type:"",desc:"from",special:0,globalskip:0,runinfull:0};
+var countdefault = {count:0,type:"",desc:"from",special:0,globalskip:0,globalignore:0,runinfull:0};
 var classdefault = {id:"",desc:"",skip:0,coreq:0,range:0,dept:"",from:"",to:"",globalskip:0};
 function checkReqs(arr, callback, callbackargs, level, test){
 	//The idea here is to make it possible to loop recursively through a requisite tree and perform callback actions when a class matches
@@ -203,7 +202,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 				}
 				return false;
 			}).each(function(){
-				if($.inArray(this, globalmatches)!=-1) return true;
+				if($.inArray(this, globalmatches)!=-1 && !matched.globalignore) return true;
 				var tempargs = callbackargs.slice();
 				var clspos = $.inArray("cls", tempargs);
 				if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:$(this)});
@@ -226,7 +225,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 		//Now only bona fide classes
 		var classmatches = $(".classdiv."+(newarr.id.toUpperCase().replace('.','_').replace(':','.')));
 		classmatches.each(function(){
-			if($.inArray(this, globalmatches)!=-1) return true;
+			if($.inArray(this, globalmatches)!=-1 && !matched.globalignore) return true;
 			var tempargs = callbackargs.slice();
 			var clspos = $.inArray("cls", tempargs);
 			if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:$(this)});
@@ -662,15 +661,14 @@ var crSetup = function(){
 			for(i in $(".classdivhigh").data("terminals").terminal.wires){
 				$($(".classdivhigh").data("terminals").terminal.wires[i].element).removeClass("WireIt-Wire-low");
 			}
-			$("#nowreading").html($('.classdivhigh').data("info"));
-			$("#nowreading a[href^='javascript:PopUpHelp']").remove();
+			$("#nowreading").html($('.classdivhigh').data("info")).scrollTop(0);
 			$("#overridercheck").prop("disabled", false).prop("checked", $('.classdivhigh').data('override'));
 		}else{
 			unhighlightClasses();
 		}
 	}).on("click", "canvas.WireIt-Wire", unhighlightClasses).keydown(function(event){
 		var cls = $(".classdiv.classdivhigh");
-		if(event.which==46 && cls.length && confirm("Are you sure you want to delete "+cls.data("subject_id")+"?")){
+		if(event.which==46 && cls.length && confirm("Are you sure you want to delete "+(cls.data("subject_id")||("\""+cls.data("subject_title")+"\""))+"?")){
 			cls.remove();
 			unhighlightClasses();
 			addAllWires();
@@ -733,7 +731,7 @@ var crSetup = function(){
 			preventUpdateWires = true;
 			$('.WireIt-Wire').hide();
 			var terms = ["fall","iap","spring","summer"];
-			for(s in terms) $("."+terms[s]).addClass(ui.item.data(terms[s])?"OKterm":"notOKterm");
+			for(s in terms) $("."+terms[s]).addClass(ui.item.data("custom")||ui.item.data(terms[s])?"OKterm":"notOKterm");
 		},
 		stop: function(event, ui){
 			preventUpdateWires = false;
@@ -812,6 +810,7 @@ var crSetup = function(){
 		$("#getnewclassterm").val(Math.max(0, Math.min($("#getnewclassterm option").length-1, parseInt($("#getnewclassterm").val())+parseInt($(this).val()))));
 	});
 	$("#savemap").click(function(){
+		$("#savemap").val("Saving...").prop("disabled",true);
 		$.post("?", {classes: minclass(true), majors: minmajors(true), trycert: loggedin}, function(data){
 			$(window).off("beforeunload", runBeforeUnload);
 			if(loggedin){
@@ -826,6 +825,7 @@ var crSetup = function(){
 				userHashChange = false;
 				window.location.hash = data;
 			}
+			$("#savemap").val("Save Courses").prop("disabled",false);
 		});
 	});
 	if(!loggedin && triedlogin) $("#mapcerts").hide();
@@ -833,6 +833,7 @@ var crSetup = function(){
 		if(loggedin){
 			$("#viewroads").dialog("open");
 		}else{
+			$("#mapcerts").val("Saving...").prop("disabled",true);
 			$.post("?", {classes: minclass(true), majors: minmajors(true), trycert: true}, function(data){
 				$(window).off("beforeunload", runBeforeUnload);
 				if(data=="**auth**"){
@@ -841,6 +842,7 @@ var crSetup = function(){
 					userHashChange = false;
 					window.location.hash = data;
 				}
+				$("#mapcerts").val("Save with Login (requires certs)").prop("disabled",false);
 			});
 		}
 	});

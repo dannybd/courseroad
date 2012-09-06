@@ -1,6 +1,6 @@
 <?php
 
-echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
+//echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
 
 
 die();
@@ -13,6 +13,50 @@ die();
 require("connect.php");
 
 header("Content-type: text/javascript");
+
+$query = mysql_query("SELECT DISTINCT `hash` FROM `roads2` WHERE `hash` NOT LIKE '%/%' ORDER BY `hash` ASC");
+$i = 0;
+while($row = mysql_fetch_assoc($query)){
+	$hash = $row['hash'];
+	$query2 = mysql_query("SELECT DISTINCT `classes` FROM `roads2` WHERE `hash`='$hash'");
+	if(mysql_num_rows($query2)<2) continue;
+	$i++;
+	echo "$hash:\n";
+	$row3 = mysql_fetch_assoc(mysql_query("SELECT `classes` FROM `roads2` WHERE `hash`='$hash' ORDER BY `id` DESC LIMIT 0,1"));
+	$latest = $row3['classes'];
+	echo "Latest: ".substr($latest,0,10)."\n";
+	$j = -1;
+	while($row2 = mysql_fetch_assoc($query2)){
+		$classes = $row2['classes'];
+		echo "\n\t".substr($classes,0,10)."\t-->\t$hash";
+		if($classes==$latest) continue;
+		echo 1+$j++;
+		$sql = "UPDATE `roads2` SET `hash`='$hash$j' WHERE `hash`='$hash' AND `classes`='$classes'";
+		echo "\n\t\t$sql";
+		//mysql_query($sql);
+	}
+	echo "\n--------------\n\n";
+}
+echo "done $i";
+die();
+
+$query = mysql_query("SELECT * FROM `roads2` ORDER BY `id` DESC");
+$i = 0;
+while($row = mysql_fetch_assoc($query)){
+	$hash = $row['hash'];
+	$classes = $row['classes'];
+	$majors = $row['majors'];
+	$query2 = mysql_query("SELECT * FROM `roads2` WHERE `hash`='$hash' AND `classes`!='$classes' AND `majors`!='$majors' ORDER BY `id` ASC");
+	if(!mysql_num_rows($query2)) continue;
+	$i++;
+	print_r($row);
+	while($row2 = mysql_fetch_assoc($query2)){
+		print_r($row2);
+	}
+	echo "\n--------------\n\n";
+}
+echo "done";
+die();
 
 /*
 	TO COPY FROM WAREHOUSE TO THE EXCEPTIONS TABLE:
