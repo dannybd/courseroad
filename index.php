@@ -226,6 +226,8 @@ if(isset($_POST['classes'])){
 	$classes = mysql_real_escape_string(encrypt($_POST['classes']));
 	$majors = mysql_real_escape_string(encrypt($_POST['majors']));
 	$hash = substr(strtr(base64_encode(md5($classes.$majors)), '+/=', '-_,'),0,5);
+	for($i="";mysql_num_rows(mysql_query("SELECT 1 FROM `roads2` WHERE `hash`='$hash$i' AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"));$i===""?$i=0:$i++);
+	$hash .= $i;
 	$_SESSION['crhash'] = $hash;
 	$trycert = false;
 	if($_POST['trycert']){

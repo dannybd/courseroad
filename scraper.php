@@ -1,8 +1,6 @@
 <?php
 
 //echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
-
-
 die();
 /*
 echo "HERE:<br><pre>";
@@ -13,6 +11,19 @@ die();
 require("connect.php");
 
 header("Content-type: text/javascript");
+
+
+$hash = "NjNskN";
+$classes = "a";
+$majors = "b";
+//$i = -1;
+//echo mysql_num_rows(mysql_query("SELECT 1 FROM `roads2` WHERE `hash`='$hash' AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"));
+//while(mysql_num_rows(mysql_query("SELECT 1 FROM `roads2` WHERE `hash`='$hash".($i==-1?"":$i)."' AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"))) $i++;
+for($i="";mysql_num_rows(mysql_query("SELECT 1 FROM `roads2` WHERE `hash`='$hash$i' AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"));$i===""?$i=0:$i++);
+
+echo $hash.$i;
+
+die();
 
 $query = mysql_query("SELECT DISTINCT `hash` FROM `roads2` WHERE `hash` NOT LIKE '%/%' ORDER BY `hash` ASC");
 $i = 0;

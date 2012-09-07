@@ -319,6 +319,12 @@ function addWires(div, addwires){
 }
 
 function updateWires(){
+	$(".term").each(function(){
+		$(this).find(".termname, .termname span").css("width", $(this).height()+"px");
+	});
+	$(".year").each(function(){
+		$(this).find(".yearname, .yearname span").css("width", $(this).height()+"px");
+	});
 	if(preventUpdateWires) return false;
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.redrawAllWires();

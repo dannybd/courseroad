@@ -470,12 +470,10 @@ div.majorminor ul{
 	font-variant: small-caps;
 	font-size: 20px;
 	width: 399px;
-	height: 399px;
 	overflow: hidden;
 }
 .yearname.showsummer{
 	width: 485px;
-	height: 485px;
 }
 .yearname span{
 	display: inline-block;
@@ -497,7 +495,8 @@ div.majorminor ul{
 }
 .term{
 	width: auto;
-	height: 116px;
+	height: auto;
+	min-height: 59px;
 	margin-left: 25px;
 	padding: 20px;
 	text-align: center;
@@ -513,14 +512,14 @@ div.majorminor ul{
 }
 .termname{
 	position: absolute;
-	width: 116px;
+	width: 59px;
 	margin-left: -20px;
 	font-variant: small-caps;
 	font-size: 17px;
 }
 .termname span{
 	display: inline-block;
-	width: 116px;
+	width: 59px;
 	margin-top: 100%;
 	cursor: default;
 	text-align: center;
@@ -534,7 +533,7 @@ div.majorminor ul{
 	-o-transform: rotate(-90deg);
 }
 .credit{
-	height: 45px;
+	min-height: 45px;
 	margin-left: 0;
 	background-color: #7A7A7A;
 	padding-left: 45px;
@@ -551,7 +550,7 @@ div.majorminor ul{
 }
 .iap{
 	background-color: #E8F9FF;
-	height: 45px;
+	min-height: 45px;
 	border-top: 1px dotted #888;
 }
 .iap .termname, .iap .termname span{
