@@ -331,7 +331,7 @@ if(isset($_POST['commentonroad'])){
 	if(!$loggedin) die($hash);
 	if(($athena!=strstr($hash, '/', true)) and ($hash!="null")) die();
 	mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
-	die($comment);
+	die(stripslashes($comment));
 }
 //Similarly, runs when the user deletes a road.
 if(isset($_POST['deleteroad'])){

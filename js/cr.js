@@ -30,7 +30,7 @@ majors["m2_A_old"] = [0, "2.001", "2.003", "2.005", "2.009", "2.670", "2.671", "
 majors["m2_A_new"] = [0, [1, "2.00", "2.00B"], "2.678", "2.087", "2.090", "2.01", [1, "2.02A", "2.02B"], "2.03", [1, "2.04A", "2.04B"], "2.05", "2.051", "2.06", "2.671", "2.009", {id:"6 subjects forming a 2A Concentration",skip:1}];
 majors["m2_OE"] = [0, "2.001", "2.002", "2.003", "2.004", "2.005", "2.016", "2.017", "2.019", "2.086", "2.612", "2.670", "2.671", "18.03", [2, "2.006", "2.007", "2.008", "2.065", "2.092", "2.12", "2.14", "2.51", "2.60", "2.700", "2.72", "2.96", "2.THU"]];
 majors["m3"] = [0, [{count:2,desc:"(for CI-M) from",globalskip:1}, "3.014", "3.042", "3.155"], "3.012", "3.014", [1, "18.03", "18.034", "3.016"], [1, "3.021", "1.00", "6.01", "3.016"], "3.022", "3.024", "3.032", "3.034", "3.042", "3.044", [1, "3.THU", [2, "3.930", "3.931"]], [4, "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052", "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073", "3.074", "3.080", "3.14", "3.15", "3.153", "3.155"]];
-majors["m3_A"] = [0, [5, "3.012", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.001"], "3.022", "3.024", "3.032", "3.034", "3.042", "3.044"], "3.014", [3, "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052", "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073", "3.074", "3.080", "3.14", "3.15", "3.153", "3.155"], {id:"6 Planned electives appropriate to the student's stated goals",skip:1}];
+majors["m3_A"] = [0, [5, "3.012", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.01"], "3.022", "3.024", "3.032", "3.034", "3.042", "3.044"], "3.014", [3, "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052", "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073", "3.074", "3.080", "3.14", "3.15", "3.153", "3.155"], {id:"6 Planned electives appropriate to the student's stated goals",skip:1}];
 majors["m3_C"] = [0, "3.012", "3.014", [1, "3.016", "18.03", "18.034"], [1, "3.021", "1.00", "6.01"], "3.022", [1, "3.032", "3.044"], "3.THU", "3.985", "3.986", "3.987", "3.990", "12.001", [1, "12.110", "12.119"], "21A.100", [1, "3.07", "3.14", "3.051", "3.052"], [1, "3.982", "3.983", "3.984", "3.988"]];
 majors["m4_archdesign"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.113", "4.114", "4.115", "4.440", "4.603", "4.605", [1, "4.116", {id:"2 Classes from other streams",skip:1}]];
 majors["m4_buildingtech"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.411", "4.440", "4.605", "4.THT", "4.THU", {id:"4 Classes in Building Tech",skip:1}, {id:"1 Class from the other streams",skip:1}];
@@ -396,6 +396,13 @@ function addAllWires(){
 		var temp = addWires($(this));
 		status = status && temp;
 	});
+	$(".term").each(function(){ 
+		$(this).find(".termname span a").attr("href", "http://picker.mit.edu/browse.html?courses="+
+			$(this).find(".classdiv:not(.custom)").map(function(){ 
+				return $(this).data("subject_code"); 
+			}).get().join("%3B")
+		);
+	});
 	updateWires();
 	checkClasses();
 	$("select.majorminor").each(function(){checkMajor(this);});
@@ -602,6 +609,7 @@ window.onhashchange = function(){
 	//userHashChange means that if the user types in a new hash in the URL, 
 	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
 	userHashChange = !userHashChange || window.location.reload(); 
+	document.title = "CourseRoad: "+window.location.hash.substr(1);
 }
 
 var reasonToTrySave = preventUpdateWires = false;
@@ -616,6 +624,7 @@ var crSetup = function(){
 		$("#loading").show();
 		userHashChange = false;
 		window.location.hash = window.location.hash.replace(/\/+$/,'');
+		document.title = "CourseRoad: "+window.location.hash.substr(1);
 		$.post("?", {gethash:window.location.hash}, function(data){
 			$("#loading").hide();
 			if(data=="") return false;
@@ -701,6 +710,7 @@ var crSetup = function(){
 			if(window.location.hash.substr(1)==prev.parents("tr").data("hash")){
 				userHashChange = false;
 				window.location.hash = data;
+				document.title = "CourseRoad: "+window.location.hash.substr(1);
 			}
 			prev.text(data.substr(data.indexOf("/")+1)).removeClass("newload").parents("tr").data("hash", data).attr("data-hash", data).find(":radio").val(data).parents("tr").find("a.hashlink").attr("href", "?hash="+data);
 		});
@@ -826,10 +836,12 @@ var crSetup = function(){
 				}else{
 					userHashChange = false;
 					window.location.hash = data;
+					document.title = "CourseRoad: "+window.location.hash.substr(1);
 				}	
 			}else{
 				userHashChange = false;
 				window.location.hash = data;
+				document.title = "CourseRoad: "+window.location.hash.substr(1);
 			}
 			$("#savemap").val("Save Courses").prop("disabled",false);
 		});
@@ -847,6 +859,7 @@ var crSetup = function(){
 				}else{
 					userHashChange = false;
 					window.location.hash = data;
+					document.title = "CourseRoad: "+window.location.hash.substr(1);
 				}
 				$("#mapcerts").val("Save with Login (requires certs)").prop("disabled",false);
 			});
@@ -929,4 +942,5 @@ var crSetup = function(){
 			$(window).off("beforeunload", runBeforeUnload);
 		});
 	});
+	$(".termname span").wrapInner('<a href="http://picker.mit.edu/browse.html?courses=" class="spannamepicker" target="_blank" title="Click to head over to Picker to check your classes for this semester."></a>');
 };

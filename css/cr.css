@@ -469,7 +469,7 @@ div.majorminor ul{
 	position: absolute;
 	font-variant: small-caps;
 	font-size: 20px;
-	width: 399px;
+	width: 285px;
 	overflow: hidden;
 }
 .yearname.showsummer{
@@ -477,7 +477,7 @@ div.majorminor ul{
 }
 .yearname span{
 	display: inline-block;
-	width: 399px;
+	width: 285px;
 	margin-top: 100%;
 	cursor: default;
 	text-align: center;
@@ -531,6 +531,10 @@ div.majorminor ul{
 	-ms-transform: rotate(-90deg);
 	-o-transform-origin: top left;
 	-o-transform: rotate(-90deg);
+}
+.termname span a{
+	text-decoration: none;
+	color: #000;
 }
 .credit{
 	min-height: 45px;
