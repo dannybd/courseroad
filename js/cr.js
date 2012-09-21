@@ -161,10 +161,6 @@ function checkReqs(arr, callback, callbackargs, level, test){
 	for(var i=1;i<arr.length;i++){
 		if($.isArray(arr[i])){
 			var req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
-			var asd = false;
-			//if(req[0] && req[2].length==6) var asd = true;
-			if(asd) qaz = req;
-			if(asd) console.log(qaz, matched);
 			if(req[0] || matched.pullmatches) matched.special ? $(req[2]).each(function(){ matched.count -= $(this).data(matched.type); }) : matched.count--;
 			if(req[0]){ //If the sub-branch matched its requirements
 				var tempargs = callbackargs.slice();
@@ -176,7 +172,6 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			}else{
 				tempstr.push(req[1]);
 			}
-			if(asd) console.log(qaz, matched);
 			continue;
 		}
 		//Let's deal with the objects (for things like coreqs) now.
