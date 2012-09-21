@@ -57,7 +57,7 @@ majors["m11_enviro"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, 
 majors["m11_society"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.013", "11.014", "11.015", "11.016", "11.019", "11.026", "11.150"], "11.027", "11.THT", "11.THU"];
 majors["m11_regional"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.003", "11.005", "11.011", "11.025", "11.126", "11.152", "11.164", "11.166"], "11.027", "11.THT", "11.THU"];
 majors["m11_international"] = [0, "11.001", "11.002", "11.123", "14.01", "11.188", [5, "11.005", "11.025", "11.140", "11.144", "11.147", "11.164", "11.165", "11.166"], "11.027", "11.THT", "11.THU"];
-majors["m12"] = [0, "12.001", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP", "12.THU", [1, "12.115", [2, "12.221", "12.222"], "12.307", "12.335", "12.410"], [{count:72,type:"total_units",desc:"units from",special:1}, [{count:24,type:"total_units",desc:"units (at least) from",special:1}, "12.002", "12.005", "12.006", "12.007", "12.008", "12.021", "12.086", "12.021", "12.102", "12.104", "12.108", "12.109", "12.110", "12.113", "12.114", "12.119", "12.120", "12.158", "12.163", "12.170", "12.172", "12.201", "12.207", "12.213", "12.214", "12.301", "12.310", "12.333", "12.340", "12.348", "12.420", "12.425", "12.43", "12.431"], [{count:48,type:"total_units",desc:"units (at MAX) from",special:1}, "1.00", "1.060", "1.061", "1.080", "3.012", "5.60", "5.03", "5.12", "5.61", "6.00", "7.03", "7.05", "7.21", "8.03", "8.04", "8.044", "8.07", "8.09", "8.21", "12.010", "12.320", "18.04", "18.05", "18.06", "18.100A", "18.100B", "18.100C", "18.311"]]];
+majors["m12"] = [0, "12.001", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP", "12.THU", [1, "12.115", [2, "12.221", "12.222"], "12.307", "12.335", "12.410"], [{count:72,type:"total_units",desc:"units from",special:1,pullmatches:1}, [{count:24,type:"total_units",desc:"units (at least) from",special:1,runinfull:1}, "12.002", "12.005", "12.006", "12.007", "12.008", "12.021", "12.086", "12.021", "12.102", "12.104", "12.108", "12.109", "12.110", "12.113", "12.114", "12.119", "12.120", "12.158", "12.163", "12.170", "12.172", "12.201", "12.207", "12.213", "12.214", "12.301", "12.310", "12.333", "12.340", "12.348", "12.420", "12.425", "12.43", "12.431"], [{count:48,type:"total_units",desc:"units (at MAX) from",special:1}, "1.00", "1.060", "1.061", "1.080", "3.012", "5.60", "5.03", "5.12", "5.61", "6.00", "7.03", "7.05", "7.21", "8.03", "8.04", "8.044", "8.07", "8.09", "8.21", "12.010", "12.320", "18.04", "18.05", "18.06", "18.100A", "18.100B", "18.100C", "18.311"]]];
 majors["m14"] = [0, "14.01", "14.02", "14.04", "14.05", "14.30", "14.32", "14.33", "14.THU", [{count:60,type:"total_units",desc:"units from",special:1}, {id:"Elective subjects in economics",skip:1}]];
 majors["m15"] = [0, [1, "1.00", "6.005"], [1, "6.041", "18.440"], "14.01", "14.02", [1, "15.053", "15.058"], [1, "15.075", "18.443"], "15.279", "15.301", "15.501", "18.06", [1, "15.354", "15.401", "15.812", "15.761"], {id:"2 Subjects in Finanace, Information Technologies, Marketing Science, Operations Research",skip:1}];
 majors["m16_1"] = [0, "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07", [1, "16.09", "6.041"], [1, "18.03", "18.034"], [2, "16.20", "16.50", "16.90", "16.100"], [2, "16.100", "16.20", "16.50", "16.90", "16.30", "6.111", "16.35", "16.36", "16.400", "16.410"], [1, "16.82", "16.83"], [1, [2, "16.621", "16.622"], "16.821", "16.831"]];
@@ -128,19 +128,14 @@ majors["miJapanese"] = [0, [1, [2, [1, "21F.503", "21F.573"], "21F.504"], [2, "2
 majors["miHistory"] = [0, "21H.390", {id:"Four undergraduate introductory or intermediate subjects from the history curriculum",skip:1}, {id:"At least one 21H seminar in addition to 21H.390",skip:1}, {id:"At least two temporal periods, one premodern (before 1700) and one modern, to be covered by the five subjects other than 21H.390",skip:1}];
 majors["miLiterature"] = [0, [1, {id:"21L.000-044",range:1,dept:"21L",from:"000",to:"044"}], [2, {id:"21L.420-522",range:1,dept:"21L",from:"420",to:"522"}], [1, [1, {id:"21L.000-044",range:1,dept:"21L",from:"000",to:"044"}], [1, {id:"21L.420-522",range:1,dept:"21L",from:"420",to:"522"}]], [2, {id:"21L.701-715",range:1,dept:"21L",from:"701",to:"715"}]];
 
-/*
-majors["miApplied_international"] = [0, {id:"Proficiency in at least one language (minimum second-year college-level)",skip:1}, {id:"Two or three subjects in foreign language/culture (beyond first-year language) or anthropology. At least two of these subjects must focus on specific region or country",skip:1}, ];
-
-
-//*/
+majors["miApplied_international"] = [0, {id:"Six classes from any program in SHASS, including at least 2 focused on one area of the world, and at least one in the social sciences",skip:1}, {id:"The equivalent of 4 semesters of college language training related to the student's geographical specialization",skip:1}, {id:"An international experience (MISTI, D-Lab or other)",skip:1}, {id:"A research seminar in international studies and social science (this class counts as one of the 6 total required for the minor). In consultation with the instructor, students pick a topic for extensive independent research and over the course of the semester complete a lengthy term paper. Normally students would take this seminar after completing some course work and their international experience",skip:1}];
 majors["miAstronomy"] = [0, "8.03", "8.282", "18.03", [1, "8.284", "8.286"], [1, "12.008", "12.400", "12.420", "12.425"], [1, "8.287", "12.43", "12.431", "12.432"], [1, "8.UR", "12.UR", "8.THU", "12.THU", "12.411"], {id:"Four of the subjects used to satisfy the requirements for the astronomy minor may not be used to satisfy any other major or minor.",skip:1}];
 majors["miBiomed"] = [0, [1, "18.03", "3.016"], [1, "1.010", "7.36", "9.07", "18.440", "18.443"], [1, "5.07", "7.05"], [2, "7.02", "7.03", "7.06", {id:"An intro level engineering-focused class from Courses 1, 2, 3, 6, 10, 16, or 22",skip:1}], [1, [3, [1, "20.110", "20.111"], [1, "20.310", "20.320", "20.330"], [1, "20.371", "20.390", "HST.561"]], [3, [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"20.340-499",range:1,dept:"20",from:"340",to:"499"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.520-529",range:1,dept:"HST",from:"520",to:"529"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}], [1, {id:"HST.540-549",range:1,dept:"HST",from:"540",to:"549"}]]]];
-//majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"]], [2, [1, "2.005", "5.60"], [1, "12.021", "12.340"]], [2, "6.007", [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:1}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
 majors["miEnergy_studies"] = [0, [1, "8.21", [2, "6.007", [1, "2.005", "5.60"], [1, "12.021", "12.340"]]], "15.031", [1, "2.60", "4.42", "22.081"], [{count:24,type:"total_units",desc:"units from",special:1}, "1.071", "1.801", "2.006", "2.570", "2.612", "2.627", "2.813", "3.003", "4.401", "4.472", "5.92", "6.061", "6.131", "6.701", "10.04", "10.27", "11.162", "11.165", "11.168", "12.213", "14.42", "14.44", "15.026", "21H.207", "22.033", "22.06", "SP.775", "STS.032", "4.274", "11.369", "15.366", "15.933", "ESD.124", "ESD.162"]];
 majors["miPsych"] = [0, "9.00", [2, {id:"Subject in experimental psychology",skip:1}, {id:"Subject in personality and social psychology",skip:1}, {id:"Subject in applied psychology",skip:1}], [3, {id:"Subject in experimental psychology",skip:1}, {id:"Subject in personality and social psychology",skip:1}, {id:"Subject in applied psychology",skip:1}]];
 majors["miPublic_policy"] = [0, [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"], {id:"3 Subjects chosen in one of the following tracks: social and educational policy, environmental policy, infrastructure policy, science and technology policy, labor and industrial policy, international development policy, security and defense policy, and urban and regional policy",skip:1}];
 
-var countdefault = {count:0,type:"",desc:"from",special:0,globalskip:0,globalignore:0,runinfull:0};
+var countdefault = {count:0,type:"",desc:"from",special:0,globalskip:0,globalignore:0,runinfull:0,pullmatches:0};
 var classdefault = {id:"",desc:"",skip:0,coreq:0,range:0,dept:"",from:"",to:"",globalskip:0};
 function checkReqs(arr, callback, callbackargs, level, test){
 	//The idea here is to make it possible to loop recursively through a requisite tree and perform callback actions when a class matches
@@ -166,8 +161,12 @@ function checkReqs(arr, callback, callbackargs, level, test){
 	for(var i=1;i<arr.length;i++){
 		if($.isArray(arr[i])){
 			var req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); //In case a sub-branch is inside this branch, we recursively solve that branch and use its result.
+			var asd = false;
+			//if(req[0] && req[2].length==6) var asd = true;
+			if(asd) qaz = req;
+			if(asd) console.log(qaz, matched);
+			if(req[0] || matched.pullmatches) matched.special ? $(req[2]).each(function(){ matched.count -= $(this).data(matched.type); }) : matched.count--;
 			if(req[0]){ //If the sub-branch matched its requirements
-				matched.special ? $(req[2]).each(function(){ matched.count -= $(this).data(matched.type); }) : matched.count--;
 				var tempargs = callbackargs.slice();
 				var clspos = $.inArray("cls", tempargs);
 				if(clspos!=-1) tempargs[clspos] = $.extend({},newarr,{div:arr[i]});
@@ -177,6 +176,7 @@ function checkReqs(arr, callback, callbackargs, level, test){
 			}else{
 				tempstr.push(req[1]);
 			}
+			if(asd) console.log(qaz, matched);
 			continue;
 		}
 		//Let's deal with the objects (for things like coreqs) now.
@@ -302,7 +302,7 @@ function addWires(div, addwires){
 			return ((($.inArray($(this).data("subject_id"), div.data("equiv_subjects"))!=-1) || $(this).hasClass(div.data("id"))) && (j<$(div).index(".classdiv")));
 		}).length) div.data("checkrepeat", false);
 	}
-	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat")) || div.data("override")) && (div.data("checkterm")) && (div.data("offered_this_year"))) || div.data("classterm")==0);
+	div.data("status", (((div.data("reqstatus") && div.data("checkrepeat") && (div.data("offered_this_year"))) || div.data("override")) && (div.data("checkterm"))) || div.data("classterm")==0);
 	div.removeClass("classdivgood").removeAttr('title');
 	if(div.data("status")) div.addClass("classdivgood");
 	if(!div.data("checkrepeat")) div.attr('title', div.data("subject_id")+' is not counting for credit');

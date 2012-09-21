@@ -677,6 +677,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="miJapanese">Minor in Japanese</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
+			<option value="miApplied_international">Minor in Applied International Studies</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
@@ -724,6 +725,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="miJapanese">Minor in Japanese</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
+			<option value="miApplied_international">Minor in Applied International Studies</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
 			<option value="miEnergy_studies">Minor in Energy Studies</option>
@@ -819,7 +821,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 		<div>
 			The year attached to each class represents the <strong>catalog year from which that class' data was taken</strong>. It doesn't necessarily match the year in which you took the class: if the requisites and teachers are the same then and now, then you don't have to worry about it.<br>
 			<br>
-			If, however, you took (say) the 2009 version of a class, simply click the displayed year and choose "2009" from the dropdown. The class will automatically replace itself with the 2009 version.<br>
+			If, however, you took (say) the 2009-2010 version of a class, simply click the displayed year and choose "'09-'10" from the dropdown. The class will automatically replace itself with the proper version.<br>
 			<br>
 			If you're entering a lot of classes and this seems like an issue, try clicking the "About" tab and choosing "User Settings": if you update your class year in that field, CourseRoad will try to add the classes to semesters using data from the year in which you took said classes.
 		</div>
@@ -839,7 +841,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<ul>
 				<li>Save your roads attached to your account and manage them later (go to the "Save" tab and click "View Saved Roads")</li>
 				<li>Save user settings such as class year and toggling CourseRoad features</li>
-				<li>Choose custom save hashes for your roads (e.g. "<em>username</em>/with-energy-minor", and even choose a "public" road to be visible at courseroad.mit.edu/<em>username</em></li>
+				<li>Choose custom save hashes for your roads (e.g. "<em>username</em>/with-energy-minor"), and even choose a "public" road to be visible at courseroad.mit.edu/<em>username</em></li>
 			</ul>
 			and more!
 		</div>
