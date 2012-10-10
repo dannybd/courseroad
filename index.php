@@ -26,7 +26,7 @@
 
 require("connect.php"); //connect to database
 
-//if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
+if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
 if(isset($_GET['hash'])){
 	header("Location: $baseURL/#".urldecode($_GET['hash']));
@@ -102,6 +102,7 @@ EOD;
 	$row['custom'] = false;
 	
 	$row['ayear'] = "'".substr($row['year']-1,-2)."-'".substr($row['year'],-2);
+	$row['oyear'] = $year;
 	$row['otheryears'] = "<select>";
 	$query = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
 	while($row2 = mysql_fetch_assoc($query)){

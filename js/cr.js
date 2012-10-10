@@ -40,7 +40,7 @@ majors["m4_artculture"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", 
 majors["m5"] = [0, "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36", "5.37", "5.38", {id:"Note: CourseRoad doesn't currently recognize the 5.35-38 module behavior. Try using 0-unit custom classes to mark where the modules <em>should</em> be.",skip:1}, "5.60", "5.61", [2, "5.04", "5.08", "5.43", "5.62"]];
 //majors["m5"] = [0, [3, {id:"8.03-07",range:1,dept:"8",from:"03",to:"07"}, "8.012", "8.022"]];
 majors["m6_1"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], [3, "6.002", "6.003", "6.004", "6.007"], [{count:3,globalskip:1}, "6.011", "6.012", "6.013", "6.021"], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}, [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
-majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.033", "6.034", "6.046"], [{count:1,globalskip:1}, "6.011", "6.012", "6.013", "6.021", "6.033", "6.034", "6.046"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
+majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.034", "6.046", "6.033"], [{count:1,globalskip:1}, "6.011", "6.012", "6.013", "6.021", "6.034", "6.046", "6.033"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
 majors["m6_3"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], "6.042",  [{count:1,globalskip:1}, "6.172", "6.035", "6.141", "6.813", "6.828"], [3, "6.004", "6.005", "6.006"], [{count:3,globalskip:1}, "6.033", "6.034", "6.046"], [2, "6.022", "6.023", "6.035", "6.045", "6.047", "6.049", "6.061", "6.077", "6.111", "6.115", "6.131", "6.141", "6.142", "6.172", "6.173", "6.207", "6.301", "6.302", "6.336", "6.341", "6.434", "6.502", "6.503", "6.602", "6.608", "6.641", "6.701", "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.813", "6.814", "6.815", "6.824", "6.825", "6.837", "6.840", "6.854", "6.857", "6.858", "6.863", "6.867", "16.36"], [{count:1,desc:"(for CI-M) from"}, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_7"] = [0, [1, "18.03", "18.06"], "6.01", "6.042", "5.12", [1, "5.60", "7.10", "20.110"], [1, "7.02", "20.109"], "6.005", "6.006", "6.046", "7.03", "7.06", [1, "7.05", "5.07"], [1, "6.047", "6.048", "6.503", "6.802", "7.36"], [1, "7.20", "7.23", "7.27", "7.28", "7.33"], "6.UAP", "6.UAT"];
 majors["m7"] = [0, "5.12", [1, "20.110", "7.10", "5.60"], [1, "7.02", "20.109"], "7.03", [1, "7.05", "5.07"], "7.06", [3, {id:"7.08-37",range:1,dept:"7",from:"08",to:"37"}], [1, "7.13", "7.16", "7.18"]];
@@ -121,7 +121,7 @@ majors["miNuclear_science"] = [0, "22.01", "22.02", "22.05", "22.06", "22.058", 
 majors["miPhysics"] = [0, [1, "18.03", "18.034"], [{count:57,type:"total_units",desc:"units from",special:1}, [5, {id:"8.03-999",range:1,dept:"8",from:"03",to:"999"}]]];
 majors["miPolitical_science"] = [0, [1, {id:"Intro class (two digit decimal)",skip:1}], [4, {id:"Advanced classes (three digit decimal)",skip:1}], [1, {id:"17.01-999",range:1,dept:"17",from:"01",to:"999"}]];
 majors["miChinese"] = [0, [1, [2, [1, "21F.103", "21F.173"], "21F.104"], [2, [1, "21F.109", "21F.183"], "21F.110"], [2, "21F.142", "21F.143"]], [1, [2, [1, "21F.105", "21F.175"], "21F.106"], [1, "21F.113", "21F.185"]], [1, "21F.190", "21F.192", "21F.193", "21F.194", "21F.195", {id:"21F.199",desc:" (if Capstone)"}], [1, "21F.027", "21F.030", "21F.193", "21F.036", "21F.190", "21F.038", "21F.194", "21F.043", "21F.044", "21F.195", "21F.046", "21F.192", "21F.075", "21H.151", "21H.152", "21H.351"]];
-majors["miFrench"] = [0, [1, "21F.303", "21F.373"], [1, "21F.304", "21F.374"], [2, {id:"21F.308-315",range:1,dept:"21F",from:"308",to:"315"}], [2, "21F.052", "21F.068", "21F.071", {id:"21F.320-348",range:1,dept:"21F",from:"320",to:"348"}, "21H.241"], [1, {id:"21F.308-315",range:1,dept:"21F",from:"308",to:"313"}, "21F.315", "21F.052", "21F.068", "21F.071", {id:"21F.320-348",range:1,dept:"21F",from:"320",to:"348"}, "21H.241"]];
+majors["miFrench"] = [0, [1, "21F.303", "21F.373"], [1, "21F.304", "21F.374"], [2, {id:"21F.308-313",range:1,dept:"21F",from:"308",to:"313"}, "21F.315"], [2, "21F.052", "21F.068", "21F.071", {id:"21F.320-348",range:1,dept:"21F",from:"320",to:"348"}, "21H.241"]];
 majors["miGerman"] = [0, [1, "21F.403", "21F.473"], [1, "21F.404", "21F.474"], [2, {id:"21F.405-412",range:1,dept:"21F",from:"405",to:"412"}], [2, "21F.019", "21F.055", "21F.059", "21F.098", {id:"21F.414-420",range:1,dept:"21F",from:"414",to:"420"}], [1, {id:"21F.405-412",range:1,dept:"21F",from:"405",to:"412"}, "21F.019", "21F.055", "21F.059", "21F.098", {id:"21F.414-420",range:1,dept:"21F",from:"414",to:"420"}]];
 majors["miSpanish"] = [0, [1, "21F.703", "21F.773"], [1, "21F.704", "21F.774"], [3, {id:"21F.711-714",range:1,dept:"21F",from:"711",to:"714"}, "21F.792"], [{count:2,desc:"(at least) from"}, "21F.010", "21F.084", {id:"21F.716-740",range:1,dept:"21F",from:"716",to:"740"}]];
 majors["miJapanese"] = [0, [1, [2, [1, "21F.503", "21F.573"], "21F.504"], [2, "21F.562", "21F.563"]], [1, "21F.505", "21F.575"], "21F.506", [1, "21F.590", "21F.591", "21F.592", "21F.593", "21F.596"], [1, "21F.590", "21F.591", "21F.592", "21F.593", "21F.596", "17.433", "17.537", "17.543", "21F.027", "21F.030", "21F.039", "21F.063", "21F.064", "21F.065"]];
@@ -426,6 +426,10 @@ function classFromJSON(json, loadspeed, replacediv){
 	return newdiv;
 }
 
+function properYear(classterm){
+	return user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
+}
+
 function getClass(){
 	//pulls down and interprets the class data
 	var classterm = $("#getnewclassterm").val();
@@ -436,7 +440,7 @@ function getClass(){
 	}else{
 		if(!$("#getnewclassid").val()) return false;
 		var data = {getclass: $("#getnewclassid").val(), getyear:0};
-		data.getyear = user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
+		data.getyear = properYear(classterm);
 	}
 	$("#getnewclass .ui-autocomplete").hide();
 	$(".getnewclasstypes input").val("");
@@ -571,7 +575,7 @@ function minclass(stringify){
 	//Creates the storable string which holds our precious class data. Used primarily in saved classes
 	if(stringify==undefined) stringify = false;
 	var temp = $(".classdiv").map(function(){
-		arr = $(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units"),custom:true}:{id:$(this).data("subject_id"), year:$(this).data("year")};
+		arr = $(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units"),custom:true}:{id:$(this).data("subject_id"), year:$(this).data("oyear")};
 		arr.term = $(this).data("classterm");
 		arr.override = $(this).data("override");
 		return arr;
@@ -605,6 +609,18 @@ window.onhashchange = function(){
 	//the browser will reload, but if the hash changes due to saving a new version or something it won't.
 	userHashChange = !userHashChange || window.location.reload(); 
 	document.title = "CourseRoad: "+window.location.hash.substr(1);
+}
+
+function swapClassYear(oldclass, newyear){
+	oldclass.addClass("classdivlow");
+	$.post('?', {getclass:oldclass.data("subject_id"), getyear:newyear}, function(json){
+		if($.inArray(json,["error","noclass",""])!=-1) return false;
+		json.classterm = oldclass.data("classterm");
+		json.override = oldclass.data("override");
+		classFromJSON(json, 0, oldclass);
+		addAllWires();
+		unhighlightClasses();
+	}, "json");
 }
 
 var reasonToTrySave = preventUpdateWires = false;
@@ -650,15 +666,7 @@ var crSetup = function(){
 			oldclass.data("changing", false);
 			return false;
 		}
-		oldclass.addClass("classdivlow");
-		$.post('?', {getclass:oldclass.data("subject_id"), getyear:val}, function(json){
-			if($.inArray(json,["error","noclass",""])!=-1) return false;
-			json.classterm = oldclass.data("classterm");
-			json.override = oldclass.data("override");
-			classFromJSON(json, 0, oldclass);
-			addAllWires();
-			unhighlightClasses();
-		}, "json");
+		swapClassYear(oldclass, val);
 	}).on("click", ".classdiv", function(){
 		//Highlights the selected class, dims the others, and displays info on that class in the lower right
 		$(".classdiv").not($(this)).removeClass("classdivhigh");
@@ -765,7 +773,7 @@ var crSetup = function(){
 			$(".term").removeClass("notOKterm");
 			classterm = $(this).index(".term");
 			var data = {getclass: event.target.innerHTML, getyear:0};
-			data.getyear = user.classYear - parseInt(3-Math.floor((classterm-1)/4)) - user.supersenior;
+			data.getyear = properYear(classterm);
 			$.post('?', data, function(json){
 				if($.inArray(json,["error","noclass",""])!=-1) return false;
 				json.classterm = classterm;
@@ -925,13 +933,22 @@ var crSetup = function(){
 			toggle_view_req_lines: ($("#usersettings_view_req_lines").prop("checked")?1:0),
 			toggle_autocomplete: ($("#usersettings_autocomplete").prop("checked")?1:0)
 		};
+		var old_class_year = user.classYear;
 		$("#usersettings_div").load("?", data, function(){
 			user.classYear = parseInt($("#usersettings_class_year").val());
 			user.viewReqLines = ($("#usersettings_view_req_lines").prop("checked")?1:0);
 			user.autocomplete = ($("#usersettings_autocomplete").prop("checked")?1:0);
 			user.needPermission = ($("#usersettings_need_permission").prop("checked")?1:0);
+
 			$("#usersettings_saved").show().delay(1000).fadeOut("slow");
 			$("body").toggleClass("no-wires", !user.viewReqLines);
+			if(old_class_year!=user.classYear && confirm("You changed your saved class year. Would you like to edit the year versions of your classes to match that change? (Clicking Cancel will prevent this behavior)")){
+				console.log("Let's go.");
+				$(".classdiv:not(.custom)").each(function(){
+					if($(this).data("oyear")==properYear($(this).data("classterm"))) return true;
+					swapClassYear($(this), properYear($(this).data("classterm")));
+				});
+			}
 			addAllWires();
 			$("#getnewclassid").autocomplete("option", "disabled", !user.autocomplete);
 			$(window).off("beforeunload", runBeforeUnload);
