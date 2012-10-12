@@ -1,15 +1,17 @@
 AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
 
+Options +FollowSymLinks
 RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
 
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
 </Files>
 
+#Only deployed for beta-testing
 #RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
 #RewriteCond %{REQUEST_URI} !^/503.php [NC]
 #RewriteRule .* /503.php
