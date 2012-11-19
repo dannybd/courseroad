@@ -1,7 +1,7 @@
 <?php
 
 //echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
-die();
+//die();
 /*
 echo "HERE:<br><pre>";
 print_r($_SERVER);
@@ -12,7 +12,7 @@ require("connect.php");
 
 header("Content-type: text/javascript");
 
-
+/*
 $hash = "NjNskN";
 $classes = "a";
 $majors = "b";
@@ -162,9 +162,10 @@ EOD;//*/
 
 /*
 	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'08/18/2012';
+	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'11/16/2012';
 //*/
 
-$handle = fopen('archive/Warehouse-update-20120819.csv', 'r');
+$handle = fopen('archive/Warehouse-update-20121116.csv', 'r');
 $headers = fgetcsv($handle);
 foreach($headers as &$header){
 	$header = strtr(($header), ' ', '_');
@@ -226,9 +227,9 @@ for($i=1;$i<=10000;$i++){
 	$course2[] = $course['Hgn_Code'];				//hgn_code
 	$course2[] = $course['Hgn_Except'];				//hgn_except
 	
-	
 	print_r($course2);
-	//$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
+	$sql = "";
+	$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
 	//mysql_query($sql);
 	echo "\n$sql\n\n";
 }
