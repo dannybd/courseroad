@@ -2,7 +2,7 @@
 
 //echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
 //die();
-/*
+//*
 echo "HERE:<br><pre>";
 print_r($_SERVER);
 echo "</pre>";
