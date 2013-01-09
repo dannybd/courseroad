@@ -722,7 +722,7 @@ body.no-wires .WireIt-Wire{
 	filter: alpha(opacity=100);
 	opacity: 1;
 }
-.trashdefault img{
+.trashdefault>*{
 	position: absolute;
 	left: 0px;
 	top: 50%;
@@ -730,7 +730,7 @@ body.no-wires .WireIt-Wire{
 	width:40px;
 	height:	40px;
 }
-img.trashhover{
+img.trashhover,svg.trashhover{
 	margin-top: -40px;
 	width: 80px;
 	height: 80px;

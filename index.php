@@ -364,6 +364,7 @@ if(isset($_GET['user'])) die("user<br><pre>".print_r(@$_SESSION, true)."\n\n\n".
 $nocache = isset($_GET['nocache']);
 $nocache = true; //Uncomment during development
 $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through updates to the linked js and css files in browsers that love to hold on to cached versions; for debugging only.
+header('Content-type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html>
 <!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8"><![endif]-->
@@ -371,7 +372,6 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 <!--[if IE 9]><html lang="en-us" class="ie ie9 lte9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us"><!--<![endif]-->
 <head>
-	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
 	<title>CourseRoad<?= $loggedin?": $athena":"" ?></title>
@@ -379,11 +379,8 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 	<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-	<!--[if gte IE 9]><script>YAHOO.env.ua.ie=0;</script><![endif]--><!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
-	<script src="/js/json2-min.js"></script>
-	<script src="/js/wireit-min.js"></script>
-	<script src="/js/cr.js<?= $nocache ?>"></script>
+	<script src="/js/cr-min.js<?= $nocache ?>"></script>
+	<!--script src="/js/d3.js"></script-->
 	<script>
 		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview",location.pathname+location.search+location.hash]];
 		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
@@ -641,6 +638,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor" name="chooseminor" class="majorminor" data-div="#minorreqs">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miPremed">Pre-Med Path</option>
 			<option value="miArchitecture">Minor in Architecture</option>
 			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
 			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
@@ -678,6 +676,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="miJapanese">Minor in Japanese</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
+			<option value="miAncient_and_medieval">Minor in Ancient and Medieval Studies</option>
 			<option value="miApplied_international">Minor in Applied International Studies</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
@@ -689,6 +688,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 		<span class="majorminor">-----------------<br></span>
 		<select id="chooseminor2" name="chooseminor2" class="majorminor" data-div="#minorreqs2">
 			<option value="m0">---Select a Minor---</option>
+			<option value="miPremed">Pre-Med Path</option>
 			<option value="miArchitecture">Minor in Architecture</option>
 			<option value="miHist_Architecture_Art">Minor in the History of Architecture and Art</option>
 			<option value="miArt_culture_tech">Minor in Art, Culture and Technology</option>
@@ -726,6 +726,7 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 			<option value="miJapanese">Minor in Japanese</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
+			<option value="miAncient_and_medieval">Minor in Ancient and Medieval Studies</option>
 			<option value="miApplied_international">Minor in Applied International Studies</option>
 			<option value="miAstronomy">Minor in Astronomy</option>
 			<option value="miBiomed">Minor in Biomedical Engineering</option>
@@ -778,7 +779,15 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 		<div class="term summer supersenior hidden"><div class="termname supersenior hidden"><span>Summer</span></div></div>
 	</div>
 </div>
-<div id="trash" class="trash trashdefault"><img src="/images/trashx.png" alt="" class="trash"></div>
+<div id="trash" class="trash trashdefault">
+	<!--svg class="trash" xmlns="http://www.w3.org/2000/svg">
+		<g>
+		<line id="svg_1" y2="100%" x2="100%" y1="0" x1="0" stroke-width="15" stroke="#f00000" fill="none"/>
+		<line id="svg_2" y2="0" x2="100%" y1="100%" x1="0" stroke-width="15" stroke="#f00000" fill="none"/>
+		</g>
+	</svg-->
+	<img src="/images/trashx.png" alt="" class="trash">
+</div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble my-dialog">
 	<div id="viewroads_close" class="my-dialog-close">Close this</div>
@@ -879,5 +888,9 @@ $nocache = $nocache?"?nocache=".time():"?v2.0"; //This can help force through up
 	</div>
 	<input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<!--[if gte IE 9]><script>ie9=1;</script><![endif]--><!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
+<script src="/js/json2-min.js"></script>
+<script src="/js/wireit-min.js"></script>
 </body>
 </html>

@@ -1,10 +1,12 @@
 <?php
-
-//echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
-//die();
+if(!isset($_GET['magnets'])) die();
+echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
+//echo odbc_connect("//warehouse.mit.edu:1521/DWRHS","dannybd","ohlookawarehousepassword");
+echo "test";
+die();
 //*
 echo "HERE:<br><pre>";
-print_r($_SERVER);
+//print_r($_SERVER);
 echo "</pre>";
 die();
 //*/
@@ -163,9 +165,11 @@ EOD;//*/
 /*
 	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'08/18/2012';
 	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'11/16/2012';
+	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'12/13/2012';
+	In BrioQuery: SELECT * FROM `CIS_COURSE_CATALOG` WHERE `Last Activity Date`>'12/18/2012';
 //*/
 
-$handle = fopen('archive/Warehouse-update-20121116.csv', 'r');
+$handle = fopen('archive/Warehouse-update-20121218.csv', 'r');
 $headers = fgetcsv($handle);
 foreach($headers as &$header){
 	$header = strtr(($header), ' ', '_');
