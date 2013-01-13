@@ -1,7 +1,23 @@
 <?php
 if(!isset($_GET['magnets'])) die();
-echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
-//echo odbc_connect("//warehouse.mit.edu:1521/DWRHS","dannybd","ohlookawarehousepassword");
+
+
+
+
+
+
+
+
+die();
+// cd ~/Downloads/instantclient_11_2;env LD_LIBRARY_PATH=. TWO_TASK=warehouse rlwrap -H /tmp/sqlplus_hist ./sqlplus
+//env LD_LIBRARY_PATH=~/Downloads/instantclient_11_2 TWO_TASK=warehouse rlwrap -H /tmp/sqlplus_hist ~/Downloads/instantclient_11_2/sqlplus -M "HTML ON" -S dannybd/ohlookawarehousepassword @pull.sql sid=8.012
+//echo mysql_connect("warehouse.mit.edu:1521","dannybd","ohlookawarehousepassword");
+//echo odbc_connect("Driver={SQL Server Native Client 10.0};Server=warehouse.mit.edu:1521;Database=DWRHS","dannybd","ohlookawarehousepassword");
+//exec("export LD_LIBRARY_PATH=~/Downloads/instantclient_11_2 ORACLE_HOME=~/Downloads/instantclient_11_2 TWO_TASK=warehouse");
+putenv("LD_LIBRARY_PATH=~/Downloads/instantclient_11_2");
+putenv("ORACLE_HOME=~/Downloads/instantclient_11_2");
+putenv("TWO_TASK=warehouse");
+$connect = odbc_connect("Driver=Oracle;Server=warehouse.mit.edu:1521;Database=DWRHS","dannybd","ohlookawarehousepassword");
 echo "test";
 die();
 //*
@@ -171,6 +187,7 @@ EOD;//*/
 
 $handle = fopen('archive/Warehouse-update-20121218.csv', 'r');
 $headers = fgetcsv($handle);
+$headers = explode(',',"Academic Year,Subject Id,Subject Code,Subject Number,Source Subject Id,Print Subject Id,Is Printed In Bulletin,Department Code,Department Name,Effective Term Code,Subject Short Title,Subject Title,Is Variable Units,Lecture Units,Lab Units,Preparation Units,Total Units,Design Units,Grade Type,Grade Type Desc,Grade Rule,Grade Rule Desc,Hgn Code,Hgn Desc,Hgn Except,Gir Attribute,Gir Attribute Desc,Comm Req Attribute,Comm Req Attribute Desc,Tuition Attribute,Tuition Attribute Desc,Write Req Attribute,Write Req Attribute Desc,Supervisor Attribute,Supervisor Attribute Desc,Prerequisites,Subject Description,Joint Subjects,School Wide Electives,Meets With Subjects,Equivalent Subjects,Is Offered This Year,Is Offered Fall Term,Is Offered Iap,Is Offered Spring Term,Is Offered Summer Term,Fall Instructors,Spring Instructors,Status Change,Last Activity Date,Warehouse Load Date,Master Subject Id,Hass Attribute,Hass Attribute Desc,Term Duration,Global Regions,Global Countries,On Line Page Number\n");
 foreach($headers as &$header){
 	$header = strtr(($header), ' ', '_');
 }

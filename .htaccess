@@ -9,6 +9,7 @@ Options +FollowSymLinks
 RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
+RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
 
 <Files secure.php>
