@@ -5,6 +5,16 @@ AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml appl
 Header set Cache-Control "max-age=604800, public"
 </filesMatch>
 
+<Files update>
+order allow,deny
+deny from all
+</Files>
+
+<Files output.html>
+order allow,deny
+deny from all
+</Files>
+
 Options +FollowSymLinks
 RewriteEngine On
 RewriteCond %{HTTPS} off
