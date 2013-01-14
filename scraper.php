@@ -1,7 +1,8 @@
 <?php
 if(!isset($_GET['magnets'])) die();
 
-
+//header("Content-type: text/javascript");
+//print_r($_SERVER);
 
 
 

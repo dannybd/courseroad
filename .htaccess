@@ -22,6 +22,11 @@ RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
 
+RewriteCond %{SERVER_NAME} !^courseroad.mit.edu$
+RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
+RewriteCond %{REQUEST_URI} !^/output.php [NC]
+RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI} [R]
+
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
