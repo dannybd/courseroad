@@ -4,12 +4,13 @@ header("Content-type: text/javascript;");
 if(isset($_GET['date'])) die(date("d-M-Y", time()-10*86400));
 if(!isset($_GET['magnets'])) die();
 require("connect.php");
-$file = file_get_contents("output.html");
+$filename = "../../cron_scripts/output.html";
+$file = file_get_contents($filename);
 preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s",$file,$matches);
 $matches = $matches[1];
 if(!count($matches)){
-	file_put_contents("output.html","");
-	die("No matches/changes");
+	file_put_contents($filename,"");
+	die("No matches/changes\n");
 }
 $headers = explode(',',"Academic Year,Subject Id,Subject Code,Subject Number,Source Subject Id,Print Subject Id,Is Printed In Bulletin,Department Code,Department Name,Effective Term Code,Subject Short Title,Subject Title,Is Variable Units,Lecture Units,Lab Units,Preparation Units,Total Units,Design Units,Grade Type,Grade Type Desc,Grade Rule,Grade Rule Desc,Hgn Code,Hgn Desc,Hgn Except,Gir Attribute,Gir Attribute Desc,Comm Req Attribute,Comm Req Attribute Desc,Tuition Attribute,Tuition Attribute Desc,Write Req Attribute,Write Req Attribute Desc,Supervisor Attribute,Supervisor Attribute Desc,Prerequisites,Subject Description,Joint Subjects,School Wide Electives,Meets With Subjects,Equivalent Subjects,Is Offered This Year,Is Offered Fall Term,Is Offered Iap,Is Offered Spring Term,Is Offered Summer Term,Fall Instructors,Spring Instructors,Status Change,Last Activity Date,Warehouse Load Date,Master Subject Id,Hass Attribute,Hass Attribute Desc,Term Duration,Global Regions,Global Countries,On Line Page Number");
 foreach($headers as &$header){
@@ -66,11 +67,9 @@ foreach($courses as &$course){
 	//print_r($course['Last_Activity_Date']."\n");
 	$sql = "";
 	$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
-	mysql_query($sql);
+	//mysql_query($sql);
 	echo "\n$sql\n\n";
 }
-file_put_contents("output.html","");
-//file_put_contents("output.html",strtoupper(date("d-M-Y")));
 
 function parseReqs2($str){
 	//$str = preg_replace("/<(.*?)>/s", "", $str);
@@ -139,4 +138,6 @@ function parseReqs2($str){
 function req($str, $isCoreq){
 	return $isCoreq?array("id"=>$str, "coreq"=>1):$str;
 }
+
+file_put_contents($filename,"");
 ?>

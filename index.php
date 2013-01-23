@@ -379,7 +379,7 @@ header('Content-type: text/html; charset=utf-8');
 	<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-	<script src="/js/cr-min.js<?= $nocache ?>"></script>
+	<script src="/js/cr.js<?= $nocache ?>"></script>
 	<!--script src="/js/d3.js"></script-->
 	<script>
 		var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview",location.pathname+location.search+location.hash]];

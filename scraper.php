@@ -1,10 +1,10 @@
 <?php
 if(!isset($_GET['magnets'])) die();
 
-//header("Content-type: text/javascript");
+header("Content-type: text/javascript");
 //print_r($_SERVER);
 
-
+echo file_get_contents("../../cron_scripts/update");
 
 
 

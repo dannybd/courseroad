@@ -38,8 +38,8 @@ majors["m4_computation"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401",
 majors["m4_history"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.601", "4.605", [1, "4.602", "4.641", "4.651"], [1, "4.613", "4.614"], "4.THT", "4.THU", {id:"3 Classes in History, Theory and Criticism",skip:1}, {id:"1 Class from Art, Culture and Technology",skip:1}];
 majors["m4_artculture"] = [0, [0, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500", "4.322", "4.341", "4.351", "4.601", "4.THT", "4.THU", {id:"3 Classes in Art, Culture and Technology",skip:1}, {id:"1 Class from History, Theory and Criticism",skip:1}];
 majors["m5"] = [0, "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36", "5.37", "5.38", {id:"Note: CourseRoad doesn't currently recognize the 5.35-38 module behavior. Try using 0-unit custom classes to mark where the modules <em>should</em> be.",skip:1}, "5.60", "5.61", [2, "5.04", "5.08", "5.43", "5.62"]];
-majors["m6_1"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], [3, "6.002", "6.003", "6.004", "6.007"], [{count:3,globalskip:1}, "6.011", "6.012", "6.013", "6.021"], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}, [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
-majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.034", "6.046", "6.033"], [{count:1,globalskip:1}, "6.011", "6.012", "6.013", "6.021", "6.034", "6.046", "6.033"], [1, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1,globalignore:1}, "6.022"]], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
+majors["m6_1"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1}, "6.022"]], [3, "6.002", "6.003", "6.004", "6.007"], [{count:3,globalskip:1}, "6.011", "6.012", "6.013", "6.021"], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}, [{count:1,desc:"(for CI-M) from"}, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
+majors["m6_2"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], [1, "6.041", "18.440", "6.042"], [2, "6.002", "6.003", "6.007", "6.004"], [2, "6.005", "6.006", "6.004"], [1, "6.011", "6.012", "6.013", "6.021"], [1, "6.034", "6.046", "6.033"], [{count:1,globalskip:1}, "6.011", "6.012", "6.013", "6.021", "6.034", "6.046", "6.033"], [{count:1,desc:"(for CI-M) from"}, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"], [1, [1, {id:"6.100-182",range:1,dept:"6",from:"100",to:"182"}], {id:"CS lab",skip:1}, [2, {id:"6.021",globalskip:1,globalignore:1}, "6.022"]], {id:"2 from dept. list of advanced undergraduate subjects",skip:1}];
 majors["m6_3"] = [0, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.06"], "6.042",  [{count:1,globalskip:1}, "6.141", "6.170", "6.172", "6.173", "6.035", {id:"6.828", desc:" (taken in Spr 2012 or before)"}, "6.S195"], [3, "6.004", "6.005", "6.006"], [{count:3,globalskip:1}, "6.033", "6.034", "6.046"], [2, "6.022", "6.023", "6.035", "6.045", "6.047", "6.049", "6.061", "6.077", "6.111", "6.115", "6.131", "6.141", "6.142", "6.172", "6.173", "6.207", "6.301", "6.302", "6.336", "6.341", "6.434", "6.502", "6.503", "6.602", "6.608", "6.641", "6.701", "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.813", "6.814", "6.815", "6.824", "6.825", "6.837", "6.840", "6.854", "6.857", "6.858", "6.863", "6.867", "16.36"], [{count:1,desc:"(for CI-M) from"}, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"]];
 majors["m6_7"] = [0, [1, "18.03", "18.06"], "6.01", "6.042", "5.12", [1, "5.60", "7.10", "20.110"], [1, "7.02", "20.109"], "6.005", "6.006", "6.046", "7.03", "7.06", [1, "7.05", "5.07"], [1, "6.047", "6.048", "6.503", "6.802", "7.36"], [1, "7.20", "7.23", "7.27", "7.28", "7.33"], "6.UAP", "6.UAT"];
 majors["m7"] = [0, "5.12", [1, "20.110", "7.10", "5.60"], [1, "7.02", "20.109"], "7.03", [1, "7.05", "5.07"], "7.06", [3, "7.08", "7.20", "7.21", "7.22", "7.23", "7.25", "7.26", "7.27", "7.28", "7.29", "7.30", "7.31", "7.32", "7.33", "7.35", "7.36", "7.37", "7.41", "7.49"], [1, "7.13", "7.16", "7.18"]];
@@ -379,7 +379,7 @@ function checkClasses(){
 	$("#totalunits").html(totalUnits);
 }
 
-function addAllWires(){
+function addAllWires(noreload){
 	var status = true;
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.removeAllWires();
@@ -399,7 +399,8 @@ function addAllWires(){
 	updateWires();
 	checkClasses();
 	$("select.majorminor").each(function(){checkMajor(this);});
-	$(window).on("beforeunload", runBeforeUnload);
+	console.log("addAllWires");
+	if(!noreload) $(window).on("beforeunload", runBeforeUnload);
 	return status;
 }
 
@@ -454,12 +455,12 @@ function getClass(){
 	}, "json");
 }
 
-function getClasses(classarr){
+function getClasses(classarr,noreload){
 	//Used for initial pageload when a hash is present: takes in an array containing objects describing the classes.
 	for(i=0;i<classarr.length;i++){
 		classFromJSON(classarr[i], 0);
 	}
-	addAllWires();
+	addAllWires(noreload);
 }
 
 /*** Major/minor functions ***/
@@ -628,8 +629,8 @@ var crSetup = function(){
 	crSetup = undefined;
 	$("#getnewclass").tabs({collapsible: false, selected:(loggedin?1:0)});
 	user.supersenior = $(".year.supersenior").is(":visible")?1:0;
-	//setInterval(function(){if(Math.random()<0.1){console.log(1);addAllWires()}else{console.log(0);updateWires()}}, 10000); //Assures regular updating of the window, should anything change
-	setInterval(addAllWires, 10000); //Assures regular updating of the window, should anything change
+	//setInterval(function(){if(Math.random()<0.1){console.log(1);addAllWires(true)}else{console.log(0);updateWires()}}, 10000); //Assures regular updating of the window, should anything change
+	setInterval(function(){addAllWires(true);}, 10000); //Assures regular updating of the window, should anything change
 	if(window.location.hash){
 		//Load hash's classes on pageload
 		$("#loading").show();
@@ -644,7 +645,7 @@ var crSetup = function(){
 			$("select.majorminor").each(function(i){
 				$(this).val(jsonmajors[i]).attr("selected",true);
 			});
-			getClasses(json);
+			getClasses(json,true);
 			$(window).off("beforeunload", runBeforeUnload);
 		});
 		userHashChange = true;
