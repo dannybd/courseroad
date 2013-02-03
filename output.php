@@ -67,7 +67,7 @@ foreach($courses as &$course){
 	//print_r($course['Last_Activity_Date']."\n");
 	$sql = "";
 	$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
-	//mysql_query($sql);
+	mysql_query($sql);
 	echo "\n$sql\n\n";
 }
 
