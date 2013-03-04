@@ -341,7 +341,10 @@ function checkClasses(){
 			var effect = "#COREchecker .corecheck.unused.GIR."+$(div).data("gir")+":first";
 			if($(effect).length){
 				$(effect).removeClass('unused').addClass('used').attr('title', $(div).data("subject_id"));
-				if($(div).data("gir")=="LAB") $(effect).removeClass('unused').addClass('used').attr('title', $(div).data("subject_id"));
+				if($(div).data("gir")=="LAB"){
+                    if(!$(effect).length) totalUnits += $(div).data("total_units") - 6;
+                    $(effect).removeClass('unused').addClass('used').attr('title', $(div).data("subject_id"));
+                }
 				forUnits = false;
 			}
 		}
