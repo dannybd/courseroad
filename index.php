@@ -25,16 +25,40 @@
 /******************************************************************/
 
 require("connect.php"); //connect to database
+session_start();
 
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
+if(isset($_GET['addterm'])){
+	$_SESSION['addterm'] = base64_decode(urldecode($_GET['addterm']));
+	if(!isset($_GET['hash'])) $_GET['hash'] = "";
+}
+
 if(isset($_GET['hash'])){
+	$_SESSION['thishash'] = $_GET['hash'];
 	header("Location: $baseURL/#".urldecode($_GET['hash']));
 	die();
 }
 
-session_start();
 $_SESSION['wenttoindex'] = true;
+
+$addterm = false;
+if(isset($_SESSION['addterm'])){
+	$addterm = json_decode($_SESSION['addterm'],true);
+	unset($_SESSION['addterm']);
+}
+$thishash = false;
+if(isset($_SESSION['thishash'])){
+	$thishash = $_SESSION['thishash'];
+	unset($_SESSION['thishash']);
+}
+/*
+Future planning: base64 encoded class info sent in, detected here, redirect to secure.php with proper checks, send back to here with prompt for choosing a road to add it to, then load that road in the background (no redirect) and change the hash.
+
+Also changing roads by refresh shouldn't be necessary...
+
+Also fix the wire library already
+//*/
 
 //autocomplete business
 if(isset($_POST['autocomplete'])){
@@ -203,6 +227,39 @@ if(isset($_POST['gethash'])){
 	}
 	$json[] = $majors;
 	die(json_encode($json));
+}
+
+if($addterm){
+	$json = array();
+	foreach($addterm['classes'] as $class){
+		$json[] = pullClass($class, $addterm["year"], $addterm["term"], false);	
+	}
+	$addterm = mysql_real_escape_string(json_encode($json));
+}
+
+if($thishash){
+	$thishash = mysql_real_escape_string($thishash);
+	$_SESSION['crhash'] = $thishash;
+	$sql = "SELECT `classes`,`majors` FROM `roads2` WHERE (`hash`='$thishash' OR (`hash` LIKE '$thishash/%' AND `public`='1')) ORDER BY `added` DESC LIMIT 0,1";
+	$query = mysql_query($sql);
+	$classes = '';
+	$majors = '';
+	while($row = mysql_fetch_array($query)){
+		$classes = json_decode(decrypt($row['classes']), true);
+		$majors = stripslashes(decrypt($row['majors']));
+	}
+	if($classes=='') die();
+	$majors = json_decode($majors, true);
+	$json = array();
+	foreach($classes as $class){
+		if(isset($class["custom"])){
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
+		}else{
+			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+		}
+	}
+	$json[] = $majors;
+	$thishash = mysql_real_escape_string(json_encode($json));
 }
 
 //For certification purposes.
@@ -389,6 +446,8 @@ header('Content-type: text/html; charset=utf-8');
 		var loggedin = <?= intval($loggedin) ?>;
 		var triedlogin = <?= intval($_SESSION['triedcert']) ?>; //These are not trusted variables, but they do aid in displaying different (non-secure) things based on login status.
 		var user = {classYear:<?= $_SESSION['user']['class_year'] ?>, viewReqLines:<?= $_SESSION['user']['view_req_lines'] ?>, autocomplete:<?= $_SESSION['user']['autocomplete'] ?>, needPermission:<?= $_SESSION['user']['need_permission'] ?>};
+		var addterm = $.parseJSON('<?= $addterm ?>')||0;
+		var thishash = $.parseJSON('<?= $thishash ?>')||0;
 		$(crSetup);
 	</script>
 </head>
@@ -674,6 +733,7 @@ header('Content-type: text/html; charset=utf-8');
 			<option value="miGerman">Minor in German</option>
 			<option value="miSpanish">Minor in Spanish</option>
 			<option value="miJapanese">Minor in Japanese</option>
+			<option value="miAsian">Minor in Asian and Asian Diaspora Studies</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
 			<option value="miAncient_and_medieval">Minor in Ancient and Medieval Studies</option>
@@ -724,6 +784,7 @@ header('Content-type: text/html; charset=utf-8');
 			<option value="miGerman">Minor in German</option>
 			<option value="miSpanish">Minor in Spanish</option>
 			<option value="miJapanese">Minor in Japanese</option>
+			<option value="miAsian">Minor in Asian and Asian Diaspora Studies</option>
 			<option value="miHistory">Minor in History</option>
 			<option value="miLiterature">Minor in Literature</option>
 			<option value="miAncient_and_medieval">Minor in Ancient and Medieval Studies</option>

@@ -622,7 +622,7 @@ div.WireIt-Terminal{
 	opacity: 0;
 	width: 1px;
 	height: 1px;
-	pointer: default;
+	cursor: default;
 }
 .WireIt-Wire{
 	position: absolute;
