@@ -29,8 +29,10 @@ session_start();
 
 if(isset($_GET['dev'])) $_POST = $_POST + $_GET; //REMOVE AFTER DEVELOPMENT (allows me to test POST code)
 
-if(isset($_GET['addterm'])){
-	$_SESSION['addterm'] = base64_decode(urldecode($_GET['addterm']));
+if(isset($_GET['addclasses'])){
+	if(!isset($_GET['year'])) $_GET['year'] = false;
+	if(!isset($_GET['term'])) $_GET['term'] = 1;
+	$_SESSION['addterm'] = array('year'=>mysql_real_escape_string($_GET['year']),'term'=>mysql_real_escape_string($_GET['term']),'classes'=>explode(',',mysql_real_escape_string($_GET['addclasses'])));
 	if(!isset($_GET['hash'])) $_GET['hash'] = "";
 }
 
@@ -44,7 +46,7 @@ $_SESSION['wenttoindex'] = true;
 
 $addterm = false;
 if(isset($_SESSION['addterm'])){
-	$addterm = json_decode($_SESSION['addterm'],true);
+	$addterm = $_SESSION['addterm'];
 	unset($_SESSION['addterm']);
 }
 $thishash = false;
@@ -70,10 +72,9 @@ if(isset($_POST['autocomplete'])){
 }
 
 function pullClass($class, $year=false, $classterm=0, $override=false){
-	$exception = (mysql_num_rows(mysql_query("SELECT * FROM `warehouse_exceptions` WHERE `subject_id`='$class'".($year?" AND `year`='$year'":"")." ORDER BY `year` DESC, `last_modified` DESC;"))!=0);
-	$sql = "SELECT * FROM `warehouse".($exception?"_exceptions":"")."` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." `last_modified` DESC;";
+	$sql = "SELECT *, '0' AS exception FROM `warehouse` WHERE `subject_id`='$class' UNION ALL SELECT *, '1' AS exception FROM `warehouse_exceptions` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." exception DESC, `last_modified` DESC;";
 	$row = mysql_fetch_assoc(mysql_query($sql));
-	if(!$row) die("noclass");
+	if(!$row) return "noclass";
 	unset($row['id']);
 	unset($row['design_units']);
 	unset($row['tuition_attr']);
@@ -82,6 +83,7 @@ function pullClass($class, $year=false, $classterm=0, $override=false){
 	unset($row['hgn_except']);
 	unset($row['last_modified']);
 	unset($row['notes']);
+	unset($row['exception']);
 	$row['id'] = str_replace('.','_',$row['subject_id']);
 	$row['divid'] = $row['id']."__".rand();
 	$row['is_variable_units'] = ($row['is_variable_units']=='1');
@@ -126,7 +128,7 @@ EOD;
 	$row['custom'] = false;
 	
 	$row['ayear'] = "'".substr($row['year']-1,-2)."-'".substr($row['year'],-2);
-	$row['oyear'] = $year;
+	$row['oyear'] = $year?$year:(date("Y")+(date("m")>3));
 	$row['otheryears'] = "<select>";
 	$query = mysql_query("SELECT DISTINCT `year` FROM `warehouse` WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC");
 	while($row2 = mysql_fetch_assoc($query)){
@@ -222,7 +224,8 @@ if(isset($_POST['gethash'])){
 		if(isset($class["custom"])){
 			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
 		}else{
-			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			if($tempclass!="noclass") $json[] = $tempclass;
 		}
 	}
 	$json[] = $majors;
@@ -231,8 +234,9 @@ if(isset($_POST['gethash'])){
 
 if($addterm){
 	$json = array();
-	foreach($addterm['classes'] as $class){
-		$json[] = pullClass($class, $addterm["year"], $addterm["term"], false);	
+	foreach($addterm["classes"] as $class){
+		$tempclass = pullClass(rtrim($class,'J'), $addterm["year"], $addterm["term"], false);	
+		if($tempclass!="noclass") $json[] = $tempclass;
 	}
 	$addterm = mysql_real_escape_string(json_encode($json));
 }
@@ -248,14 +252,15 @@ if($thishash){
 		$classes = json_decode(decrypt($row['classes']), true);
 		$majors = stripslashes(decrypt($row['majors']));
 	}
-	if($classes=='') die();
+	if($classes=='') $classes=array();
 	$majors = json_decode($majors, true);
 	$json = array();
 	foreach($classes as $class){
 		if(isset($class["custom"])){
 			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
 		}else{
-			$json[] = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			if($tempclass!="noclass") $json[] = $tempclass;
 		}
 	}
 	$json[] = $majors;

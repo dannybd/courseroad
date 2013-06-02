@@ -413,6 +413,7 @@ function addAllWires(noreload){
 /*** Course-loading functions ***/
 function classFromJSON(json, loadspeed, replacediv){
 	if(loadspeed==undefined) loadspeed = "slow";
+	json = $.extend({}, {override:false}, json);
 	if(json.classterm>16) $(".supersenior.hidden").removeClass("hidden", loadspeed);
 	if(json.classterm && json.classterm%4==0) $(".term .termname").eq(json.classterm).fadeIn(loadspeed).parent().slideDown(loadspeed, function(){updateWires();}).siblings(".yearname").addClass("showsummer", loadspeed);
 	json.info = deGIR(json.info);
@@ -583,7 +584,8 @@ function minclass(stringify){
 	var temp = $(".classdiv").map(function(){
 		arr = $(this).data("custom")?{name:$(this).data("subject_title"),units:$(this).data("total_units"),custom:true}:{id:$(this).data("subject_id"), year:$(this).data("oyear")};
 		arr.term = $(this).data("classterm");
-		arr.override = $(this).data("override");
+		if($(this).data("override")) arr.override = $(this).data("override");
+		if($(this).data("substitute")) arr.substitute = $(this).data("substitute");
 		return arr;
 	}).get();
 	return stringify?JSON.stringify(temp):temp;
