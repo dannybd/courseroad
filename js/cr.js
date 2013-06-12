@@ -390,6 +390,9 @@ function addAllWires(noreload){
 	$(".classdiv").each(function(){
 		$(this).data("terminals").terminal.removeAllWires();
 		$(this).data("classterm", $(this).parent().index(".term"));
+		if($(this).data("substitute")){
+			$(this).addClass($(this).data("substitute").replace(/\./g,"_").replace(/,/g," "));
+		}
 	}).each(function(){
 		if($(this).data("custom")) return true;
 		var temp = addWires($(this));

@@ -71,7 +71,7 @@ if(isset($_POST['autocomplete'])){
 	die(json_encode($temp));
 }
 
-function pullClass($class, $year=false, $classterm=0, $override=false){
+function pullClass($class, $year=false, $classterm=0, $override=false, $substitute=""){
 	$sql = "SELECT *, '0' AS exception FROM `warehouse` WHERE `subject_id`='$class' UNION ALL SELECT *, '1' AS exception FROM `warehouse_exceptions` WHERE `subject_id`='$class' ORDER BY".($year?" ABS(`year`-'$year') ASC,":" `year` DESC,")." exception DESC, `last_modified` DESC;";
 	$row = mysql_fetch_assoc(mysql_query($sql));
 	if(!$row) return "noclass";
@@ -125,6 +125,7 @@ EOD;
 	$row['special'] = ($row['gir'] or $row['ci'] or $row['hass']);
 	$row['classterm'] = $classterm;
 	$row['override'] = $override;
+	$row['substitute'] = $substitute;
 	$row['custom'] = false;
 	
 	$row['ayear'] = "'".substr($row['year']-1,-2)."-'".substr($row['year'],-2);
@@ -156,7 +157,7 @@ EOD;
 	return $row;
 }
 
-function pullCustom($name, $units, $classterm=0, $override=false){
+function pullCustom($name, $units, $classterm=0, $override=false, $substitute=""){
 	$row = array();
 	$row['year'] = "0";
 	$row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
@@ -173,6 +174,7 @@ EOD;
 	$row['classterm'] = $classterm;
 	$row['checkrepeat'] = true;
 	$row['override'] = $override;
+	$row['substitute'] = $substitute;
 	$row['custom'] = true;
 	//the $row['div'] actually stores the HTML of the class bubble.
 	$row['div'] = <<<EOD
@@ -220,11 +222,13 @@ if(isset($_POST['gethash'])){
 	if($classes=='') die();
 	$majors = json_decode($majors, true);
 	$json = array();
-	foreach($classes as $class){
+	foreach($classes as &$class){
+		if(!isset($class["override"])) $class["override"]=false;
+		if(!isset($class["substitute"])) $class["substitute"]="";
 		if(isset($class["custom"])){
-			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"], $class["substitute"]);
 		}else{
-			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"], $class["substitute"]);
 			if($tempclass!="noclass") $json[] = $tempclass;
 		}
 	}
@@ -256,10 +260,12 @@ if($thishash){
 	$majors = json_decode($majors, true);
 	$json = array();
 	foreach($classes as $class){
+		if(!isset($class["override"])) $class["override"]=false;
+		if(!isset($class["substitute"])) $class["substitute"]="";
 		if(isset($class["custom"])){
-			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"]);
+			$json[] = pullCustom($class["name"], $class["units"], $class["term"], $class["override"], $class["substitute"]);
 		}else{
-			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"]);
+			$tempclass = pullClass($class["id"], $class["year"], $class["term"], $class["override"], $class["substitute"]);
 			if($tempclass!="noclass") $json[] = $tempclass;
 		}
 	}
@@ -357,7 +363,7 @@ if(isset($_POST['savedroads'])){
 		foreach($classes as &$class2){
 			if(isset($class2["custom"])) $class2["id"] = '('.$class2["name"].')';
 			if(!isset($class2["id"])) continue;
-			if($class2["override"]) $class2["id"] .= "*";
+			if(isset($class2["override"]) and $class2["override"]) $class2["id"] .= "*";
 			$classes2[] = $class2["id"];
 		}
 		echo "<td>".implode(", ", $classes2)."</td>";
