@@ -111,7 +111,7 @@ function parseReqs2($str){
 					$course = array(2, req(trim($course[0]), $coreq), req(trim($course[1]), $coreq));
 					$temp3[] = $course;
 				}else{
-					if(substr($course, 0, 4)=="GIR:") $course = strtr($course, ':', '.');
+					// if(substr($course, 0, 4)=="GIR:") $course = strtr($course, ':', '.');
 					$temp3[] = req($course, $coreq);
 				}
 				if($endcoreq) $coreq = $endcoreq = false;

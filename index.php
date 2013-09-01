@@ -472,7 +472,7 @@ if ($loggedin) {
  */
 function hash_is_safe($hash, $classes, $majors) {
   return mysql_num_rows(mysql_query(
-    "SELECT 1 FROM `roads2` WHERE `hash`='$hash$i' " .
+    "SELECT 1 FROM `roads2` WHERE `hash`='$hash' " .
     "AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"
   ));
 }
@@ -757,7 +757,7 @@ header('Content-type: text/html; charset=utf-8');
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
-  <title>CourseRoad<?= $loggedin?": $athena":"" ?></title>
+  <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <link rel="stylesheet" type="text/css" href="/css/cr.css<?= $nocache ?>">
   <!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -766,9 +766,10 @@ header('Content-type: text/html; charset=utf-8');
   <script src="/js/cr.js<?= $nocache ?>"></script>
   <!--script src="/js/d3.js"></script-->
   <script>
-    var _gaq=[["_setAccount","UA-31018454-1"],["_trackPageview",location.pathname+location.search+location.hash]];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-    g.src="https://ssl.google-analytics.com/ga.js";
+    var _gaq=[["_setAccount","UA-31018454-1"],
+    ["_trackPageview",location.pathname+location.search+location.hash]];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.async=1;g.src="https://ssl.google-analytics.com/ga.js";
     s.parentNode.insertBefore(g,s)}(document,"script"));
     // These are not trusted variables, but they do aid in displaying 
     // different (non-secure) things based on login status.
@@ -787,33 +788,73 @@ header('Content-type: text/html; charset=utf-8');
 </head>
 <body>
 <div id="leftbar">
-  <div id="getnewclass">
-    <ul>
-      <li><a href="#infotabs-about">About</a></li>
-      <li><a href="#infotabs-add">Add</a></li>
-      <li><a href="#infotabs-save">Save</a></li>
+  <div id="getnewclass" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+      <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#infotabs-about">About</a></li>
+      <li class="ui-state-default ui-corner-top"><a href="#infotabs-add">Add</a></li>
+      <li class="ui-state-default ui-corner-top"><a href="#infotabs-save">Save</a></li>
     </ul>
-    <div id="infotabs-about" class="ui-corner-all leftbarholder">
+    <div id="infotabs-about" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
       <div class="infotabs-about-header flakyCSS">Welcome to CourseRoad!</div>
-      <div class="infotabs-about-subheader flakyCSS">A four-year planner for the MIT community.</div>
-      <a id="openhelp" href="#" class="dummylink">Help</a> ~ <a href="/blog" target="_blank">Blog</a>
+      <div class="infotabs-about-subheader flakyCSS">
+        A four-year planner for the MIT community.
+      </div>
+      <a id="openhelp" href="#" class="dummylink">Help</a> ~ 
+      <a href="/blog" target="_blank">Blog</a>
       <br>
-      <?= $loggedin?"Hello, <strong>$athena</strong>! ":"<input type=\"button\" id=\"userlogin\" class=\"bubble loaders\" value=\"Login\"".($_SESSION['triedcert']?" disabled=\"disabled\" title=\"Sorry, we couldn't log you in. Try reopening your browser.\">":">") ?>
-      <input type="button" id="showusersettings" class="bubble loaders" value="User Settings">
+      <?=
+        ($loggedin 
+          ? "Hello, <strong>$athena</strong>! " 
+          : "<input type=\"button\" id=\"userlogin\" " .
+          "class=\"bubble loaders\" value=\"Login\"" .
+          ($_SESSION['triedcert'] 
+            ? " disabled=\"disabled\" title=\"Sorry, we couldn't log you in. " .
+              "Try reopening your browser.\">"
+            : ">"
+          )
+        );
+      ?>
+      <input 
+        type="button" 
+        id="showusersettings" 
+        class="bubble loaders" 
+        value="User Settings">
     </div>
-    <div id="infotabs-add" class="ui-corner-all leftbarholder">
+    <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
       Class Type:&nbsp;
-      <input type="radio" name="getnewclasstype" id="getnewclasstype-subject" value="subject" checked><label for="getnewclasstype-subject" title="18.01, CMS.631, etc.">Subject</label>
+      <input 
+        type="radio" 
+        name="getnewclasstype" 
+        id="getnewclasstype-subject" 
+        value="subject" 
+        checked>
+      <label for="getnewclasstype-subject" title="18.01, CMS.631, etc.">
+        Subject
+      </label>
       &nbsp;
-      <input type="radio" name="getnewclasstype" id="getnewclasstype-custom" value="custom"><label for="getnewclasstype-custom" title="Summer UROP, Lab Assistant, etc.">Custom</label>
+      <input 
+        type="radio" 
+        name="getnewclasstype" 
+        id="getnewclasstype-custom" 
+        value="custom">
+      <label for="getnewclasstype-custom" title="Summer UROP, Lab Assistant, etc.">
+        Custom
+      </label>
       <br>
       <span>Add</span>
       <div id="getnewclass-class"  class="getnewclasstypes visible">
-        <input id="getnewclassid" type="text" name="classid" placeholder="18.01" pattern="[A-Za-z0-9\.]*" autofocus>
+        <input 
+          id="getnewclassid" 
+          type="text" 
+          name="classid" 
+          placeholder="18.01" 
+          pattern="[A-Za-z0-9\.]*" 
+          autofocus>
       </div>
       <div id="getnewclass-custom" class="getnewclasstypes">
         <input id="getnewclassname" type="text" name="classname" placeholder="UROP">
-        &nbsp;(<input id="getnewclassunits" type="text" name="classunits" placeholder="0" pattern="[0-9\.]*"> units)
+        &nbsp;
+        (<input id="getnewclassunits" type="text" name="classunits" placeholder="0" pattern="[0-9\.]*"> units)
       </div>
       <br>
       &nbsp;to 
@@ -849,7 +890,7 @@ header('Content-type: text/html; charset=utf-8');
       <br> 
       <input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
     </div>
-    <div id="infotabs-save" class="ui-corner-all leftbarholder">
+    <div id="infotabs-save"class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
       <input type="button" id="savemap" class="bubble loaders" value="Save Courses">
       <input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
     </div>
