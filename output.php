@@ -1,33 +1,57 @@
 <?php
 header("Content-type: text/javascript;");
-//curl -s http://courseroad.mit.edu/output.php?date|env LD_LIBRARY_PATH=~/Downloads/instantclient_11_2 TWO_TASK=warehouse rlwrap -H /tmp/sqlplus_hist ~/Downloads/instantclient_11_2/sqlplus -M "HTML ON" -S dannybd/ohlookawarehousepassword @pull.sql;curl -s http://courseroad.mit.edu/output.php?magnets
-if(isset($_GET['date'])) die(date("d-M-Y", time()-10*86400));
-if(!isset($_GET['magnets'])) die();
+
+if(isset($_GET['date'])) {
+  die(date("d-M-Y", time()-10*86400));
+}
+if(!isset($_GET['magnets'])) {
+  die();
+}
 require("connect.php");
 $filename = "../../cron_scripts/output.html";
 $file = file_get_contents($filename);
 preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s",$file,$matches);
 $matches = $matches[1];
-if(!count($matches)){
+if(!count($matches)) {
 	file_put_contents($filename,"");
 	die("No matches/changes\n");
 }
-$headers = explode(',',"Academic Year,Subject Id,Subject Code,Subject Number,Source Subject Id,Print Subject Id,Is Printed In Bulletin,Department Code,Department Name,Effective Term Code,Subject Short Title,Subject Title,Is Variable Units,Lecture Units,Lab Units,Preparation Units,Total Units,Design Units,Grade Type,Grade Type Desc,Grade Rule,Grade Rule Desc,Hgn Code,Hgn Desc,Hgn Except,Gir Attribute,Gir Attribute Desc,Comm Req Attribute,Comm Req Attribute Desc,Tuition Attribute,Tuition Attribute Desc,Write Req Attribute,Write Req Attribute Desc,Supervisor Attribute,Supervisor Attribute Desc,Prerequisites,Subject Description,Joint Subjects,School Wide Electives,Meets With Subjects,Equivalent Subjects,Is Offered This Year,Is Offered Fall Term,Is Offered Iap,Is Offered Spring Term,Is Offered Summer Term,Fall Instructors,Spring Instructors,Status Change,Last Activity Date,Warehouse Load Date,Master Subject Id,Hass Attribute,Hass Attribute Desc,Term Duration,Global Regions,Global Countries,On Line Page Number");
-foreach($headers as &$header){
+$headers = explode(',', 
+  'Academic Year,Subject Id,Subject Code,Subject Number,Source Subject Id,' .
+  'Print Subject Id,Is Printed In Bulletin,Department Code,Department Name,' .
+  'Effective Term Code,Subject Short Title,Subject Title,Is Variable Units,' .
+  'Lecture Units,Lab Units,Preparation Units,Total Units,Design Units,' .
+  'Grade Type,Grade Type Desc,Grade Rule,Grade Rule Desc,Hgn Code,Hgn Desc,' .
+  'Hgn Except,Gir Attribute,Gir Attribute Desc,Comm Req Attribute,' .
+  'Comm Req Attribute Desc,Tuition Attribute,Tuition Attribute Desc,' .
+  'Write Req Attribute,Write Req Attribute Desc,Supervisor Attribute,' .
+  'Supervisor Attribute Desc,Prerequisites,Subject Description,' .
+  'Joint Subjects,School Wide Electives,Meets With Subjects,' .
+  'Equivalent Subjects,Is Offered This Year,Is Offered Fall Term,' .
+  'Is Offered Iap,Is Offered Spring Term,Is Offered Summer Term,' .
+  'Fall Instructors,Spring Instructors,Status Change,Last Activity Date,' .
+  'Warehouse Load Date,Master Subject Id,Hass Attribute,Hass Attribute Desc,' .
+  'Term Duration,Global Regions,Global Countries,On Line Page Number'
+);
+foreach($headers as &$header) {
 	$header = strtr(($header), ' ', '_');
 }
 $head = count($headers);
 //print_r($headers);
 $courses = array();
-for($i=0;$i<count($matches);$i++){
+for ($i=0; $i < count($matches); $i++) {
 	$row = floor($i / $head);
 	$pos = $i % $head;
-	if($matches[$i]=="&nbsp;") $matches[$i]="";
-	$courses[$row][$headers[$pos]] = mysql_real_escape_string(html_entity_decode(trim($matches[$i])));
+	if($matches[$i] == "&nbsp;") {
+    $matches[$i]="";
+  }
+	$courses[$row][$headers[$pos]] = mysql_real_escape_string(
+    html_entity_decode(trim($matches[$i]))
+  );
 }
-echo "ADDING ".count($courses)." COURSES:\n\n";
+echo "ADDING " . count($courses) . " COURSES:\n\n";
 //print_r($courses);
-foreach($courses as &$course){
+foreach($courses as &$course) {
 	$course2 = array();
 	$course2[] = $course['Academic_Year'];			//year
 	$course2[] = $course['Subject_Id'];				//subject_id
@@ -39,18 +63,29 @@ foreach($courses as &$course){
 	$course2[] = $course['Gir_Attribute'];			//gir
 	$course2[] = $course['Comm_Req_Attribute'];		//ci
 	$course2[] = $course['Hass_Attribute'];			//hass
-	if(!$course['Is_Variable_Units']) $course['Is_Variable_Units']='Y';
-	$course2[] = strtr($course['Is_Variable_Units'], 'YN', '10');		//is_variable_units
-	$course2[] = intval($course['Lecture_Units']).'-'.intval($course['Lab_Units']).'-'.intval($course['Preparation_Units']);		//unitload
+	if(!$course['Is_Variable_Units']) {
+    $course['Is_Variable_Units']='Y';
+  }
+  //is_variable_units
+	$course2[] = strtr($course['Is_Variable_Units'], 'YN', '10');		
+	$course2[] = (
+    intval($course['Lecture_Units']) . '-' . intval($course['Lab_Units']) .
+    '-' . intval($course['Preparation_Units'])
+  );		//unitload
 	$course2[] = intval($course['Total_Units']);			//total_units
 	$course2[] = $course['Grade_Type'];				//grade_type
 	$course2[] = $course['Grade_Rule'];				//grade_rule
 	$course2[] = $course['Prerequisites'];			//reqstr
 	//parse things here
-	$course2[] = mysql_real_escape_string(json_encode(parseReqs2($course['Prerequisites'])));			//reqs
+	$course2[] = mysql_real_escape_string(
+    json_encode(parseReqs2($course['Prerequisites']))
+  );			//reqs
 	$course2[] = $course['Subject_Description'];	//desc
-	if(!$course['Is_Offered_This_Year']) $course['Is_Offered_This_Year']='N';
-	$course2[] = strtr($course['Is_Offered_This_Year'], 'YN', '10');		//offered_this_year
+	if(!$course['Is_Offered_This_Year']) {
+    $course['Is_Offered_This_Year'] = 'N';
+  }
+  //offered_this_year
+	$course2[] = strtr($course['Is_Offered_This_Year'], 'YN', '10');
 	$course2[] = strtr($course['Is_Offered_Fall_Term'], 'YN', '10');		//fall
 	$course2[] = strtr($course['Is_Offered_Iap'], 'YN', '10');				//iap
 	$course2[] = strtr($course['Is_Offered_Spring_Term'], 'YN', '10');		//spring
@@ -66,7 +101,10 @@ foreach($courses as &$course){
 	//print_r($course2);
 	//print_r($course['Last_Activity_Date']."\n");
 	$sql = "";
-	$sql = "INSERT INTO `warehouse` VALUES (NULL, '".implode("', '",$course2)."', CURRENT_TIMESTAMP, '', '');";
+	$sql = (
+    "INSERT INTO `warehouse` VALUES (NULL, '" . implode("', '",$course2) .
+    "', CURRENT_TIMESTAMP, '', '');"
+  );
 	mysql_query($sql);
 	echo "\n$sql\n\n";
 }
@@ -108,10 +146,16 @@ function parseReqs2($str){
 				$course = rtrim(ltrim($course, '['), 'J]');
 				if(strpos($course,' and ')!==false){
 					$course = explode(' and ', $course);
-					$course = array(2, req(trim($course[0]), $coreq), req(trim($course[1]), $coreq));
+					$course = array(
+            2, 
+            req(trim($course[0]), $coreq), 
+            req(trim($course[1]), $coreq)
+          );
 					$temp3[] = $course;
 				}else{
-					// if(substr($course, 0, 4)=="GIR:") $course = strtr($course, ':', '.');
+					// if(substr($course, 0, 4)=="GIR:") {
+          //   $course = strtr($course, ':', '.');
+          // }
 					$temp3[] = req($course, $coreq);
 				}
 				if($endcoreq) $coreq = $endcoreq = false;
