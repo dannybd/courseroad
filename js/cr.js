@@ -1,80 +1,82 @@
 /**
  * Welcome to the cr.js file!
  */
- 
-var countdefault = {
-  count: 0,
-  type: "",
-  desc: "from",
-  special: 0,
-  globalskip: 0,
-  globalignore: 0,
-  runinfull: 0,
-  pullmatches: 0
-};
 
-var classdefault = {
-  id: "",
-  desc: "",
-  skip: 0,
-  coreq: 0,
-  range: 0,
-  dept: "",
-  from: "",
-  to: "",
-  globalskip: 0,
-  globalignore: 0
+var Defaults = {
+  requisiteCount: {
+    count: 0,
+    type: "",
+    desc: "from",
+    special: 0,
+    globalskip: 0,
+    globalignore: 0,
+    runinfull: 0,
+    pullmatches: 0
+  },
+
+  requisiteClass: {
+    id: "",
+    desc: "",
+    skip: 0,
+    coreq: 0,
+    range: 0,
+    dept: "",
+    from: "",
+    to: "",
+    globalskip: 0,
+    globalignore: 0
+  }
 };
 
 var globalmatches = [];
 
 /**
- * The idea here is to make it possible to loop recursively through 
+ * The idea here is to make it possible to loop recursively through
  * a requisite tree and perform callback actions when a class matches.
  */
 function checkReqs(arr, callback, callbackargs, level, test) {
   callback = callback || function() {
     // The default callback is just a return true
-    return true; 
+    return true;
   };
   /**
-   * Holds the arguments for callback. "cls" (with quotes) will be replaced 
-   * with the matched course number before beign fed into callback.
+   * Holds the arguments for callback. "cls" (with quotes) will be replaced
+   * with the matched course number before being fed into callback.
    */
-  callbackargs = callbackargs || []; 
+  callbackargs = callbackargs || [];
   test = test || true;
-  if (level == undefined) {
-    level = []; // Keep track of recursion. 
+  if (level === undefined) {
+    level = []; // Keep track of recursion.
     globalmatches = [];
   }
-  if (arr[0] == 0) {
+  if (arr[0] === 0) {
     /**
-     * allows "and" arrays to be prefixed with a 0 (easier) 
+     * allows "and" arrays to be prefixed with a 0 (easier)
      * [0, "a", "b"] --> [2, "a", "b"];
      */
-    arr[0] = arr.length - 1; 
+    arr[0] = arr.length - 1;
   }
   // Transform the default number form into an object
   var matched = null;
   if (typeof (arr[0]) == "number") {
-    matched = $.extend({}, countdefault, {
+    matched = $.extend({}, Defaults.requisiteCount, {
       count: parseInt(0 + arr[0])
     });
   } else {
-    matched = $.extend({}, countdefault, arr[0]);
+    matched = $.extend({}, Defaults.requisiteCount, arr[0]);
   }
   matched.ocount = 0 + matched.count;
   matched.matches = [];
   // Holds the unsatisfied requisites in a string for display to the user.
-  var tempstr = []; 
+  var tempstr = [];
   var temp2 = true;
   for (var i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
       /**
-       * In case a sub-branch is inside this branch, 
+       * In case a sub-branch is inside this branch,
        * we recursively solve that branch and use its result.
        */
-      var req = checkReqs(arr[i], callback, callbackargs, level.concat([i])); 
+      var req = checkReqs(arr[i], callback, callbackargs, level.concat([i]));
       if (req[0] || matched.pullmatches) {
         if (matched.special) {
           $(req[2]).each(function() {
@@ -85,7 +87,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
         }
       }
       // If the sub-branch matched its requirements
-      if (req[0]) { 
+      if (req[0]) {
         var tempargs = callbackargs.slice();
         var clspos = $.inArray("cls", tempargs);
         if (clspos != -1) {
@@ -105,14 +107,14 @@ function checkReqs(arr, callback, callbackargs, level, test) {
     }
     /**
      * Deal with the objects (for things like coreqs) now.
-     * Converting both things to objects, but only the coreq ones 
+     * Converting both things to objects, but only the coreq ones
      * will have a "coreq":1 attribute.
      */
     var newarr = null;
-    if (typeof (arr[i]) == "object") { 
-      newarr = $.extend({}, classdefault, arr[i]);
+    if (typeof (arr[i]) == "object") {
+      newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
     } else {
-      newarr = $.extend({}, classdefault, {
+      newarr = $.extend({}, Defaults.requisiteClass, {
         id: arr[i]
       });
     }
@@ -160,7 +162,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
           tempargs[lvlpos] = level.concat([i]);
         }
         // Calls callback with tempargs as its arguments.
-        var temp2 = callback.apply(null, tempargs); 
+        var temp2 = callback.apply(null, tempargs);
         if (temp2) {
           matched.count -= matched.special ? $(this).data(matched.type) : 1;
           matched.matches.push(this);
@@ -176,8 +178,8 @@ function checkReqs(arr, callback, callbackargs, level, test) {
         return [true, "", level.length ? matched.matches : globalmatches];
       }
       tempstr.push(
-        (newarr.coreq === 1) 
-        ? ("[" + newarr.id + newarr.desc + "]") 
+        (newarr.coreq === 1)
+        ? ("[" + newarr.id + newarr.desc + "]")
         : (newarr.id + newarr.desc)
       );
       continue;
@@ -203,7 +205,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
         tempargs[lvlpos] = level.concat([i]);
       }
       // Calls callback with tempargs as its arguments.
-      var temp2 = callback.apply(null, tempargs); 
+      var temp2 = callback.apply(null, tempargs);
       if (temp2) {
         matched.count -= matched.special ? $(this).data(matched.type) : 1;
         matched.matches.push(this);
@@ -212,10 +214,10 @@ function checkReqs(arr, callback, callbackargs, level, test) {
       }
     });
     // If it's not a class, or callback failed, then we need to note that.
-    if (!classmatches.length || !temp2) { 
+    if (!classmatches.length || !temp2) {
       tempstr.push(
-        (newarr.coreq == 1) 
-        ? ("[" + newarr.id + newarr.desc + "]") 
+        (newarr.coreq == 1)
+        ? ("[" + newarr.id + newarr.desc + "]")
         : (newarr.id + newarr.desc)
       );
     }
@@ -230,7 +232,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
   var tempstr = tempstr.join(", ");
   tempstr = deGIR(tempstr);
   if (matched.special) {
-    tempstr = "(" + matched.count + " " + matched.desc + ": " + 
+    tempstr = "(" + matched.count + " " + matched.desc + ": " +
       (JSON.stringify(arr.slice(1))) + ")";
   } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
     tempstr = "(" + matched.count + " " + matched.desc + ": " + tempstr + ")";
@@ -241,8 +243,8 @@ function checkReqs(arr, callback, callbackargs, level, test) {
 /*** Course functions ***/
 
 /**
- * Defines new wire's properties (black/grey, straight/curved) 
- * partially based on the relative semesters and terms of the two 
+ * Defines new wire's properties (black/grey, straight/curved)
+ * partially based on the relative semesters and terms of the two
  * would-be connected classes.
  * from is $() div, to is object with to.div as $() div.
  */
@@ -291,15 +293,15 @@ function newWire(from, to) {
   user.viewReqLines && from.data("terminals").wires.push(
     new WireIt[wireType](
       from.data("terminals").terminal,
-      to.div.data("terminals").terminal, 
-      document.body, 
+      to.div.data("terminals").terminal,
+      document.body,
       options[option]
     )
   );
   return (options[option].OK);
 }
 
-// Frankly, this function has outgrown its name. 
+// Frankly, this function has outgrown its name.
 // addWires adds everything for a given class and updates its status.
 function addWires(div, addwires) {
   if (addwires === undefined) {
@@ -327,7 +329,7 @@ function addWires(div, addwires) {
     if ($(".classdiv").not(div).filter(function(j) {
       return (
         (
-          $.inArray($(this).data("subject_id"), data.equiv_subjects) !== -1 || 
+          $.inArray($(this).data("subject_id"), data.equiv_subjects) !== -1 ||
           $(this).hasClass(data.id)
         ) &&
         (j < $(div).index(".classdiv"))
@@ -338,12 +340,12 @@ function addWires(div, addwires) {
   }
   data.status = (
     (
-      data.reqstatus && 
-      data.checkrepeat && 
-      data.offered_this_year || 
+      data.reqstatus &&
+      data.checkrepeat &&
+      data.offered_this_year ||
       data.override
-    ) && 
-    data.checkterm || 
+    ) &&
+    data.checkterm ||
     data.classterm == 0
   );
   div.removeClass("classdivgood").removeAttr('title');
@@ -537,8 +539,8 @@ function classFromJSON(json, loadspeed, replacediv) {
 }
 
 function properYear(classterm) {
-  return user.classYear 
-    - parseInt(3 - Math.floor((classterm - 1) / 4)) 
+  return user.classYear
+    - parseInt(3 - Math.floor((classterm - 1) / 4))
     - user.supersenior;
 }
 
@@ -582,7 +584,7 @@ function getClass() {
   }, "json");
 }
 
-// Used for initial pageload when a hash is present: 
+// Used for initial pageload when a hash is present:
 // takes in an array containing objects describing the classes.
 function getClasses(classarr, noreload) {
   for (i = 0; i < classarr.length; i++) {
@@ -596,7 +598,7 @@ function getClasses(classarr, noreload) {
 function checkOff(majordiv, lvl, cls) {
   // $(majordiv+" .majorchk.majorchk_"+lvl.join("_")+":not(.chk):first")
   //   .addClass("chk").html("[X]")
-  //   .attr("title",$.isArray(cls.div)?null:cls.div.data("subject_id")); 
+  //   .attr("title",$.isArray(cls.div)?null:cls.div.data("subject_id"));
   var boxes = $(majordiv + " .majorchk.majorchk_" + lvl.join("_") +
     ":not(.chk):first");
   boxes.addClass("chk").attr("title", $.isArray(cls.div) ? null : cls.div.data(
@@ -622,34 +624,34 @@ function checkMajor(selector) {
 }
 
 function buildMajor(arr, level) {
-  if (level == undefined) level = []; // Keep track of recursion. 
-  // allows "and" arrays to be prefixed with a 0 (easier) 
+  if (level == undefined) level = []; // Keep track of recursion.
+  // allows "and" arrays to be prefixed with a 0 (easier)
   // [0, "a", "b"] --> [2, "a", "b"];
-  if (arr[0] == 0) arr[0] = arr.length - 1; 
+  if (arr[0] == 0) arr[0] = arr.length - 1;
   if (typeof (arr[0]) == "number") {
-    var holdobj = $.extend({}, countdefault, {
+    var holdobj = $.extend({}, Defaults.requisiteCount, {
       count: (0 + arr[0])
     });
   } else {
-    var holdobj = $.extend({}, countdefault, arr[0]);
+    var holdobj = $.extend({}, Defaults.requisiteCount, arr[0]);
   }
   // Holds the unsatisfied requisites in a string for display to the user.
-  var tempstr = ""; 
+  var tempstr = "";
   var temp2 = true;
   for (var i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
-      // In case a sub-branch is inside this branch, 
+      // In case a sub-branch is inside this branch,
       // we recursively solve that branch and use its result.
-      var req = buildMajor(arr[i], level.concat([i])); 
+      var req = buildMajor(arr[i], level.concat([i]));
       tempstr += req;
       continue;
     }
-    // Converting both things to objects, 
+    // Converting both things to objects,
     // but only the coreq ones will have a "coreq":1 thing.
-    if (typeof (arr[i]) == "object") { 
-      var newarr = $.extend({}, classdefault, arr[i]);
+    if (typeof (arr[i]) == "object") {
+      var newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
     } else {
-      var newarr = $.extend({}, classdefault, {
+      var newarr = $.extend({}, Defaults.requisiteClass, {
         id: arr[i]
       });
     }
@@ -658,34 +660,34 @@ function buildMajor(arr, level) {
       var innertempstr = "";
       for (var j = 0; j < holdobj.count; j++) {
         innertempstr += (
-          "<span class='majorchk majorchk_" + 
-          level.concat([i]).join("_") + 
+          "<span class='majorchk majorchk_" +
+          level.concat([i]).join("_") +
           " checkbox1'>[<span>&#x2713;<\/span>]<\/span>"
         );
       }
       tempstr += (
-        "<li>" + innertempstr + " The range " + newarr.id + 
+        "<li>" + innertempstr + " The range " + newarr.id +
         newarr.desc + "<\/li>\n"
       );
-      // return "<li>"+innertempstr + " " + holdobj.count + 
+      // return "<li>"+innertempstr + " " + holdobj.count +
       // "from the range "+newarr.id+newarr.desc+"<\/li>\n";
       continue;
     }
     // Now only strings
     tempstr += (
       "<li>" + (
-        newarr.skip 
-        ? "&#x2006;&#x2014; " 
+        newarr.skip
+        ? "&#x2006;&#x2014; "
         : "<span class='majorchk majorchk_" + level.concat([i]).join("_") +
           " checkbox1'>[<span>&#x2713;<\/span>]<\/span> "
-      ) + 
+      ) +
       (
-        newarr.skip 
+        newarr.skip
         ? ""
         : "<span class='checkbox1_text' data-id='" + newarr.id + "'>"
-      ) + 
+      ) +
       newarr.id +
-      (newarr.skip ? "" : "</span>") + 
+      (newarr.skip ? "" : "</span>") +
       newarr.desc + "<\/li>\n"
     );
   }
@@ -694,7 +696,7 @@ function buildMajor(arr, level) {
     tempstr = holdobj.count + " " + holdobj.desc + ":\n" + tempstr;
   } else if (level.length || (!level.length && (holdobj.count != arr.length - 1))) {
     // the != part find the "2 from following" strings
-    tempstr = holdobj.count + " " + holdobj.desc + ":\n" + tempstr; 
+    tempstr = holdobj.count + " " + holdobj.desc + ":\n" + tempstr;
   }
   if (!level.length) return "<strong>Requirements:<\/strong><br>\n" + tempstr;
   return "<li><span class='majorchk majorchk_" + level.join("_") +
@@ -705,7 +707,7 @@ function draggableChecklist() {
   $(".checkbox1_text").draggable({
     appendTo: "#rightbar",
     // containment: "body",
-    // distance: 30, 
+    // distance: 30,
     helper: "clone",
     start: function(event, ui) {
       ui.helper.attr("data-term", "(none)");
@@ -745,7 +747,7 @@ function deGIR(str) {
 }
 
 /**
- * Creates the storable string which holds our precious class data. 
+ * Creates the storable string which holds our precious class data.
  * Used primarily in saved classes
  */
 function minclass(stringify) {
@@ -773,9 +775,9 @@ function minclass(stringify) {
 
 function minmajors(stringify) {
   var temp = [
-    $("#choosemajor").val(), 
-    $("#choosemajor2").val(), 
-    $("#chooseminor").val(), 
+    $("#choosemajor").val(),
+    $("#choosemajor2").val(),
+    $("#chooseminor").val(),
     $("#chooseminor2").val()
   ];
   return stringify ? JSON.stringify(temp) : temp;
@@ -785,12 +787,12 @@ function minmajors(stringify) {
 function deltaDate() {
   var d = new Date();
   d = [
-    d.getFullYear(), 
-    d.getMonth(), 
-    d.getDate(), 
-    d.getHours(), 
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate(),
+    d.getHours(),
     d.getMinutes(),
-    d.getSeconds(), 
+    d.getSeconds(),
     d.getMilliseconds()
   ];
   for (var t = 0; t < arguments.length; t++) {
@@ -810,7 +812,7 @@ function runBeforeUnload() {
 
 var userHashChange = true;
 window.onhashchange = function() {
-  // userHashChange means that if the user types in a new hash in the URL, 
+  // userHashChange means that if the user types in a new hash in the URL,
   // the browser will reload, but if the hash changes due to saving a new version or something it won't.
   userHashChange = !userHashChange || window.location.reload();
   document.title = "CourseRoad: " + window.location.hash.substr(1);
@@ -844,18 +846,18 @@ var crSetup = function() {
    * // Assures regular updating of the window, should anything change
    * setInterval(function() {
    *   if(Math.random() < 0.1) {
-   *     console.log(1); 
+   *     console.log(1);
    *     addAllWires(true)
    *   } else {
    *     console.log(0);
    *     updateWires()
    *   }
-   * }, 10000); 
+   * }, 10000);
    */
   // Assures regular updating of the window, should anything change
   setInterval(function() {
     addAllWires(true);
-  }, 10000); 
+  }, 10000);
   if (thishash) {
     var jsonmajors = thishash.pop();
     $("select.majorminor").each(function(i) {
@@ -911,7 +913,7 @@ var crSetup = function() {
     }
     swapClassYear(oldclass, val);
   }).on("click", ".classdiv", function() {
-    // Highlights the selected class, dims the others, 
+    // Highlights the selected class, dims the others,
     // and displays info on that class in the lower right
     $(".classdiv").not($(this)).removeClass("classdivhigh");
     $(".classdiv").removeClass("classdivlow");
@@ -1040,7 +1042,7 @@ var crSetup = function() {
       $(".term").not(this).addClass("notOKterm");
       $(this).removeClass("notOKterm");
       ui.helper.attr(
-        "data-term", 
+        "data-term",
         $("#getnewclassterm option").eq($(this).index(".term")).text()
       );
     },
