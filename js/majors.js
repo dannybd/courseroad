@@ -1507,29 +1507,14 @@ window.majors = {
   ]],
 
   miBrain_Cog_Sci: [0,
-    "9.00", "9.01", [
-    {
-      count: 4,
-      desc: "(three from one area of specialization " +
-            "and one from the other) from"
-    },
-    {
-      id: "Cognitive Science:",
-      skip: 1
-    }, "9.34", "9.35", "9.56", "9.57", "9.65", "9.66", "9.71", "9.85",
-    {
-      id: "9.URG",
-      desc: " (can only count once)"
-    },
-    {
-      id: "Computation and Systems Neuroscience:",
-      skip: 1
-    }, "9.03", "9.04", "9.09", "9.10", "9.14", "9.15", "9.18", "9.20", "9.22",
-    "9.24", "9.29", "9.31", "9.37",
-    {
-      id: "9.URG",
-      desc: " (can only count once)"
-    }
+	{id: "Tier I:", skip: 1},
+    "9.00", "9.01", "9.40", 
+	[3,
+	  {id: "Tier II:", skip: 1},
+	  "9.04", "9.09", "9.10", "9.14", "9.15", "9.16", "9.18", "9.20", "9.31", 
+	  "9.35", "9.54", "9.65", "9.66", "9.85",
+	  {id: "Tier III:", skip: 1},
+	  "9.24", "9.26", "9.46", "9.56", "9.57", "9.71"
   ]],
 
   miChemistry: [0,
