@@ -1222,6 +1222,9 @@ var crSetup = function() {
     updateWires();
   });
   $(".flakyCSS").removeClass("flakyCSS");
+  var doge = new Konami(function() { 
+    $("#rightbar").addClass("doge");
+  });
   $("#userlogin").click(function() {
     window.location.href = "https://courseroad.mit.edu:444/secure.php";
   });

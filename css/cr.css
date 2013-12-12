@@ -678,6 +678,15 @@ body.no-wires .WireIt-Wire{
 	margin: -3px;
 }
 
+.doge{
+  background-image: url(http://i.imgur.com/MebfQnj.jpg);
+  background-size: cover;
+}
+
+.doge > * {
+  opacity: 0.65;
+}
+
 .ui-sortable-placeholder { 
 	border: 1px dotted black; 
 	border-radius: 6px;
