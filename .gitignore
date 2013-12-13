@@ -1,4 +1,6 @@
 .gitignore
+.htaccess
+.htaccess.mit
 dev
 blog
 archive

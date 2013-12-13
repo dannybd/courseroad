@@ -5,8 +5,7 @@ AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml appl
 Header set Cache-Control "max-age=604800, public"
 </filesMatch>
 
-# These are used for a daily update of the class versions 
-# from the Data Warehouse.
+# These are used for a daily update of the class versions from the warehouse.
 <Files update>
 order allow,deny
 deny from all
@@ -20,17 +19,19 @@ deny from all
 Options +FollowSymLinks
 RewriteEngine On
 
+# REPLACE COURSEROAD_URL [mine is courseroad.mit.edu, no slash]
+
 # Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
-RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
+RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI}
 
 # Force to central courseroad domain
 RewriteCond %{SERVER_NAME} !^courseroad.mit.edu$
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
-RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI} [R]
+RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI} [R]
 
 # Access to secure.php requires certificates
 <Files secure.php>
