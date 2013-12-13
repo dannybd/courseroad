@@ -30,7 +30,7 @@ if (!isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
 $athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], "@", true); // florey
 $fullname = @$_SERVER['SSL_CLIENT_S_DN_CN']; // Jack Florey
 
-// Sanitizine data
+// Sanitize data
 $athena = mysql_real_escape_string($athena);
 $fullname = mysql_real_escape_string($fullname);
 

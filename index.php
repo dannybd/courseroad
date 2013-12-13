@@ -462,6 +462,8 @@ if (isset($_POST['gethash'])){
   dieJSON($json);
 }
 
+// If we're trying to add an additional term's worth of information, then
+// collect that.
 if ($add_new_term){
   $json = array();
   foreach($add_new_term['classes'] as $class) {
@@ -470,33 +472,44 @@ if ($add_new_term){
       $add_new_term['year'], 
       $add_new_term['term']
     ); 
-    if ($tempclass!='noclass') {
+    if ($tempclass != 'noclass') {
       $json[] = $tempclass;
     }
   }
   $add_new_term = mysql_real_escape_string(json_encode($json));
 }
 
+// hash_to_use holds a value if we went from ?hash=foo to #foo via the redirect
+// above. This allows the hash's class/major list to be passed directly without
+// the additional AJAX call.
 if ($hash_to_use) {
   $json = buildClassesArray($hash_to_use);
   $hash_to_use = mysql_real_escape_string(json_encode($json));
 }
 
-// For certification purposes.
+// If we haven't tried to log in, then default to false.
 if (!isset($_SESSION['triedcert'])) {
   $_SESSION['triedcert'] = false;
 }
+
+// SESSION.athena is only set within secure.php, so if it has a value then we've
+// logged in sucessfully
 $loggedin = isset($_SESSION['athena']);
-$athena = $loggedin ? mysql_real_escape_string($_SESSION['athena']) : false;
+$athena = $loggedin ? $_SESSION['athena'] : false;
+
+// Without logging in, we don't have a user pref map, so this set the default.
+// class_year is assumed to be that of the freshmen.
 if (!isset($_SESSION['user'])) {
   $_SESSION['user'] = array(
-    'class_year' => '2016',
+    'class_year' => strval(date('Y') + (date('m') > 7) + 3),
     'view_req_lines' => 1,
     'autocomplete' => 1,
     'need_permission' => 0,
     'edited' => 0
   );
 }
+
+// If logged in, repopulate the user prefs with their real values.
 if ($loggedin) {
   $tempuser = mysql_fetch_assoc(mysql_query(
     "SELECT * FROM `users` WHERE `athena`='$athena'"
@@ -534,15 +547,13 @@ if (isset($_POST['classes'])) {
       base64_encode(md5($classes . $majors)), 
       '+/=', 
       '-_,'
-    ), 
-    0, 
-    5
+    ), 0, 5
   );
   for (
     $i = ''; 
     hash_is_safe($hash . $i, $classes, $majors); 
-    $i==='' 
-      ? $i=0 
+    $i === '' 
+      ? $i = 0 
       : $i++
   );
   $hash .= $i;
@@ -675,7 +686,7 @@ if (isset($_POST['choosesavedroad'])) {
   if (!$loggedin) {
     die();
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash!='null')) {
+  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die();
   }
   mysql_query(
@@ -689,7 +700,7 @@ if (isset($_POST['choosesavedroad'])) {
 if (isset($_POST['changeroadhash'])) {
   $hash = mysql_real_escape_string($_POST['changeroadhash']);
   $newhash = mysql_real_escape_string(
-    $athena . '/' . htmlentities(substr($_POST['newhash'],0,36))
+    $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36))
   );
   if (!$loggedin || 
       preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) || 
@@ -716,7 +727,7 @@ if (isset($_POST['commentonroad'])) {
   if (!$loggedin) {
     die($hash);
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash!='null')) {
+  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die();
   }
   mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
@@ -732,6 +743,8 @@ if (isset($_POST['deleteroad'])) {
   die('ok');
 }
 
+// When the user saves changes to their user prefs, we update their prefs if
+// they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['usersettings'])) {
   $_SESSION['user']['class_year'] = intval(
     mysql_real_escape_string($_POST['class_year'])
@@ -742,7 +755,7 @@ if (isset($_POST['usersettings'])) {
   $_SESSION['user']['autocomplete'] = (
     mysql_real_escape_string($_POST['toggle_autocomplete']) == 1 ? 1 : 0
   );
-  $_SESSION['user']['edited'] = $loggedin?0:1;
+  $_SESSION['user']['edited'] = $loggedin ? 0 : 1;
   if ($loggedin) {
     mysql_query(
       "UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', " .
@@ -771,7 +784,7 @@ EOD;
   die();
 }
 
-if (isset($_GET['user'])) {
+if (__DEV__ && isset($_GET['user'])) {
   $msg = (
     "user<br><pre>" . 
     print_r(@$_SESSION, true) . 
@@ -789,7 +802,7 @@ if (isset($_GET['user'])) {
 $nocache = isset($_GET['nocache']);
 //Uncomment during development
 $nocache = true; 
-$nocache = $nocache ? '?nocache=' . time() : '?v2.0'; 
+$nocache = $nocache ? '?nocache=' . time() : '?v3.0'; 
 
 header('Content-type: text/html; charset=utf-8');
 ?>
@@ -804,8 +817,8 @@ header('Content-type: text/html; charset=utf-8');
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <link rel="stylesheet" type="text/css" href="css/cr.css<?= $nocache ?>">
   <!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <script src="js/konami.js<?= $nocache ?>"></script>
   <script src="js/majors.js<?= $nocache ?>"></script>
   <script src="js/cr.js<?= $nocache ?>"></script>
