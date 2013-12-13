@@ -1,10 +1,12 @@
 AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
 
-# 1 WEEK
+# 1 week cache
 <filesMatch ".(ico|png|css|js)$">
 Header set Cache-Control "max-age=604800, public"
 </filesMatch>
 
+# These are used for a daily update of the class versions 
+# from the Data Warehouse.
 <Files update>
 order allow,deny
 deny from all
@@ -15,6 +17,7 @@ order allow,deny
 deny from all
 </Files>
 
+# Force HTTPS
 Options +FollowSymLinks
 RewriteEngine On
 RewriteCond %{HTTPS} off
@@ -22,26 +25,30 @@ RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
 
+# Force to central courseroad domain
 RewriteCond %{SERVER_NAME} !^courseroad.mit.edu$
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI} [R]
 
+# Access to secure.php requires certificates
 <Files secure.php>
 AuthType SSLCert
 Require valid-user
 </Files>
 
-#Only deployed for beta-testing
-#RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
-#RewriteCond %{REQUEST_URI} !^/503.php [NC]
-#RewriteRule .* /503.php
+# Only deployed for beta-testing
+# RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
+# RewriteCond %{REQUEST_URI} !^/503.php [NC]
+# RewriteRule .* /503.php
 
+# [url]/username --> [url]/index.php?hash=username
 RewriteCond %{REQUEST_URI} !^blog
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ /index.php?hash=$1
 
+# Define ErrorDocuments
 ErrorDocument 401 /index.php?triedlogin=1
 ErrorDocument 403 /index.php?hash=error403
 ErrorDocument 404 /index.php?hash=error404
