@@ -397,68 +397,80 @@ if (isset($_POST['getcustom'])){
   dieJSON(pullCustom($name, $units));
 }
 
-// Returns the desired hash's class and major data
-if (isset($_POST['gethash'])){
-  // Strip the leading octothrope
-  $hash = substr($_POST['gethash'], 1);
+function buildClassesArray($hash) {
   $hash = mysql_real_escape_string($hash);
   $_SESSION['crhash'] = $hash;
+  
+  // Pull out the latest matching saved road's classes and majors
   $sql = (
     "SELECT `classes`,`majors` FROM `roads2` " . 
     "WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) " .
     "ORDER BY `added` DESC LIMIT 0,1"
   );
   $query = mysql_query($sql);
+  
   $classes = '';
   $majors = '';
+  // Include the while loop in case there isn't a match.
   while($row = mysql_fetch_array($query)) {
+    // decrypt is defined in connect.php
     $classes = json_decode(decrypt($row['classes']), true);
     $majors = stripslashes(decrypt($row['majors']));
   }
-  if ($classes=='') die();
+  if ($classes == '') die();
   $majors = json_decode($majors, true);
+  
+  // json holds the pulled data on each saved class.
   $json = array();
   foreach($classes as &$class) {
-    if (!isset($class["override"])) {
-      $class["override"] = false;
+    if (!isset($class['override'])) {
+      $class['override'] = false;
     }
-    if (!isset($class["substitute"])) {
-      $class["substitute"] = "";
+    if (!isset($class['substitute'])) {
+      $class['substitute'] = '';
     }
-    if (isset($class["custom"])) {
+    if (isset($class['custom'])) {
       $json[] = pullCustom(
-        $class["name"], 
-        $class["units"], 
-        $class["term"], 
-        $class["override"], 
-        $class["substitute"]
+        $class['name'], 
+        $class['units'], 
+        $class['term'], 
+        $class['override'], 
+        $class['substitute']
       );
     }else{
       $tempclass = pullClass(
-        $class["id"], 
-        $class["year"], 
-        $class["term"], 
-        $class["override"], 
-        $class["substitute"]
+        $class['id'], 
+        $class['year'], 
+        $class['term'], 
+        $class['override'], 
+        $class['substitute']
       );
-      if ($tempclass != "noclass") {
+      if ($tempclass != 'noclass') {
         $json[] = $tempclass;
       }
     }
   }
   $json[] = $majors;
+  return $json;
+}
+
+// Returns the desired hash's class and major data
+if (isset($_POST['gethash'])){
+  // Strip the leading octothrope
+  $hash = substr($_POST['gethash'], 1);
+  $json = buildClassesArray($hash);
   dieJSON($json);
 }
 
 if ($add_new_term){
   $json = array();
-  foreach($add_new_term["classes"] as $class) {
+  foreach($add_new_term['classes'] as $class) {
     $tempclass = pullClass(
       rtrim($class,'J'), 
-      $add_new_term["year"], 
-      $add_new_term["term"]
+      $add_new_term['year'], 
+      $add_new_term['term']
     ); 
-    if ($tempclass!="noclass") {
+    if ($tempclass!='noclass') {
       $json[] = $tempclass;
     }
   }
@@ -466,54 +478,7 @@ if ($add_new_term){
 }
 
 if ($hash_to_use) {
-  $hash_to_use = mysql_real_escape_string($hash_to_use);
-  $_SESSION['crhash'] = $hash_to_use;
-  $sql = (
-    "SELECT `classes`,`majors` FROM `roads2` WHERE (`hash`='$hash_to_use' OR " .
-    "(`hash` LIKE '$hash_to_use/%' AND `public`='1')) " . 
-    "ORDER BY `added` DESC LIMIT 0,1"
-  );
-  $query = mysql_query($sql);
-  $classes = '';
-  $majors = '';
-  while($row = mysql_fetch_array($query)) {
-    $classes = json_decode(decrypt($row['classes']), true);
-    $majors = stripslashes(decrypt($row['majors']));
-  }
-  if ($classes == '') {
-    $classes = array();
-  }
-  $majors = json_decode($majors, true);
-  $json = array();
-  foreach($classes as $class) {
-    if (!isset($class["override"])) {
-      $class["override"] = false;
-    }
-    if (!isset($class["substitute"])) {
-      $class["substitute"] = "";
-    }
-    if (isset($class["custom"])) {
-      $json[] = pullCustom(
-        $class["name"], 
-        $class["units"], 
-        $class["term"], 
-        $class["override"], 
-        $class["substitute"]
-      );
-    }else{
-      $tempclass = pullClass(
-        $class["id"], 
-        $class["year"], 
-        $class["term"], 
-        $class["override"], 
-        $class["substitute"]
-      );
-      if ($tempclass!="noclass") {
-        $json[] = $tempclass;
-      }
-    }
-  }
-  $json[] = $majors;
+  $json = buildClassesArray($hash_to_use);
   $hash_to_use = mysql_real_escape_string(json_encode($json));
 }
 
@@ -574,9 +539,9 @@ if (isset($_POST['classes'])) {
     5
   );
   for (
-    $i = ""; 
+    $i = ''; 
     hash_is_safe($hash . $i, $classes, $majors); 
-    $i==="" 
+    $i==='' 
       ? $i=0 
       : $i++
   );
@@ -585,7 +550,7 @@ if (isset($_POST['classes'])) {
   $trycert = false;
   if ($_POST['trycert']) {
     if ($loggedin) {
-      $saveas = date("YmdHis");
+      $saveas = date('YmdHis');
       $hash = $athena . '/' . $saveas;
     }else if (!$_SESSION['triedcert']) {
       $_SESSION['trycert'] = true;
@@ -615,7 +580,7 @@ if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['savedroads'])) {
   if (!$loggedin) {
-    die("Sorry, you need to log in again.");
+    die('Sorry, you need to log in again.');
   }
   $sql = "SELECT * FROM `roads2` WHERE `user`='$athena' ORDER BY `added` DESC";
   $query = mysql_query($sql);
@@ -681,17 +646,17 @@ if (isset($_POST['savedroads'])) {
     $classes2 = array();
     foreach($classes as &$class2) {
       if (isset($class2["custom"])) {
-        $class2["id"] = '(' . $class2["name"] . ')';
+        $class2['id'] = '(' . $class2['name'] . ')';
       }
-      if (!isset($class2["id"])) {
+      if (!isset($class2['id'])) {
         continue;
       }
-      if (isset($class2["override"]) && $class2["override"]) {
-        $class2["id"] .= "*";
+      if (isset($class2['override']) && $class2['override']) {
+        $class2['id'] .= '*';
       }
-      $classes2[] = $class2["id"];
+      $classes2[] = $class2['id'];
     }
-    echo "<td>" . implode(", ", $classes2) . "</td>";
+    echo '<td>' . implode(', ', $classes2) . '</td>';
     echo (
       "<td><span class=\"saved-roads-comment\">" .
       $row['comment'] . "</span><span ". 
@@ -710,28 +675,28 @@ if (isset($_POST['choosesavedroad'])) {
   if (!$loggedin) {
     die();
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash!="null")) {
+  if (($athena != strstr($hash, '/', true)) && ($hash!='null')) {
     die();
   }
   mysql_query(
     "UPDATE `roads2` SET `public`= CASE " .
     "WHEN `hash`='$hash' THEN '1' ELSE '0' END WHERE `user`='$athena'"
   );
-  die("ok");
+  die('ok');
 }
 
 // When the user changes a road's hash
 if (isset($_POST['changeroadhash'])) {
   $hash = mysql_real_escape_string($_POST['changeroadhash']);
   $newhash = mysql_real_escape_string(
-    $athena . "/" . htmlentities(substr($_POST['newhash'],0,36))
+    $athena . '/' . htmlentities(substr($_POST['newhash'],0,36))
   );
   if (!$loggedin || 
       preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) || 
       !strlen($_POST['newhash'])) {
     die($hash);
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash != "null")) {
+  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die($hash);
   }
   if (mysql_num_rows(mysql_query(
@@ -751,7 +716,7 @@ if (isset($_POST['commentonroad'])) {
   if (!$loggedin) {
     die($hash);
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash!="null")) {
+  if (($athena != strstr($hash, '/', true)) && ($hash!='null')) {
     die();
   }
   mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
@@ -762,9 +727,9 @@ if (isset($_POST['commentonroad'])) {
 if (isset($_POST['deleteroad'])) {
   $hash = mysql_real_escape_string($_POST['deleteroad']);
   if (!$loggedin) die();
-  if (($athena != strstr($hash, '/', true)) && ($hash != "null")) die();
-  if ($hash != "null") mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
-  die("ok");
+  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) die();
+  if ($hash != 'null') mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
+  die('ok');
 }
 
 if (isset($_POST['usersettings'])) {
@@ -772,7 +737,7 @@ if (isset($_POST['usersettings'])) {
     mysql_real_escape_string($_POST['class_year'])
   );
   $_SESSION['user']['view_req_lines'] = (
-    $_POST['toggle_view_req_lines'] == "1" ? 1 : 0
+    $_POST['toggle_view_req_lines'] == '1' ? 1 : 0
   );
   $_SESSION['user']['autocomplete'] = (
     mysql_real_escape_string($_POST['toggle_autocomplete']) == 1 ? 1 : 0
@@ -824,7 +789,7 @@ if (isset($_GET['user'])) {
 $nocache = isset($_GET['nocache']);
 //Uncomment during development
 $nocache = true; 
-$nocache = $nocache ? "?nocache=" . time() : "?v2.0"; 
+$nocache = $nocache ? '?nocache=' . time() : '?v2.0'; 
 
 header('Content-type: text/html; charset=utf-8');
 ?>
