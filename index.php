@@ -31,46 +31,58 @@
 require('connect.php'); 
 session_start();
 
-// Make sit easier to test POST code
+// Makes it easier to test POST code
 if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET; 
 }
 
-if (isset($_GET['addclasses'])) {
+// Beginnings of an external API hook. From a comma-separated list of classes,
+// a year value and a term, this will drop a set of classes into CourseRoad, to
+// be saved by the user.
+if (isset($_GET['add_classes'])) {
   if (!isset($_GET['year'])) {
     $_GET['year'] = false;
   }
+  
   if (!isset($_GET['term'])) {
     $_GET['term'] = 1;
   }
-  $_SESSION['addterm'] = array(
+  
+  // SESSION.add_new_term holds onto the new term's data
+  $_SESSION['add_new_term'] = array(
     'year'=>mysql_real_escape_string($_GET['year']),
     'term'=>mysql_real_escape_string($_GET['term']),
-    'classes'=>explode(',', mysql_real_escape_string($_GET['addclasses']))
+    'classes'=>explode(',', mysql_real_escape_string($_GET['add_classes']))
   );
+  
   if (!isset($_GET['hash'])) {
-    $_GET['hash'] = "";
+    $_GET['hash'] = '';
   }
 }
 
+// A visible "?hash=" in the URL is unwanted, so we redirect to remove it,
+// but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
-  $_SESSION['thishash'] = $_GET['hash'];
+  $_SESSION['hash_to_use'] = $_GET['hash'];
   header("Location: $baseURL/#" . urldecode($_GET['hash']));
   die();
 }
 
+// Store that we've been to index.php.
 $_SESSION['wenttoindex'] = true;
 
-$addterm = false;
-if (isset($_SESSION['addterm'])) {
-  $addterm = $_SESSION['addterm'];
-  unset($_SESSION['addterm']);
+// We originally add add_new_term to SESSION to protect over the redirect above.
+// Now we read it into a variable and clear the SESSION version.
+$add_new_term = false;
+if (isset($_SESSION['add_new_term'])) {
+  $add_new_term = $_SESSION['add_new_term'];
+  unset($_SESSION['add_new_term']);
 }
 
-$thishash = false;
-if (isset($_SESSION['thishash'])) {
-  $thishash = $_SESSION['thishash'];
-  unset($_SESSION['thishash']);
+$hash_to_use = false;
+if (isset($_SESSION['hash_to_use'])) {
+  $hash_to_use = $_SESSION['hash_to_use'];
+  unset($_SESSION['hash_to_use']);
 }
 
 /**
@@ -84,27 +96,46 @@ if (isset($_SESSION['thishash'])) {
  * Also fix the wire library already
  */
 
-// autocomplete business
+
+/**
+ * Set the header type to Javascript and JSON encode the result.
+ */
+function dieJSON($obj) {
+  header("Content-type: text/javascript");
+  die(json_encode($obj));
+} 
+
+// Yields a JSON-encoded list of classes which match the autocompletion field
+// in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
-  $term = mysql_real_escape_string($_POST['autocomplete']);
+  $search = mysql_real_escape_string($_POST['autocomplete']);
   $temp = array();
   $query = mysql_query(
     "SELECT DISTINCT `subject_id` FROM `warehouse` " .
-    "WHERE `subject_id` LIKE '$term%' ORDER BY `subject_id` LIMIT 6"
+    "WHERE `subject_id` LIKE '$search%' ORDER BY `subject_id` LIMIT 6"
   );
   while($row = mysql_fetch_array($query)) {
     $temp[] = $row['subject_id'];
   }
-  die(json_encode($temp));
+  dieJSON($temp);
 }
 
+/**
+ * Create an array of info on a particular class of a particular year.
+ */
 function pullClass(
     $class, 
     $year = false, 
     $classterm = 0, 
     $override = false, 
-    $substitute = "") {
+    $substitute = '') {
+  
+  // If we have a year, then prioritize classes based on their distance to that
+  // year; otherwise, prioritize based on most recent year first.
   $sort_by_year = $year ? "ABS(`year`-'$year') ASC," : "`year` DESC,";
+  
+  // Prioritize rows found within the exceptions table over rows found in the
+  // regular table.
   $sql = (
     "SELECT *, '0' AS exception FROM `warehouse` " . 
     "WHERE `subject_id`='$class' UNION ALL " .
@@ -112,11 +143,13 @@ function pullClass(
     "WHERE `subject_id`='$class' ORDER BY $sort_by_year " .  
     "exception DESC, `last_modified` DESC;"
   );
+  // $row now holds the desired class' information row
   $row = mysql_fetch_assoc(mysql_query($sql));
   if (!$row) {
-    return "noclass";
+    return 'noclass';
   }
   
+  // Some returned columns are unhelpful and are thus discarded.
   unset($row['id']);
   unset($row['design_units']);
   unset($row['tuition_attr']);
@@ -127,6 +160,8 @@ function pullClass(
   unset($row['notes']);
   unset($row['exception']);
   
+  // Format assorted other rows. While classes are usually considered as "8.01",
+  // it's easier to keep refer to them as "8_01" [for classes, etc.]
   $row['id'] = str_replace('.', '_', $row['subject_id']);
   $row['divid'] = $row['id'] . '__' . rand();
   $row['is_variable_units'] = ($row['is_variable_units'] == '1');
@@ -145,31 +180,22 @@ function pullClass(
   
   $row['total_units'] = floatval($row['total_units']);
   
+  // Occasionally, the Warehouse tries to say that a class has 0 units. Since
+  // that doesn't make much sense, default these exceptions to 12 units.
+  $default_unit_count = 12;
   if (!$row['total_units']) {
-    $row['total_units'] = 12;
+    $row['total_units'] = $default_unit_count;
   }
   
-  $catalog_link = (
-    'http://student.mit.edu/catalog/search.cgi?search=' . $row['subject_id']
-  );
-  
-  $evaluations_link = (
-    'https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=' .
-    'Search&subjectCode=' . $row['subject_id']
-  );
-  
-  $row['info'] = <<<EOD
-Additional info for <strong>{$row['subject_id']}</strong>:<br>
-<strong>{$row['subject_title']}</strong><br>
-<a href="{$catalog_link}" target="_blank">Course Catalog</a> &#149;
-<a href="{$evaluations_link}" target="_blank">Class Evalutions</a><br>
-{$row['reqstr']}
-<p class='infounits'>{$row['unitload']} ({$row['total_units']} units)</p><br>
-<p class='infoinfo'>{$row['desc']}</p>
-EOD;
+  // Build the class' HTML for the info box when it's selected.
+  $row['info'] = makeClassInfoHTML($row);
 
+  // Each class added to the page is a div; this string holds the space-
+  // separated classes added to that div. (Apologies on the overloading of the
+  // word "class".)
   $row['divclasses']  = 'classdiv bubble ' . $row['id'];
 
+  // Joint subjects at MIT are labelled with a J suffix. This trims that off.
   $row['joint_subjects'] = explode(', ', $row['joint_subjects']);
   foreach($row['joint_subjects'] as &$subj) {
     $subj = rtrim($subj, 'J');
@@ -177,6 +203,7 @@ EOD;
   if (!$row['joint_subjects'][0]) {
     $row['joint_subjects'] = false;
   }
+  
   $row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
   foreach($row['equiv_subjects'] as &$subj) {
     $subj = rtrim($subj, 'J');
@@ -184,11 +211,13 @@ EOD;
   if (!$row['equiv_subjects'][0]) {
     $row['equiv_subjects'] = false;
   }
+  
   if ($row['joint_subjects']) {
-    $row['divclasses'] .= (
-      ' ' . str_replace('.', '_', implode(' ', $row['joint_subjects']))
-    );
+    $joint_subjects_classes = implode(' ', $row['joint_subjects']);
+    $joint_subjects_classes = str_replace('.', '_', $joint_subjects_classes);
+    $row['divclasses'] .= ' ' . $joint_subjects_classes;
   }
+  
   if ($row['gir'] && $row['gir'][0] == 'H') {
     $row['gir'] = '';
   }
@@ -201,6 +230,10 @@ EOD;
   if ($row['hass']) {
     $row['divclasses'] .= ' HASS ' . $row['hass'];
   }
+  
+  // Extraclasses handles cases where a class universally also counts for
+  // something else, like 18.100B and 18.100. This is set manually in the 
+  // warehouse_exceptions table.
   if ($row['extraclasses']) {
     $row['divclasses'] .= ' ' . str_replace('.', '_', $row['extraclasses']);
   }
@@ -211,28 +244,25 @@ EOD;
   $row['substitute'] = $substitute;
   $row['custom'] = false;
   
-  $row['ayear'] = (
+  // year = 2013 --> year_range = '12-'13
+  $row['year_range'] = (
     "'" . substr($row['year'] - 1, -2) . "-'" . substr($row['year'], -2)
   );
-  $row['oyear'] = $year ? $year : (date('Y') + (date('m') > 3));
-  $row['otheryears'] = "<select>";
-  $query = mysql_query(
-    "SELECT DISTINCT `year` FROM `warehouse` " .
-    "WHERE `subject_id`='{$row['subject_id']}' ORDER BY `year` DESC"
-  );
-  while($row2 = mysql_fetch_assoc($query)) {
-    $year2 = $row2['year'];
-    $ayear2 = "'" . substr($year2 - 1, -2) . "-'" . substr($year2, -2);
-    $row['otheryears'] .= "\n\t<option value='$year2'";
-    $row['otheryears'] .= ($year2 == $row['year']) ? " selected='true'>":">";
-    $row['otheryears'] .= "$ayear2</option>";
-  }
+  
+  // year_desired holds the year the class attempted to match. This allows for
+  // classes which will be in the '14-'15 cycle to be defined now with '13-'14,
+  // but should '14-'15 become available, that version with be loaded instead.
+  // Thus, year_desired holds the user's desired year.
+  $row['year_desired'] = $year ? $year : (date('Y') + (date('m') > 3));
+  
+  // Generate HTML for a dropdown list of the other offered years 
+  $row['otheryears'] = makeYearsOfferedHTML($row['subject_id'], $row['year']);
+  
   $row['yearspan'] = (
-    '<span title="The data for this class is from the '. $row['ayear'] .
+    '<span title="The data for this class is from the '. $row['year_range'] .
     'version of the subject. Click to use another year\'s version." '. 
-    'href="#" class="dummylink">' . $row['ayear'] . '</span>'
+    'href="#" class="dummylink">' . $row['year_range'] . '</span>'
   );
-  $row['otheryears'] .= "\n<select>"; 
   
   // $row['div'] actually stores the HTML of the class bubble.
   $row['div'] = <<<EOD
@@ -252,12 +282,69 @@ EOD;
   return $row;
 }
 
+/**
+ * Turn "2013" into "'12-'13"
+ */
+function makeYearRange($year) {
+  return "'" . substr($year - 1, -2) . "-'" . substr($year, -2);
+}
+
+/**
+ * Generate the innerHTML for the info box to be used for when the class is
+ * highlighted.
+ */
+function makeClassInfoHTML($row) {
+  $catalog_link_base = 'http://student.mit.edu/catalog/search.cgi?search=';
+  $catalog_link = $catalog_link_base . $row['subject_id'];
+  
+  $evaluations_link_base = (
+    'https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=' .
+    'Search&subjectCode='
+  );
+  $evaluations_link = $evaluations_link_base . $row['subject_id'];
+  
+  return <<<EOD
+Additional info for <strong>{$row['subject_id']}</strong>:<br>
+<strong>{$row['subject_title']}</strong><br>
+<a href="{$catalog_link}" target="_blank">Course Catalog</a> &#149;
+<a href="{$evaluations_link}" target="_blank">Class Evalutions</a><br>
+{$row['reqstr']}
+<p class='infounits'>{$row['unitload']} ({$row['total_units']} units)</p><br>
+<p class='infoinfo'>{$row['desc']}</p>
+EOD;
+}
+
+/**
+ * Generate the HTML of the dropdown which holds the list of offered years for
+ * a given class.
+ */
+function makeYearsOfferedHTML($subject_id, $year) {
+  $html = '<select>';
+  $query = mysql_query(
+    "SELECT DISTINCT `year` FROM `warehouse` " .
+    "WHERE `subject_id`='$subject_id' ORDER BY `year` DESC"
+  );
+  while($row2 = mysql_fetch_assoc($query)) {
+    $year2 = $row2['year'];
+    $year_range2 = makeYearRange($year2);
+    $html .= "\n\t<option value='$year2'";
+    $html .= ($year2 == $year) ? " selected='true'" : '';
+    $html .= ">$year_range2</option>";
+  }
+  $html .= "\n<select>"; 
+  return $html;
+}
+
+/**
+ * Create an array of info on a custom-created class.
+ */
 function pullCustom(
     $name, 
     $units, 
     $classterm = 0, 
     $override = false, 
     $substitute = "") {
+
   $row = array();
   $row['year'] = '0';
   $row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
@@ -293,27 +380,17 @@ EOD;
   return $row;
 }
 
-/**
- * Set the header type to Javascript and JSON encode the result.
- */
-function dieJSON ($obj) {
-  header("Content-type: text/javascript");
-  die(json_encode($obj));
-}
-
-/**
- * loads class data from the database and serves up the JSON which 
- * CourseRoad requires to load that class.
- */
+// Loads class data from the database and serves up the JSON which CourseRoad 
+// requires to load that class.
 if (isset($_POST['getclass'])){
   $class = mysql_real_escape_string($_POST['getclass']);
   $year = isset($_POST['getyear'])
     ? mysql_real_escape_string($_POST['getyear'])
     : false;
-  // echo $class;
   dieJSON(pullClass($class, $year));
 }
 
+// Same, but for a custom class. These are used by the Add tab.
 if (isset($_POST['getcustom'])){
   $name = htmlentities($_POST['getcustom']);
   $units = isset($_POST['getunits']) ? floatval($_POST['getunits']) : false;
@@ -322,7 +399,9 @@ if (isset($_POST['getcustom'])){
 
 // Returns the desired hash's class and major data
 if (isset($_POST['gethash'])){
-  $hash = mysql_real_escape_string(substr($_POST['gethash'], 1));
+  // Strip the leading octothrope
+  $hash = substr($_POST['gethash'], 1);
+  $hash = mysql_real_escape_string($hash);
   $_SESSION['crhash'] = $hash;
   $sql = (
     "SELECT `classes`,`majors` FROM `roads2` " . 
@@ -371,27 +450,27 @@ if (isset($_POST['gethash'])){
   dieJSON($json);
 }
 
-if ($addterm){
+if ($add_new_term){
   $json = array();
-  foreach($addterm["classes"] as $class) {
+  foreach($add_new_term["classes"] as $class) {
     $tempclass = pullClass(
       rtrim($class,'J'), 
-      $addterm["year"], 
-      $addterm["term"]
+      $add_new_term["year"], 
+      $add_new_term["term"]
     ); 
     if ($tempclass!="noclass") {
       $json[] = $tempclass;
     }
   }
-  $addterm = mysql_real_escape_string(json_encode($json));
+  $add_new_term = mysql_real_escape_string(json_encode($json));
 }
 
-if ($thishash) {
-  $thishash = mysql_real_escape_string($thishash);
-  $_SESSION['crhash'] = $thishash;
+if ($hash_to_use) {
+  $hash_to_use = mysql_real_escape_string($hash_to_use);
+  $_SESSION['crhash'] = $hash_to_use;
   $sql = (
-    "SELECT `classes`,`majors` FROM `roads2` WHERE " .
-    "(`hash`='$thishash' OR (`hash` LIKE '$thishash/%' AND `public`='1')) " . 
+    "SELECT `classes`,`majors` FROM `roads2` WHERE (`hash`='$hash_to_use' OR " .
+    "(`hash` LIKE '$hash_to_use/%' AND `public`='1')) " . 
     "ORDER BY `added` DESC LIMIT 0,1"
   );
   $query = mysql_query($sql);
@@ -435,7 +514,7 @@ if ($thishash) {
     }
   }
   $json[] = $majors;
-  $thishash = mysql_real_escape_string(json_encode($json));
+  $hash_to_use = mysql_real_escape_string(json_encode($json));
 }
 
 // For certification purposes.
@@ -758,13 +837,13 @@ header('Content-type: text/html; charset=utf-8');
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
-  <link rel="stylesheet" type="text/css" href="/css/cr.css<?= $nocache ?>">
+  <link rel="stylesheet" type="text/css" href="css/cr.css<?= $nocache ?>">
   <!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-  <script src="/js/konami.js<?= $nocache ?>"></script>
-  <script src="/js/majors.js<?= $nocache ?>"></script>
-  <script src="/js/cr.js<?= $nocache ?>"></script>
+  <script src="js/konami.js<?= $nocache ?>"></script>
+  <script src="js/majors.js<?= $nocache ?>"></script>
+  <script src="js/cr.js<?= $nocache ?>"></script>
   <!--script src="/js/d3.js"></script-->
   <script>
     var _gaq=[["_setAccount","UA-31018454-1"],
@@ -782,8 +861,8 @@ header('Content-type: text/html; charset=utf-8');
       autocomplete: <?= $_SESSION['user']['autocomplete'] ?>, 
       needPermission: <?= $_SESSION['user']['need_permission'] ?>
     };
-    var addterm = $.parseJSON('<?= $addterm ?>') || 0;
-    var thishash = $.parseJSON('<?= $thishash ?>') || 0;
+    var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
+    var hash_to_use = $.parseJSON('<?= $hash_to_use ?>') || 0;
     $(crSetup);
   </script>
 </head>

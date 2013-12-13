@@ -357,7 +357,7 @@ function addWires(div, addwires) {
       'in the Spring term', 'in the Summer term'])[(data.classterm - 1) %
       4]);
   if (!data.offered_this_year) div.attr('title', data.subject_id +
-    ' is not available in this year (' + div.data('ayear') + ')');
+    ' is not available in this year (' + div.data('year_range') + ')');
   if (data.override) div.find(".coreqs").attr('title',
     'OVERRIDE enabled');
   if ($('.classdivhigh').length == 1) {
@@ -759,7 +759,7 @@ function minclass(stringify) {
       custom: true
     } : {
       id: $(this).data("subject_id"),
-      year: $(this).data("oyear")
+      year: $(this).data("year_desired")
     };
     arr.term = $(this).data("classterm");
     if ($(this).data("override")) {
@@ -858,12 +858,12 @@ var crSetup = function() {
   setInterval(function() {
     addAllWires(true);
   }, 10000);
-  if (thishash) {
-    var jsonmajors = thishash.pop();
+  if (hash_to_use) {
+    var jsonmajors = hash_to_use.pop();
     $("select.majorminor").each(function(i) {
       $(this).val(jsonmajors[i]).attr("selected", true);
     });
-    getClasses(thishash);
+    getClasses(hash_to_use);
   } else if (window.location.hash) {
     // Load hash's classes on pageload
     $("#loading").show();
@@ -885,11 +885,11 @@ var crSetup = function() {
     });
     userHashChange = true;
   }
-  if (addterm) {
-    getClasses(addterm);
+  if (add_new_term) {
+    getClasses(add_new_term);
     $(window).on("beforeunload", runBeforeUnload);
   }
-  thisterm = addterm = 0;
+  thisterm = add_new_term = 0;
   $("body").on("click", ".classdivyear span", function() {
     var par = $(this).parents(".classdiv");
     if (par.data("changing")) return false;
@@ -1265,7 +1265,7 @@ var crSetup = function() {
       )) {
         console.log("Let's go.");
         $(".classdiv:not(.custom)").each(function() {
-          if ($(this).data("oyear") == properYear($(this).data(
+          if ($(this).data("year_desired") == properYear($(this).data(
             "classterm"))) return true;
           swapClassYear($(this), properYear($(this).data("classterm")));
         });
