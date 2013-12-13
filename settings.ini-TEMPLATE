@@ -1,9 +1,10 @@
 <?php
 
-$username = "USERNAME";
-$password = "PASSWORD";
-define("SALT", "SALTGOESHERE");
-$database = "DATABASE_NAME";
-$baseURL = "COURSEROAD_URL";
+$username = 'USERNAME';
+$password = 'PASSWORD';
+define('SALT', 'SALTGOESHERE');
+$database = 'DATABASE_NAME';
+$databaseURL = 'example.com';
+$baseURL = 'https://COURSEROAD_URL.com';
 
 ?>

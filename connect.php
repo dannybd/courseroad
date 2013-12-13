@@ -2,7 +2,7 @@
 
 require('settings.ini');
 
-$connect = mysql_connect("sql.mit.edu", $username, $password);
+$connect = mysql_connect($databaseURL, $username, $password);
 mysql_select_db($database);
 
 function encrypt($mixed){
