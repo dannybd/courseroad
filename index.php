@@ -1280,7 +1280,7 @@ header('Content-type: text/html; charset=utf-8');
     <line id="svg_2" y2="0" x2="100%" y1="100%" x1="0" stroke-width="15" stroke="#f00000" fill="none"/>
     </g>
   </svg-->
-  <img src="/images/trashx.png" alt="" class="trash">
+  <img src="images/trashx.png" alt="" class="trash">
 </div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
 <div id="viewroads" class="bubble my-dialog">
@@ -1366,7 +1366,7 @@ header('Content-type: text/html; charset=utf-8');
     <div>
       First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/cool historical maps.<br>
       <br>
-      CourseRoad is the brainchild of Danny Ben-David '15, and was the Grand Prize Winner in the 2012 <a href="icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT, I've been bothered at how unintuitive the course and major structures are as laid out in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
+      CourseRoad is the brainchild of Danny Ben-David '15, and was the Grand Prize Winner in the 2012 <a href="http://icampusprize.mit.edu">iCampus Student Prize Competition</a>. Ever since I showed up at MIT, I've been bothered at how unintuitive the course and major structures are as laid out in the MIT Catalog. Seeking a better way, the iCampus Prize provided the motive for me to build CourseRoad, and here we are. :)<br>
       <br>
       Special thanks to <a href="http://oeit.mit.edu">OEIT<a> for funding and guiding me through the spring and summer, and to the awesome folks at <a href="http://sipb.mit.edu">SIPB</a> for their litany of services and helpful insights.
     </div>
