@@ -31,8 +31,8 @@
 require('connect.php'); 
 session_start();
 
-// REMOVE AFTER DEVELOPMENT (allows me to test POST code)
-if (isset($_GET['dev'])) {
+// Make sit easier to test POST code
+if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET; 
 }
 

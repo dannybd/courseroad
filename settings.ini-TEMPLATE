@@ -6,5 +6,6 @@ define('SALT', 'SALTGOESHERE');
 $database = 'DATABASE_NAME';
 $databaseURL = 'example.com';
 $baseURL = 'https://COURSEROAD_URL.com';
+define('__DEV__', false);
 
 ?>
