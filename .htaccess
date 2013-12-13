@@ -20,17 +20,17 @@ deny from all
 Options +FollowSymLinks
 RewriteEngine On
 
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
+RewriteCond %{REQUEST_URI} !^/output.php [NC]
+RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI}
+
 # Force to central courseroad domain
 RewriteCond %{SERVER_NAME} !^courseroad.mit.edu$
 RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://courseroad.mit.edu%{REQUEST_URI} [R]
-
-# Force HTTPS
-RewriteCond %{HTTPS} off
-RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
-RewriteCond %{REQUEST_URI} !^/output.php [NC]
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 
 # Access to secure.php requires certificates
 <Files secure.php>
