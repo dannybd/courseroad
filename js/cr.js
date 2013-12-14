@@ -51,7 +51,7 @@ function checkReqs(arr, callback, callbackargs, level) {
     globalmatches = [];
   }
   
-  var matched = getMatchParams(arr);
+  var matchParams = getMatchParams(arr);
   
   // Holds the unsatisfied requisites in a string for display to the user.
   var tempstr = [];
@@ -63,16 +63,16 @@ function checkReqs(arr, callback, callbackargs, level) {
        * we recursively solve that branch and use its result.
        */
       var req = checkReqs(arr[i], callback, callbackargs, level.concat([i]));
-      if (req[0] || matched.pullmatches) {
-        if (matched.special) {
+      if (req[0] || matchParams.pullmatches) {
+        if (matchParams.special) {
           $(req[2]).each(function() {
-            matched.count -= $(this).data(matched.type);
+            matchParams.count -= $(this).data(matchParams.type);
           });
         } else {
-          matched.count--;
+          matchParams.count--;
         }
       }
-      // If the sub-branch matched its requirements
+      // If the sub-branch matchParams its requirements
       if (req[0]) {
         var tempargs = callbackargs.slice();
         var clspos = $.inArray("cls", tempargs);
@@ -111,8 +111,8 @@ function checkReqs(arr, callback, callbackargs, level) {
       continue;
     }
     if (newarr.id === "Permission" && !user.needPermission) {
-      if (matched.initialCount == arr.length - 1) {
-        matched.count -= matched.special ? $(this).data(matched.type) : 1;
+      if (matchParams.initialCount == arr.length - 1) {
+        matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
       }
       continue;
     }
@@ -132,7 +132,7 @@ function checkReqs(arr, callback, callbackargs, level) {
         }
         return false;
       }).each(function() {
-        if ($.inArray(this, globalmatches) != -1 && !matched.globalignore && !
+        if ($.inArray(this, globalmatches) != -1 && !matchParams.globalignore && !
             newarr.globalignore) {
           return true;
         }
@@ -150,18 +150,18 @@ function checkReqs(arr, callback, callbackargs, level) {
         // Calls callback with tempargs as its arguments.
         var temp2 = callback.apply(null, tempargs);
         if (temp2) {
-          matched.count -= matched.special ? $(this).data(matched.type) : 1;
-          matched.matchesFound.push(this);
-          !newarr.globalskip && !matched.globalskip && globalmatches.push(this);
-          newarr.globalskip && console.log("newarrskip", newarr, matched);
-          matched.globalskip && console.log("matchedskip", newarr, matched);
+          matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
+          matchParams.matchesFound.push(this);
+          !newarr.globalskip && !matchParams.globalskip && globalmatches.push(this);
+          newarr.globalskip && console.log("newarrskip", newarr, matchParams);
+          matchParams.globalskip && console.log("matchParamsskip", newarr, matchParams);
         }
-        if (matched.count <= 0 && !matched.runinfull) {
-          return [true, "", level.length ? matched.matchesFound : globalmatches];
+        if (matchParams.count <= 0 && !matchParams.runinfull) {
+          return [true, "", level.length ? matchParams.matchesFound : globalmatches];
         }
       });
-      if (matched.count <= 0) {
-        return [true, "", level.length ? matched.matchesFound : globalmatches];
+      if (matchParams.count <= 0) {
+        return [true, "", level.length ? matchParams.matchesFound : globalmatches];
       }
       tempstr.push(
         (newarr.coreq === 1)
@@ -175,7 +175,7 @@ function checkReqs(arr, callback, callbackargs, level) {
       newarr.id.toUpperCase().replace('.', '_').replace(':', '.')
     ));
     classmatches.each(function() {
-      if ($.inArray(this, globalmatches) != -1 && !matched.globalignore && !
+      if ($.inArray(this, globalmatches) != -1 && !matchParams.globalignore && !
           newarr.globalignore) {
         return true;
       }
@@ -193,9 +193,9 @@ function checkReqs(arr, callback, callbackargs, level) {
       // Calls callback with tempargs as its arguments.
       var temp2 = callback.apply(null, tempargs);
       if (temp2) {
-        matched.count -= matched.special ? $(this).data(matched.type) : 1;
-        matched.matchesFound.push(this);
-        !newarr.globalskip && !matched.globalskip && globalmatches.push(this);
+        matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
+        matchParams.matchesFound.push(this);
+        !newarr.globalskip && !matchParams.globalskip && globalmatches.push(this);
         return false;
       }
     });
@@ -207,23 +207,23 @@ function checkReqs(arr, callback, callbackargs, level) {
         : (newarr.id + newarr.desc)
       );
     }
-    if (matched.count <= 0 && !matched.runinfull) {
-      return [true, "", level.length ? matched.matchesFound : globalmatches];
+    if (matchParams.count <= 0 && !matchParams.runinfull) {
+      return [true, "", level.length ? matchParams.matchesFound : globalmatches];
     }
   }
   // return two pieces of info: state and string
-  if (matched.count <= 0) {
-    return [true, "", level.length ? matched.matchesFound : globalmatches];
+  if (matchParams.count <= 0) {
+    return [true, "", level.length ? matchParams.matchesFound : globalmatches];
   }
   var tempstr = tempstr.join(", ");
   tempstr = deGIR(tempstr);
-  if (matched.special) {
-    tempstr = "(" + matched.count + " " + matched.desc + ": " +
+  if (matchParams.special) {
+    tempstr = "(" + matchParams.count + " " + matchParams.desc + ": " +
       (JSON.stringify(arr.slice(1))) + ")";
   } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
-    tempstr = "(" + matched.count + " " + matched.desc + ": " + tempstr + ")";
+    tempstr = "(" + matchParams.count + " " + matchParams.desc + ": " + tempstr + ")";
   }
-  return [false, tempstr, level.length ? matched.matchesFound : globalmatches];
+  return [false, tempstr, level.length ? matchParams.matchesFound : globalmatches];
 }
 
 function getMatchParams(arr) {
@@ -597,7 +597,7 @@ function getClass() {
 // Used for initial pageload when a hash is present:
 // takes in an array containing objects describing the classes.
 function getClasses(classarr, noreload) {
-  for (i = 0; i < classarr.length; i++) {
+  for (var i = 0; i < classarr.length; i++) {
     classFromJSON(classarr[i], 0);
   }
   addAllWires(noreload);
