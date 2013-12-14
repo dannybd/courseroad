@@ -586,7 +586,8 @@ if (isset($_POST['classes'])) {
 }
 
 if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
-  // This only happens when the check has failed, and the user isn't authenticated.
+  // This only happens when the check has failed, and the user isn't 
+  // authenticated.
   $_SESSION['triedcert'] = true;
   unset($_SESSION['trycert']);
   if (!isset($_SESSION['crhash'])) {
