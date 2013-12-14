@@ -5,8 +5,8 @@
 var Defaults = {
   requisiteCount: {
     count: 0,
-    type: "",
-    desc: "from",
+    type: '',
+    desc: 'from',
     special: 0,
     globalskip: 0,
     globalignore: 0,
@@ -15,14 +15,14 @@ var Defaults = {
   },
 
   requisiteClass: {
-    id: "",
-    desc: "",
+    id: '',
+    desc: '',
     skip: 0,
     coreq: 0,
     range: 0,
-    dept: "",
-    from: "",
-    to: "",
+    dept: '',
+    from: '',
+    to: '',
     globalskip: 0,
     globalignore: 0
   }
@@ -33,40 +33,26 @@ var globalmatches = [];
 /**
  * The idea here is to make it possible to loop recursively through
  * a requisite tree and perform callback actions when a class matches.
+ *
+ * Arguments:
+ * - arr: The array which stores the requisites. Usually recursively called. For
+ *     more information on arr, see majors.js.
+ * - callback: function to run on sucessfully matched classes, and can define
+ *     further criteria for filtering. Defaults to returning true.
+ * - callbackargs: Holds the arguments for callback. "cls" (with quotes) will be
+ *     replaced with the matched course number before being fed into callback.
+ * - level: Used for recursive calls of checkReqs
  */
-function checkReqs(arr, callback, callbackargs, level, test) {
-  callback = callback || function() {
-    // The default callback is just a return true
-    return true;
-  };
-  /**
-   * Holds the arguments for callback. "cls" (with quotes) will be replaced
-   * with the matched course number before being fed into callback.
-   */
+function checkReqs(arr, callback, callbackargs, level) {
+  callback = callback || function() { return true; };
   callbackargs = callbackargs || [];
-  test = test || true;
   if (level === undefined) {
-    level = []; // Keep track of recursion.
+    level = [];
     globalmatches = [];
   }
-  if (arr[0] === 0) {
-    /**
-     * allows "and" arrays to be prefixed with a 0 (easier)
-     * [0, "a", "b"] --> [2, "a", "b"];
-     */
-    arr[0] = arr.length - 1;
-  }
-  // Transform the default number form into an object
-  var matched = null;
-  if (typeof (arr[0]) == "number") {
-    matched = $.extend({}, Defaults.requisiteCount, {
-      count: parseInt(0 + arr[0])
-    });
-  } else {
-    matched = $.extend({}, Defaults.requisiteCount, arr[0]);
-  }
-  matched.ocount = 0 + matched.count;
-  matched.matches = [];
+  
+  var matched = getMatchParams(arr);
+  
   // Holds the unsatisfied requisites in a string for display to the user.
   var tempstr = [];
   var temp2 = true;
@@ -125,7 +111,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
       continue;
     }
     if (newarr.id === "Permission" && !user.needPermission) {
-      if (matched.ocount == arr.length - 1) {
+      if (matched.initialCount == arr.length - 1) {
         matched.count -= matched.special ? $(this).data(matched.type) : 1;
       }
       continue;
@@ -165,17 +151,17 @@ function checkReqs(arr, callback, callbackargs, level, test) {
         var temp2 = callback.apply(null, tempargs);
         if (temp2) {
           matched.count -= matched.special ? $(this).data(matched.type) : 1;
-          matched.matches.push(this);
+          matched.matchesFound.push(this);
           !newarr.globalskip && !matched.globalskip && globalmatches.push(this);
           newarr.globalskip && console.log("newarrskip", newarr, matched);
           matched.globalskip && console.log("matchedskip", newarr, matched);
         }
         if (matched.count <= 0 && !matched.runinfull) {
-          return [true, "", level.length ? matched.matches : globalmatches];
+          return [true, "", level.length ? matched.matchesFound : globalmatches];
         }
       });
       if (matched.count <= 0) {
-        return [true, "", level.length ? matched.matches : globalmatches];
+        return [true, "", level.length ? matched.matchesFound : globalmatches];
       }
       tempstr.push(
         (newarr.coreq === 1)
@@ -208,7 +194,7 @@ function checkReqs(arr, callback, callbackargs, level, test) {
       var temp2 = callback.apply(null, tempargs);
       if (temp2) {
         matched.count -= matched.special ? $(this).data(matched.type) : 1;
-        matched.matches.push(this);
+        matched.matchesFound.push(this);
         !newarr.globalskip && !matched.globalskip && globalmatches.push(this);
         return false;
       }
@@ -222,12 +208,12 @@ function checkReqs(arr, callback, callbackargs, level, test) {
       );
     }
     if (matched.count <= 0 && !matched.runinfull) {
-      return [true, "", level.length ? matched.matches : globalmatches];
+      return [true, "", level.length ? matched.matchesFound : globalmatches];
     }
   }
   // return two pieces of info: state and string
   if (matched.count <= 0) {
-    return [true, "", level.length ? matched.matches : globalmatches];
+    return [true, "", level.length ? matched.matchesFound : globalmatches];
   }
   var tempstr = tempstr.join(", ");
   tempstr = deGIR(tempstr);
@@ -237,7 +223,31 @@ function checkReqs(arr, callback, callbackargs, level, test) {
   } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
     tempstr = "(" + matched.count + " " + matched.desc + ": " + tempstr + ")";
   }
-  return [false, tempstr, level.length ? matched.matches : globalmatches];
+  return [false, tempstr, level.length ? matched.matchesFound : globalmatches];
+}
+
+function getMatchParams(arr) {
+  var matchedElement = arr[0];
+  
+  // Shortcut "all of the following" lists with a 0 in front:
+  // [0, "a", "b"] --> [2, "a", "b"];
+  if (matchedElement === 0) {
+    matchedElement = arr.length - 1;
+  }
+  
+  var matchedObject;
+  if (typeof matchedElement === 'number') {
+    matchedObject = $.extend({}, Defaults.requisiteCount, {
+      count: parseInt(0 + matchedElement)
+    });
+  } else {
+    matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
+  }
+  
+  matchedObject.initialCount = matchedObject.count;
+  matchedObject.matchesFound = [];
+  
+  return matchedObject;
 }
 
 /*** Course functions ***/
@@ -694,7 +704,8 @@ function buildMajor(arr, level) {
   tempstr = "<ul>\n" + tempstr + "<\/ul>\n";
   if (holdobj.special) {
     tempstr = holdobj.count + " " + holdobj.desc + ":\n" + tempstr;
-  } else if (level.length || (!level.length && (holdobj.count != arr.length - 1))) {
+  } else if (
+      level.length || (!level.length && (holdobj.count != arr.length - 1))) {
     // the != part find the "2 from following" strings
     tempstr = holdobj.count + " " + holdobj.desc + ":\n" + tempstr;
   }
@@ -813,7 +824,8 @@ function runBeforeUnload() {
 var userHashChange = true;
 window.onhashchange = function() {
   // userHashChange means that if the user types in a new hash in the URL,
-  // the browser will reload, but if the hash changes due to saving a new version or something it won't.
+  // the browser will reload, but if the hash changes due to saving a new 
+  // version or something it won't.
   userHashChange = !userHashChange || window.location.reload();
   document.title = "CourseRoad: " + window.location.hash.substr(1);
 }
@@ -1271,7 +1283,9 @@ var crSetup = function() {
         });
       }
       addAllWires();
-      $("#getnewclassid").autocomplete("option", "disabled", !user.autocomplete);
+      $("#getnewclassid").autocomplete(
+        "option", "disabled", !user.autocomplete
+      );
       $(window).off("beforeunload", runBeforeUnload);
     });
   });
