@@ -36,6 +36,11 @@ if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET; 
 }
 
+function redirect($clip) {
+  header("Location: $baseURL/$clip");
+  die();
+}
+
 // Beginnings of an external API hook. From a comma-separated list of classes,
 // a year value and a term, this will drop a set of classes into CourseRoad, to
 // be saved by the user.
@@ -64,8 +69,7 @@ if (isset($_GET['add_classes'])) {
 // but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
   $_SESSION['hash_to_use'] = $_GET['hash'];
-  header("Location: $baseURL/#" . urldecode($_GET['hash']));
-  die();
+  redirect('#' . urldecode($_GET['hash']));
 }
 
 // Store that we've been to index.php.
@@ -584,8 +588,7 @@ if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
   if (!isset($_SESSION['crhash'])) {
     $_SESSION['crhash'] = 'error401';
   }
-  header("Location: $baseURL/#{$_SESSION['crhash']}");
-  die();
+  redirect('#' . $_SESSION['crhash']);
 }
 
 // Returns the desired table of saved roads when the user is logged in
