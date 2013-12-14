@@ -36,8 +36,12 @@ if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET; 
 }
 
-function redirect($clip) {
-  header("Location: $baseURL/$clip");
+function redirect_hash($hash) {
+  global $baseURL;
+  $link = "$baseURL/#$hash";
+  header("Location: $link");
+  echo "Redirecting to <a href=\"$link\">$link</a>. ";
+  echo "Click on that link if you're not redirected.";
   die();
 }
 
@@ -69,7 +73,7 @@ if (isset($_GET['add_classes'])) {
 // but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
   $_SESSION['hash_to_use'] = $_GET['hash'];
-  redirect('#' . urldecode($_GET['hash']));
+  redirect_hash(urldecode($_GET['hash']));
 }
 
 // Store that we've been to index.php.
@@ -588,7 +592,7 @@ if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
   if (!isset($_SESSION['crhash'])) {
     $_SESSION['crhash'] = 'error401';
   }
-  redirect('#' . $_SESSION['crhash']);
+  redirect_hash($_SESSION['crhash']);
 }
 
 // Returns the desired table of saved roads when the user is logged in
