@@ -1034,7 +1034,7 @@ window.majors = {
     "20.380", [
       {
         count: 2,
-        desc: "from (Restricted Electives)"
+        desc: "from (Restricted Electives; at least one must be from Course 20)"
       },
       {
         id: "Biomechanics and Biophysics",
