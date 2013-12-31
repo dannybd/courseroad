@@ -8,10 +8,10 @@ var Defaults = {
     type: '',
     desc: 'from',
     special: 0,
-    globalskip: 0,
-    globalignore: 0,
+    globalMatchesSkip: 0, // Do not add classes to globalMatches
+    globalMatchesIgnore: 0, // Ignore whether classes are in globalMatches
     runinfull: 0,
-    pullmatches: 0
+    pullmatches: 0 // Hold onto match information for subtrees
   },
 
   requisiteClass: {
@@ -23,12 +23,10 @@ var Defaults = {
     dept: '',
     from: '',
     to: '',
-    globalskip: 0,
-    globalignore: 0
+    globalMatchesSkip: 0,
+    globalMatchesIgnore: 0
   }
 };
-
-var globalmatches = [];
 
 /**
  * The idea here is to make it possible to loop recursively through
@@ -39,42 +37,54 @@ var globalmatches = [];
  *     more information on arr, see majors.js.
  * - callback: function to run on sucessfully matched classes, and can define
  *     further criteria for filtering. Defaults to returning true.
- * - callbackargs: Holds the arguments for callback. "cls" (with quotes) will be
+ * - callbackArgs: Holds the arguments for callback. "cls" (with quotes) will be
  *     replaced with the matched course number before being fed into callback.
- * - level: Used for recursive calls of checkReqs
+ * - level: Used for recursive calls of checkRequisites. At the top level, it is
+ *     length 0, []. In each level of recursion, that level gets an array of
+ *     index values down through the recursion.
+ *
+ * Returns an array, as follows:
+ * [
+ *  boolean (were reqs met),
+ *  string (information on what requisites are still needed),
+ *  array of matched classes
+ * ]
  */
-function checkReqs(arr, callback, callbackargs, level) {
+var globalMatches = [];
+function checkRequisites(arr, callback, callbackArgs, level) {
   callback = callback || function() { return true; };
-  callbackargs = callbackargs || [];
+  callbackArgs = callbackArgs || [];
   if (level === undefined) {
     level = [];
-    globalmatches = [];
+    globalMatches = [];
   }
   
   var matchParams = getMatchParams(arr);
   
   // Holds the unsatisfied requisites in a string for display to the user.
-  var tempstr = [];
-  var temp2 = true;
+  var unsatisfiedRequisitesInfo = [];
   for (var i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
-      /**
-       * In case a sub-branch is inside this branch,
-       * we recursively solve that branch and use its result.
-       */
-      var req = checkReqs(arr[i], callback, callbackargs, level.concat([i]));
-      if (req[0] || matchParams.pullmatches) {
+      // In case a sub-branch is inside this branch, we recursively solve that 
+      // branch and use its result.
+      var requisiteBranch = checkRequisites(
+        arr[i], callback, callbackArgs, level.concat([i])
+      );
+      // If the branch is satisfied, or if we need to count something like
+      // [5, [2, 'foo', 'bar'], [4, 'baz', 'bam', bax', 'bay']] where the 4 from
+      // will not necessarily be satisfied while the 5 from will be, then count.
+      if (requisiteBranch[0] || matchParams.pullmatches) {
         if (matchParams.special) {
-          $(req[2]).each(function() {
+          $(requisiteBranch[2]).each(function() {
             matchParams.count -= $(this).data(matchParams.type);
           });
         } else {
           matchParams.count--;
         }
       }
-      // If the sub-branch matchParams its requirements
-      if (req[0]) {
-        var tempargs = callbackargs.slice();
+
+      if (requisiteBranch[0]) {
+        var tempargs = callbackArgs.slice();
         var clspos = $.inArray("cls", tempargs);
         if (clspos != -1) {
           tempargs[clspos] = $.extend({}, newarr, {
@@ -87,7 +97,7 @@ function checkReqs(arr, callback, callbackargs, level) {
         }
         var temp2 = callback.apply(null, tempargs);
       } else {
-        tempstr.push(req[1]);
+        unsatisfiedRequisitesInfo.push(requisiteBranch[1]);
       }
       continue;
     }
@@ -112,7 +122,9 @@ function checkReqs(arr, callback, callbackargs, level) {
     }
     if (newarr.id === "Permission" && !user.needPermission) {
       if (matchParams.initialCount == arr.length - 1) {
-        matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
+        matchParams.count -= (
+          matchParams.special ? $(this).data(matchParams.type) : 1
+        );
       }
       continue;
     }
@@ -132,38 +144,41 @@ function checkReqs(arr, callback, callbackargs, level) {
         }
         return false;
       }).each(function() {
-        if ($.inArray(this, globalmatches) != -1 && !matchParams.globalignore && !
-            newarr.globalignore) {
+        if (
+            $.inArray(this, globalMatches) != -1 && 
+            !matchParams.globalMatchesIgnore && 
+            !newarr.globalMatchesIgnore) {
           return true;
         }
-        var tempargs = callbackargs.slice();
-        var clspos = $.inArray("cls", tempargs);
-        if (clspos != -1) {
-          tempargs[clspos] = $.extend({}, newarr, {
-            div: $(this)
-          });
-        }
-        var lvlpos = $.inArray("lvl", tempargs);
-        if (lvlpos != -1) {
-          tempargs[lvlpos] = level.concat([i]);
-        }
         // Calls callback with tempargs as its arguments.
-        var temp2 = callback.apply(null, tempargs);
+        var temp2 = applyCallbackFn(
+          $(this), callback, callbackArgs, level, i, newarr
+        );
         if (temp2) {
-          matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
+          matchParams.count -= (
+            matchParams.special ? $(this).data(matchParams.type) : 1
+          );
           matchParams.matchesFound.push(this);
-          !newarr.globalskip && !matchParams.globalskip && globalmatches.push(this);
-          newarr.globalskip && console.log("newarrskip", newarr, matchParams);
-          matchParams.globalskip && console.log("matchParamsskip", newarr, matchParams);
+          !newarr.globalMatchesSkip 
+            && !matchParams.globalMatchesSkip 
+            && globalMatches.push(this);
+          newarr.globalMatchesSkip 
+            && console.log("newarrskip", newarr, matchParams);
+          matchParams.globalMatchesSkip 
+            && console.log("matchParamsskip", newarr, matchParams);
         }
         if (matchParams.count <= 0 && !matchParams.runinfull) {
-          return [true, "", level.length ? matchParams.matchesFound : globalmatches];
+          return [
+            true, "", level.length ? matchParams.matchesFound : globalMatches
+          ];
         }
       });
       if (matchParams.count <= 0) {
-        return [true, "", level.length ? matchParams.matchesFound : globalmatches];
+        return [
+          true, "", level.length ? matchParams.matchesFound : globalMatches
+        ];
       }
-      tempstr.push(
+      unsatisfiedRequisitesInfo.push(
         (newarr.coreq === 1)
         ? ("[" + newarr.id + newarr.desc + "]")
         : (newarr.id + newarr.desc)
@@ -175,79 +190,99 @@ function checkReqs(arr, callback, callbackargs, level) {
       newarr.id.toUpperCase().replace('.', '_').replace(':', '.')
     ));
     classmatches.each(function() {
-      if ($.inArray(this, globalmatches) != -1 && !matchParams.globalignore && !
-          newarr.globalignore) {
+      if (
+          $.inArray(this, globalMatches) != -1 
+          && !matchParams.globalMatchesIgnore 
+          && !newarr.globalMatchesIgnore) {
         return true;
       }
-      var tempargs = callbackargs.slice();
-      var clspos = $.inArray("cls", tempargs);
-      if (clspos != -1) {
-        tempargs[clspos] = $.extend({}, newarr, {
-          div: $(this)
-        });
-      }
-      var lvlpos = $.inArray("lvl", tempargs);
-      if (lvlpos != -1) {
-        tempargs[lvlpos] = level.concat([i]);
-      }
       // Calls callback with tempargs as its arguments.
-      var temp2 = callback.apply(null, tempargs);
+      var temp2 = applyCallbackFn(
+        $(this), callback, callbackArgs, level, i, newarr
+      );
       if (temp2) {
-        matchParams.count -= matchParams.special ? $(this).data(matchParams.type) : 1;
+        matchParams.count -= (
+          matchParams.special ? $(this).data(matchParams.type) : 1
+        );
         matchParams.matchesFound.push(this);
-        !newarr.globalskip && !matchParams.globalskip && globalmatches.push(this);
+        !newarr.globalMatchesSkip 
+          && !matchParams.globalMatchesSkip 
+          && globalMatches.push(this);
         return false;
       }
     });
     // If it's not a class, or callback failed, then we need to note that.
     if (!classmatches.length || !temp2) {
-      tempstr.push(
+      unsatisfiedRequisitesInfo.push(
         (newarr.coreq == 1)
         ? ("[" + newarr.id + newarr.desc + "]")
         : (newarr.id + newarr.desc)
       );
     }
     if (matchParams.count <= 0 && !matchParams.runinfull) {
-      return [true, "", level.length ? matchParams.matchesFound : globalmatches];
+      return [
+        true, "", level.length ? matchParams.matchesFound : globalMatches
+      ];
     }
   }
   // return two pieces of info: state and string
   if (matchParams.count <= 0) {
-    return [true, "", level.length ? matchParams.matchesFound : globalmatches];
+    return [true, "", level.length ? matchParams.matchesFound : globalMatches];
   }
-  var tempstr = tempstr.join(", ");
-  tempstr = deGIR(tempstr);
+  var unsatisfiedRequisitesInfo = unsatisfiedRequisitesInfo.join(", ");
+  unsatisfiedRequisitesInfo = deGIR(unsatisfiedRequisitesInfo);
   if (matchParams.special) {
-    tempstr = "(" + matchParams.count + " " + matchParams.desc + ": " +
-      (JSON.stringify(arr.slice(1))) + ")";
+    unsatisfiedRequisitesInfo = (
+      "(" + matchParams.count + " " + matchParams.desc + ": " +
+      (JSON.stringify(arr.slice(1))) + ")"
+    );
   } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
-    tempstr = "(" + matchParams.count + " " + matchParams.desc + ": " + tempstr + ")";
+    unsatisfiedRequisitesInfo = (
+      "(" + matchParams.count + " " + matchParams.desc + ": " + 
+      unsatisfiedRequisitesInfo + ")"
+    );
   }
-  return [false, tempstr, level.length ? matchParams.matchesFound : globalmatches];
+  return [
+    false, 
+    unsatisfiedRequisitesInfo, 
+    level.length ? matchParams.matchesFound : globalMatches
+  ];
 }
 
 function getMatchParams(arr) {
   var matchedElement = arr[0];
   
-  // Shortcut "all of the following" lists with a 0 in front:
-  // [0, "a", "b"] --> [2, "a", "b"];
-  if (matchedElement === 0) {
-    matchedElement = arr.length - 1;
-  }
-  
-  var matchedObject;
   if (typeof matchedElement === 'number') {
-    matchedObject = $.extend({}, Defaults.requisiteCount, {
-      count: parseInt(0 + matchedElement)
-    });
-  } else {
-    matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
+    // Shortcut "all of the following" lists with a 0 in front:
+    // [0, "a", "b"] --> [2, "a", "b"];
+    if (matchedElement === 0) {
+      matchedElement = arr.length - 1;
+    }
+    matchedElement = { count: parseInt(0 + matchedElement) };
   }
   
+  var matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
   matchedObject.initialCount = matchedObject.count;
   matchedObject.matchesFound = [];
   
   return matchedObject;
+}
+
+function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
+  // Copye args
+  var tempArgs = callbackArgs.slice();
+  var clsPosition = $.inArray("cls", tempArgs);
+  if (clsPosition != -1) {
+    tempArgs[clsPosition] = $.extend({}, newarr, {
+      div: obj
+    });
+  }
+  var lvlPosition = $.inArray("lvl", tempArgs);
+  if (lvlPosition != -1) {
+    tempArgs[lvlPosition] = level.concat([i]);
+  }
+  // Calls callback with tempArgs as its arguments.
+  return callback.apply(null, tempArgs);
 }
 
 /*** Course functions ***/
@@ -321,7 +356,7 @@ function addWires(div, addwires) {
   data.terminals.wires = [];
   data.reqstatus = true;
   if (data.reqs) {
-    var reqcheck = checkReqs(data.reqs, newWire, [div, "cls"]);
+    var reqcheck = checkRequisites(data.reqs, newWire, [div, "cls"]);
     data.reqstatus = reqcheck[0];
     var tempstr = reqcheck[1];
     if (data.reqstatus || data.override || !data.classterm) {
@@ -630,7 +665,7 @@ function checkMajor(selector) {
     "<a href=\"mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20" +
     val + "\">here<\/a>.<\/span>");
   draggableChecklist();
-  checkReqs(majors[val], checkOff, [div, "lvl", "cls"]);
+  checkRequisites(majors[val], checkOff, [div, "lvl", "cls"]);
 }
 
 function buildMajor(arr, level) {
