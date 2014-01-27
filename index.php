@@ -824,33 +824,6 @@ header('Content-type: text/html; charset=utf-8');
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <link rel="stylesheet" type="text/css" href="css/cr.css<?= $nocache ?>">
-  <!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-  <script src="js/konami.js<?= $nocache ?>"></script>
-  <script src="js/majors.js<?= $nocache ?>"></script>
-  <script src="js/cr.js<?= $nocache ?>"></script>
-  <!--script src="/js/d3.js"></script-->
-  <script>
-    var _gaq=[["_setAccount","UA-31018454-1"],
-    ["_trackPageview",location.pathname+location.search+location.hash]];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.async=1;g.src="https://ssl.google-analytics.com/ga.js";
-    s.parentNode.insertBefore(g,s)}(document,"script"));
-    // These are not trusted variables, but they do aid in displaying 
-    // different (non-secure) things based on login status.
-    var loggedin = <?= intval($loggedin) ?>;
-    var triedlogin = <?= intval($_SESSION['triedcert']) ?>; 
-    var user = {
-      classYear: <?= $_SESSION['user']['class_year'] ?>, 
-      viewReqLines: <?= $_SESSION['user']['view_req_lines'] ?>, 
-      autocomplete: <?= $_SESSION['user']['autocomplete'] ?>, 
-      needPermission: <?= $_SESSION['user']['need_permission'] ?>
-    };
-    var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
-    var hash_to_use = $.parseJSON('<?= $hash_to_use ?>') || 0;
-    $(crSetup);
-  </script>
 </head>
 <body>
 <div id="leftbar">
@@ -1390,10 +1363,36 @@ header('Content-type: text/html; charset=utf-8');
   </div>
   <input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
+<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 <!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
 <!--[if gte IE 9]><script>ie9=1;</script><![endif]-->
-<script src="/js/json2-min.js"></script>
-<script src="/js/wireit-min.js"></script>
+<!--[if !(IE)]><!--><script type="text/javascript">Function('/*@cc_on return document.documentMode===10@*/')()&&(ie9=1);</script><!--<![endif]-->
+<script src="js/wireit-min.js"></script>
+<script src="js/majors.js<?= $nocache ?>"></script>
+<script src="js/cr.js<?= $nocache ?>"></script>
+<!--script src="/js/d3.js"></script-->
+<script>
+  var _gaq=[["_setAccount","UA-31018454-1"],
+  ["_trackPageview",location.pathname+location.search+location.hash]];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.async=1;g.src="https://ssl.google-analytics.com/ga.js";
+  s.parentNode.insertBefore(g,s)}(document,"script"));
+  // These are not trusted variables, but they do aid in displaying 
+  // different (non-secure) things based on login status.
+  var loggedin = <?= intval($loggedin) ?>;
+  var triedlogin = <?= intval($_SESSION['triedcert']) ?>; 
+  var user = {
+    classYear: <?= $_SESSION['user']['class_year'] ?>, 
+    viewReqLines: <?= $_SESSION['user']['view_req_lines'] ?>, 
+    autocomplete: <?= $_SESSION['user']['autocomplete'] ?>, 
+    needPermission: <?= $_SESSION['user']['need_permission'] ?>
+  };
+  var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
+  var hash_to_use = $.parseJSON('<?= $hash_to_use ?>') || 0;
+  $(crSetup);
+</script>
 </body>
 </html>
