@@ -1,24 +1,24 @@
-html{ 
+html {
 	overflow-y:scroll;
 }
-body{
+body {
+	background-color: #DDD;
 	font-family: Arial;
 	font-size: 10pt;
-	background-color: #DDD;
 	margin: 0;
-	padding: 0;
 	min-width: 950px;
+	padding: 0;
 }
-.no-js #viewroads, .no-js #help, .no-js #usersettings, .no-js #trash img{
+.no-js #viewroads, .no-js #help, .no-js #usersettings, .no-js #trash img {
   display: none;
 }
-.no-js #trash{
+.no-js #trash {
   background-color: rgba(255, 200, 200, 0.5);
   left: 0;
   width: 100%;
   opacity: 1;
 }
-.no-js #trash::after{
+.no-js #trash::after {
   content: 'Sorry, CourseRoad requires Javascript enabled to work';
   font-size: 26pt;
   font-weight: bold;
@@ -26,107 +26,106 @@ body{
   position: relative;
   top: 50%;
 }
-.ui-dialog-titlebar{
+.ui-dialog-titlebar {
 	display: none;
 }
-.my-dialog{
-	width: auto;
-	min-height: 146px;
-	height: auto;
+.my-dialog {
 	border: 5px solid #444;
 	border-radius: 12px;
+	height: auto;
+	min-height: 146px;
+	width: auto;
 }
-.my-dialog-header{
+.my-dialog-header {
 	margin: 0;
 	padding: 5px;
 }
-.my-dialog-close{
+.my-dialog-close {
 	float:right;
 	margin: 0;
 	padding: 5px;
 }
-.ui-resizable-handle{
+.ui-resizable-handle {
 	display: none !important;
 }
-#savedroads{
+#savedroads {
 	height: 400px;
 	overflow-y: scroll;
 	padding: 5px;
 }
-#savedroads td{
+#savedroads td {
 	padding-bottom: 4px;
 	text-align: center;
 }
-.saved-roads-hash, .saved-roads-comment{
-	word-wrap: break-word;
+.saved-roads-hash, .saved-roads-comment {
+	display: inline-block;
 	max-width: 100px;
+	word-wrap: break-word;
+}
+.saved-roads-edit-hash, .saved-roads-edit-comment, .deleteroad {
 	display: inline-block;
 }
-.saved-roads-edit-hash, .saved-roads-edit-comment, .deleteroad{
-	display: inline-block;
-}
-span.newload{
+span.newload {
 	color: grey;
 }
-.ui-widget-overlay{
-	position: absolute;
-	top: 0;
-	left: 0;
+.ui-widget-overlay {
 	background-color: #BBB;
 	filter: alpha(opacity=40);
+	left: 0;
 	opacity: 0.4;
+	position: absolute;
+	top: 0;
 }
-#accordion{
+#accordion {
 	max-height: 500px;
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
-.ui-accordion-header{
+.ui-accordion-header {
 	background-color: #DDD;
-	padding: 5px;
-	margin: 0;
 	border: 2px solid #B8B8B8;
 	border-radius: 6px;
-	-webkit-border-radius: 6px;
-}
-.ui-accordion-header a{
-	text-decoration: none;
-	color: black;
-}
-.ui-accordion-content{
+	margin: 0;
 	padding: 5px;
 }
-#usersettings_div{
+.ui-accordion-header a {
+	color: black;
+	text-decoration: none;
+}
+.ui-accordion-content {
+	padding: 5px;
+}
+#usersettings_div {
 	padding: 0px 10px;
 }
-#usersettings_class_year{
+#usersettings_class_year {
 	width: 30px;
 }
-#usersettings_save{
+#usersettings_save {
 	margin-left: 10px;
 }
-#usersettings_saved{
+#usersettings_saved {
 	display: none;
 	padding-left: 5px;
 }
-#leftbar{
-	position: fixed;
+#leftbar {
+	background-color: #A0A0A0;
+	border-right: 1px solid;
 	height: 100%;
+	min-height: 350px;
+	position: fixed;
 	width: 250px;
 	z-index: 6;
-	border-right: 1px solid;
-	background-color: #A0A0A0;
-	min-height: 350px;
 }
-#leftbar>div{
+#leftbar>div {
 	left: 4px;
 	position: absolute;
 }
-#getnewclass{
+#getnewclass {
 	text-align: center;
 	width: 242px !important;
 }
-#getnewclass > div{
+#getnewclass > div {
 	height: 92px;
 	text-align: center;
 }
@@ -357,147 +356,147 @@ button.changeclassterm span{ display: block; }
 .infotabs-about-subheader{ font-size: 8pt !important; padding-bottom: 5px; }
 #userlogin, #showusersettings{ margin-top: 5px; }
 
-#getnewclassid{
+#getnewclassid {
 	width: 60px;
 }
-#getnewclassname{
+#getnewclassname {
 	width: 100px;
 }
-#getnewclassunits{
-	width: 16px;
+#getnewclassunits {
 	text-align: center;
+	width: 16px;
 }
-.getnewclasstypes{
+.getnewclasstypes {
 	display: none;
 }
-.getnewclasstypes.visible{
+.getnewclasstypes.visible {
 	display: inline-block !important;
 }
-#getnewclassterm{
+#getnewclassterm {
 	width: 150px;
 }
-.ui-autocomplete{
-	list-style: none;
+.ui-autocomplete {
 	background-color: #FFF;
 	border: 1px solid #AAA;
+	list-style: none;
 	padding-left: 0px;
-	width: 59px;
 	position: absolute;
 	top: 10px;
+	width: 59px;
 }
-.ui-menu-item{
-	width: 100%;
+.ui-menu-item {
 	text-align: left;
+	width: 100%;
 }
-.ui-state-hover{
+.ui-state-hover {
 	background-color: #D8D8D8;
-	display: block;
 	cursor: pointer;
+	display: block;
 }
 
-.leftbarholder, .ui-tabs .ui-state-active{
-	border: 1px solid #5E5E5E !important;
+.leftbarholder, .ui-tabs .ui-state-active {
 	background-color: #E0E0E0 !important;
+	border: 1px solid #5E5E5E !important;
 }
 
-#COREchecker{
-	overflow-y: auto;
+#COREchecker {
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
-	top: 142px;
 	bottom: 210px;
+	overflow-y: auto;
 	padding: 2px;
+	top: 142px;
 	width: 236px;
 }
-select.majorminor{
+select.majorminor {
 	width: 200px;
 }
-div.majorminor>ul{
+div.majorminor > ul {
 	margin: 0px;
 	padding: 0px;
 	padding-left: 10px;
 }
-div.majorminor ul{
+div.majorminor ul {
 	list-style: none;
 }
-.checkbox1 span, span.corecheck span{
-	opacity: 0;
+.checkbox1 span, span.corecheck span {
 	filter: alpha(opacity=0);
+	opacity: 0;
 }
-.checkbox1.chk span, span.corecheck.used span{
-	opacity: 1 !important;
+.checkbox1.chk span, span.corecheck.used span {
 	filter: alpha(opacity=100) !important;
+	opacity: 1 !important;
 }
-.checkbox1_text.ui-draggable-dragging:before{
+.checkbox1_text.ui-draggable-dragging:before {
 	content: "Add ";
 }
-.checkbox1_text.ui-draggable-dragging{
+.checkbox1_text.ui-draggable-dragging {
 	font-size: 12pt;
 }
-.checkbox1_text.ui-draggable-dragging:after{
+.checkbox1_text.ui-draggable-dragging:after {
 	content: " to " attr(data-term);
 }
-#overrider{
-	bottom: 185px;
+#overrider {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
-	width: 238px;
+	bottom: 185px;
 	padding-left: 2px;
+	width: 238px;
 }
-#overrider span{
+#overrider span {
 	filter: alpha(opacity=0);
 	opacity: 0;
 }
-#nowreading{
+#nowreading {
+	border-bottom-left-radius: 4px;
 	bottom: 4px;
-	width: 238px;
 	height: 180px;
 	overflow-y: auto;
-	border-bottom-left-radius: 4px;
 	padding-left: 2px;
+	width: 238px;
 }
-#nowreading p{
+#nowreading p {
 	display: inline;
 }
-#nowreading p.infounits{
+#nowreading p.infounits {
 	font-style: italic;
 }
-#nowreading a{
+#nowreading a {
 	text-decoration: none;
 }
-#rightbar{
+#rightbar {
 	background-color: #FDFDFD;
 	height: 100%;
-	width: auto;
 	margin-left: 251px;
+	width: auto;
 }
-.year{
-	width: 100%;
-	height: auto;
+.year {
 	border-top: 10px solid #444;
+	height: auto;
+	width: 100%;
 }
-.year:nth-child(even){
+.year:nth-child(even) {
 	background-color: #EEE;
 }
-.supersenior.hidden{
+.supersenior.hidden {
 	display: none;
 }
-.yearname{
-	position: absolute;
-	font-variant: small-caps;
+.yearname {
 	font-size: 20px;
-	width: 285px;
+	font-variant: small-caps;
 	overflow: hidden;
+	position: absolute;
+	width: 285px;
 }
-.yearname.showsummer{
+.yearname.showsummer {
 	width: 485px;
 }
-.yearname span{
-	display: inline-block;
-	width: 285px;
-	margin-top: 100%;
+.yearname span {
 	cursor: default;
+	display: inline-block;
+	margin-top: 100%;
 	text-align: center;
+	width: 285px;
 	-webkit-transform-origin: top left;
 	-webkit-transform: rotate(-90deg);
 	-moz-transform-origin: top left;
@@ -507,39 +506,39 @@ div.majorminor ul{
 	-o-transform-origin: top left;
 	-o-transform: rotate(-90deg);
 }
-.yearname.showsummer span{
+.yearname.showsummer span {
 	width: 485px;
 }
-.term{
-	width: auto;
+.term {
 	height: auto;
-	min-height: 59px;
 	margin-left: 25px;
+	min-height: 59px;
 	padding: 20px;
 	text-align: center;
+	width: auto;
 }
-.term.notOKterm{
+.term.notOKterm {
 	background-color: #EEE !important;
 	filter: alpha(opacity=55);
 	opacity: 0.55;
 
 }
-.year:nth-child(odd) .term.notOKterm{
+.year:nth-child(odd) .term.notOKterm {
 	background-color: #FDFDFD !important;
 }
-.termname{
+.termname {
+	font-size: 17px;
+	font-variant: small-caps;
+	margin-left: -20px;
 	position: absolute;
 	width: 59px;
-	margin-left: -20px;
-	font-variant: small-caps;
-	font-size: 17px;
 }
-.termname span{
-	display: inline-block;
-	width: 59px;
-	margin-top: 100%;
+.termname span {
 	cursor: default;
+	display: inline-block;
+	margin-top: 100%;
 	text-align: center;
+	width: 59px;
 	-webkit-transform-origin: top left;
 	-webkit-transform: rotate(-90deg);
 	-moz-transform-origin: top left;
@@ -549,236 +548,236 @@ div.majorminor ul{
 	-o-transform-origin: top left;
 	-o-transform: rotate(-90deg);
 }
-.termname span a{
-	text-decoration: none;
+.termname span a {
 	color: #000;
+	text-decoration: none;
 }
-.credit{
-	min-height: 45px;
-	margin-left: 0;
+.credit {
 	background-color: #7A7A7A;
+	margin-left: 0;
+	min-height: 45px;
 	padding-left: 45px;
 }
-.credit .termname{
-	width: 45px;
+.credit .termname {
 	margin-left: -40px;
-}
-.credit .termname span{
 	width: 45px;
 }
-.fall{
+.credit .termname span {
+	width: 45px;
+}
+.fall {
 	background-color: #FEB;
 }
-.iap{
+.iap {
 	background-color: #E8F9FF;
-	min-height: 45px;
 	border-top: 1px dotted #888;
+	min-height: 45px;
 }
-.iap .termname, .iap .termname span{
+.iap .termname, .iap .termname span {
 	width: 45px;
 }
-.spring{
+.spring {
 	background-color: #DFD;
 	border-top: 1px dotted #888;
 }
-.summer{
-	display: none;
+.summer {
 	background-color: #FFFFAE;
-	height: 45px;
 	border-top: 1px dotted #888;
+	display: none;
+	height: 45px;
 }
-.summer .termname{ 
+.summer .termname {
 	display: none;
 	width: 45px;
 }
-.summer .termname span{
+.summer .termname span {
 	width: 45px;
 }
-.bubble{
+.bubble {
 	background-color: #EEE;
 	border: 2px solid #B8B8B8;
 	border-radius: 6px;
 }
-.loaders:active{
+.loaders:active {
 	background-color: #DDD;
 }
-.classdiv{
-	width: 130px;
-	position: relative;
+.classdiv {
+	background-color: #FCC;
+	display: inline-block;
+	filter: alpha(opacity=95);
 	margin: 0px 10px 10px;
 	min-height: 3em;
-	display: inline-block;
-	text-align: left;
-	z-index: 5;
-	filter: alpha(opacity=95);
 	opacity: 0.95;
-	background-color: #FCC;
+	position: relative;
+	text-align: left;
+	width: 130px;
+	z-index: 5;
 }
-.classdivgood{
+.classdivgood {
 	background-color: #CFC;
 }
-.custom{
+.custom {
 	background-color: #B2B2FF;
 }
-.classdivlow{
+.classdivlow {
 	filter: alpha(opacity=60);
 	opacity: 0.6;
 }
-.classdivhigh{
+.classdivhigh {
 	border: 4px solid #FAF;
 	margin: -2px 8px 8px;
 }
-.classdivoverride{
+.classdivoverride {
 	border-style: dotted;
 }
-div.WireIt-Terminal{
-	position: absolute;
+div.WireIt-Terminal {
+	cursor: default;
+	height: 1px;
+	filter: alpha(opacity=0);
 	margin-left: 52px;
 	margin-top: -33px;
-	filter: alpha(opacity=0);
 	opacity: 0;
-	width: 1px;
-	height: 1px;
-	cursor: default;
-}
-.WireIt-Wire{
 	position: absolute;
+	width: 1px;
+}
+.WireIt-Wire {
 	border: 0;
-	z-index: 0;
 	filter: alpha(opacity=70);
 	opacity: 0.7;
+	position: absolute;
+	z-index: 0;
 }
-.WireIt-Wire-low{
+.WireIt-Wire-low {
 	filter: alpha(opacity=10);
 	opacity: 0.1;
 }
-body.no-wires .WireIt-Wire{
+body.no-wires .WireIt-Wire {
 	display: none !important;
 }
-.classdivlabel{
-	white-space: nowrap;
-	padding: 2px;
-	cursor: default;
+.classdivlabel {
 	border-bottom: 1px solid #CCC;
+	cursor: default;
+	padding: 2px;
+	white-space: nowrap;
 }
-.classdivterminal{
+.classdivterminal {
 	position: absolute;
 }
-.classdivcourse{
+.classdivcourse {
 	float: left;
 	font-weight: bold;
 }
-.classdivtitle{
+.classdivtitle {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.custom .classdivtitle{
+.custom .classdivtitle {
 	text-align: center;
 }
-.classdivinfo{
+.classdivinfo {
 	font-size: 8pt;
-	text-align: center;
-	white-space: nowrap;
 	overflow: hidden;
+	text-align: center;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
-.classdivinfo div{
+.classdivinfo div {
 	padding: 4px 0px 4px;
 }
-.classdivyear{
+.classdivyear {
+	border-right: 1px solid #CCC;
 	float: left;
 	width: 30%;
-	border-right: 1px solid #CCC;
 }
-.classdivyear select{
+.classdivyear select {
 	font-size: 8pt;
 	margin: -3px;
 }
 
-.doge{
+.doge {
   background-image: url(http://i.imgur.com/MebfQnj.jpg);
   background-size: cover;
 }
 
-.doge > * {
+.doge > *  {
   opacity: 0.65;
 }
 
-.ui-sortable-placeholder { 
+.ui-sortable-placeholder  {
+	background-color: #EEE;
 	border: 1px dotted black; 
 	border-radius: 6px;
-	margin: 0px 12px -6px;
 	-webkit-border-radius: 6px;
-	background-color: #EEE;
-	filter: alpha(opacity=30);
-	opacity: 0.3;
-	visibility: visible !important; 
-	min-height: 3em !important; 
-	width: 130px !important;
 	display: inline-block;
+	filter: alpha(opacity=30);
+	margin: 0px 12px -6px;
+	min-height: 3em !important; 
+	opacity: 0.3;
 	text-align: left;
+	visibility: visible !important; 
+	width: 130px !important;
 }
-.ui-sortable-placeholder * { 
+.ui-sortable-placeholder *  {
 	visibility: hidden; 
 }
 
-#trash{
-	position: fixed;
-	top: 0;
-	height: 100%;
+#trash {
 	background-color: #DDD;
-	text-align: center;
-	z-index: 10;
+	height: 100%;
 	float: right;
+	position: fixed;
+	text-align: center;
+	top: 0;
+	z-index: 10;
 }
-.trashdefault{
-	right: -40px;
-	width: 40px;
+.trashdefault {
 	height: 100%;
 	filter: alpha(opacity=0);
 	opacity: 0.0;
+	right: -40px;
+	width: 40px;
 }
-.trashon{
-	right: 0px;
+.trashon {
 	filter: alpha(opacity=70);
 	opacity: 0.7;
+	right: 0px;
 }
-.trashhover{
-	width: 80px;
+.trashhover {
 	filter: alpha(opacity=100);
 	opacity: 1;
+	width: 80px;
 }
-.trashdefault>*{
-	position: absolute;
-	left: 0px;
-	top: 50%;
-	margin-top: -20px;
-	width:40px;
+.trashdefault>* {
 	height:	40px;
+	left: 0px;
+	margin-top: -20px;
+	position: absolute;
+	top: 50%;
+	width:40px;
 }
-img.trashhover,svg.trashhover{
+img.trashhover,svg.trashhover {
+	height: 80px;
 	margin-top: -40px;
 	width: 80px;
-	height: 80px;
 }
-#loading{
-	display: none;
-	position: fixed;
-	top: 30%;
-	left: 50%;
-	width: 200px;
-	filter: alpha(opacity=70);
-	opacity: 0.7;
-	text-align: center;
+#loading {
 	border-radius: 12px;
+	display: none;
+	filter: alpha(opacity=70);
+	left: 50%;
+	opacity: 0.7;
+	position: fixed;
+	text-align: center;
+	top: 30%;
+	width: 200px;
 	z-index: 10;
 }
-.flakyCSS{
+.flakyCSS {
 	margin: 1px !important;
 }
 
 /*** Print CSS ***/
-@media print{
+@media print {
 	@page{ margin: 0.5cm; }
 	* { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
 	body{ border: 1px solid black !important; }
@@ -796,45 +795,45 @@ img.trashhover,svg.trashhover{
 /*** End Print CSS ***/
 
 /*** Begin Mobile CSS ***/
-@media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px){ 
+@media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px) {
 	#leftbar{ position: absolute; }
 }
 /*** End Mobile CSS ***/
 
 /*** IE7/8 CSS ***/
 .lte8 #leftbar{ left: 0px; }
-.ie7 #getnewclass > ul, .ie7 .ui-tabs .ui-tabs-nav, .ie7 .ui-tabs .ui-tabs-nav .ui-state-default{
-	list-style-image: none;
+.ie7 #getnewclass > ul, .ie7 .ui-tabs .ui-tabs-nav, .ie7 .ui-tabs .ui-tabs-nav .ui-state-default {
 	display: inline;
+	list-style-image: none;
 	zoom: 1;
 }
 .ie7 .ui-button { margin: -3px 0px -1px !important;}
 .ie7 #mapcerts{ width: 200px !important; }
-.lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior{
+.lte8 .year.freshman, .lte8 .year.junior, .lte8 .year.supersenior {
 	background-color: #DDD;
 }
-.lte8 .yearname{
+.lte8 .yearname {
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	left: 250px;
-	width: auto;
 	margin: 0px;
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	width: auto;
 }
-.lte8 .termname{
+.lte8 .termname {
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	left: 280px;
-	width: auto;
 	margin: 0px;
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	width: auto;
 }
-.lte8 .credit .termname{
+.lte8 .credit .termname {
 	margin-left: -20px;
 }
-.lte8 .yearname span{
+.lte8 .yearname span {
 	margin-top: 0px;
 }
-.lte8 .termname span{
+.lte8 .termname span {
 	margin-top: 0px;
 }
-.ie7 .saved-roads-hash, .ie7 .saved-roads-comment, .ie7 .saved-roads-edit-hash, .ie7 .saved-roads-edit-comment, .ie7 .deleteroad, .ie7 .getnewclasstypes.visible, .ie7 .classdiv, .ie7 .ui-sortable-placeholder{
+.ie7 .saved-roads-hash, .ie7 .saved-roads-comment, .ie7 .saved-roads-edit-hash, .ie7 .saved-roads-edit-comment, .ie7 .deleteroad, .ie7 .getnewclasstypes.visible, .ie7 .classdiv, .ie7 .ui-sortable-placeholder {
 	display: inline !important;
 	zoom: 1;
 }
