@@ -815,15 +815,17 @@ $nocache = $nocache ? '?nocache=' . time() : '?v3.0';
 header('Content-type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html>
-<!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8"><![endif]-->
-<!--[if IE 8]><html lang="en-us" class="ie ie8 lte9 lte8"><![endif]-->
-<!--[if IE 9]><html lang="en-us" class="ie ie9 lte9"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us"><!--<![endif]-->
+<!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8 no-js"><![endif]-->
+<!--[if IE 8]><html lang="en-us" class="ie ie8 lte9 lte8 no-js"><![endif]-->
+<!--[if IE 9]><html lang="en-us" class="ie ie9 lte9 no-js"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us" class="no-js"><!--<![endif]-->
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
+  <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="css/cr.css<?= $nocache ?>">
+  <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
 <body>
 <div id="leftbar">

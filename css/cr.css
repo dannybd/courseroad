@@ -9,6 +9,23 @@ body{
 	padding: 0;
 	min-width: 950px;
 }
+.no-js #viewroads, .no-js #help, .no-js #usersettings, .no-js #trash img{
+  display: none;
+}
+.no-js #trash{
+  background-color: rgba(255, 200, 200, 0.5);
+  left: 0;
+  width: 100%;
+  opacity: 1;
+}
+.no-js #trash::after{
+  content: 'Sorry, CourseRoad requires Javascript enabled to work';
+  font-size: 26pt;
+  font-weight: bold;
+  left: 0;
+  position: relative;
+  top: 50%;
+}
 .ui-dialog-titlebar{
 	display: none;
 }
