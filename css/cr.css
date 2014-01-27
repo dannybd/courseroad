@@ -19,7 +19,7 @@ body {
   opacity: 1;
 }
 .no-js #trash::after {
-  content: 'Sorry, CourseRoad requires Javascript enabled to work';
+  content: 'Sorry, CourseRoad requires Javascript enabled to work :(';
   font-size: 26pt;
   font-weight: bold;
   left: 0;
