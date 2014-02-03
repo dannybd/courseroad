@@ -60,7 +60,7 @@ window.majors = {
       {
         id: "2.02B",
         desc: " (Cannot also be used in substitution above)",
-        globalignore: 1
+        globalMatchesIgnore: 1
     }]],
     [1, "2.003", [2, "2.03", "2.031"]], "2.004", [1, "2.005", [3, "2.05",
       "2.051", "2.06"
@@ -129,7 +129,7 @@ window.majors = {
       {
         id: "2.02B",
         desc: " (Cannot also be used in substitution above)",
-        globalignore: 1
+        globalMatchesIgnore: 1
     }]],
     [1, "2.003", [2, "2.03", "2.031"]], "2.004", [1, "2.005", [3, "2.05",
       "2.051", "2.06"
@@ -150,7 +150,7 @@ window.majors = {
       {
         count: 2,
         desc: "(for CI-M) from",
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "3.014", "3.042", "3.155"], "3.012", "3.014", [1, "18.03", "18.034",
       "3.016"
     ],
@@ -276,14 +276,14 @@ window.majors = {
       [2,
         {
           id: "6.021",
-          globalskip: 1
+          globalMatchesSkip: 1
       }, "6.022"]
     ],
     [3, "6.002", "6.003", "6.004", "6.007"],
     [
       {
         count: 3,
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "6.011", "6.012", "6.013", "6.021"],
     [
       {
@@ -301,8 +301,8 @@ window.majors = {
       {
         count: 1,
         desc: "(for CI-M) from",
-        globalskip: 1,
-        globalignore: 1
+        globalMatchesSkip: 1,
+        globalMatchesIgnore: 1
       }, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152",
       "6.161", "6.163", "6.173", "6.182", "6.805"
     ]
@@ -324,14 +324,14 @@ window.majors = {
     [
       {
         count: 1,
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "6.011", "6.012", "6.013", "6.021", "6.034", "6.046", "6.033"],
     [
       {
         count: 1,
         desc: "(for CI-M) from",
-        globalskip: 1,
-        globalignore: 1
+        globalMatchesSkip: 1,
+        globalMatchesIgnore: 1
       }, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152",
       "6.161", "6.163", "6.173", "6.182", "6.805"
     ],
@@ -354,8 +354,8 @@ window.majors = {
       [2,
         {
           id: "6.021",
-          globalskip: 1,
-          globalignore: 1
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
       }, "6.022"]
     ],
     [
@@ -383,7 +383,7 @@ window.majors = {
     "6.042", [
       {
         count: 1,
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "6.141", "6.170", "6.172", "6.173", "6.035",
       {
         id: "6.828",
@@ -393,7 +393,7 @@ window.majors = {
     [
       {
         count: 3,
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "6.033", "6.034", "6.046"],
     [
       {
@@ -498,8 +498,8 @@ window.majors = {
       {
         count: 2,
         desc: "(CI-M) from",
-        globalskip: 1,
-        globalignore: 1
+        globalMatchesSkip: 1,
+        globalMatchesIgnore: 1
     }, "8.06", "8.13", "8.225", "8.226", "8.287"]
   ],
 
@@ -857,7 +857,7 @@ window.majors = {
       {
         count: 8,
         desc: "(in total) from",
-        globalskip: 1,
+        globalMatchesSkip: 1,
         runinfull: 1
     },
       {
@@ -870,7 +870,7 @@ window.majors = {
     [
       {
         count: 6,
-        globalskip: 1,
+        globalMatchesSkip: 1,
         runinfull: 1
     },
       {
@@ -905,7 +905,7 @@ window.majors = {
     [1,
       {
         id: "18.310",
-        globalignore: 1
+        globalMatchesIgnore: 1
     }, "18.310A"], "18.311", [1, "18.04", "18.112"],
     [1, "18.06", "18.700"],
     {
@@ -946,36 +946,36 @@ window.majors = {
       {
         count: 1,
         desc: "(for CI-M) from",
-        globalignore: 1,
-        globalskip: 1
+        globalMatchesIgnore: 1,
+        globalMatchesSkip: 1
       },
       [
         {
           count: 2,
-          globalignore: 1,
-          globalskip: 1
+          globalMatchesIgnore: 1,
+          globalMatchesSkip: 1
         }, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504", "18.704",
         "18.784", "18.821", "18.904", "18.994"
       ],
       [
         {
           count: 2,
-          globalignore: 1,
-          globalskip: 1
+          globalMatchesIgnore: 1,
+          globalMatchesSkip: 1
         },
         [
           {
             count: 1,
-            globalignore: 1,
-            globalskip: 1
+            globalMatchesIgnore: 1,
+            globalMatchesSkip: 1
           }, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504",
           "18.704", "18.784", "18.821", "18.904", "18.994"
         ],
         [
           {
             count: 1,
-            globalignore: 1,
-            globalskip: 1
+            globalMatchesIgnore: 1,
+            globalMatchesSkip: 1
         }, "8.06", "14.33", "18.100C", "18.310"]
       ]
     ]
@@ -986,7 +986,7 @@ window.majors = {
     [1, "18.06", "18.700", "18.701"], "18.410", "6.01", "6.006", [1, "18.062",
       {
         id: "18.310",
-        globalskip: 1
+        globalMatchesSkip: 1
     }, "18.310A", "18.314"],
     [1, "18.400", "18.404"],
     [1, "6.005", "6.033"],
