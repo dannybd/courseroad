@@ -442,66 +442,67 @@ function checkClasses() {
   $('.corecheck').addClass('unused').removeClass('used');
   $('.classdiv').each(function(i) {
     var div = this;
-    if (!$(div).data('checkrepeat')) return true;
+    var $this = $(this);
+    if (!$this.data('checkrepeat')) return true;
     var forUnits = true;
-    if (!$(div).data('special')) {
-      totalUnits += $(div).data('total_units');
+    if (!$this.data('special')) {
+      totalUnits += $this.data('total_units');
       return true;
     }
-    if ($(div).data('gir')) {
-      var effect = '#COREchecker .corecheck.unused.GIR.' + $(div).data('gir') +
-        ':first';
-      if ($(effect).length) {
-        $(effect).removeClass('unused').addClass('used').attr('title', $(div)
+    if ($this.data('gir')) {
+      var $effect = $('#COREchecker .corecheck.unused.GIR.' + $this.data('gir') +
+        ':first');
+      if ($effect.length) {
+        $effect.removeClass('unused').addClass('used').attr('title', $this
           .data('subject_id'));
-        if ($(div).data('gir') == 'LAB') {
-          if (!$(effect).length) {
-            totalUnits += $(div).data('total_units') - 6;
+        if ($this.data('gir') == 'LAB') {
+          if (!$effect.length) {
+            totalUnits += $this.data('total_units') - 6;
           }
-          $(effect).removeClass('unused').addClass('used').attr('title', $(
+          $effect.removeClass('unused').addClass('used').attr('title', $(
             div).data('subject_id'));
         }
         forUnits = false;
       }
     }
-    var thisterm = $(div).data('classterm');
-    if ($(div).data('ci') && !($('.classdiv.CI:not(.CIM)').not(div).filter(
+    var thisterm = $this.data('classterm');
+    if ($this.data('ci') && !($('.classdiv.CI:not(.CIM)').not(div).filter(
       function() {
-        return ($(this).data('classterm') == $(div).data('classterm')) &&
+        return ($(this).data('classterm') == $this.data('classterm')) &&
           ($(this).index('.classdiv') < i);
       }).length)) {
-      var effect = '#COREchecker .corecheck.unused.CI.' + $(div).data('ci') +
-        ':first';
-      if ($(effect).length) {
-        $(effect).removeClass('unused').addClass('used').attr('title', $(div)
+      var $effect = $('#COREchecker .corecheck.unused.CI.' + $this.data('ci') +
+        ':first');
+      if ($effect.length) {
+        $effect.removeClass('unused').addClass('used').attr('title', $this
           .data('subject_id'));
         forUnits = false;
       }
     }
-    if ($(div).data('hass')) {
-      var hass = [$(div).data('hass')];
+    if ($this.data('hass')) {
+      var hass = [$this.data('hass')];
       if (hass[0].indexOf(',') != -1) {
         hass = hass[0].split(',');
       }
       for (i in hass) {
-        var effect = '#COREchecker .corecheck.unused.HASS.' + hass[i] +
-          ':first';
-        if ($(effect).length) {
-          $(effect).removeClass('unused').addClass('used').attr('title', $(
+        var $effect = $('#COREchecker .corecheck.unused.HASS.' + hass[i] +
+          ':first');
+        if ($effect.length) {
+          $effect.removeClass('unused').addClass('used').attr('title', $(
             div).data('subject_id'));
           forUnits = false;
         } else {
           if ((hass.length > 1) && (i != (hass.length - 1))) continue;
           var effect = '#COREchecker .corecheck.unused.HASS.HE:first';
-          if ($(effect).length) {
-            $(effect).removeClass('unused').addClass('used').attr('title', $(
+          if ($effect.length) {
+            $effect.removeClass('unused').addClass('used').attr('title', $(
               div).data('subject_id'));
             forUnits = false;
           }
         }
       }
     }
-    if (forUnits) totalUnits += $(div).data('total_units');
+    if (forUnits) totalUnits += $this.data('total_units');
   });
   totalUnits = Math.round(100 * totalUnits) / 100;
   $('#totalunits').html(totalUnits);
@@ -510,15 +511,17 @@ function checkClasses() {
 function addAllWires(noreload) {
   var status = true;
   $('.classdiv').each(function() {
-    $(this).data('terminals').terminal.removeAllWires();
-    $(this).data('classterm', $(this).parent().index('.term'));
-    if ($(this).data('substitute')) {
-      $(this).addClass($(this).data('substitute')
+    var $this = $(this);
+    $this.data('terminals').terminal.removeAllWires();
+    $this.data('classterm', $this.parent().index('.term'));
+    if ($this.data('substitute')) {
+      $this.addClass($this.data('substitute')
         .replace(/\./g, '_').replace(/,/g, ' '));
     }
   }).each(function() {
-    if ($(this).data('custom')) return true;
-    var temp = addWires($(this));
+    var $this = $(this);
+    if ($this.data('custom')) return true;
+    var temp = addWires($this);
     status = status && temp;
   });
   $('.term').each(function() {
