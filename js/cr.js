@@ -393,13 +393,10 @@ function addWires(div, addwires) {
   }
   data.status = (
     (
-      data.reqstatus &&
-      data.checkrepeat &&
-      (data.offered_this_year ||
-      data.override)
+      (data.reqstatus && data.checkrepeat && data.offered_this_year) ||
+      data.override
     ) &&
-    (data.checkterm ||
-    data.classterm === 0)
+    ( data.checkterm || data.classterm === 0 )
   );
   div.removeClass('classdivgood').removeAttr('title');
   if (data.status) { 
