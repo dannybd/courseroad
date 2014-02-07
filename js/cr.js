@@ -4,6 +4,10 @@
 
 "use strict";
 
+var $, user, WireIt, majors;
+var loggedin, hash_to_use, add_new_term, classterm, triedlogin;
+var document, window, setInterval, confirm, prompt, console, setTimeout, event;
+
 var Defaults = {
   requisiteCount: {
     count: 0,
@@ -209,9 +213,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     }
     if (newMatch.id === 'Permission' && !user.needPermission) {
       if (matchParams.initialCount == arr.length - 1) {
-        matchParams.count -= (
-          matchParams.special ? $(this).data(matchParams.type) : 1
-        );
+        matchParams.count --;
       }
       continue;
     }
@@ -586,7 +588,9 @@ function classFromJSON(json, loadspeed, replacediv) {
     newdiv.addClass('classdivoverride');
   }
   for (var attr in json) {
-    newdiv.data(attr, json[attr]);
+    if (json.hasOwnProperty(attr)) {
+      newdiv.data(attr, json[attr]);
+    }
   }
   newdiv.data('terminals', {
     terminal: new WireIt.Terminal(newdiv[0], {
@@ -816,14 +820,19 @@ function minclass(stringify) {
   if (stringify === undefined) stringify = false;
   var temp = $('.classdiv').map(function() {
     var $this = $(this);
-    arr = $this.data('custom') ? {
-      name: $this.data('subject_title'),
-      units: $this.data('total_units'),
-      custom: true
-    } : {
-      id: $this.data('subject_id'),
-      year: $this.data('year_desired')
-    };
+    var arr;
+    if ($this.data('custom')) {
+      arr = {
+        name: $this.data('subject_title'),
+        units: $this.data('total_units'),
+        custom: true
+      };
+    } else {
+      arr = {
+        id: $this.data('subject_id'),
+        year: $this.data('year_desired')
+      };
+    }
     arr.term = $this.data('classterm');
     if ($this.data('override')) {
       arr.override = $this.data('override');
@@ -955,7 +964,8 @@ var crSetup = function() {
     getClasses(add_new_term, true);
     $(window).on('beforeunload', runBeforeUnload);
   }
-  var thisterm = add_new_term = 0;
+  var thisterm = 0;
+  add_new_term = 0;
   $('body').on('click', '.classdivyear span', function() {
     var par = $(this).parents('.classdiv');
     if (par.data('changing')) return false;
@@ -1435,11 +1445,11 @@ var Konami = function (callback) {
         });
       },
       check_direction: function (link) {
-        x_magnitude = Math.abs(this.start_x - this.stop_x);
-        y_magnitude = Math.abs(this.start_y - this.stop_y);
-        x = ((this.start_x - this.stop_x) < 0) ? 'RIGHT' : 'LEFT';
-        y = ((this.start_y - this.stop_y) < 0) ? 'DOWN' : 'UP';
-        result = (x_magnitude > y_magnitude) ? x : y;
+        var x_magnitude = Math.abs(this.start_x - this.stop_x);
+        var y_magnitude = Math.abs(this.start_y - this.stop_y);
+        var x = ((this.start_x - this.stop_x) < 0) ? 'RIGHT' : 'LEFT';
+        var y = ((this.start_y - this.stop_y) < 0) ? 'DOWN' : 'UP';
+        var result = (x_magnitude > y_magnitude) ? x : y;
         result = (this.tap === true) ? 'TAP' : result;
 
         if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
