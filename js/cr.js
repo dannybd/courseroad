@@ -33,6 +33,10 @@ var Defaults = {
   }
 };
 
+/**
+ * Builds match parameters object from requisites syntax. Handles when the match
+ * param is a number and when it is an object. Returns a match params object.
+ */
 function getMatchParams(arr) {
   var matchedElement = arr[0];
 
@@ -52,6 +56,11 @@ function getMatchParams(arr) {
   return matchedObject;
 }
 
+/**
+ * Builds match requirement object from requisites syntax. By default, you
+ * expect something like "18.03", but you must also handle extra information.
+ * Returns an object with the desired parameters.
+ */
 function getMatchObject(match) {
   var newMatch;
   if (typeof match === 'object') {
@@ -67,8 +76,15 @@ function getMatchObject(match) {
   return newMatch;
 }
 
+/**
+ * Allows for supplying a callback function to run when a class is found which
+ * successfully acts as a requisite for the requirements. The arguments can be
+ * stocked with the strings 'cls' and/or 'lvl' to pass the callback information
+ * on either the class which met the requirement or the level in the requisites
+ * which was met.
+ */
 function applyCallbackFn(obj, callback, callbackArgs, level, i, newMatch) {
-  // Copye args
+  // Copy args
   var tempArgs = callbackArgs.slice();
   var clsPosition = $.inArray('cls', tempArgs);
   if (~clsPosition) {
@@ -217,11 +233,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       }
       continue;
     }
-    /**
-     * Deal with the objects (for things like coreqs) now.
-     * Converting both things to objects, but only the coreq ones
-     * will have a "coreq":1 attribute.
-     */
+
     newMatch = getMatchObject(arr[i]);
 
     if (newMatch.skip) {
