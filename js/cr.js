@@ -408,10 +408,9 @@ function addWires(div, addwires) {
     'OVERRIDE enabled');
   if ($('.classdivhigh').length == 1) {
     $('.WireIt-Wire').addClass('WireIt-Wire-low');
-    for (i in $('.classdivhigh').data('terminals').terminal.wires) {
-      $($('.classdivhigh').data('terminals').terminal.wires[i].element)
-        .removeClass('WireIt-Wire-low');
-    }
+    $('.classdivhigh').data('terminals').terminal.wires.forEach(function(wire) {
+      $(wire.element).removeClass('WireIt-Wire-low');
+    });
   }
   return data.status;
 }
@@ -449,18 +448,19 @@ function checkClasses() {
       totalUnits += $this.data('total_units');
       return true;
     }
-    if ($this.data('gir')) {
-      var $effect = $('#COREchecker .corecheck.unused.GIR.' + $this.data('gir') +
-        ':first');
+    var GIR = $this.data('gir');
+    if (GIR) {
+      var $effect = $('.corecheck.unused.GIR.' + GIR + ':first');
       if ($effect.length) {
         $effect.removeClass('unused').addClass('used').attr('title', $this
           .data('subject_id'));
-        if ($this.data('gir') == 'LAB') {
+        if (GIR == 'LAB') {
           if (!$effect.length) {
             totalUnits += $this.data('total_units') - 6;
           }
-          $effect.removeClass('unused').addClass('used').attr('title', $(
-            div).data('subject_id'));
+          $effect.removeClass('unused').addClass('used').attr('title', 
+            $this.data('subject_id')
+          );
         }
         forUnits = false;
       }
@@ -468,7 +468,7 @@ function checkClasses() {
     var thisterm = $this.data('classterm');
     if ($this.data('ci') && !($('.classdiv.CI:not(.CIM)').not(div).filter(
       function() {
-        return ($(this).data('classterm') == $this.data('classterm')) &&
+        return ($(this).data('classterm') == $(div).data('classterm')) &&
           ($(this).index('.classdiv') < i);
       }).length)) {
       var $effect = $('#COREchecker .corecheck.unused.CI.' + $this.data('ci') +
@@ -493,7 +493,7 @@ function checkClasses() {
           forUnits = false;
         } else {
           if ((hass.length > 1) && (i != (hass.length - 1))) continue;
-          var effect = '#COREchecker .corecheck.unused.HASS.HE:first';
+          var $effect = $('#COREchecker .corecheck.unused.HASS.HE:first');
           if ($effect.length) {
             $effect.removeClass('unused').addClass('used').attr('title', $(
               div).data('subject_id'));
@@ -502,7 +502,7 @@ function checkClasses() {
         }
       }
     }
-    if (forUnits) totalUnits += $this.data('total_units');
+    forUnits && (totalUnits += $this.data('total_units'));
   });
   totalUnits = Math.round(100 * totalUnits) / 100;
   $('#totalunits').html(totalUnits);
@@ -803,20 +803,21 @@ function deGIR(str) {
 function minclass(stringify) {
   if (stringify == undefined) stringify = false;
   var temp = $('.classdiv').map(function() {
-    arr = $(this).data('custom') ? {
-      name: $(this).data('subject_title'),
-      units: $(this).data('total_units'),
+    var $this = $(this);
+    arr = $this.data('custom') ? {
+      name: $this.data('subject_title'),
+      units: $this.data('total_units'),
       custom: true
     } : {
-      id: $(this).data('subject_id'),
-      year: $(this).data('year_desired')
+      id: $this.data('subject_id'),
+      year: $this.data('year_desired')
     };
-    arr.term = $(this).data('classterm');
-    if ($(this).data('override')) {
-      arr.override = $(this).data('override');
+    arr.term = $this.data('classterm');
+    if ($this.data('override')) {
+      arr.override = $this.data('override');
     }
-    if ($(this).data('substitute')) {
-      arr.substitute = $(this).data('substitute');
+    if ($this.data('substitute')) {
+      arr.substitute = $this.data('substitute');
     }
     return arr;
   }).get();
