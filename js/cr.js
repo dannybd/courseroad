@@ -67,12 +67,12 @@ function getMatchObject(match) {
   return newMatch;
 }
 
-function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
+function applyCallbackFn(obj, callback, callbackArgs, level, i, newMatch) {
   // Copye args
   var tempArgs = callbackArgs.slice();
   var clsPosition = $.inArray('cls', tempArgs);
   if (~clsPosition) {
-    tempArgs[clsPosition] = $.extend({}, newarr, {
+    tempArgs[clsPosition] = $.extend({}, newMatch, {
       div: obj
     });
   }
@@ -108,7 +108,7 @@ function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
  */
 var globalMatches = [];
 function checkRequisites(arr, callback, callbackArgs, level) {
-  callback = callback || function() { return true; };
+  callback = callback || function () { return true; };
   callbackArgs = callbackArgs || [];
   if (level === undefined) {
     level = [];
@@ -121,14 +121,13 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   var unsatisfiedRequisitesInfo = [];
   var requisiteBranch;
   var temp2;
-  var newarr;
   var newMatch;
   var i, j;
-  var requisiteBranchMatchParams = function() {
+  var requisiteBranchMatchParams = function () {
     matchParams.count -= $(this).data(matchParams.type);
   };
-  var filterRangeMatches = function(index) {
-    var rng = [newarr.dept, '.' + newarr.from, '.' + newarr.to];
+  var filterRangeMatches = function () {
+    var rng = [newMatch.dept, '.' + newMatch.from, '.' + newMatch.to];
     var data = $(this).data();
     var temp2 = [data.subject_id].concat(data.joint_subjects || []);
     for (j = 0; j < temp2.length; j++) {
@@ -140,29 +139,29 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     }
     return false;
   };
-  var iterateRangeMatches = function() {
+  var iterateRangeMatches = function () {
     if (
         ~$.inArray(this, globalMatches) &&
         !matchParams.globalMatchesIgnore &&
-        !newarr.globalMatchesIgnore) {
+        !newMatch.globalMatchesIgnore) {
       return true;
     }
     // Calls callback with tempargs as its arguments.
     var temp2 = applyCallbackFn(
-      $(this), callback, callbackArgs, level, i, newarr
+      $(this), callback, callbackArgs, level, i, newMatch
     );
     if (temp2) {
       matchParams.count -= (
         matchParams.special ? $(this).data(matchParams.type) : 1
       );
       matchParams.matchesFound.push(this);
-      if (!newarr.globalMatchesSkip && !matchParams.globalMatchesSkip) {
+      if (!newMatch.globalMatchesSkip && !matchParams.globalMatchesSkip) {
         globalMatches.push(this);
       }
-      // newarr.globalMatchesSkip &&
-      //   console.log('newarrskip', newarr, matchParams);
+      // newMatch.globalMatchesSkip &&
+      //   console.log('newarrskip', newMatch, matchParams);
       // matchParams.globalMatchesSkip &&
-      //   console.log('matchParamsskip', newarr, matchParams);
+      //   console.log('matchParamsskip', newMatch, matchParams);
     }
     if (matchParams.count <= 0 && !matchParams.runinfull) {
       return [
@@ -170,22 +169,22 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       ];
     }
   };
-  var iterateClassMatches = function() {
+  var iterateClassMatches = function () {
     if (~$.inArray(this, globalMatches) &&
         !matchParams.globalMatchesIgnore &&
-        !newarr.globalMatchesIgnore) {
+        !newMatch.globalMatchesIgnore) {
       return true;
     }
     // Calls callback with tempargs as its arguments.
     var temp2 = applyCallbackFn(
-      $(this), callback, callbackArgs, level, i, newarr
+      $(this), callback, callbackArgs, level, i, newMatch
     );
     if (temp2) {
       matchParams.count -= (
         matchParams.special ? $(this).data(matchParams.type) : 1
       );
       matchParams.matchesFound.push(this);
-      if (!newarr.globalMatchesSkip && !matchParams.globalMatchesSkip) {
+      if (!newMatch.globalMatchesSkip && !matchParams.globalMatchesSkip) {
         globalMatches.push(this);
       }
       return false;
@@ -211,7 +210,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
 
       if (requisiteBranch[0]) {
         temp2 = applyCallbackFn(
-          arr[i], callback, callbackArgs, level, i, newarr
+          arr[i], callback, callbackArgs, level, i, newMatch
         );
       } else {
         unsatisfiedRequisitesInfo.push(requisiteBranch[1]);
@@ -234,10 +233,10 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       }
       continue;
     }
-    newarr = newMatch;
     // Now check for ranges. These are strings of the form 'X.XXX-X.XXX'
-    if (newarr.range) {
-      var rangematches = $('.classdiv:not(.custom)').filter(filterRangeMatches)
+    if (newMatch.range) {
+      $('.classdiv:not(.custom)')
+        .filter(filterRangeMatches)
         .each(iterateRangeMatches);
       if (matchParams.count <= 0) {
         return [
@@ -245,23 +244,23 @@ function checkRequisites(arr, callback, callbackArgs, level) {
         ];
       }
       unsatisfiedRequisitesInfo.push(
-        (newarr.coreq === 1) ?
-          ('[' + newarr.id + newarr.desc + ']') :
-          (newarr.id + newarr.desc)
+        (newMatch.coreq === 1) ?
+          ('[' + newMatch.id + newMatch.desc + ']') :
+          (newMatch.id + newMatch.desc)
       );
       continue;
     }
     // Now only bona fide classes
     var classmatches = $('.classdiv.' + (
-      newarr.id.toUpperCase().replace('.', '_').replace(':', '.')
+      newMatch.id.toUpperCase().replace('.', '_').replace(':', '.')
     ));
     classmatches.each(iterateClassMatches);
     // If it's not a class, or callback failed, then we need to note that.
     if (!classmatches.length || !temp2) {
       unsatisfiedRequisitesInfo.push(
-        (newarr.coreq === 1) ?
-          ('[' + newarr.id + newarr.desc + ']') :
-          (newarr.id + newarr.desc)
+        (newMatch.coreq === 1) ?
+          ('[' + newMatch.id + newMatch.desc + ']') :
+          (newMatch.id + newMatch.desc)
       );
     }
     if (matchParams.count <= 0 && !matchParams.runinfull) {
@@ -274,8 +273,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   if (matchParams.count <= 0) {
     return [true, '', level.length ? matchParams.matchesFound : globalMatches];
   }
-  unsatisfiedRequisitesInfo = unsatisfiedRequisitesInfo.join(', ');
-  unsatisfiedRequisitesInfo = deGIR(unsatisfiedRequisitesInfo);
+  unsatisfiedRequisitesInfo = deGIR(unsatisfiedRequisitesInfo.join(', '));
   if (matchParams.special) {
     unsatisfiedRequisitesInfo = (
       '(' + matchParams.count + ' ' + matchParams.desc + ': ' +
@@ -306,10 +304,10 @@ function newWire(from, to) {
   if ($.isArray(to.div)) {
     return true;
   }
-  var fromid = from.attr('id');
-  var toid = to.div.attr('id');
-  var fromterm = from.data('classterm') + 0;
-  var toterm = to.div.data('classterm') + 0;
+  // var fromid = from.attr('id');
+  // var toid = to.div.attr('id');
+  var fromterm = from.data('classterm');
+  var toterm = to.div.data('classterm');
   var dterm = Math.abs(fromterm - toterm);
   var options = {
     prereq: {
@@ -381,7 +379,7 @@ function addWires(div, addwires) {
     data.iap, data.spring, data.summer])[(data.classterm - 1) % 4]);
   data.checkrepeat = true;
   if (!~$.inArray(data.grade_rule, ['J', 'U', 'R'])) {
-    if ($('.classdiv').not(div).filter(function(j) {
+    if ($('.classdiv').not(div).filter(function (j) {
       return (
         (
           $.inArray($(this).data('subject_id'), data.equiv_subjects) !== -1 ||
@@ -397,11 +395,11 @@ function addWires(div, addwires) {
     (
       data.reqstatus &&
       data.checkrepeat &&
-      data.offered_this_year ||
-      data.override
+      (data.offered_this_year ||
+      data.override)
     ) &&
-    data.checkterm ||
-    (data.classterm === 0)
+    (data.checkterm ||
+    data.classterm === 0)
   );
   div.removeClass('classdivgood').removeAttr('title');
   if (data.status) { 
@@ -425,7 +423,8 @@ function addWires(div, addwires) {
   }
   if ($('.classdivhigh').length === 1) {
     $('.WireIt-Wire').addClass('WireIt-Wire-low');
-    $('.classdivhigh').data('terminals').terminal.wires.forEach(function(wire) {
+    $('.classdivhigh').data('terminals').terminal.wires
+      .forEach(function (wire) {
       $(wire.element).removeClass('WireIt-Wire-low');
     });
   }
@@ -433,12 +432,12 @@ function addWires(div, addwires) {
 }
 
 function updateWires() {
-  $('.term').each(function() {
+  $('.term').each(function () {
     $(this).find('.termname, .termname span').css(
       'width', $(this).height() + 'px'
     );
   });
-  $('.year').each(function() {
+  $('.year').each(function () {
     $(this).find('.yearname, .yearname span').css(
       'width', $(this).height() + 'px'
     );
@@ -446,7 +445,7 @@ function updateWires() {
   if (preventUpdateWires) {
     return false;
   }
-  $('.classdiv').each(function() {
+  $('.classdiv').each(function () {
     $(this).data('terminals').terminal.redrawAllWires();
   });
 }
@@ -456,7 +455,7 @@ function checkClasses() {
   var totalUnits = 0;
   $('#COREchecker span.checkbox1').removeAttr('title');
   $('.corecheck').addClass('unused').removeClass('used');
-  $('.classdiv').each(function(i) {
+  $('.classdiv').each(function (i) {
     var div = this;
     var $this = $(this);
     var data = $this.data();
@@ -486,9 +485,8 @@ function checkClasses() {
         forUnits = false;
       }
     }
-    var thisterm = data.classterm;
     var otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(div)
-      .filter(function() {
+      .filter(function () {
         return ($(this).data('classterm') === data.classterm) &&
           ($(this).index('.classdiv') < i);
     });
@@ -534,7 +532,7 @@ function checkClasses() {
 
 function addAllWires(reloadNotify) {
   var status = true;
-  $('.classdiv').each(function() {
+  $('.classdiv').each(function () {
     var $this = $(this);
     $this.data('terminals').terminal.removeAllWires();
     $this.data('classterm', $this.parent().index('.term'));
@@ -542,7 +540,7 @@ function addAllWires(reloadNotify) {
       $this.addClass($this.data('substitute')
         .replace(/\./g, '_').replace(/,/g, ' '));
     }
-  }).each(function() {
+  }).each(function () {
     var $this = $(this);
     if ($this.data('custom')) {
       return true;
@@ -550,17 +548,17 @@ function addAllWires(reloadNotify) {
     var temp = addWires($this);
     status = status && temp;
   });
-  $('.term').each(function() {
+  $('.term').each(function () {
     $(this).find('.termname span a').attr('href',
       'http://picker.mit.edu/browse.html?courses=' +
-      $(this).find('.classdiv:not(.custom)').map(function() {
+      $(this).find('.classdiv:not(.custom)').map(function () {
         return $(this).data('subject_code');
       }).get().join('%3B')
     );
   });
   updateWires();
   checkClasses();
-  $('select.majorminor').each(function() {
+  $('select.majorminor').each(function () {
     checkMajor(this);
   });
   // console.log('addAllWires');
@@ -584,7 +582,7 @@ function classFromJSON(json, loadspeed, replacediv) {
   }
   if (json.classterm && json.classterm % 4 === 0) {
     $('.term .termname').eq(json.classterm)
-      .fadeIn(loadspeed).parent().slideDown(loadspeed, function() {
+      .fadeIn(loadspeed).parent().slideDown(loadspeed, function () {
         updateWires();
       }).siblings('.yearname').addClass('showsummer', loadspeed);
   }
@@ -650,7 +648,7 @@ function getClass() {
   }
   $('#getnewclass .ui-autocomplete').hide();
   $('.getnewclasstypes input').val('');
-  $.post('?', data, function(json) {
+  $.post('?', data, function (json) {
     if (~$.inArray(json, ['error', 'noclass', ''])) {
       return false;
     }
@@ -667,7 +665,7 @@ function getClass() {
 // Used for initial pageload when a hash is present:
 // takes in an array containing objects describing the classes.
 function getClasses(classarr, reloadNotify) {
-  classarr.forEach(function(cls) {
+  classarr.forEach(function (cls) {
     classFromJSON(cls, 0);
   });
   addAllWires(reloadNotify);
@@ -720,15 +718,14 @@ function buildMajor(arr, level) {
   var holdobj;
   if (typeof (arr[0]) === 'number') {
     holdobj = $.extend({}, Defaults.requisiteCount, {
-      count: (0 + arr[0])
+      count: parseInt(arr[0], 10)
     });
   } else {
     holdobj = $.extend({}, Defaults.requisiteCount, arr[0]);
   }
   // Holds the unsatisfied requisites in a string for display to the user.
   var tempstr = '';
-  var temp2 = true;
-  var newarr;
+  var newMatch;
   var i;
   for (i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
@@ -741,14 +738,14 @@ function buildMajor(arr, level) {
     // Converting both things to objects,
     // but only the coreq ones will have a 'coreq':1 thing.
     if (typeof (arr[i]) === 'object') {
-      newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
+      newMatch = $.extend({}, Defaults.requisiteClass, arr[i]);
     } else {
-      newarr = $.extend({}, Defaults.requisiteClass, {
+      newMatch = $.extend({}, Defaults.requisiteClass, {
         id: arr[i]
       });
     }
     // Now check for ranges. These are strings of the form 'X.XXX-X.XXX'
-    if (newarr.range) {
+    if (newMatch.range) {
       var innertempstr = '';
       var j;
       for (j = 0; j < holdobj.count; j++) {
@@ -759,29 +756,29 @@ function buildMajor(arr, level) {
         );
       }
       tempstr += (
-        '<li>' + innertempstr + ' The range ' + newarr.id +
-        newarr.desc + '<\/li>\n'
+        '<li>' + innertempstr + ' The range ' + newMatch.id +
+        newMatch.desc + '<\/li>\n'
       );
       // return '<li>'+innertempstr + ' ' + holdobj.count +
-      // 'from the range '+newarr.id+newarr.desc+'<\/li>\n';
+      // 'from the range '+newMatch.id+newMatch.desc+'<\/li>\n';
       continue;
     }
     // Now only strings
     tempstr += (
       '<li>' + (
-        newarr.skip ?
+        newMatch.skip ?
           '&#x2006;&#x2014; ' :
           '<span class="majorchk majorchk_' + level.concat([i]).join('_') +
           ' checkbox1">[<span>&#x2713;<\/span>]<\/span> '
       ) +
       (
-        newarr.skip ?
+        newMatch.skip ?
           '' :
-          '<span class="checkbox1_text" data-id="' + newarr.id + '">'
+          '<span class="checkbox1_text" data-id="' + newMatch.id + '">'
       ) +
-      newarr.id +
-      (newarr.skip ? '' : '</span>') +
-      newarr.desc + '<\/li>\n'
+      newMatch.id +
+      (newMatch.skip ? '' : '</span>') +
+      newMatch.desc + '<\/li>\n'
     );
   }
   tempstr = '<ul>\n' + tempstr + '<\/ul>\n';
@@ -805,12 +802,12 @@ function draggableChecklist() {
     // containment: 'body',
     // distance: 30,
     helper: 'clone',
-    start: function(event, ui) {
+    start: function (event, ui) {
       ui.helper.attr('data-term', '(none)');
       $('.term').addClass('notOKterm');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');
     },
-    stop: function(event, ui) {
+    stop: function () {
       $('.term').removeClass('notOKterm');
       unhighlightClasses();
       $('.WireIt-Wire').removeClass('WireIt-Wire-low');
@@ -850,7 +847,7 @@ function minclass(stringify) {
   if (stringify === undefined) {
     stringify = false;
   }
-  var temp = $('.classdiv').map(function() {
+  var temp = $('.classdiv').map(function () {
     var $this = $(this);
     var arr;
     if ($this.data('custom')) {
@@ -887,25 +884,6 @@ function minmajors(stringify) {
   return stringify ? JSON.stringify(temp) : temp;
 }
 
-// Simply returns a date which is relative to now
-function deltaDate() {
-  var d = new Date();
-  d = [
-    d.getFullYear(),
-    d.getMonth(),
-    d.getDate(),
-    d.getHours(),
-    d.getMinutes(),
-    d.getSeconds(),
-    d.getMilliseconds()
-  ];
-  var t;
-  for (t = 0; t < arguments.length; t++) {
-    d[t] += arguments[t];
-  }
-  return new Date(d[0], d[1], d[2], d[3], d[4], d[5], d[6]);
-}
-
 /*** UI/Page-loading functions ***/
 
 function runBeforeUnload() {
@@ -916,7 +894,7 @@ function runBeforeUnload() {
 }
 
 var userHashChange = true;
-window.onhashchange = function() {
+window.onhashchange = function () {
   // userHashChange means that if the user types in a new hash in the URL,
   // the browser will reload, but if the hash changes due to saving a new
   // version or something it won't.
@@ -929,7 +907,7 @@ function swapClassYear(oldclass, newyear) {
   $.post('?', {
     getclass: oldclass.data('subject_id'),
     getyear: newyear
-  }, function(json) {
+  }, function (json) {
     if (~$.inArray(json, ['error', 'noclass', ''])) {
       return false;
     }
@@ -941,10 +919,9 @@ function swapClassYear(oldclass, newyear) {
   }, 'json');
 }
 
-var reasonToTrySave = false;
+// var reasonToTrySave = false;
 var preventUpdateWires = false;
-var totalUnits = 0;
-var crSetup = function() {
+var crSetup = function () {
   crSetup = undefined;
   $('#getnewclass').tabs({
     collapsible: false,
@@ -953,7 +930,7 @@ var crSetup = function() {
   user.supersenior = $('.year.supersenior').is(':visible') ? 1 : 0;
   /**
    * // Assures regular updating of the window, should anything change
-   * setInterval(function() {
+   * setInterval(function () {
    *   if(Math.random() < 0.1) {
    *     console.log(1);
    *     addAllWires(true)
@@ -963,12 +940,12 @@ var crSetup = function() {
    *   }
    * }, 10000);
    */
-  setInterval(function() {
+  setInterval(function () {
     addAllWires(false);
   }, 10000);
   if (hash_to_use) {
     var jsonmajors = hash_to_use.pop();
-    $('select.majorminor').each(function(i) {
+    $('select.majorminor').each(function (i) {
       $(this).val(jsonmajors[i]).attr('selected', true);
     });
     getClasses(hash_to_use);
@@ -980,14 +957,14 @@ var crSetup = function() {
     document.title = 'CourseRoad: ' + window.location.hash.substr(1);
     $.post('?', {
       gethash: window.location.hash
-    }, function(data) {
+    }, function (data) {
       $('#loading').hide();
       if (data === '') {
         return false;
       }
       var json = $.parseJSON(data);
       var jsonmajors = json.pop();
-      $('select.majorminor').each(function(i) {
+      $('select.majorminor').each(function (i) {
         $(this).val(jsonmajors[i]).attr('selected', true);
       });
       getClasses(json, false);
@@ -999,20 +976,19 @@ var crSetup = function() {
     getClasses(add_new_term, true);
     $(window).on('beforeunload', runBeforeUnload);
   }
-  var thisterm = 0;
   add_new_term = 0;
-  $('body').on('click', '.classdivyear span', function() {
+  $('body').on('click', '.classdivyear span', function () {
     var par = $(this).parents('.classdiv');
     if (par.data('changing')) {
       return false;
     }
     par.data('changing', true);
-    $(this).replaceWith(function() {
+    $(this).replaceWith(function () {
       return par.data('otheryears');
     });
     par.data('changing', false);
     par.find('.classdivyear select').focus();
-  }).on('change blur', '.classdivyear select', function(event) {
+  }).on('change blur', '.classdivyear select', function () {
     var val = $(this).val();
     var oldclass = $(this).parents('.classdiv');
     if (oldclass.data('changing')) {
@@ -1020,14 +996,14 @@ var crSetup = function() {
     }
     oldclass.data('changing', true);
     if (val === oldclass.data('year')) {
-      $(this).replaceWith(function() {
+      $(this).replaceWith(function () {
         return oldclass.data('yearspan');
       });
       oldclass.data('changing', false);
       return false;
     }
     swapClassYear(oldclass, val);
-  }).on('click', '.classdiv', function() {
+  }).on('click', '.classdiv', function () {
     // Highlights the selected class, dims the others,
     // and displays info on that class in the lower right
     $('.classdiv').not($(this)).removeClass('classdivhigh');
@@ -1038,7 +1014,7 @@ var crSetup = function() {
       $('.classdiv').not($(this)).addClass('classdivlow');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');
       $('.classdivhigh').data('terminals').terminal.wires
-        .forEach(function(wire) {
+        .forEach(function (wire) {
         $(wire.element).removeClass('WireIt-Wire-low');
       });
       $('#nowreading').html($('.classdivhigh').data('info')).scrollTop(0);
@@ -1047,7 +1023,7 @@ var crSetup = function() {
     } else {
       unhighlightClasses();
     }
-  }).on('click', 'canvas.WireIt-Wire', unhighlightClasses).keydown(function(
+  }).on('click', 'canvas.WireIt-Wire', unhighlightClasses).keydown(function (
     event) {
     var cls = $('.classdiv.classdivhigh');
     if (event.which === 46 && cls.length && confirm(
@@ -1057,13 +1033,13 @@ var crSetup = function() {
       unhighlightClasses();
       addAllWires(true);
     }
-  }).on('click', '.my-dialog-close, .ui-widget-overlay', function() {
+  }).on('click', '.my-dialog-close, .ui-widget-overlay', function () {
     $('.my-dialog').dialog('close');
-  }).on('click', '.choosesavedroad', function() {
+  }).on('click', '.choosesavedroad', function () {
     $.post('?', {
       choosesavedroad: $(this).val()
     });
-  }).on('click', '.deleteroad', function() {
+  }).on('click', '.deleteroad', function () {
     if (!confirm(
       'Are you sure you want to delete this road? This action cannot be undone.'
     )) {
@@ -1072,9 +1048,9 @@ var crSetup = function() {
     var parent = $(this).parents('tr');
     $.post('?', {
       deleteroad: parent.data('hash')
-    }, function(data) {
+    }, function (data) {
       if (data === 'ok') {
-        parent.fadeOut('slow').delay(2000).queue(function() {
+        parent.fadeOut('slow').delay(2000).queue(function () {
           $(this).remove();
         });
       }
@@ -1082,7 +1058,7 @@ var crSetup = function() {
         $(window).on('beforeunload', runBeforeUnload);
       }
     });
-  }).on('click', '.saved-roads-edit-hash', function() {
+  }).on('click', '.saved-roads-edit-hash', function () {
     var newhash2 = prompt(
       'Enter a new hash for this saved road below ' +
       '(max. 36 characters, letters, numbers, and hyphens only):',
@@ -1096,7 +1072,7 @@ var crSetup = function() {
     $.post('?', {
       changeroadhash: $(this).parents('tr').data('hash'),
       newhash: newhash2
-    }, function(data) {
+    }, function (data) {
       console.log(data, window.location.hash, prev.parents('tr').data(
         'hash'), window.location.hash === prev.parents('tr').data('hash'));
       if (window.location.hash.substr(1) === prev.parents('tr').data('hash')) {
@@ -1110,7 +1086,7 @@ var crSetup = function() {
           .find(':radio').val(data).parents('tr')
           .find('a.hashlink').attr('href', '?hash=' + data);
     });
-  }).on('click', '.saved-roads-edit-comment', function() {
+  }).on('click', '.saved-roads-edit-comment', function () {
     var comment = prompt(
       'Enter your comment for this saved road below (max. 100 characters):',
       $(this).prev().text());
@@ -1123,13 +1099,13 @@ var crSetup = function() {
     $.post('?', {
       commentonroad: $(this).parents('tr').data('hash'),
       commentforroad: comment
-    }, function(data) {
+    }, function (data) {
       prev.text(data).removeClass('newload');
     });
-  }).on('click', '.dummylink', function(e) {
+  }).on('click', '.dummylink', function (e) {
     e.preventDefault();
   });
-  $('#overridercheck').change(function() {
+  $('#overridercheck').change(function () {
     $('.classdivhigh').data('override', $(this).prop('checked'));
     $('.classdivhigh').toggleClass('classdivoverride');
     addAllWires(true);
@@ -1146,18 +1122,18 @@ var crSetup = function() {
     placeholder: 'ui-sortable-placeholder',
     scroll: true,
     zIndex: 99,
-    start: function(event, ui) {
+    start: function (event, ui) {
       preventUpdateWires = true;
       $('.WireIt-Wire').hide();
       var terms = ['fall', 'iap', 'spring', 'summer'];
-      terms.forEach(function(term) {
+      terms.forEach(function (term) {
         $('.' + term).addClass(
           ui.item.data('custom') || 
           ui.item.data(term) ? 'OKterm' : 'notOKterm'
         );
       });
     },
-    stop: function(event, ui) {
+    stop: function () {
       preventUpdateWires = false;
       $('.classdiv').removeAttr('style');
       $('.WireIt-Wire').show();
@@ -1166,7 +1142,7 @@ var crSetup = function() {
     }
   }).droppable({
     accept: '.checkbox1_text',
-    over: function(event, ui) {
+    over: function (event, ui) {
       $('.term').not(this).addClass('notOKterm');
       $(this).removeClass('notOKterm');
       ui.helper.attr(
@@ -1174,10 +1150,10 @@ var crSetup = function() {
         $('#getnewclassterm option').eq($(this).index('.term')).text()
       );
     },
-    out: function(event, ui) {
+    out: function () {
       $(this).addClass('notOKterm');
     },
-    drop: function(event, ui) {
+    drop: function () {
       $('.term').removeClass('notOKterm');
       classterm = $(this).index('.term');
       var data = {
@@ -1185,7 +1161,7 @@ var crSetup = function() {
         getyear: 0
       };
       data.getyear = properYear(classterm);
-      $.post('?', data, function(json) {
+      $.post('?', data, function (json) {
         if (~$.inArray(json, ['error', 'noclass', ''])) {
           return false;
         }
@@ -1202,35 +1178,35 @@ var crSetup = function() {
     accept: '.classdiv',
     hoverClass: 'drophover',
     tolerance: 'touch',
-    activate: function(event, ui) {
+    activate: function () {
       $(this).addClass('trashon', 'slow');
     },
-    deactivate: function(event, ui) {
+    deactivate: function () {
       $(this).removeClass('trashon', 'fast');
     },
-    over: function(event, ui) {
+    over: function () {
       $('.trash').addClass('trashhover', 'fast');
     },
-    out: function(event, ui) {
+    out: function () {
       $('.trash').removeClass('trashhover', 'fast');
     },
-    drop: function(event, ui) {
+    drop: function (event, ui) {
       preventUpdateWires = false;
       ui.draggable.remove();
       $('.trash').removeClass('trashhover', 'fast');
       addAllWires(true);
     }
   });
-  $('#getnewclassid').blur(function() {
+  $('#getnewclassid').blur(function () {
     $('#getnewclass .ui-autocomplete').hide();
   }).focus();
   $('#getnewclasssubmit').click(getClass);
-  $('input[name="getnewclasstype"]').change(function() {
+  $('input[name="getnewclasstype"]').change(function () {
     $('.getnewclasstypes').toggleClass('visible').filter('.visible').find(
       'input:first').focus();
   });
   $('#getnewclassid').autocomplete({
-    source: function(request, response) {
+    source: function (request, response) {
       $.post('?', {
         autocomplete: request.term
       }, response, 'json');
@@ -1239,24 +1215,24 @@ var crSetup = function() {
     appendTo: '#getnewclass',
     disabled: !user.autocomplete
   });
-  $('.getnewclasstypes input').keydown(function(event) {
+  $('.getnewclasstypes input').keydown(function (event) {
     if (event.which === 13) { 
       getClass();
     }
   });
-  $('button.changeclassterm').click(function() {
+  $('button.changeclassterm').click(function () {
     $('.getnewclasstypes.visible input:first').focus();
     $('#getnewclassterm').val(Math.max(0, Math.min($(
       '#getnewclassterm option').length - 1, parseInt($(
       '#getnewclassterm').val(), 10) + parseInt($(this).val(), 10))));
   });
-  $('#savemap').click(function() {
+  $('#savemap').click(function () {
     $('#savemap').val('Saving...').prop('disabled', true);
     $.post('?', {
       classes: minclass(true),
       majors: minmajors(true),
       trycert: loggedin
-    }, function(data) {
+    }, function (data) {
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
         if (data === '**auth**') {
@@ -1279,7 +1255,7 @@ var crSetup = function() {
   if (!loggedin && triedlogin) {
     $('#mapcerts').hide();
   }
-  $('#mapcerts').click(function() {
+  $('#mapcerts').click(function () {
     if (loggedin) {
       $('#viewroads').dialog('open');
     } else {
@@ -1288,7 +1264,7 @@ var crSetup = function() {
         classes: minclass(true),
         majors: minmajors(true),
         trycert: true
-      }, function(data) {
+      }, function (data) {
         $(window).off('beforeunload', runBeforeUnload);
         if (data === '**auth**') {
           window.location.href =
@@ -1303,7 +1279,7 @@ var crSetup = function() {
       });
     }
   });
-  $('select.majorminor').on('change', function() {
+  $('select.majorminor').on('change', function () {
     checkMajor(this);
   });
   $('#viewroads').dialog({
@@ -1312,11 +1288,11 @@ var crSetup = function() {
     draggable: false,
     resizeable: false,
     modal: true,
-    open: function(event, ui) {
+    open: function () {
       $('#savedroads').html('Loading...');
       $.post('?', {
         savedroads: 1
-      }, function(data) {
+      }, function (data) {
         $('#savedroads').html(data);
       });
     }
@@ -1332,25 +1308,26 @@ var crSetup = function() {
   $('#accordion').accordion({
     autoHeight: false,
     collapsible: true,
-    change: function(event, ui) {
+    change: function (event, ui) {
       var temp = ui.newContent.length ? ui.newContent.position().top : 0;
+      temp = 0;
     }
   });
-  $('#openhelp').click(function() {
+  $('#openhelp').click(function () {
     $('#help').dialog('open').dialog('option', 'position', 'center');
     $('#accordion').accordion('resize');
   });
-  setTimeout(function() {
+  setTimeout(function () {
     $('#help').dialog('option', 'position', 'center');
     $('#accordion').accordion('resize');
   }, 2500);
-  $('select.majorminor option').each(function() {
+  $('select.majorminor option').each(function () {
     if (majors[$(this).val()] === undefined) {
       $(this).remove();
     }
   });
   $(window).resize(updateWires);
-  $('#printroad').click(function() {
+  $('#printroad').click(function () {
     $('body, #rightbar, .term, .year').toggleClass('printing');
     updateWires();
     window.print();
@@ -1358,10 +1335,11 @@ var crSetup = function() {
     updateWires();
   });
   $('.flakyCSS').removeClass('flakyCSS');
-  var doge = new Konami(function() {
+  var doge;
+  doge = new Konami(function () {
     $('#rightbar').addClass('doge');
   });
-  $('#userlogin').click(function() {
+  $('#userlogin').click(function () {
     window.location.href = 'https://courseroad.mit.edu:444/secure.php';
   });
   $('#usersettings').dialog({
@@ -1370,10 +1348,10 @@ var crSetup = function() {
     resizeable: false,
     modal: true
   });
-  $('#showusersettings').click(function() {
+  $('#showusersettings').click(function () {
     $('#usersettings').dialog('open');
   });
-  $('#usersettings_save').click(function() {
+  $('#usersettings_save').click(function () {
     var data = {
       usersettings: 1,
       class_year: $('#usersettings_class_year').val(),
@@ -1383,7 +1361,7 @@ var crSetup = function() {
         1 : 0)
     };
     var old_class_year = user.classYear;
-    $('#usersettings_div').load('?', data, function() {
+    $('#usersettings_div').load('?', data, function () {
       user.classYear = parseInt($('#usersettings_class_year').val(), 10);
       user.viewReqLines = ($('#usersettings_view_req_lines').prop('checked') ?
         1 : 0);
@@ -1400,7 +1378,7 @@ var crSetup = function() {
         '(Clicking Cancel will prevent this behavior)'
       )) {
         console.log('Let\'s go.');
-        $('.classdiv:not(.custom)').each(function() {
+        $('.classdiv:not(.custom)').each(function () {
           if ($(this).data('year_desired') === properYear($(this).data(
             'classterm'))) {
             return true;
@@ -1501,7 +1479,7 @@ var Konami = function (callback) {
             konami.iphone.check_direction();
           }
         });
-        konami.addEvent(document, 'touchend', function (evt) {
+        konami.addEvent(document, 'touchend', function () {
           if (konami.iphone.tap === true) {
             konami.iphone.check_direction(link);
           }
