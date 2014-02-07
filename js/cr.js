@@ -2,6 +2,8 @@
  * Welcome to the cr.js file!
  */
 
+"use strict";
+
 var Defaults = {
   requisiteCount: {
     count: 0,
@@ -58,18 +60,85 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     level = [];
     globalMatches = [];
   }
-  
+
   var matchParams = getMatchParams(arr);
-  
+
   // Holds the unsatisfied requisites in a string for display to the user.
   var unsatisfiedRequisitesInfo = [];
   var requisiteBranch;
   var temp2;
   var newarr;
   var newMatch;
+  var requisiteBranchMatchParams = function() {
+    matchParams.count -= $(this).data(matchParams.type);
+  };
+  var filterRangeMatches = function(index) {
+    var rng = [newarr.dept, '.' + newarr.from, '.' + newarr.to];
+    var data = $(this).data();
+    var temp2 = [data.subject_id].concat(data.joint_subjects || []);
+    for (var j in temp2) {
+      var temp3 = [temp2[j].split('.')[0], '.' + temp2[j].split('.')[1]];
+      if ((temp3[0] == rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
+        rng[2])) {
+        return true;
+      }
+    }
+    return false;
+  };
+  var iterateRangeMatches = function() {
+    if (
+        $.inArray(this, globalMatches) != -1 &&
+        !matchParams.globalMatchesIgnore &&
+        !newarr.globalMatchesIgnore) {
+      return true;
+    }
+    // Calls callback with tempargs as its arguments.
+    var temp2 = applyCallbackFn(
+      $(this), callback, callbackArgs, level, i, newarr
+    );
+    if (temp2) {
+      matchParams.count -= (
+        matchParams.special ? $(this).data(matchParams.type) : 1
+      );
+      matchParams.matchesFound.push(this);
+      if (!newarr.globalMatchesSkip && !matchParams.globalMatchesSkip) {
+        globalMatches.push(this);
+      }
+      // newarr.globalMatchesSkip &&
+      //   console.log('newarrskip', newarr, matchParams);
+      // matchParams.globalMatchesSkip &&
+      //   console.log('matchParamsskip', newarr, matchParams);
+    }
+    if (matchParams.count <= 0 && !matchParams.runinfull) {
+      return [
+        true, '', level.length ? matchParams.matchesFound : globalMatches
+      ];
+    }
+  };
+  var iterateClassMatches = function() {
+    if (~$.inArray(this, globalMatches) &&
+        !matchParams.globalMatchesIgnore &&
+        !newarr.globalMatchesIgnore) {
+      return true;
+    }
+    // Calls callback with tempargs as its arguments.
+    var temp2 = applyCallbackFn(
+      $(this), callback, callbackArgs, level, i, newarr
+    );
+    if (temp2) {
+      matchParams.count -= (
+        matchParams.special ? $(this).data(matchParams.type) : 1
+      );
+      matchParams.matchesFound.push(this);
+      if (!newarr.globalMatchesSkip && !matchParams.globalMatchesSkip) {
+        globalMatches.push(this);
+      }
+      return false;
+    }
+  };
   for (var i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
-      // In case a sub-branch is inside this branch, we recursively solve that 
+      // In case a sub-branch is inside this branch, we recursively solve that
       // branch and use its result.
       requisiteBranch = checkRequisites(
         arr[i], callback, callbackArgs, level.concat([i])
@@ -79,9 +148,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       // will not necessarily be satisfied while the 5 from will be, then count.
       if (requisiteBranch[0] || matchParams.pullmatches) {
         if (matchParams.special) {
-          $(requisiteBranch[2]).each(function() {
-            matchParams.count -= $(this).data(matchParams.type);
-          });
+          $(requisiteBranch[2]).each(requisiteBranchMatchParams);
         } else {
           matchParams.count--;
         }
@@ -102,7 +169,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
      * will have a "coreq":1 attribute.
      */
     newMatch = getMatchObject(arr[i]);
-    
+
     if (newMatch.skip) {
       continue;
     }
@@ -117,57 +184,17 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     newarr = newMatch;
     // Now check for ranges. These are strings of the form 'X.XXX-X.XXX'
     if (newarr.range) {
-      var rangematches = $('.classdiv:not(.custom)').filter(function(index) {
-        var rng = [newarr.dept, '.' + newarr.from, '.' + newarr.to];
-        var data = $(this).data();
-        var temp2 = [data.subject_id].concat(data.joint_subjects || []);
-        for (j in temp2) {
-          var temp3 = [temp2[j].split('.')[0], '.' + temp2[j].split('.')[1]];
-          if ((temp3[0] == rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
-            rng[2])) {
-            return true;
-          }
-        }
-        return false;
-      }).each(function() {
-        if (
-            $.inArray(this, globalMatches) != -1 && 
-            !matchParams.globalMatchesIgnore && 
-            !newarr.globalMatchesIgnore) {
-          return true;
-        }
-        // Calls callback with tempargs as its arguments.
-        var temp2 = applyCallbackFn(
-          $(this), callback, callbackArgs, level, i, newarr
-        );
-        if (temp2) {
-          matchParams.count -= (
-            matchParams.special ? $(this).data(matchParams.type) : 1
-          );
-          matchParams.matchesFound.push(this);
-          !newarr.globalMatchesSkip 
-            && !matchParams.globalMatchesSkip 
-            && globalMatches.push(this);
-          newarr.globalMatchesSkip 
-            && console.log('newarrskip', newarr, matchParams);
-          matchParams.globalMatchesSkip 
-            && console.log('matchParamsskip', newarr, matchParams);
-        }
-        if (matchParams.count <= 0 && !matchParams.runinfull) {
-          return [
-            true, '', level.length ? matchParams.matchesFound : globalMatches
-          ];
-        }
-      });
+      var rangematches = $('.classdiv:not(.custom)').filter(filterRangeMatches)
+        .each(iterateRangeMatches);
       if (matchParams.count <= 0) {
         return [
           true, '', level.length ? matchParams.matchesFound : globalMatches
         ];
       }
       unsatisfiedRequisitesInfo.push(
-        (newarr.coreq === 1)
-        ? ('[' + newarr.id + newarr.desc + ']')
-        : (newarr.id + newarr.desc)
+        (newarr.coreq === 1) ?
+          ('[' + newarr.id + newarr.desc + ']') :
+          (newarr.id + newarr.desc)
       );
       continue;
     }
@@ -175,34 +202,13 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     var classmatches = $('.classdiv.' + (
       newarr.id.toUpperCase().replace('.', '_').replace(':', '.')
     ));
-    classmatches.each(function() {
-      if (
-          $.inArray(this, globalMatches) != -1 
-          && !matchParams.globalMatchesIgnore 
-          && !newarr.globalMatchesIgnore) {
-        return true;
-      }
-      // Calls callback with tempargs as its arguments.
-      var temp2 = applyCallbackFn(
-        $(this), callback, callbackArgs, level, i, newarr
-      );
-      if (temp2) {
-        matchParams.count -= (
-          matchParams.special ? $(this).data(matchParams.type) : 1
-        );
-        matchParams.matchesFound.push(this);
-        !newarr.globalMatchesSkip 
-          && !matchParams.globalMatchesSkip 
-          && globalMatches.push(this);
-        return false;
-      }
-    });
+    classmatches.each(iterateClassMatches);
     // If it's not a class, or callback failed, then we need to note that.
     if (!classmatches.length || !temp2) {
       unsatisfiedRequisitesInfo.push(
-        (newarr.coreq == 1)
-        ? ('[' + newarr.id + newarr.desc + ']')
-        : (newarr.id + newarr.desc)
+        (newarr.coreq == 1) ?
+          ('[' + newarr.id + newarr.desc + ']') :
+          (newarr.id + newarr.desc)
       );
     }
     if (matchParams.count <= 0 && !matchParams.runinfull) {
@@ -215,7 +221,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   if (matchParams.count <= 0) {
     return [true, '', level.length ? matchParams.matchesFound : globalMatches];
   }
-  var unsatisfiedRequisitesInfo = unsatisfiedRequisitesInfo.join(', ');
+  unsatisfiedRequisitesInfo = unsatisfiedRequisitesInfo.join(', ');
   unsatisfiedRequisitesInfo = deGIR(unsatisfiedRequisitesInfo);
   if (matchParams.special) {
     unsatisfiedRequisitesInfo = (
@@ -224,33 +230,33 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     );
   } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
     unsatisfiedRequisitesInfo = (
-      '(' + matchParams.count + ' ' + matchParams.desc + ': ' + 
+      '(' + matchParams.count + ' ' + matchParams.desc + ': ' +
       unsatisfiedRequisitesInfo + ')'
     );
   }
   return [
-    false, 
-    unsatisfiedRequisitesInfo, 
+    false,
+    unsatisfiedRequisitesInfo,
     level.length ? matchParams.matchesFound : globalMatches
   ];
 }
 
 function getMatchParams(arr) {
   var matchedElement = arr[0];
-  
+
   if (typeof matchedElement === 'number') {
     // Shortcut "all of the following" lists with a 0 in front:
     // [0, "a", "b"] --> [2, "a", "b"];
     if (matchedElement === 0) {
       matchedElement = arr.length - 1;
     }
-    matchedElement = { count: parseInt(0 + matchedElement) };
+    matchedElement = { count: parseInt(0 + matchedElement, 10) };
   }
-  
+
   var matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
   matchedObject.initialCount = matchedObject.count;
   matchedObject.matchesFound = [];
-  
+
   return matchedObject;
 }
 
@@ -336,14 +342,14 @@ function newWire(from, to) {
     option = 'error';
   }
   var wireType = (dterm == 1 || dterm == 2) ? 'Wire' : 'BezierWire';
-  user.viewReqLines && from.data('terminals').wires.push(
-    new WireIt[wireType](
+  if (user.viewReqLines) {
+    from.data('terminals').wires.push(new WireIt[wireType](
       from.data('terminals').terminal,
       to.div.data('terminals').terminal,
       document.body,
       options[option]
-    )
-  );
+    ));
+  }
   return (options[option].OK);
 }
 
@@ -368,7 +374,7 @@ function addWires(div, addwires) {
     if (data.override) div.find('.reqs').attr('title',
       'OVERRIDE enabled');
   }
-  data.checkterm = (data.classterm == 0) || (([data.fall,
+  data.checkterm = (data.classterm === 0) || (([data.fall,
     data.iap, data.spring, data.summer])[(data.classterm - 1) % 4]);
   data.checkrepeat = true;
   if ($.inArray(data.grade_rule, ['J', 'U', 'R']) == -1) {
@@ -392,7 +398,7 @@ function addWires(div, addwires) {
       data.override
     ) &&
     data.checkterm ||
-    data.classterm == 0
+    data.classterm === 0
   );
   div.removeClass('classdivgood').removeAttr('title');
   if (data.status) div.addClass('classdivgood');
@@ -443,6 +449,7 @@ function checkClasses() {
     var div = this;
     var $this = $(this);
     var data = $this.data();
+    var $effect;
     if (!data.checkrepeat) {
       return true;
     }
@@ -453,7 +460,7 @@ function checkClasses() {
     }
     var GIR = data.gir;
     if (GIR) {
-      var $effect = $('.corecheck.unused.GIR.' + GIR + ':first');
+      $effect = $('.corecheck.unused.GIR.' + GIR + ':first');
       if ($effect.length) {
         $effect.removeClass('unused').addClass('used')
           .attr('title', data.subject_id);
@@ -474,7 +481,7 @@ function checkClasses() {
           ($(this).index('.classdiv') < i);
     });
     if (data.ci && !otherCIPrecedingInTerm.length) {
-      var $effect = $('.corecheck.unused.CI.' + data.ci + ':first');
+      $effect = $('.corecheck.unused.CI.' + data.ci + ':first');
       if ($effect.length) {
         $effect.removeClass('unused').addClass('used').attr('title', $this
           .data('subject_id'));
@@ -486,15 +493,15 @@ function checkClasses() {
       if (~hass[0].indexOf(',')) {
         hass = hass[0].split(',');
       }
-      for (i in hass) {
-        var $effect = $('.corecheck.unused.HASS.' + hass[i] + ':first');
+      for (var j in hass) {
+        $effect = $('.corecheck.unused.HASS.' + hass[j] + ':first');
         if ($effect.length) {
-          $effect.removeClass('unused').addClass('used').attr('title', $(
-            div).data('subject_id'));
+          $effect.removeClass('unused').addClass('used')
+            .attr('title', $(div).data('subject_id'));
           forUnits = false;
         } else {
-          if ((hass.length > 1) && (i != (hass.length - 1))) continue;
-          var $effect = $('.corecheck.unused.HASS.HE:first');
+          if ((hass.length > 1) && (j != (hass.length - 1))) continue;
+          $effect = $('.corecheck.unused.HASS.HE:first');
           if ($effect.length) {
             $effect.removeClass('unused').addClass('used')
               .attr('title', data.subject_id);
@@ -503,7 +510,9 @@ function checkClasses() {
         }
       }
     }
-    forUnits && (totalUnits += data.total_units);
+    if (forUnits) {
+      totalUnits += data.total_units;
+    }
   });
   totalUnits = Math.round(100 * totalUnits) / 100;
   $('#totalunits').html(totalUnits);
@@ -555,7 +564,7 @@ function classFromJSON(json, loadspeed, replacediv) {
   if (json.classterm > 16) {
     $('.supersenior.hidden').removeClass('hidden', loadspeed);
   }
-  if (json.classterm && json.classterm % 4 == 0) {
+  if (json.classterm && json.classterm % 4 === 0) {
     $('.term .termname').eq(json.classterm)
       .fadeIn(loadspeed).parent().slideDown(loadspeed, function() {
         updateWires();
@@ -576,7 +585,7 @@ function classFromJSON(json, loadspeed, replacediv) {
   if (json.override) {
     newdiv.addClass('classdivoverride');
   }
-  for (attr in json) {
+  for (var attr in json) {
     newdiv.data(attr, json[attr]);
   }
   newdiv.data('terminals', {
@@ -589,14 +598,14 @@ function classFromJSON(json, loadspeed, replacediv) {
 }
 
 function properYear(classterm) {
-  return user.classYear
-    - parseInt(3 - Math.floor((classterm - 1) / 4))
-    - user.supersenior;
+  return user.classYear -
+    parseInt(3 - Math.floor((classterm - 1) / 4), 10) - user.supersenior;
 }
 
 function getClass() {
   // pulls down and interprets the class data
   var classterm = $('#getnewclassterm').val();
+  var data;
   user.supersenior = (
     ($('.year.supersenior').is(':visible') || classterm > 16) ? 1 : 0
   );
@@ -604,7 +613,7 @@ function getClass() {
     if (!$('#getnewclassname').val()) {
       return false;
     }
-    var data = {
+    data = {
       getcustom: $('#getnewclassname').val(),
       getunits: $('#getnewclassunits').val() || 0
     };
@@ -612,7 +621,7 @@ function getClass() {
     if (!$('#getnewclassid').val()) {
       return false;
     }
-    var data = {
+    data = {
       getclass: $('#getnewclassid').val(),
       getyear: 0
     };
@@ -661,7 +670,7 @@ function checkMajor(selector) {
   var div = $(selector).data('div');
   var span = $(selector).prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
-  if (majors[val] == undefined) majors[val] = [0];
+  if (majors[val] === undefined) majors[val] = [0];
   if (val == 'm0') return $(div).html('') && false;
   span.attr('data-value', $(selector).find('option:selected').text())
     .removeAttr('data-empty');
@@ -674,20 +683,22 @@ function checkMajor(selector) {
 }
 
 function buildMajor(arr, level) {
-  if (level == undefined) level = []; // Keep track of recursion.
+  if (level === undefined) level = []; // Keep track of recursion.
   // allows 'and' arrays to be prefixed with a 0 (easier)
   // [0, 'a', 'b'] --> [2, 'a', 'b'];
-  if (arr[0] == 0) arr[0] = arr.length - 1;
+  if (arr[0] === 0) arr[0] = arr.length - 1;
+  var holdobj;
   if (typeof (arr[0]) == 'number') {
-    var holdobj = $.extend({}, Defaults.requisiteCount, {
+    holdobj = $.extend({}, Defaults.requisiteCount, {
       count: (0 + arr[0])
     });
   } else {
-    var holdobj = $.extend({}, Defaults.requisiteCount, arr[0]);
+    holdobj = $.extend({}, Defaults.requisiteCount, arr[0]);
   }
   // Holds the unsatisfied requisites in a string for display to the user.
   var tempstr = '';
   var temp2 = true;
+  var newarr;
   for (var i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
       // In case a sub-branch is inside this branch,
@@ -699,9 +710,9 @@ function buildMajor(arr, level) {
     // Converting both things to objects,
     // but only the coreq ones will have a 'coreq':1 thing.
     if (typeof (arr[i]) == 'object') {
-      var newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
+      newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
     } else {
-      var newarr = $.extend({}, Defaults.requisiteClass, {
+      newarr = $.extend({}, Defaults.requisiteClass, {
         id: arr[i]
       });
     }
@@ -726,15 +737,15 @@ function buildMajor(arr, level) {
     // Now only strings
     tempstr += (
       '<li>' + (
-        newarr.skip
-        ? '&#x2006;&#x2014; '
-        : '<span class="majorchk majorchk_' + level.concat([i]).join('_') +
+        newarr.skip ?
+          '&#x2006;&#x2014; ' :
+          '<span class="majorchk majorchk_' + level.concat([i]).join('_') +
           ' checkbox1">[<span>&#x2713;<\/span>]<\/span> '
       ) +
       (
-        newarr.skip
-        ? ''
-        : '<span class="checkbox1_text" data-id="' + newarr.id + '">'
+        newarr.skip ?
+          '' :
+          '<span class="checkbox1_text" data-id="' + newarr.id + '">'
       ) +
       newarr.id +
       (newarr.skip ? '' : '</span>') +
@@ -802,7 +813,7 @@ function deGIR(str) {
  * Used primarily in saved classes
  */
 function minclass(stringify) {
-  if (stringify == undefined) stringify = false;
+  if (stringify === undefined) stringify = false;
   var temp = $('.classdiv').map(function() {
     var $this = $(this);
     arr = $this.data('custom') ? {
@@ -865,11 +876,11 @@ function runBeforeUnload() {
 var userHashChange = true;
 window.onhashchange = function() {
   // userHashChange means that if the user types in a new hash in the URL,
-  // the browser will reload, but if the hash changes due to saving a new 
+  // the browser will reload, but if the hash changes due to saving a new
   // version or something it won't.
   userHashChange = !userHashChange || window.location.reload();
   document.title = 'CourseRoad: ' + window.location.hash.substr(1);
-}
+};
 
 function swapClassYear(oldclass, newyear) {
   oldclass.addClass('classdivlow');
@@ -888,7 +899,8 @@ function swapClassYear(oldclass, newyear) {
   }, 'json');
 }
 
-var reasonToTrySave = preventUpdateWires = false;
+var reasonToTrySave = false;
+var preventUpdateWires = false;
 var totalUnits = 0;
 var crSetup = function() {
   crSetup = undefined;
@@ -909,7 +921,6 @@ var crSetup = function() {
    *   }
    * }, 10000);
    */
-  // Assures regular updating of the window, should anything change
   setInterval(function() {
     addAllWires(false);
   }, 10000);
@@ -929,7 +940,7 @@ var crSetup = function() {
       gethash: window.location.hash
     }, function(data) {
       $('#loading').hide();
-      if (data == '') return false;
+      if (data === '') return false;
       var json = $.parseJSON(data);
       var jsonmajors = json.pop();
       $('select.majorminor').each(function(i) {
@@ -944,7 +955,7 @@ var crSetup = function() {
     getClasses(add_new_term, true);
     $(window).on('beforeunload', runBeforeUnload);
   }
-  thisterm = add_new_term = 0;
+  var thisterm = add_new_term = 0;
   $('body').on('click', '.classdivyear span', function() {
     var par = $(this).parents('.classdiv');
     if (par.data('changing')) return false;
@@ -977,7 +988,7 @@ var crSetup = function() {
       $('#overrider span').css('opacity', 1);
       $('.classdiv').not($(this)).addClass('classdivlow');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');
-      for (i in $('.classdivhigh').data('terminals').terminal.wires) {
+      for (var i in $('.classdivhigh').data('terminals').terminal.wires) {
         $($('.classdivhigh').data('terminals').terminal.wires[i].element)
           .removeClass('WireIt-Wire-low');
       }
@@ -1081,8 +1092,13 @@ var crSetup = function() {
       preventUpdateWires = true;
       $('.WireIt-Wire').hide();
       var terms = ['fall', 'iap', 'spring', 'summer'];
-      for (s in terms) $('.' + terms[s]).addClass(ui.item.data('custom') ||
-        ui.item.data(terms[s]) ? 'OKterm' : 'notOKterm');
+      for (var s in terms) {
+        $('.' + terms[s]).addClass(
+          ui.item.data('custom') || (
+            ui.item.data(terms[s]) ? 'OKterm' : 'notOKterm'
+          )
+        );
+      }
     },
     stop: function(event, ui) {
       preventUpdateWires = false;
@@ -1171,7 +1187,7 @@ var crSetup = function() {
     $('.getnewclasstypes.visible input:first').focus();
     $('#getnewclassterm').val(Math.max(0, Math.min($(
       '#getnewclassterm option').length - 1, parseInt($(
-      '#getnewclassterm').val()) + parseInt($(this).val()))));
+      '#getnewclassterm').val(), 10) + parseInt($(this).val(), 10))));
   });
   $('#savemap').click(function() {
     $('#savemap').val('Saving...').prop('disabled', true);
@@ -1266,7 +1282,7 @@ var crSetup = function() {
     $('#accordion').accordion('resize');
   }, 2500);
   $('select.majorminor option').each(function() {
-    if (majors[$(this).val()] == undefined) $(this).remove();
+    if (majors[$(this).val()] === undefined) $(this).remove();
   });
   $(window).resize(updateWires);
   $('#printroad').click(function() {
@@ -1277,7 +1293,7 @@ var crSetup = function() {
     updateWires();
   });
   $('.flakyCSS').removeClass('flakyCSS');
-  var doge = new Konami(function() { 
+  var doge = new Konami(function() {
     $('#rightbar').addClass('doge');
   });
   $('#userlogin').click(function() {
@@ -1303,7 +1319,7 @@ var crSetup = function() {
     };
     var old_class_year = user.classYear;
     $('#usersettings_div').load('?', data, function() {
-      user.classYear = parseInt($('#usersettings_class_year').val());
+      user.classYear = parseInt($('#usersettings_class_year').val(), 10);
       user.viewReqLines = ($('#usersettings_view_req_lines').prop('checked') ?
         1 : 0);
       user.autocomplete = ($('#usersettings_autocomplete').prop('checked') ?
@@ -1340,8 +1356,8 @@ var crSetup = function() {
 };
 
 /*
- * Konami-JS ~ 
- * :: Now with support for touch events and multiple instances for 
+ * Konami-JS ~
+ * :: Now with support for touch events and multiple instances for
  * :: those situations that call for multiple easter eggs!
  * Code: http://konami-js.googlecode.com/
  * Examples: http://www.snaptortoise.com/konami-js
@@ -1352,95 +1368,97 @@ var crSetup = function() {
  */
 
 var Konami = function (callback) {
-	var konami = {
-		addEvent: function (obj, type, fn, ref_obj) {
-			if (obj.addEventListener)
-				obj.addEventListener(type, fn, false);
-			else if (obj.attachEvent) {
-				// IE
-				obj['e' + type + fn] = fn;
-				obj[type + fn] = function () {
-					obj['e' + type + fn](window.event, ref_obj);
-				}
-				obj.attachEvent('on' + type, obj[type + fn]);
-			}
-		},
-		input: '',
-		pattern: '38384040373937396665',
-		load: function (link) {
-			this.addEvent(document, 'keydown', function (e, ref_obj) {
-				if (ref_obj) konami = ref_obj; // IE
-				konami.input += e ? e.keyCode : event.keyCode;
-				if (konami.input.length > konami.pattern.length)
-					konami.input = konami.input.substr((konami.input.length - konami.pattern.length));
-				if (konami.input == konami.pattern) {
-					konami.code(link);
-					konami.input = '';
-					e.preventDefault();
-					return false;
-				}
-			}, this);
-			this.iphone.load(link);
-		},
-		code: function (link) {
-			window.location = link
-		},
-		iphone: {
-			start_x: 0,
-			start_y: 0,
-			stop_x: 0,
-			stop_y: 0,
-			tap: false,
-			capture: false,
-			orig_keys: '',
-			keys: ['UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 'RIGHT', 'LEFT', 'RIGHT', 'TAP', 'TAP'],
-			code: function (link) {
-				konami.code(link);
-			},
-			load: function (link) {
-				this.orig_keys = this.keys;
-				konami.addEvent(document, 'touchmove', function (e) {
-					if (e.touches.length == 1 && konami.iphone.capture == true) {
-						var touch = e.touches[0];
-						konami.iphone.stop_x = touch.pageX;
-						konami.iphone.stop_y = touch.pageY;
-						konami.iphone.tap = false;
-						konami.iphone.capture = false;
-						konami.iphone.check_direction();
-					}
-				});
-				konami.addEvent(document, 'touchend', function (evt) {
-					if (konami.iphone.tap == true) konami.iphone.check_direction(link);
-				}, false);
-				konami.addEvent(document, 'touchstart', function (evt) {
-					konami.iphone.start_x = evt.changedTouches[0].pageX;
-					konami.iphone.start_y = evt.changedTouches[0].pageY;
-					konami.iphone.tap = true;
-					konami.iphone.capture = true;
-				});
-			},
-			check_direction: function (link) {
-				x_magnitude = Math.abs(this.start_x - this.stop_x);
-				y_magnitude = Math.abs(this.start_y - this.stop_y);
-				x = ((this.start_x - this.stop_x) < 0) ? 'RIGHT' : 'LEFT';
-				y = ((this.start_y - this.stop_y) < 0) ? 'DOWN' : 'UP';
-				result = (x_magnitude > y_magnitude) ? x : y;
-				result = (this.tap == true) ? 'TAP' : result;
+  var konami = {
+    addEvent: function (obj, type, fn, ref_obj) {
+      if (obj.addEventListener)
+        obj.addEventListener(type, fn, false);
+      else if (obj.attachEvent) {
+        // IE
+        obj['e' + type + fn] = fn;
+        obj[type + fn] = function () {
+          obj['e' + type + fn](window.event, ref_obj);
+        };
+        obj.attachEvent('on' + type, obj[type + fn]);
+      }
+    },
+    input: '',
+    pattern: '38384040373937396665',
+    load: function (link) {
+      this.addEvent(document, 'keydown', function (e, ref_obj) {
+        if (ref_obj) konami = ref_obj; // IE
+        konami.input += e ? e.keyCode : event.keyCode;
+        if (konami.input.length > konami.pattern.length)
+          konami.input = konami.input.substr((konami.input.length - konami.pattern.length));
+        if (konami.input == konami.pattern) {
+          konami.code(link);
+          konami.input = '';
+          e.preventDefault();
+          return false;
+        }
+      }, this);
+      this.iphone.load(link);
+    },
+    code: function (link) {
+      window.location = link;
+    },
+    iphone: {
+      start_x: 0,
+      start_y: 0,
+      stop_x: 0,
+      stop_y: 0,
+      tap: false,
+      capture: false,
+      orig_keys: '',
+      keys: ['UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 'RIGHT', 'LEFT', 'RIGHT', 'TAP', 'TAP'],
+      code: function (link) {
+        konami.code(link);
+      },
+      load: function (link) {
+        this.orig_keys = this.keys;
+        konami.addEvent(document, 'touchmove', function (e) {
+          if (e.touches.length == 1 && konami.iphone.capture === true) {
+            var touch = e.touches[0];
+            konami.iphone.stop_x = touch.pageX;
+            konami.iphone.stop_y = touch.pageY;
+            konami.iphone.tap = false;
+            konami.iphone.capture = false;
+            konami.iphone.check_direction();
+          }
+        });
+        konami.addEvent(document, 'touchend', function (evt) {
+          if (konami.iphone.tap === true) konami.iphone.check_direction(link);
+        }, false);
+        konami.addEvent(document, 'touchstart', function (evt) {
+          konami.iphone.start_x = evt.changedTouches[0].pageX;
+          konami.iphone.start_y = evt.changedTouches[0].pageY;
+          konami.iphone.tap = true;
+          konami.iphone.capture = true;
+        });
+      },
+      check_direction: function (link) {
+        x_magnitude = Math.abs(this.start_x - this.stop_x);
+        y_magnitude = Math.abs(this.start_y - this.stop_y);
+        x = ((this.start_x - this.stop_x) < 0) ? 'RIGHT' : 'LEFT';
+        y = ((this.start_y - this.stop_y) < 0) ? 'DOWN' : 'UP';
+        result = (x_magnitude > y_magnitude) ? x : y;
+        result = (this.tap === true) ? 'TAP' : result;
 
-				if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
-				if (this.keys.length == 0) {
-					this.keys = this.orig_keys;
-					this.code(link);
-				}
-			}
-		}
-	}
+        if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
+        if (this.keys.length === 0) {
+          this.keys = this.orig_keys;
+          this.code(link);
+        }
+      }
+    }
+  };
 
-	typeof callback === 'string' && konami.load(callback);
-	if (typeof callback === 'function') {
-		konami.code = callback;
-		konami.load();
-	}
+  if (typeof callback === 'string') {
+    konami.load(callback);
+  }
+  if (typeof callback === 'function') {
+    konami.code = callback;
+    konami.load();
+  }
 
-	return konami;
+  return konami;
 };
