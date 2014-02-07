@@ -30,6 +30,40 @@ var Defaults = {
   }
 };
 
+function getMatchParams(arr) {
+  var matchedElement = arr[0];
+
+  if (typeof matchedElement === 'number') {
+    // Shortcut "all of the following" lists with a 0 in front:
+    // [0, "a", "b"] --> [2, "a", "b"];
+    if (matchedElement === 0) {
+      matchedElement = arr.length - 1;
+    }
+    matchedElement = { count: parseInt(matchedElement, 10) };
+  }
+
+  var matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
+  matchedObject.initialCount = matchedObject.count;
+  matchedObject.matchesFound = [];
+
+  return matchedObject;
+}
+
+function getMatchObject(match) {
+  var newMatch;
+  if (typeof match === 'object') {
+    newMatch = $.extend({}, Defaults.requisiteClass, match);
+  } else {
+    newMatch = $.extend({}, Defaults.requisiteClass, {
+      id: match
+    });
+  }
+  if (newMatch.desc === undefined) {
+    newMatch.desc = '';
+  }
+  return newMatch;
+}
+
 /**
  * The idea here is to make it possible to loop recursively through
  * a requisite tree and perform callback actions when a class matches.
@@ -76,7 +110,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     var rng = [newarr.dept, '.' + newarr.from, '.' + newarr.to];
     var data = $(this).data();
     var temp2 = [data.subject_id].concat(data.joint_subjects || []);
-    for (var j in temp2) {
+    for (var j = 0; j < temp2.length; j++) {
       var temp3 = [temp2[j].split('.')[0], '.' + temp2[j].split('.')[1]];
       if ((temp3[0] == rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
         rng[2])) {
@@ -239,40 +273,6 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     unsatisfiedRequisitesInfo,
     level.length ? matchParams.matchesFound : globalMatches
   ];
-}
-
-function getMatchParams(arr) {
-  var matchedElement = arr[0];
-
-  if (typeof matchedElement === 'number') {
-    // Shortcut "all of the following" lists with a 0 in front:
-    // [0, "a", "b"] --> [2, "a", "b"];
-    if (matchedElement === 0) {
-      matchedElement = arr.length - 1;
-    }
-    matchedElement = { count: parseInt(0 + matchedElement, 10) };
-  }
-
-  var matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
-  matchedObject.initialCount = matchedObject.count;
-  matchedObject.matchesFound = [];
-
-  return matchedObject;
-}
-
-function getMatchObject(match) {
-  var newMatch;
-  if (typeof match == 'object') {
-    newMatch = $.extend({}, Defaults.requisiteClass, match);
-  } else {
-    newMatch = $.extend({}, Defaults.requisiteClass, {
-      id: match
-    });
-  }
-  if (newMatch.desc === undefined) {
-    newMatch.desc = '';
-  }
-  return newMatch;
 }
 
 function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
@@ -493,7 +493,7 @@ function checkClasses() {
       if (~hass[0].indexOf(',')) {
         hass = hass[0].split(',');
       }
-      for (var j in hass) {
+      for (var j = 0; j < hass.length; j++) {
         $effect = $('.corecheck.unused.HASS.' + hass[j] + ':first');
         if ($effect.length) {
           $effect.removeClass('unused').addClass('used')
@@ -988,10 +988,10 @@ var crSetup = function() {
       $('#overrider span').css('opacity', 1);
       $('.classdiv').not($(this)).addClass('classdivlow');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');
-      for (var i in $('.classdivhigh').data('terminals').terminal.wires) {
-        $($('.classdivhigh').data('terminals').terminal.wires[i].element)
-          .removeClass('WireIt-Wire-low');
-      }
+      $('.classdivhigh').data('terminals').terminal.wires
+        .forEach(function(wire) {
+        $(wire.element).removeClass('WireIt-Wire-low');
+      });
       $('#nowreading').html($('.classdivhigh').data('info')).scrollTop(0);
       $('#overridercheck').prop('disabled', false).prop('checked', $(
         '.classdivhigh').data('override'));
@@ -1092,13 +1092,12 @@ var crSetup = function() {
       preventUpdateWires = true;
       $('.WireIt-Wire').hide();
       var terms = ['fall', 'iap', 'spring', 'summer'];
-      for (var s in terms) {
-        $('.' + terms[s]).addClass(
-          ui.item.data('custom') || (
-            ui.item.data(terms[s]) ? 'OKterm' : 'notOKterm'
-          )
+      terms.forEach(function(term) {
+        $('.' + term).addClass(
+          ui.item.data('custom') || 
+          ui.item.data(term) ? 'OKterm' : 'notOKterm'
         );
-      }
+      });
     },
     stop: function(event, ui) {
       preventUpdateWires = false;
