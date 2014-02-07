@@ -4,9 +4,8 @@
 
 "use strict";
 
-var $, user, WireIt, majors;
-var loggedin, hash_to_use, add_new_term, classterm, triedlogin;
-var document, window, setInterval, confirm, prompt, console, setTimeout, event;
+var WireIt, majors, user;
+var add_new_term, classterm, hash_to_use, loggedin, triedlogin;
 
 var Defaults = {
   requisiteCount: {
@@ -68,6 +67,23 @@ function getMatchObject(match) {
   return newMatch;
 }
 
+function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
+  // Copye args
+  var tempArgs = callbackArgs.slice();
+  var clsPosition = $.inArray('cls', tempArgs);
+  if (~clsPosition) {
+    tempArgs[clsPosition] = $.extend({}, newarr, {
+      div: obj
+    });
+  }
+  var lvlPosition = $.inArray('lvl', tempArgs);
+  if (~lvlPosition) {
+    tempArgs[lvlPosition] = level.concat([i]);
+  }
+  // Calls callback with tempArgs as its arguments.
+  return callback.apply(null, tempArgs);
+}
+
 /**
  * The idea here is to make it possible to loop recursively through
  * a requisite tree and perform callback actions when a class matches.
@@ -107,6 +123,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   var temp2;
   var newarr;
   var newMatch;
+  var i, j;
   var requisiteBranchMatchParams = function() {
     matchParams.count -= $(this).data(matchParams.type);
   };
@@ -114,9 +131,9 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     var rng = [newarr.dept, '.' + newarr.from, '.' + newarr.to];
     var data = $(this).data();
     var temp2 = [data.subject_id].concat(data.joint_subjects || []);
-    for (var j = 0; j < temp2.length; j++) {
+    for (j = 0; j < temp2.length; j++) {
       var temp3 = [temp2[j].split('.')[0], '.' + temp2[j].split('.')[1]];
-      if ((temp3[0] == rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
+      if ((temp3[0] === rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
         rng[2])) {
         return true;
       }
@@ -125,7 +142,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   };
   var iterateRangeMatches = function() {
     if (
-        $.inArray(this, globalMatches) != -1 &&
+        ~$.inArray(this, globalMatches) &&
         !matchParams.globalMatchesIgnore &&
         !newarr.globalMatchesIgnore) {
       return true;
@@ -174,7 +191,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       return false;
     }
   };
-  for (var i = 1; i < arr.length; i++) {
+  for (i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
       // In case a sub-branch is inside this branch, we recursively solve that
       // branch and use its result.
@@ -212,7 +229,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       continue;
     }
     if (newMatch.id === 'Permission' && !user.needPermission) {
-      if (matchParams.initialCount == arr.length - 1) {
+      if (matchParams.initialCount === arr.length - 1) {
         matchParams.count --;
       }
       continue;
@@ -242,7 +259,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     // If it's not a class, or callback failed, then we need to note that.
     if (!classmatches.length || !temp2) {
       unsatisfiedRequisitesInfo.push(
-        (newarr.coreq == 1) ?
+        (newarr.coreq === 1) ?
           ('[' + newarr.id + newarr.desc + ']') :
           (newarr.id + newarr.desc)
       );
@@ -264,7 +281,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       '(' + matchParams.count + ' ' + matchParams.desc + ': ' +
       (JSON.stringify(arr.slice(1))) + ')'
     );
-  } else if (level.length || (!level.length && (arr[0] != arr.length - 1))) {
+  } else if (level.length || (!level.length && (arr[0] !== arr.length - 1))) {
     unsatisfiedRequisitesInfo = (
       '(' + matchParams.count + ' ' + matchParams.desc + ': ' +
       unsatisfiedRequisitesInfo + ')'
@@ -275,23 +292,6 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     unsatisfiedRequisitesInfo,
     level.length ? matchParams.matchesFound : globalMatches
   ];
-}
-
-function applyCallbackFn(obj, callback, callbackArgs, level, i, newarr) {
-  // Copye args
-  var tempArgs = callbackArgs.slice();
-  var clsPosition = $.inArray('cls', tempArgs);
-  if (clsPosition != -1) {
-    tempArgs[clsPosition] = $.extend({}, newarr, {
-      div: obj
-    });
-  }
-  var lvlPosition = $.inArray('lvl', tempArgs);
-  if (lvlPosition != -1) {
-    tempArgs[lvlPosition] = level.concat([i]);
-  }
-  // Calls callback with tempArgs as its arguments.
-  return callback.apply(null, tempArgs);
 }
 
 /*** Course functions ***/
@@ -343,7 +343,7 @@ function newWire(from, to) {
   if ((fromterm < toterm) && (fromterm || dterm)) {
     option = 'error';
   }
-  var wireType = (dterm == 1 || dterm == 2) ? 'Wire' : 'BezierWire';
+  var wireType = (dterm === 1 || dterm === 2) ? 'Wire' : 'BezierWire';
   if (user.viewReqLines) {
     from.data('terminals').wires.push(new WireIt[wireType](
       from.data('terminals').terminal,
@@ -373,13 +373,14 @@ function addWires(div, addwires) {
     } else {
       div.find('.reqs').html('Reqs: [ ]').attr('title', 'Need: ' + tempstr);
     }
-    if (data.override) div.find('.reqs').attr('title',
-      'OVERRIDE enabled');
+    if (data.override) {
+      div.find('.reqs').attr('title', 'OVERRIDE enabled');
+    }
   }
   data.checkterm = (data.classterm === 0) || (([data.fall,
     data.iap, data.spring, data.summer])[(data.classterm - 1) % 4]);
   data.checkrepeat = true;
-  if ($.inArray(data.grade_rule, ['J', 'U', 'R']) == -1) {
+  if (!~$.inArray(data.grade_rule, ['J', 'U', 'R'])) {
     if ($('.classdiv').not(div).filter(function(j) {
       return (
         (
@@ -400,21 +401,29 @@ function addWires(div, addwires) {
       data.override
     ) &&
     data.checkterm ||
-    data.classterm === 0
+    (data.classterm === 0)
   );
   div.removeClass('classdivgood').removeAttr('title');
-  if (data.status) div.addClass('classdivgood');
-  if (!data.checkrepeat) div.attr('title', data.subject_id +
-    ' is not counting for credit');
-  if (!data.checkterm) div.attr('title', data.subject_id +
-    ' is not available ' + (['in the Fall term', 'during IAP',
+  if (data.status) { 
+    div.addClass('classdivgood');
+  }
+  if (!data.checkrepeat) {
+    div.attr('title', data.subject_id + ' is not counting for credit');
+  }
+  if (!data.checkterm) {
+    div.attr('title', data.subject_id + ' is not available ' + 
+      (['in the Fall term', 'during IAP', 
       'in the Spring term', 'in the Summer term'])[(data.classterm - 1) %
       4]);
-  if (!data.offered_this_year) div.attr('title', data.subject_id +
+  }
+  if (!data.offered_this_year) {
+    div.attr('title', data.subject_id +
     ' is not available in this year (' + div.data('year_range') + ')');
-  if (data.override) div.find('.coreqs').attr('title',
-    'OVERRIDE enabled');
-  if ($('.classdivhigh').length == 1) {
+  }
+  if (data.override) {
+    div.find('.coreqs').attr('title', 'OVERRIDE enabled');
+  }
+  if ($('.classdivhigh').length === 1) {
     $('.WireIt-Wire').addClass('WireIt-Wire-low');
     $('.classdivhigh').data('terminals').terminal.wires.forEach(function(wire) {
       $(wire.element).removeClass('WireIt-Wire-low');
@@ -452,6 +461,7 @@ function checkClasses() {
     var $this = $(this);
     var data = $this.data();
     var $effect;
+    var j;
     if (!data.checkrepeat) {
       return true;
     }
@@ -466,7 +476,7 @@ function checkClasses() {
       if ($effect.length) {
         $effect.removeClass('unused').addClass('used')
           .attr('title', data.subject_id);
-        if (GIR == 'LAB') {
+        if (GIR === 'LAB') {
           if (!$effect.length) {
             totalUnits += data.total_units - 6;
           }
@@ -479,7 +489,7 @@ function checkClasses() {
     var thisterm = data.classterm;
     var otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(div)
       .filter(function() {
-        return ($(this).data('classterm') == data.classterm) &&
+        return ($(this).data('classterm') === data.classterm) &&
           ($(this).index('.classdiv') < i);
     });
     if (data.ci && !otherCIPrecedingInTerm.length) {
@@ -495,14 +505,16 @@ function checkClasses() {
       if (~hass[0].indexOf(',')) {
         hass = hass[0].split(',');
       }
-      for (var j = 0; j < hass.length; j++) {
+      for (j = 0; j < hass.length; j++) {
         $effect = $('.corecheck.unused.HASS.' + hass[j] + ':first');
         if ($effect.length) {
           $effect.removeClass('unused').addClass('used')
             .attr('title', $(div).data('subject_id'));
           forUnits = false;
         } else {
-          if ((hass.length > 1) && (j != (hass.length - 1))) continue;
+          if ((hass.length > 1) && (j !== (hass.length - 1))) {
+            continue;
+          }
           $effect = $('.corecheck.unused.HASS.HE:first');
           if ($effect.length) {
             $effect.removeClass('unused').addClass('used')
@@ -532,7 +544,9 @@ function addAllWires(reloadNotify) {
     }
   }).each(function() {
     var $this = $(this);
-    if ($this.data('custom')) return true;
+    if ($this.data('custom')) {
+      return true;
+    }
     var temp = addWires($this);
     status = status && temp;
   });
@@ -559,7 +573,9 @@ function addAllWires(reloadNotify) {
 /*** Course-loading functions ***/
 
 function classFromJSON(json, loadspeed, replacediv) {
-  if (loadspeed === undefined) loadspeed = 'slow';
+  if (loadspeed === undefined) {
+    loadspeed = 'slow';
+  }
   json = $.extend({}, {
     override: false
   }, json);
@@ -587,7 +603,8 @@ function classFromJSON(json, loadspeed, replacediv) {
   if (json.override) {
     newdiv.addClass('classdivoverride');
   }
-  for (var attr in json) {
+  var attr;
+  for (attr in json) {
     if (json.hasOwnProperty(attr)) {
       newdiv.data(attr, json[attr]);
     }
@@ -613,7 +630,7 @@ function getClass() {
   user.supersenior = (
     ($('.year.supersenior').is(':visible') || classterm > 16) ? 1 : 0
   );
-  if ($('input[name="getnewclasstype"]:checked').val() == 'custom') {
+  if ($('input[name="getnewclasstype"]:checked').val() === 'custom') {
     if (!$('#getnewclassname').val()) {
       return false;
     }
@@ -634,7 +651,7 @@ function getClass() {
   $('#getnewclass .ui-autocomplete').hide();
   $('.getnewclasstypes input').val('');
   $.post('?', data, function(json) {
-    if ($.inArray(json, ['error', 'noclass', '']) != -1) {
+    if (~$.inArray(json, ['error', 'noclass', ''])) {
       return false;
     }
     json.classterm = classterm;
@@ -650,9 +667,9 @@ function getClass() {
 // Used for initial pageload when a hash is present:
 // takes in an array containing objects describing the classes.
 function getClasses(classarr, reloadNotify) {
-  for (var i = 0; i < classarr.length; i++) {
-    classFromJSON(classarr[i], 0);
-  }
+  classarr.forEach(function(cls) {
+    classFromJSON(cls, 0);
+  });
   addAllWires(reloadNotify);
 }
 
@@ -674,8 +691,13 @@ function checkMajor(selector) {
   var div = $(selector).data('div');
   var span = $(selector).prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
-  if (majors[val] === undefined) majors[val] = [0];
-  if (val == 'm0') return $(div).html('') && false;
+  if (majors[val] === undefined) {
+    majors[val] = [0];
+  }
+  if (val === 'm0') {
+    $(div).html('');
+    return false;
+  }
   span.attr('data-value', $(selector).find('option:selected').text())
     .removeAttr('data-empty');
   $(div).html(buildMajor(majors[val])).append(
@@ -687,12 +709,16 @@ function checkMajor(selector) {
 }
 
 function buildMajor(arr, level) {
-  if (level === undefined) level = []; // Keep track of recursion.
+  if (level === undefined) {
+    level = []; // Keep track of recursion.
+  }
   // allows 'and' arrays to be prefixed with a 0 (easier)
   // [0, 'a', 'b'] --> [2, 'a', 'b'];
-  if (arr[0] === 0) arr[0] = arr.length - 1;
+  if (arr[0] === 0) {
+    arr[0] = arr.length - 1;
+  }
   var holdobj;
-  if (typeof (arr[0]) == 'number') {
+  if (typeof (arr[0]) === 'number') {
     holdobj = $.extend({}, Defaults.requisiteCount, {
       count: (0 + arr[0])
     });
@@ -703,7 +729,8 @@ function buildMajor(arr, level) {
   var tempstr = '';
   var temp2 = true;
   var newarr;
-  for (var i = 1; i < arr.length; i++) {
+  var i;
+  for (i = 1; i < arr.length; i++) {
     if ($.isArray(arr[i])) {
       // In case a sub-branch is inside this branch,
       // we recursively solve that branch and use its result.
@@ -713,7 +740,7 @@ function buildMajor(arr, level) {
     }
     // Converting both things to objects,
     // but only the coreq ones will have a 'coreq':1 thing.
-    if (typeof (arr[i]) == 'object') {
+    if (typeof (arr[i]) === 'object') {
       newarr = $.extend({}, Defaults.requisiteClass, arr[i]);
     } else {
       newarr = $.extend({}, Defaults.requisiteClass, {
@@ -723,7 +750,8 @@ function buildMajor(arr, level) {
     // Now check for ranges. These are strings of the form 'X.XXX-X.XXX'
     if (newarr.range) {
       var innertempstr = '';
-      for (var j = 0; j < holdobj.count; j++) {
+      var j;
+      for (j = 0; j < holdobj.count; j++) {
         innertempstr += (
           '<span class="majorchk majorchk_' +
           level.concat([i]).join('_') +
@@ -760,11 +788,13 @@ function buildMajor(arr, level) {
   if (holdobj.special) {
     tempstr = holdobj.count + ' ' + holdobj.desc + ':\n' + tempstr;
   } else if (
-      level.length || (!level.length && (holdobj.count != arr.length - 1))) {
+      level.length || (!level.length && (holdobj.count !== arr.length - 1))) {
     // the != part find the '2 from following' strings
     tempstr = holdobj.count + ' ' + holdobj.desc + ':\n' + tempstr;
   }
-  if (!level.length) return '<strong>Requirements:<\/strong><br>\n' + tempstr;
+  if (!level.length) {
+    return '<strong>Requirements:<\/strong><br>\n' + tempstr;
+  }
   return '<li><span class="majorchk majorchk_' + level.join('_') +
     ' checkbox1">[<span>&#x2713;<\/span>]<\/span> ' + tempstr + '<\/li>\n';
 }
@@ -817,7 +847,9 @@ function deGIR(str) {
  * Used primarily in saved classes
  */
 function minclass(stringify) {
-  if (stringify === undefined) stringify = false;
+  if (stringify === undefined) {
+    stringify = false;
+  }
   var temp = $('.classdiv').map(function() {
     var $this = $(this);
     var arr;
@@ -867,7 +899,8 @@ function deltaDate() {
     d.getSeconds(),
     d.getMilliseconds()
   ];
-  for (var t = 0; t < arguments.length; t++) {
+  var t;
+  for (t = 0; t < arguments.length; t++) {
     d[t] += arguments[t];
   }
   return new Date(d[0], d[1], d[2], d[3], d[4], d[5], d[6]);
@@ -949,7 +982,9 @@ var crSetup = function() {
       gethash: window.location.hash
     }, function(data) {
       $('#loading').hide();
-      if (data === '') return false;
+      if (data === '') {
+        return false;
+      }
       var json = $.parseJSON(data);
       var jsonmajors = json.pop();
       $('select.majorminor').each(function(i) {
@@ -968,7 +1003,9 @@ var crSetup = function() {
   add_new_term = 0;
   $('body').on('click', '.classdivyear span', function() {
     var par = $(this).parents('.classdiv');
-    if (par.data('changing')) return false;
+    if (par.data('changing')) {
+      return false;
+    }
     par.data('changing', true);
     $(this).replaceWith(function() {
       return par.data('otheryears');
@@ -978,9 +1015,11 @@ var crSetup = function() {
   }).on('change blur', '.classdivyear select', function(event) {
     var val = $(this).val();
     var oldclass = $(this).parents('.classdiv');
-    if (oldclass.data('changing')) return false;
+    if (oldclass.data('changing')) {
+      return false;
+    }
     oldclass.data('changing', true);
-    if (val == oldclass.data('year')) {
+    if (val === oldclass.data('year')) {
       $(this).replaceWith(function() {
         return oldclass.data('yearspan');
       });
@@ -994,7 +1033,7 @@ var crSetup = function() {
     $('.classdiv').not($(this)).removeClass('classdivhigh');
     $('.classdiv').removeClass('classdivlow');
     $(this).toggleClass('classdivhigh');
-    if ($('.classdivhigh').length == 1) {
+    if ($('.classdivhigh').length === 1) {
       $('#overrider span').css('opacity', 1);
       $('.classdiv').not($(this)).addClass('classdivlow');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');
@@ -1011,7 +1050,7 @@ var crSetup = function() {
   }).on('click', 'canvas.WireIt-Wire', unhighlightClasses).keydown(function(
     event) {
     var cls = $('.classdiv.classdivhigh');
-    if (event.which == 46 && cls.length && confirm(
+    if (event.which === 46 && cls.length && confirm(
       'Are you sure you want to delete ' + (cls.data('subject_id') || ('"' +
         cls.data('subject_title') + '"')) + '?')) {
       cls.remove();
@@ -1027,23 +1066,30 @@ var crSetup = function() {
   }).on('click', '.deleteroad', function() {
     if (!confirm(
       'Are you sure you want to delete this road? This action cannot be undone.'
-    )) return false;
+    )) {
+      return false;
+    }
     var parent = $(this).parents('tr');
     $.post('?', {
       deleteroad: parent.data('hash')
     }, function(data) {
-      if (data == 'ok') parent.fadeOut('slow').delay(2000).queue(function() {
-        $(this).remove();
-      });
-      if (window.location.hash.substr(1) == parent.data('hash')) $(window).on(
-        'beforeunload', runBeforeUnload);
+      if (data === 'ok') {
+        parent.fadeOut('slow').delay(2000).queue(function() {
+          $(this).remove();
+        });
+      }
+      if (window.location.hash.substr(1) === parent.data('hash')) {
+        $(window).on('beforeunload', runBeforeUnload);
+      }
     });
   }).on('click', '.saved-roads-edit-hash', function() {
     var newhash2 = prompt(
       'Enter a new hash for this saved road below ' +
       '(max. 36 characters, letters, numbers, and hyphens only):',
       $(this).prev().text());
-    if (newhash2 === false) return false;
+    if (newhash2 === false) {
+      return false;
+    }
     newhash2 = newhash2.substr(0, 36);
     var prev = $(this).prev();
     prev.addClass('newload');
@@ -1052,8 +1098,8 @@ var crSetup = function() {
       newhash: newhash2
     }, function(data) {
       console.log(data, window.location.hash, prev.parents('tr').data(
-        'hash'), window.location.hash == prev.parents('tr').data('hash'));
-      if (window.location.hash.substr(1) == prev.parents('tr').data('hash')) {
+        'hash'), window.location.hash === prev.parents('tr').data('hash'));
+      if (window.location.hash.substr(1) === prev.parents('tr').data('hash')) {
         userHashChange = false;
         window.location.hash = data;
         document.title = 'CourseRoad: ' + window.location.hash.substr(1);
@@ -1068,7 +1114,9 @@ var crSetup = function() {
     var comment = prompt(
       'Enter your comment for this saved road below (max. 100 characters):',
       $(this).prev().text());
-    if (comment === false) return false;
+    if (comment === false) {
+      return false;
+    }
     comment = comment.substr(0, 100);
     var prev = $(this).prev();
     prev.addClass('newload');
@@ -1138,7 +1186,9 @@ var crSetup = function() {
       };
       data.getyear = properYear(classterm);
       $.post('?', data, function(json) {
-        if ($.inArray(json, ['error', 'noclass', '']) != -1) return false;
+        if (~$.inArray(json, ['error', 'noclass', ''])) {
+          return false;
+        }
         json.classterm = classterm;
         json.override = false;
         classFromJSON(json);
@@ -1190,7 +1240,9 @@ var crSetup = function() {
     disabled: !user.autocomplete
   });
   $('.getnewclasstypes input').keydown(function(event) {
-    if (event.which == 13) getClass();
+    if (event.which === 13) { 
+      getClass();
+    }
   });
   $('button.changeclassterm').click(function() {
     $('.getnewclasstypes.visible input:first').focus();
@@ -1207,7 +1259,7 @@ var crSetup = function() {
     }, function(data) {
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
-        if (data == '**auth**') {
+        if (data === '**auth**') {
           // This redirects us to the secure cert check.
           window.location.href =
             'https://courseroad.mit.edu:444/secure.php';
@@ -1224,7 +1276,9 @@ var crSetup = function() {
       $('#savemap').val('Save Courses').prop('disabled', false);
     });
   });
-  if (!loggedin && triedlogin) $('#mapcerts').hide();
+  if (!loggedin && triedlogin) {
+    $('#mapcerts').hide();
+  }
   $('#mapcerts').click(function() {
     if (loggedin) {
       $('#viewroads').dialog('open');
@@ -1236,7 +1290,7 @@ var crSetup = function() {
         trycert: true
       }, function(data) {
         $(window).off('beforeunload', runBeforeUnload);
-        if (data == '**auth**') {
+        if (data === '**auth**') {
           window.location.href =
             'https://courseroad.mit.edu:444/secure.php';
         } else {
@@ -1291,7 +1345,9 @@ var crSetup = function() {
     $('#accordion').accordion('resize');
   }, 2500);
   $('select.majorminor option').each(function() {
-    if (majors[$(this).val()] === undefined) $(this).remove();
+    if (majors[$(this).val()] === undefined) {
+      $(this).remove();
+    }
   });
   $(window).resize(updateWires);
   $('#printroad').click(function() {
@@ -1338,15 +1394,17 @@ var crSetup = function() {
 
       $('#usersettings_saved').show().delay(1000).fadeOut('slow');
       $('body').toggleClass('no-wires', !user.viewReqLines);
-      if (old_class_year != user.classYear && confirm(
+      if (old_class_year !== user.classYear && confirm(
         'You changed your saved class year. Would you like to edit the year ' +
         'versions of your classes to match that change? ' +
         '(Clicking Cancel will prevent this behavior)'
       )) {
         console.log('Let\'s go.');
         $('.classdiv:not(.custom)').each(function() {
-          if ($(this).data('year_desired') == properYear($(this).data(
-            'classterm'))) return true;
+          if ($(this).data('year_desired') === properYear($(this).data(
+            'classterm'))) {
+            return true;
+          }
           swapClassYear($(this), properYear($(this).data('classterm')));
         });
       }
@@ -1373,15 +1431,16 @@ var crSetup = function() {
  * Copyright (c) 2009 George Mandis (georgemandis.com, snaptortoise.com)
  * Version: 1.4.2 (9/2/2013)
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
- * Tested in: Safari 4+, Google Chrome 4+, Firefox 3+, IE7+, Mobile Safari 2.2.1 and Dolphin Browser
+ * Tested in: Safari 4+, Google Chrome 4+, Firefox 3+, IE7+, Mobile Safari 2.2.1
+ * and Dolphin Browser
  */
 
 var Konami = function (callback) {
   var konami = {
     addEvent: function (obj, type, fn, ref_obj) {
-      if (obj.addEventListener)
+      if (obj.addEventListener) {
         obj.addEventListener(type, fn, false);
-      else if (obj.attachEvent) {
+      } else if (obj.attachEvent) {
         // IE
         obj['e' + type + fn] = fn;
         obj[type + fn] = function () {
@@ -1394,11 +1453,16 @@ var Konami = function (callback) {
     pattern: '38384040373937396665',
     load: function (link) {
       this.addEvent(document, 'keydown', function (e, ref_obj) {
-        if (ref_obj) konami = ref_obj; // IE
+        if (ref_obj) {
+          konami = ref_obj; // IE
+        }
         konami.input += e ? e.keyCode : event.keyCode;
-        if (konami.input.length > konami.pattern.length)
-          konami.input = konami.input.substr((konami.input.length - konami.pattern.length));
-        if (konami.input == konami.pattern) {
+        if (konami.input.length > konami.pattern.length) {
+          konami.input = konami.input.substr(
+            konami.input.length - konami.pattern.length
+          );
+        }
+        if (konami.input === konami.pattern) {
           konami.code(link);
           konami.input = '';
           e.preventDefault();
@@ -1418,14 +1482,17 @@ var Konami = function (callback) {
       tap: false,
       capture: false,
       orig_keys: '',
-      keys: ['UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 'RIGHT', 'LEFT', 'RIGHT', 'TAP', 'TAP'],
+      keys: [
+        'UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 
+        'RIGHT', 'LEFT', 'RIGHT', 'TAP', 'TAP'
+      ],
       code: function (link) {
         konami.code(link);
       },
       load: function (link) {
         this.orig_keys = this.keys;
         konami.addEvent(document, 'touchmove', function (e) {
-          if (e.touches.length == 1 && konami.iphone.capture === true) {
+          if (e.touches.length === 1 && konami.iphone.capture === true) {
             var touch = e.touches[0];
             konami.iphone.stop_x = touch.pageX;
             konami.iphone.stop_y = touch.pageY;
@@ -1435,7 +1502,9 @@ var Konami = function (callback) {
           }
         });
         konami.addEvent(document, 'touchend', function (evt) {
-          if (konami.iphone.tap === true) konami.iphone.check_direction(link);
+          if (konami.iphone.tap === true) {
+            konami.iphone.check_direction(link);
+          }
         }, false);
         konami.addEvent(document, 'touchstart', function (evt) {
           konami.iphone.start_x = evt.changedTouches[0].pageX;
@@ -1452,7 +1521,9 @@ var Konami = function (callback) {
         var result = (x_magnitude > y_magnitude) ? x : y;
         result = (this.tap === true) ? 'TAP' : result;
 
-        if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
+        if (result === this.keys[0]) {
+          this.keys = this.keys.slice(1, this.keys.length);
+        }
         if (this.keys.length === 0) {
           this.keys = this.orig_keys;
           this.code(link);
