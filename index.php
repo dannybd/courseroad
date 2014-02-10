@@ -36,6 +36,32 @@ if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET; 
 }
 
+function new_csrf_token() {
+  return hash('sha512', SALT . microtime('true') . rand());
+}
+
+function get_csrf_token() {
+  if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = new_csrf_token();
+  }
+  return $_SESSION['csrf_token'];
+}
+
+get_csrf_token();
+
+function check_csrf_token() {
+  if (!isset($_POST['csrf'])) {
+    return false;
+  }
+  return $_POST['csrf'] == get_csrf_token();
+}
+
+function require_csrf() {
+  if (!check_csrf_token()) {
+    die('error: csrf');
+  }
+}
+
 function redirect_hash($hash) {
   global $baseURL;
   $link = "$baseURL/#$hash";
@@ -464,6 +490,7 @@ function buildClassesArray($hash) {
 
 // Returns the desired hash's class and major data
 if (isset($_POST['gethash'])){
+  require_csrf();
   // Strip the leading octothrope
   $hash = substr($_POST['gethash'], 1);
   $json = buildClassesArray($hash);
@@ -548,6 +575,7 @@ function hash_is_safe($hash, $classes, $majors) {
  * or something like username-20120504051511
  */
 if (isset($_POST['classes'])) {
+  require_csrf();
   $classes = mysql_real_escape_string(encrypt($_POST['classes']));
   $majors = mysql_real_escape_string(encrypt($_POST['majors']));
   $hash = substr(
@@ -598,6 +626,7 @@ if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
 
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['savedroads'])) {
+  require_csrf();
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
   }
@@ -690,6 +719,7 @@ if (isset($_POST['savedroads'])) {
 
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['choosesavedroad'])) {
+  require_csrf();
   $hash = mysql_real_escape_string($_POST['choosesavedroad']);
   if (!$loggedin) {
     die();
@@ -706,6 +736,7 @@ if (isset($_POST['choosesavedroad'])) {
 
 // When the user changes a road's hash
 if (isset($_POST['changeroadhash'])) {
+  require_csrf();
   $hash = mysql_real_escape_string($_POST['changeroadhash']);
   $newhash = mysql_real_escape_string(
     $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36))
@@ -728,6 +759,7 @@ if (isset($_POST['changeroadhash'])) {
 
 // And when the user adds a comment
 if (isset($_POST['commentonroad'])) {
+  require_csrf();
   $hash = mysql_real_escape_string($_POST['commentonroad']);
   $comment = mysql_real_escape_string(
     htmlentities(substr($_POST['commentforroad'], 0, 100))
@@ -744,6 +776,7 @@ if (isset($_POST['commentonroad'])) {
 
 //Similarly, runs when the user deletes a road.
 if (isset($_POST['deleteroad'])) {
+  require_csrf();
   $hash = mysql_real_escape_string($_POST['deleteroad']);
   if (!$loggedin) die();
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) die();
@@ -754,6 +787,7 @@ if (isset($_POST['deleteroad'])) {
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['usersettings'])) {
+  require_csrf();
   $_SESSION['user']['class_year'] = intval(
     mysql_real_escape_string($_POST['class_year'])
   );
@@ -1394,6 +1428,7 @@ header('Content-type: text/html; charset=utf-8');
   };
   var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
   var hash_to_use = $.parseJSON('<?= $hash_to_use ?>') || 0;
+  var CSRF_token = '<?= $_SESSION['csrf_token'] ?>';
   $(crSetup);
 </script>
 </body>

@@ -4,7 +4,7 @@
 
 "use strict";
 
-var WireIt, majors, user;
+var WireIt, majors, user, CSRF_token;
 var add_new_term, classterm, hash_to_use, loggedin, triedlogin;
 
 var Defaults = {
@@ -965,7 +965,8 @@ var crSetup = function () {
     window.location.hash = window.location.hash.replace(/\/+$/, '');
     document.title = 'CourseRoad: ' + window.location.hash.substr(1);
     $.post('?', {
-      gethash: window.location.hash
+      gethash: window.location.hash,
+      csrf: CSRF_token
     }, function (data) {
       $('#loading').hide();
       if (data === '') {
@@ -1046,7 +1047,8 @@ var crSetup = function () {
     $('.my-dialog').dialog('close');
   }).on('click', '.choosesavedroad', function () {
     $.post('?', {
-      choosesavedroad: $(this).val()
+      choosesavedroad: $(this).val(),
+      csrf: CSRF_token
     });
   }).on('click', '.deleteroad', function () {
     if (!confirm(
@@ -1056,7 +1058,8 @@ var crSetup = function () {
     }
     var parent = $(this).parents('tr');
     $.post('?', {
-      deleteroad: parent.data('hash')
+      deleteroad: parent.data('hash'),
+      csrf: CSRF_token
     }, function (data) {
       if (data === 'ok') {
         parent.fadeOut('slow').delay(2000).queue(function () {
@@ -1080,7 +1083,8 @@ var crSetup = function () {
     prev.addClass('newload');
     $.post('?', {
       changeroadhash: $(this).parents('tr').data('hash'),
-      newhash: newhash2
+      newhash: newhash2,
+      csrf: CSRF_token
     }, function (data) {
       console.log(data, window.location.hash, prev.parents('tr').data(
         'hash'), window.location.hash === prev.parents('tr').data('hash'));
@@ -1107,7 +1111,8 @@ var crSetup = function () {
     prev.addClass('newload');
     $.post('?', {
       commentonroad: $(this).parents('tr').data('hash'),
-      commentforroad: comment
+      commentforroad: comment,
+      csrf: CSRF_token
     }, function (data) {
       prev.text(data).removeClass('newload');
     });
@@ -1240,7 +1245,8 @@ var crSetup = function () {
     $.post('?', {
       classes: minclass(true),
       majors: minmajors(true),
-      trycert: loggedin
+      trycert: loggedin,
+      csrf: CSRF_token
     }, function (data) {
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
@@ -1272,7 +1278,8 @@ var crSetup = function () {
       $.post('?', {
         classes: minclass(true),
         majors: minmajors(true),
-        trycert: true
+        trycert: true,
+        csrf: CSRF_token
       }, function (data) {
         $(window).off('beforeunload', runBeforeUnload);
         if (data === '**auth**') {
@@ -1300,7 +1307,8 @@ var crSetup = function () {
     open: function () {
       $('#savedroads').html('Loading...');
       $.post('?', {
-        savedroads: 1
+        savedroads: 1,
+        csrf: CSRF_token
       }, function (data) {
         $('#savedroads').html(data);
       });
@@ -1364,10 +1372,13 @@ var crSetup = function () {
     var data = {
       usersettings: 1,
       class_year: $('#usersettings_class_year').val(),
-      toggle_view_req_lines: ($('#usersettings_view_req_lines').prop(
-        'checked') ? 1 : 0),
-      toggle_autocomplete: ($('#usersettings_autocomplete').prop('checked') ?
-        1 : 0)
+      toggle_view_req_lines: (
+        $('#usersettings_view_req_lines').prop('checked') ? 1 : 0
+      ),
+      toggle_autocomplete: (
+        $('#usersettings_autocomplete').prop('checked') ? 1 : 0
+      ),
+      csrf: CSRF_token
     };
     var old_class_year = user.classYear;
     $('#usersettings_div').load('?', data, function () {
