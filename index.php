@@ -1402,7 +1402,7 @@ header('Content-type: text/html; charset=utf-8');
 <!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 <!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
 <!--[if gte IE 9]><script>ie9=1;</script><![endif]-->
 <!--[if !(IE)]><!--><script type="text/javascript">Function('/*@cc_on return document.documentMode===10@*/')()&&(ie9=1);</script><!--<![endif]-->
