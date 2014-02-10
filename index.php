@@ -58,7 +58,7 @@ function check_csrf_token() {
 
 function require_csrf() {
   if (!check_csrf_token()) {
-    die('error: csrf');
+    die('**csrf**');
   }
 }
 
@@ -574,7 +574,7 @@ function hash_is_safe($hash, $classes, $majors) {
  * status of the user and sets the hash to be either random characters 
  * or something like username-20120504051511
  */
-if (isset($_POST['classes'])) {
+if (isset($_POST['saveNewRoad'])) {
   require_csrf();
   $classes = mysql_real_escape_string(encrypt($_POST['classes']));
   $majors = mysql_real_escape_string(encrypt($_POST['majors']));
@@ -654,8 +654,8 @@ if (isset($_POST['savedroads'])) {
   $numrows = mysql_fetch_array($numrows);
   $numrows = $numrows[0];
   echo (
-    "<td><input type=\"radio\" name=\"choosesavedroad\" " .
-    "class=\"choosesavedroad\" value=\"null\" " .
+    "<td><input type=\"radio\" name=\"setPublicRoad\" " .
+    "class=\"setPublicRoad\" value=\"null\" " .
     ($numrows ? "" : "checked=\"true\" ") . "/></td>"
   );
   echo (
@@ -670,8 +670,8 @@ if (isset($_POST['savedroads'])) {
     $roadURL = "?hash=$hash";
     echo "<tr data-hash=\"$hash\">";
     echo (
-      "<td><input type=\"radio\" name=\"choosesavedroad\" " .
-      "class=\"choosesavedroad\" value=\"$hash\" " .
+      "<td><input type=\"radio\" name=\"setPublicRoad\" " .
+      "class=\"setPublicRoad\" value=\"$hash\" " .
       ($row['public'] == "1" ? "checked=\"true\" " : "") . "/></td>"
     );
     echo (
@@ -718,9 +718,9 @@ if (isset($_POST['savedroads'])) {
 }
 
 // Runs when the user sets one of their roads to be their public road
-if (isset($_POST['choosesavedroad'])) {
+if (isset($_POST['setPublicRoad'])) {
   require_csrf();
-  $hash = mysql_real_escape_string($_POST['choosesavedroad']);
+  $hash = mysql_real_escape_string($_POST['setPublicRoad']);
   if (!$loggedin) {
     die();
   }

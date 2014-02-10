@@ -928,6 +928,22 @@ function swapClassYear(oldclass, newyear) {
   }, 'json');
 }
 
+function badCSRF(msg) {
+  return msg === '**csrf**';
+}
+
+function alertBadCSRF() {
+  alert('Whoops! Looks like your session expired. Try refreshing the page.');
+}
+
+function setNewHash(hash) {
+  userHashChange = false;
+  window.location.hash = hash;
+  document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+}
+
+var secureURL = 'https://courseroad.mit.edu:444/secure.php';
+
 // var reasonToTrySave = false;
 var preventUpdateWires = false;
 var crSetup = function () {
@@ -969,6 +985,10 @@ var crSetup = function () {
       csrf: CSRF_token
     }, function (data) {
       $('#loading').hide();
+      if (badCSRF(data)) {
+        alertBadCSRF();
+        return false;
+      }
       if (data === '') {
         return false;
       }
@@ -1045,10 +1065,14 @@ var crSetup = function () {
     }
   }).on('click', '.my-dialog-close, .ui-widget-overlay', function () {
     $('.my-dialog').dialog('close');
-  }).on('click', '.choosesavedroad', function () {
+  }).on('click', '.setPublicRoad', function () {
     $.post('?', {
-      choosesavedroad: $(this).val(),
+      setPublicRoad: $(this).val(),
       csrf: CSRF_token
+    }, function (data) {
+      if (badCSRF(data)) {
+        alertBadCSRF();
+      }
     });
   }).on('click', '.deleteroad', function () {
     if (!confirm(
@@ -1061,6 +1085,10 @@ var crSetup = function () {
       deleteroad: parent.data('hash'),
       csrf: CSRF_token
     }, function (data) {
+      if (badCSRF(data)) {
+        alertBadCSRF();
+        return false;
+      }
       if (data === 'ok') {
         parent.fadeOut('slow').delay(2000).queue(function () {
           $(this).remove();
@@ -1086,8 +1114,11 @@ var crSetup = function () {
       newhash: newhash2,
       csrf: CSRF_token
     }, function (data) {
-      console.log(data, window.location.hash, prev.parents('tr').data(
-        'hash'), window.location.hash === prev.parents('tr').data('hash'));
+      if (badCSRF(data)) {
+        prev.removeClass('newload');
+        alertBadCSRF();
+        return false;
+      }
       if (window.location.hash.substr(1) === prev.parents('tr').data('hash')) {
         userHashChange = false;
         window.location.hash = data;
@@ -1114,6 +1145,11 @@ var crSetup = function () {
       commentforroad: comment,
       csrf: CSRF_token
     }, function (data) {
+      if (badCSRF(data)) {
+        alertBadCSRF();
+        prev.removeClass('newload');
+        return false;
+      }
       prev.text(data).removeClass('newload');
     });
   }).on('click', '.dummylink', function (e) {
@@ -1243,26 +1279,27 @@ var crSetup = function () {
   $('#savemap').click(function () {
     $('#savemap').val('Saving...').prop('disabled', true);
     $.post('?', {
+      saveNewRoad: 1,
       classes: minclass(true),
       majors: minmajors(true),
       trycert: loggedin,
       csrf: CSRF_token
     }, function (data) {
+      if (badCSRF(data)) {
+        alertBadCSRF();
+        $('#savemap').val('Save Courses').prop('disabled', false);
+        return false;
+      }
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
         if (data === '**auth**') {
           // This redirects us to the secure cert check.
-          window.location.href =
-            'https://courseroad.mit.edu:444/secure.php';
+          window.location.href = secureURL;
         } else {
-          userHashChange = false;
-          window.location.hash = data;
-          document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+          setNewHash(data);
         }
       } else {
-        userHashChange = false;
-        window.location.hash = data;
-        document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+        setNewHash(data);
       }
       $('#savemap').val('Save Courses').prop('disabled', false);
     });
@@ -1283,15 +1320,12 @@ var crSetup = function () {
       }, function (data) {
         $(window).off('beforeunload', runBeforeUnload);
         if (data === '**auth**') {
-          window.location.href =
-            'https://courseroad.mit.edu:444/secure.php';
+          window.location.href = secureURL;
         } else {
-          userHashChange = false;
-          window.location.hash = data;
-          document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+          setNewHash(data);
         }
-        $('#mapcerts').val('Save with Login (requires certs)').prop(
-          'disabled', false);
+        $('#mapcerts').val('Save with Login (requires certs)')
+          .prop('disabled', false);
       });
     }
   });
@@ -1310,6 +1344,11 @@ var crSetup = function () {
         savedroads: 1,
         csrf: CSRF_token
       }, function (data) {
+        if (badCSRF(data)) {
+          alertBadCSRF();
+          $('#viewroads').dialog('close');
+          return false;
+        }
         $('#savedroads').html(data);
       });
     }
@@ -1357,7 +1396,7 @@ var crSetup = function () {
     $('#rightbar').addClass('doge');
   });
   $('#userlogin').click(function () {
-    window.location.href = 'https://courseroad.mit.edu:444/secure.php';
+    window.location.href = secureURL;
   });
   $('#usersettings').dialog({
     autoOpen: false,
@@ -1381,7 +1420,12 @@ var crSetup = function () {
       csrf: CSRF_token
     };
     var old_class_year = user.classYear;
-    $('#usersettings_div').load('?', data, function () {
+    $.post('?', data, function (html) {
+      if (badCSRF(html)) {
+        alertBadCSRF();
+        return false;
+      }
+      $('#usersettings_div').html(html);
       user.classYear = parseInt($('#usersettings_class_year').val(), 10);
       user.viewReqLines = ($('#usersettings_view_req_lines').prop('checked') ?
         1 : 0);
