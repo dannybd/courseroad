@@ -74,7 +74,8 @@ function redirect_hash($hash) {
 // Beginnings of an external API hook. From a comma-separated list of classes,
 // a year value and a term, this will drop a set of classes into CourseRoad, to
 // be saved by the user.
-if (isset($_GET['add_classes'])) {
+
+if (isset($_GET['addclasses'])) {
   if (!isset($_GET['year'])) {
     $_GET['year'] = false;
   }
@@ -87,7 +88,7 @@ if (isset($_GET['add_classes'])) {
   $_SESSION['add_new_term'] = array(
     'year'=>mysql_real_escape_string($_GET['year']),
     'term'=>mysql_real_escape_string($_GET['term']),
-    'classes'=>explode(',', mysql_real_escape_string($_GET['add_classes']))
+    'classes'=>explode(',', mysql_real_escape_string($_GET['addclasses']))
   );
   
   if (!isset($_GET['hash'])) {
