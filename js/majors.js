@@ -848,16 +848,30 @@ window.majors = {
         from: "20",
         to: "299"
     }],
+    [1, 
+      {
+        id: "17.30-399",
+        range: 1,
+        dept: "17",
+        from: "30",
+        to: "399"
+      },
+      {
+        id: "A subject in another field designated as fulfilling the public " +
+            "policy requirement",
+        skip: 1
+      }
+    ],
     [1,
       {
-        id: "17.30-40-599",
+        id: "17.40-599",
         range: 1,
         dept: "17",
         from: "40",
         to: "599"
     }],
     {
-      id: "3 Additional political science subjects representing " +
+      id: "3 additional political science subjects representing " +
           "a coherent plan of study",
       skip: 1
     }
