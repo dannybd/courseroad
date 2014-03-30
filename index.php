@@ -71,6 +71,15 @@ function redirect_hash($hash) {
   die();
 }
 
+function valid_hash($hash) {
+  $hash = mysql_real_escape_string($hash);
+  $query = mysql_query(
+    "SELECT `hash` from `roads2` WHERE `hash` = '$hash' OR " .
+    "(`user` = '$hash' AND `public` = '1') LIMIT 1"
+  );
+  return mysql_num_rows($query) > 0;
+}
+
 // Beginnings of an external API hook. From a comma-separated list of classes,
 // a year value and a term, this will drop a set of classes into CourseRoad, to
 // be saved by the user.
@@ -91,7 +100,11 @@ if (isset($_GET['addclasses'])) {
     'classes'=>explode(',', mysql_real_escape_string($_GET['addclasses']))
   );
   
-  if (!isset($_GET['hash'])) {
+  if (isset($_GET['hash'])) {
+    if (!valid_hash($_GET['hash'])) {
+      $_GET['hash'] = '';
+    }
+  } else {
     $_GET['hash'] = '';
   }
 }
