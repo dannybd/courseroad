@@ -53,6 +53,27 @@ window.majors = {
       "5.60"
     ]
   ],
+  
+  m1_ENG: [0,
+    [1, "1.00", "1.000"], "1.010", [1, "1.073", "1.074"], "18.03", "1.013",
+    [{count: 1, runinfull: 1}, 
+      {id: "Environment Core:", skip: 1},
+      [{count: 9, globalMatchesIgnore: 1}, 
+        "1.060A", "1.070A", "1.080A", "1.061A", "1.018A", "1.083A", "1.092", 
+        "1.106", "1.107"
+      ],
+      {id: "Mechanics/Materials Core:", skip: 1},
+      [{count: 6, globalMatchesIgnore: 1}, 
+        "1.050", "1.035", "1.060A", "1.060B", "1.101", "1.102"
+      ],
+      {id: "Systems Core:", skip: 1},
+      [{count: 6, globalMatchesIgnore: 1}, 
+        "1.011", "1.020", "1.041", "1.022", "1.101", "1.102"
+      ]
+    ],
+    {id: "Restricted Electives:", skip: 1},
+    [4, "1.015", "1.032", "1.054", "1.153"]
+  ],
 
   m2: [0,
     [1, "2.001", [2, "2.01", "2.02B"]],
