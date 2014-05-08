@@ -228,13 +228,6 @@ function pullClass(
   
   $row['total_units'] = floatval($row['total_units']);
   
-  // Occasionally, the Warehouse tries to say that a class has 0 units. Since
-  // that doesn't make much sense, default these exceptions to 12 units.
-  $default_unit_count = 12;
-  if (!$row['total_units']) {
-    $row['total_units'] = $default_unit_count;
-  }
-  
   // Build the class' HTML for the info box when it's selected.
   $row['info'] = makeClassInfoHTML($row);
 
