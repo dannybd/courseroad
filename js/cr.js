@@ -1313,6 +1313,7 @@ var crSetup = function () {
     } else {
       $('#mapcerts').val('Saving...').prop('disabled', true);
       $.post('?', {
+        saveNewRoad: 1,
         classes: minclass(true),
         majors: minmajors(true),
         trycert: true,
