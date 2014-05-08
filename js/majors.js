@@ -2352,6 +2352,23 @@ window.majors = {
           "international development policy, security and defense policy, " +
           "and urban and regional policy",
       skip: 1
-  }]
+  }],
+  
+  miWGS: [0,
+    {id: "Tier I:", skip: 1},
+    "WGS.101",
+    {id: "Tier II:", skip: 1},
+    [4,
+      {id: "At least one \"Humanities and the Arts\" class", skip: 1},
+      {id: "At least one \"Social and Natural Sciences\" class", skip: 1},
+      {
+        id: "(One of these four may be taken at Harvard, Wellesley, or " + 
+            "Cambridge with the permission of the Director.", 
+        skip: 1
+      }
+    ],
+    {id: "Tier III:", skip: 1},
+    "WGS.301"
+  ]
 
 };

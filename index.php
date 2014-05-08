@@ -1204,6 +1204,7 @@ header('Content-type: text/html; charset=utf-8');
       <option value="miEnergy_studies">Minor in Energy Studies</option>
       <option value="miPsych">Minor in Psychology</option>
       <option value="miPublic_policy">Minor in Public Policy</option>
+      <option value="miWGS">Minor in Women's & Gender Students</option>
     </select><br>
     <div id="minorreqs" class="majorminor"></div>
     <span class="majorminor">-----------------<br></span>
@@ -1255,6 +1256,7 @@ header('Content-type: text/html; charset=utf-8');
       <option value="miEnergy_studies">Minor in Energy Studies</option>
       <option value="miPsych">Minor in Psychology</option>
       <option value="miPublic_policy">Minor in Public Policy</option>
+      <option value="miWGS">Minor in Women's & Gender Students</option>
     </select><br>
     <div id="minorreqs2" class="majorminor"></div>
     -----------------<br>
