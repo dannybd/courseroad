@@ -657,7 +657,7 @@ function getClass() {
   }
   $('#getnewclass .ui-autocomplete').hide();
   $('.getnewclasstypes input').val('');
-  $.post('?', data, function (json) {
+  $.post('ajax.php', data, function (json) {
     if (~$.inArray(json, ['error', 'noclass', ''])) {
       return false;
     }
@@ -913,7 +913,7 @@ window.onhashchange = function () {
 
 function swapClassYear(oldclass, newyear) {
   oldclass.addClass('classdivlow');
-  $.post('?', {
+  $.post('ajax.php', {
     getclass: oldclass.data('subject_id'),
     getyear: newyear
   }, function (json) {
@@ -980,7 +980,7 @@ var crSetup = function () {
     userHashChange = false;
     window.location.hash = window.location.hash.replace(/\/+$/, '');
     document.title = 'CourseRoad: ' + window.location.hash.substr(1);
-    $.post('?', {
+    $.post('ajax.php', {
       gethash: window.location.hash,
       csrf: CSRF_token
     }, function (data) {
@@ -1066,7 +1066,7 @@ var crSetup = function () {
   }).on('click', '.my-dialog-close, .ui-widget-overlay', function () {
     $('.my-dialog').dialog('close');
   }).on('click', '.setPublicRoad', function () {
-    $.post('?', {
+    $.post('ajax.php', {
       setPublicRoad: $(this).val(),
       csrf: CSRF_token
     }, function (data) {
@@ -1081,7 +1081,7 @@ var crSetup = function () {
       return false;
     }
     var parent = $(this).parents('tr');
-    $.post('?', {
+    $.post('ajax.php', {
       deleteroad: parent.data('hash'),
       csrf: CSRF_token
     }, function (data) {
@@ -1109,7 +1109,7 @@ var crSetup = function () {
     newhash2 = newhash2.substr(0, 36);
     var prev = $(this).prev();
     prev.addClass('newload');
-    $.post('?', {
+    $.post('ajax.php', {
       changeroadhash: $(this).parents('tr').data('hash'),
       newhash: newhash2,
       csrf: CSRF_token
@@ -1140,7 +1140,7 @@ var crSetup = function () {
     comment = comment.substr(0, 100);
     var prev = $(this).prev();
     prev.addClass('newload');
-    $.post('?', {
+    $.post('ajax.php', {
       commentonroad: $(this).parents('tr').data('hash'),
       commentforroad: comment,
       csrf: CSRF_token
@@ -1211,7 +1211,7 @@ var crSetup = function () {
         getyear: 0
       };
       data.getyear = properYear(classterm);
-      $.post('?', data, function (json) {
+      $.post('ajax.php', data, function (json) {
         if (~$.inArray(json, ['error', 'noclass', ''])) {
           return false;
         }
@@ -1257,7 +1257,7 @@ var crSetup = function () {
   });
   $('#getnewclassid').autocomplete({
     source: function (request, response) {
-      $.post('?', {
+      $.post('ajax.php', {
         autocomplete: request.term
       }, response, 'json');
     },
@@ -1278,7 +1278,7 @@ var crSetup = function () {
   });
   $('#savemap').click(function () {
     $('#savemap').val('Saving...').prop('disabled', true);
-    $.post('?', {
+    $.post('ajax.php', {
       saveNewRoad: 1,
       classes: minclass(true),
       majors: minmajors(true),
@@ -1312,7 +1312,7 @@ var crSetup = function () {
       $('#viewroads').dialog('open');
     } else {
       $('#mapcerts').val('Saving...').prop('disabled', true);
-      $.post('?', {
+      $.post('ajax.php', {
         saveNewRoad: 1,
         classes: minclass(true),
         majors: minmajors(true),
@@ -1341,7 +1341,7 @@ var crSetup = function () {
     modal: true,
     open: function () {
       $('#savedroads').html('Loading...');
-      $.post('?', {
+      $.post('ajax.php', {
         savedroads: 1,
         csrf: CSRF_token
       }, function (data) {
@@ -1421,7 +1421,7 @@ var crSetup = function () {
       csrf: CSRF_token
     };
     var old_class_year = user.classYear;
-    $.post('?', data, function (html) {
+    $.post('ajax.php', data, function (html) {
       if (badCSRF(html)) {
         alertBadCSRF();
         return false;
