@@ -8,7 +8,7 @@ if(!isset($_GET['magnets'])) {
   die();
 }
 require("connect.php");
-$filename = "../../cron_scripts/output.html";
+$filename = "../../../cron_scripts/output.html";
 $file = file_get_contents($filename);
 preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s",$file,$matches);
 $matches = $matches[1];
