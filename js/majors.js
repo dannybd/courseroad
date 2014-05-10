@@ -280,7 +280,9 @@ window.majors = {
           "occur frequently. For the most up-to-date listings please refer " +
           "to the Course VI checklist.",
       skip: 1
-    }, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.034", "18.06"],
+    }, "6.01", "6.02", "6.UAT", 
+    [1, "6.UAP", {id: "6.UAR", desc: " (w/ SuperUROP)"}],
+    [1, "18.03", "18.034", "18.06"],
     [1, "6.041", "18.440"],
     [1, [1,
         {
@@ -336,7 +338,9 @@ window.majors = {
           "occur frequently. For the most up-to-date listings please refer " +
           "to the Course VI checklist.",
       skip: 1
-    }, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.034", "18.06"],
+    }, "6.01", "6.02", "6.UAT", 
+    [1, "6.UAP", {id: "6.UAR", desc: " (w/ SuperUROP)"}],
+    [1, "18.03", "18.034", "18.06"],
     [1, "6.041", "18.440", "6.042"],
     [2, "6.002", "6.003", "6.007", "6.004"],
     [2, "6.005", "6.006", "6.004"],
@@ -400,7 +404,9 @@ window.majors = {
           "occur frequently. For the most up-to-date listings please refer " +
           "to the Course VI checklist.",
       skip: 1
-    }, "6.01", "6.02", "6.UAT", "6.UAP", [1, "18.03", "18.034", "18.06"],
+    }, "6.01", "6.02", "6.UAT", 
+    [1, "6.UAP", {id: "6.UAR", desc: " (w/ SuperUROP)"}],
+    [1, "18.03", "18.034", "18.06"],
     "6.042", [
       {
         count: 1,
