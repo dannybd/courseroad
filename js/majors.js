@@ -1055,7 +1055,7 @@ window.majors = {
     }, "18.310A", "18.314"],
     [1, "18.400", "18.404"],
     [1, "6.005", "6.033"],
-    {id:"Restrictive Electives:", skip:1},
+    {id:"Restricted Electives:", skip:1},
     [2, [1, "18.104", "18.304", "18.384", "18.424", "18.434", "18.504",
         "18.704", "18.784", "18.821", "18.904", "18.994"
       ],
@@ -1083,7 +1083,7 @@ window.majors = {
         from: "100",
         to: "999"
     }],
-    {id:"Unrestrictive Electives:", skip:1},
+    {id:"Unrestricted Electives:", skip:1},
     [4,
       {
         id: "18.04-999",
