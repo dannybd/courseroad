@@ -56,7 +56,7 @@ window.majors = {
   
   m1_ENG: [0,
     [1, "1.00", "1.000"], "1.010", [1, "1.073", "1.074"], "18.03", "1.013",
-    [{count: 1, runinfull: 1}, 
+    [{count: 54, type:"total_units", desc:"units from", special:1, runinfull: 1}, 
       {id: "Environment Core:", skip: 1},
       [{count: 9, globalMatchesIgnore: 1}, 
         "1.060A", "1.070A", "1.080A", "1.061A", "1.018A", "1.083A", "1.092", 
@@ -72,7 +72,13 @@ window.majors = {
       ]
     ],
     {id: "Restricted Electives:", skip: 1},
-    [4, "1.015", "1.032", "1.054", "1.153"]
+    [4, "1.015", "1.032", "1.054", "1.153", 
+      {
+        id: "4 subjects offered within or outside CEE forming a coherent " +
+        "program of study", 
+        skip: 1
+      }
+    ]
   ],
 
   m2: [0,
