@@ -15,7 +15,7 @@ if (!$page_is_active) {
 // .htaccess.
 $passphrase = md5('guest');
 
-if (@$_GET['access'] == $passphrase) {
+if (@$_GET['access'] === $passphrase) {
   // Cookie lasts a year
   setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
   header("Location: $baseURL/index.php?hash=welcome");

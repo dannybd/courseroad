@@ -46,7 +46,7 @@ function check_csrf_token() {
   if (!isset($_POST['csrf'])) {
     return false;
   }
-  return $_POST['csrf'] == get_csrf_token();
+  return $_POST['csrf'] === get_csrf_token();
 }
 
 function require_csrf() {
@@ -190,7 +190,7 @@ function pullClass(
     $row['divclasses'] .= ' ' . $joint_subjects_classes;
   }
   
-  if ($row['gir'] && $row['gir'][0] == 'H') {
+  if ($row['gir'] && $row['gir'][0] === 'H') {
     $row['gir'] = '';
   }
   if ($row['gir']) {
@@ -300,7 +300,7 @@ function makeYearsOfferedHTML($subject_id, $year) {
     $year2 = $row2['year'];
     $year_range2 = makeYearRange($year2);
     $html .= "\n\t<option value='$year2'";
-    $html .= ($year2 == $year) ? " selected='true'" : '';
+    $html .= ($year2 === $year) ? " selected='true'" : '';
     $html .= ">$year_range2</option>";
   }
   $html .= "\n<select>"; 
@@ -373,7 +373,7 @@ function buildClassesArray($hash) {
     $classes = json_decode(decrypt($row['classes']), true);
     $majors = stripslashes(decrypt($row['majors']));
   }
-  if ($classes == '') die();
+  if ($classes === '') die();
   $majors = json_decode($majors, true);
   
   // json holds the pulled data on each saved class.

@@ -219,7 +219,7 @@ if (isset($_POST['savedroads'])) {
     echo (
       "<td><input type=\"radio\" name=\"setPublicRoad\" " .
       "class=\"setPublicRoad\" value=\"$hash\" " .
-      ($row['public'] == "1" ? "checked=\"true\" " : "") . "/></td>"
+      ($row['public'] === "1" ? "checked=\"true\" " : "") . "/></td>"
     );
     echo (
       "<td><span class=\"saved-roads-hash\">" .

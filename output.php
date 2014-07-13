@@ -42,8 +42,8 @@ $courses = array();
 for ($i=0; $i < count($matches); $i++) {
   $row = floor($i / $head);
   $pos = $i % $head;
-  if($matches[$i] == "&nbsp;") {
-    $matches[$i]="";
+  if($matches[$i] === "&nbsp;") {
+    $matches[$i] = "";
   }
   $courses[$row][$headers[$pos]] = mysql_real_escape_string(
     html_entity_decode(trim($matches[$i]))
