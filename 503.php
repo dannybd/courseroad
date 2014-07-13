@@ -17,9 +17,9 @@ $passphrase = md5('guest');
 
 if (@$_GET['access'] == $passphrase) {
   // Cookie lasts a year
-	setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
-	header("Location: $baseURL/index.php?hash=welcome");
-	die();
+  setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
+  header("Location: $baseURL/index.php?hash=welcome");
+  die();
 }
 
 // To be seen by those without beta-tester access.
@@ -32,27 +32,27 @@ header("Retry-After: 86400");
 ?>
 <!DOCTYPE html>
 <head>
-	<meta charset="utf-8">
-	<title>CourseRoad is upgrading!</title>
-	<style>
-		body{
-			background-color: #EEE;
-			font-family: Arial;
-		}
-	</style>
+  <meta charset="utf-8">
+  <title>CourseRoad is upgrading!</title>
+  <style>
+    body{
+      background-color: #EEE;
+      font-family: Arial;
+    }
+  </style>
 </head>
 <body>
-	<h1>Maintenance time!</h1>
-	<p>
+  <h1>Maintenance time!</h1>
+  <p>
     Don't worry, CourseRoad will be back shortly, new and improved! 
     Sorry for the inconvenience. (I'll try to be quick!)
   </p>
-	<p>
+  <p>
     If something's gone horribly wrong and you need something <em>urgently</em>,
     or you're perhaps interested in helping me by being a beta tester, 
     email me at <a href="courseroad@mit.edu">courseroad@mit.edu</a>.
   </p>
-	<p>
+  <p>
     Thanks,<br>
     dannybd
   </p>

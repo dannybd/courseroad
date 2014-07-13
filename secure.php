@@ -9,8 +9,8 @@ session_start();
 // If someone's trying to access this page directly (without trying to first
 // auth on index.php) then send them back to index.php
 if (!@$_SESSION['wenttoindex']) {
-	header("Location: $baseURL/");
-	die();
+  header("Location: $baseURL/");
+  die();
 }
 
 // Remove this session variable, as it is no longer useful.
@@ -22,8 +22,8 @@ if (!isset($_SESSION['crhash'])) $_SESSION['crhash'] = "";
 // If the certificate used to authenticate is somehow missing an email address,
 // then we can't do anything more with it.
 if (!isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
-	header("Location: $baseURL/#-no-email");
-	die();
+  header("Location: $baseURL/#-no-email");
+  die();
 }
 
 // The cert is valid and the user is trying to log in. Pull data from the cert
@@ -58,15 +58,15 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 // If we're also trying to Save with Log In, then update the hash and copy
 // the old row.
 if (isset($_SESSION['trycert'])) {
-	$_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
-	$sql = (
+  $_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
+  $sql = (
     "INSERT INTO `roads2` ". 
     "(`hash`, `user`, `classes`, `majors`, `comment`, `ip`) " .
     "(SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `majors`, " .
     "`comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' " .
     "AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)"
   );
-	mysql_query($sql);
+  mysql_query($sql);
 }
 
 /*
