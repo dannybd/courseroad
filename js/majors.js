@@ -886,6 +886,10 @@ window.majors = {
         globalMatchesIgnore: 1,
         special: 1
       },
+      {
+        id: "Note: these overlap with the Professional Area Subjects above.",
+        skip: 1
+      },
       "16.30", "6.111", "16.35", "16.36", "16.400", "16.410",
     ],
     {id: "Laboratory and Capstone Subjects", skip: 1},
