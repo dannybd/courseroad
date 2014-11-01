@@ -45,7 +45,6 @@ Require valid-user
 # RewriteRule .* /503.php
 
 # [url]/username --> [url]/index.php?hash=username
-RewriteCond %{REQUEST_URI} !^blog
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ /index.php?hash=$1
