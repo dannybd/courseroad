@@ -186,7 +186,7 @@ header('Content-type: text/html; charset=utf-8');
         A four-year planner for the MIT community.
       </div>
       <a id="openhelp" href="#" class="dummylink">Help</a> ~ 
-      <a href="/blog" target="_blank">Blog</a>
+      <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a>
       <br>
       <?=
         ($loggedin 
