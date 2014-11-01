@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 header("Content-type: text/javascript;");
 
 if(isset($_GET['date'])) {
