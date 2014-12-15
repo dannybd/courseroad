@@ -6,5 +6,5 @@ minors.
 
 Check it out here: [https://courseroad.mit.edu/dannybd](https://courseroad.mit.edu/dannybd)
 
-Questions or comments? Email me at: 
+Questions or comments? Email me at:
 [courseroad@mit.edu](mailto:courseroad@mit.edu)

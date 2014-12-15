@@ -1,6 +1,6 @@
 <?php
-// secure.php is the connection page to check for MIT certificates; 
-// if the certs are found it will add the user data to the session accordingly 
+// secure.php is the connection page to check for MIT certificates;
+// if the certs are found it will add the user data to the session accordingly
 // and then pass the browser back to whence it came.
 
 require('connect.php');
@@ -60,7 +60,7 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 if (isset($_SESSION['trycert'])) {
   $_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
   $sql = (
-    "INSERT INTO `roads2` ". 
+    "INSERT INTO `roads2` " .
     "(`hash`, `user`, `classes`, `majors`, `comment`, `ip`) " .
     "(SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `majors`, " .
     "`comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' " .

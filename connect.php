@@ -8,4 +8,6 @@ if (!__DEV__) {
 $connect = mysql_connect($databaseURL, $username, $password);
 mysql_select_db($database);
 
+unset($databaseURL, $username, $password, $database);
+
 ?>

@@ -49,7 +49,7 @@ header("Retry-After: 86400");
   </p>
   <p>
     If something's gone horribly wrong and you need something <em>urgently</em>,
-    or you're perhaps interested in helping me by being a beta tester, 
+    or you're perhaps interested in helping me by being a beta tester,
     email me at <a href="courseroad@mit.edu">courseroad@mit.edu</a>.
   </p>
   <p>
