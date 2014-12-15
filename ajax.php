@@ -42,15 +42,19 @@ get_csrf_token();
 // Yields a JSON-encoded list of classes which match the autocompletion field
 // in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
-  $search = mysql_real_escape_string($_POST['autocomplete']);
   $temp = array();
-  $query = mysql_query(
+  $statement = $db->prepare(
     "SELECT DISTINCT `subject_id` FROM `warehouse` " .
-    "WHERE `subject_id` LIKE '$search%' ORDER BY `subject_id` LIMIT 6"
+    "WHERE `subject_id` LIKE ? ORDER BY `subject_id` LIMIT 6"
   );
-  while($row = mysql_fetch_array($query)) {
-    $temp[] = $row['subject_id'];
+  $search = "{$_POST['autocomplete']}%";
+  $statement->bind_param('s', $search);
+  $statement->execute();
+  $statement->bind_result($subject_id);
+  while($statement->fetch()) {
+    $temp[] = $subject_id;
   }
+  $statement->free_result();
   dieJSON($temp);
 }
 
