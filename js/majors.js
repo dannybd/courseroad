@@ -1025,6 +1025,7 @@ window.majors = {
       {
         count: 8,
         desc: "(in total) from",
+        globalMatchesIgnore: 1,
         globalMatchesSkip: 1,
         runinfull: 1
       },
@@ -1039,6 +1040,7 @@ window.majors = {
     [
       {
         count: 6,
+        globalMatchesIgnore: 1,
         globalMatchesSkip: 1,
         runinfull: 1
     },
