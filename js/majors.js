@@ -1040,6 +1040,7 @@ window.majors = {
     [
       {
         count: 6,
+        desc: "(in total) from",
         globalMatchesIgnore: 1,
         globalMatchesSkip: 1,
         runinfull: 1
