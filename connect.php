@@ -8,6 +8,7 @@ if (!__DEV__) {
 $connect = mysql_connect($databaseURL, $username, $password);
 mysql_select_db($database);
 
+require('sql.php');
 $db = new mysqli($databaseURL, $username, $password, $database);
 if($db->connect_errno > 0){
 	die('Unable to connect to database [' . $db->connect_error . ']');

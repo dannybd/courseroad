@@ -42,20 +42,8 @@ get_csrf_token();
 // Yields a JSON-encoded list of classes which match the autocompletion field
 // in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
-  $temp = array();
-  $statement = $db->prepare(
-    "SELECT DISTINCT `subject_id` FROM `warehouse` " .
-    "WHERE `subject_id` LIKE ? ORDER BY `subject_id` LIMIT 6"
-  );
-  $search = "{$_POST['autocomplete']}%";
-  $statement->bind_param('s', $search);
-  $statement->execute();
-  $statement->bind_result($subject_id);
-  while($statement->fetch()) {
-    $temp[] = $subject_id;
-  }
-  $statement->free_result();
-  dieJSON($temp);
+  $results = CourseRoadDB::fetchAutocompleteResults($db, $_POST['autocomplete']);
+  dieJSON($results);
 }
 
 // Loads class data from the database and serves up the JSON which CourseRoad 
