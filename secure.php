@@ -4,7 +4,6 @@
 // and then pass the browser back to whence it came.
 
 require('connect.php');
-session_start();
 
 // If someone's trying to access this page directly (without trying to first
 // auth on index.php) then send them back to index.php

@@ -29,7 +29,6 @@
 
 // connect to database
 require('connect.php');
-session_start();
 require('functions.php');
 
 get_csrf_token();

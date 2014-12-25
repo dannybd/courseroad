@@ -29,7 +29,6 @@
 error_reporting(0);
 // connect to database
 require('connect.php');
-session_start();
 require('functions.php');
 
 // Makes it easier to test POST code

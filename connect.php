@@ -10,4 +10,4 @@ CourseRoadDB::initialize($databaseURL, $username, $password, $database);
 
 unset($databaseURL, $username, $password, $database);
 
-?>
+session_start();
