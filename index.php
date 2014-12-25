@@ -66,7 +66,6 @@ if (isset($_GET['addclasses'])) {
 // A visible "?hash=" in the URL is unwanted, so we redirect to remove it,
 // but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
-  $_SESSION['hash_to_use'] = $_GET['hash'];
   redirect_hash(urldecode($_GET['hash']));
 }
 
@@ -79,12 +78,6 @@ $add_new_term = false;
 if (isset($_SESSION['add_new_term'])) {
   $add_new_term = $_SESSION['add_new_term'];
   unset($_SESSION['add_new_term']);
-}
-
-$hash_to_use = false;
-if (isset($_SESSION['hash_to_use'])) {
-  $hash_to_use = $_SESSION['hash_to_use'];
-  unset($_SESSION['hash_to_use']);
 }
 
 // If we're trying to add an additional term's worth of information, then
@@ -102,14 +95,6 @@ if ($add_new_term){
     }
   }
   $add_new_term = json_encode($json);
-}
-
-// hash_to_use holds a value if we went from ?hash=foo to #foo via the redirect
-// above. This allows the hash's class/major list to be passed directly without
-// the additional AJAX call.
-if ($hash_to_use) {
-  $json = buildClassesArray($hash_to_use);
-  $hash_to_use = json_encode($json);
 }
 
 // If we haven't tried to log in, then default to false.
@@ -737,7 +722,7 @@ header('Content-type: text/html; charset=utf-8');
     needPermission: <?= $_SESSION['user']['need_permission'] ?>
   };
   var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
-  var hash_to_use = $.parseJSON('<?= $hash_to_use ?>') || 0;
+  var hash_to_use = 0;
   var CSRF_token = '<?= $_SESSION['csrf_token'] ?>';
   $(crSetup);
 </script>
