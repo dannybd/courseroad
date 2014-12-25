@@ -329,7 +329,6 @@ EOD;
 
 
 function buildClassesArray($hash) {
-  $hash = mysql_real_escape_string($hash);
   $_SESSION['crhash'] = $hash;
   
   // Pull out the latest matching saved road's classes and majors

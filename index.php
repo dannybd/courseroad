@@ -49,9 +49,9 @@ if (isset($_GET['addclasses'])) {
   
   // SESSION.add_new_term holds onto the new term's data
   $_SESSION['add_new_term'] = array(
-    'year'=>mysql_real_escape_string($_GET['year']),
-    'term'=>mysql_real_escape_string($_GET['term']),
-    'classes'=>explode(',', mysql_real_escape_string($_GET['addclasses']))
+    'year' => $_GET['year'],
+    'term' => $_GET['term'],
+    'classes' => explode(',', $_GET['addclasses'])
   );
   
   if (isset($_GET['hash'])) {
@@ -101,7 +101,7 @@ if ($add_new_term){
       $json[] = $tempclass;
     }
   }
-  $add_new_term = mysql_real_escape_string(json_encode($json));
+  $add_new_term = json_encode($json);
 }
 
 // hash_to_use holds a value if we went from ?hash=foo to #foo via the redirect
@@ -109,7 +109,7 @@ if ($add_new_term){
 // the additional AJAX call.
 if ($hash_to_use) {
   $json = buildClassesArray($hash_to_use);
-  $hash_to_use = mysql_real_escape_string(json_encode($json));
+  $hash_to_use = json_encode($json);
 }
 
 // If we haven't tried to log in, then default to false.

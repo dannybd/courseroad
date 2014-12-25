@@ -49,10 +49,8 @@ if (isset($_POST['autocomplete'])) {
 // Loads class data from the database and serves up the JSON which CourseRoad
 // requires to load that class.
 if (isset($_POST['getclass'])){
-  $class = mysql_real_escape_string($_POST['getclass']);
-  $year = isset($_POST['getyear'])
-    ? mysql_real_escape_string($_POST['getyear'])
-    : false;
+  $class = $_POST['getclass'];
+  $year = isset($_POST['getyear']) ? $_POST['getyear'] : false;
   dieJSON(pullClass($class, $year));
 }
 
@@ -106,8 +104,8 @@ if ($loggedin) {
  */
 if (isset($_POST['saveNewRoad'])) {
   require_csrf();
-  $classes = mysql_real_escape_string(encrypt($_POST['classes']));
-  $majors = mysql_real_escape_string(encrypt($_POST['majors']));
+  $classes = encrypt($_POST['classes']);
+  $majors = encrypt($_POST['majors']);
   $hash = substr(
     strtr(
       base64_encode(md5($classes . $majors)),
@@ -238,7 +236,7 @@ if (isset($_POST['savedroads'])) {
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['setPublicRoad'])) {
   require_csrf();
-  $hash = mysql_real_escape_string($_POST['setPublicRoad']);
+  $hash = $_POST['setPublicRoad'];
   if (!$loggedin) {
     die();
   }
@@ -252,10 +250,8 @@ if (isset($_POST['setPublicRoad'])) {
 // When the user changes a road's hash
 if (isset($_POST['changeroadhash'])) {
   require_csrf();
-  $oldhash = mysql_real_escape_string($_POST['changeroadhash']);
-  $newhash = mysql_real_escape_string(
-    $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36))
-  );
+  $oldhash = $_POST['changeroadhash'];
+  $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
   if (!$loggedin ||
       preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) ||
       !strlen($_POST['newhash'])) {
@@ -274,10 +270,8 @@ if (isset($_POST['changeroadhash'])) {
 // And when the user adds a comment
 if (isset($_POST['commentonroad'])) {
   require_csrf();
-  $hash = mysql_real_escape_string($_POST['commentonroad']);
-  $comment = mysql_real_escape_string(
-    htmlentities(substr($_POST['commentforroad'], 0, 100))
-  );
+  $hash = $_POST['commentonroad'];
+  $comment = htmlentities(substr($_POST['commentforroad'], 0, 100));
   if (!$loggedin) {
     die($hash);
   }
@@ -291,7 +285,7 @@ if (isset($_POST['commentonroad'])) {
 //Similarly, runs when the user deletes a road.
 if (isset($_POST['deleteroad'])) {
   require_csrf();
-  $hash = mysql_real_escape_string($_POST['deleteroad']);
+  $hash = $_POST['deleteroad'];
   if (!$loggedin) die();
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) die();
   if ($hash != 'null') {
@@ -304,14 +298,12 @@ if (isset($_POST['deleteroad'])) {
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['usersettings'])) {
   require_csrf();
-  $_SESSION['user']['class_year'] = intval(
-    mysql_real_escape_string($_POST['class_year'])
-  );
+  $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
     $_POST['toggle_view_req_lines'] == '1' ? 1 : 0
   );
   $_SESSION['user']['autocomplete'] = (
-    mysql_real_escape_string($_POST['toggle_autocomplete']) == 1 ? 1 : 0
+    $_POST['toggle_autocomplete'] == 1 ? 1 : 0
   );
   $_SESSION['user']['edited'] = $loggedin ? 0 : 1;
   if ($loggedin) {
