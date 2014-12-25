@@ -4,14 +4,14 @@ function encrypt($mixed){
 	return strtr(
     base64_encode(
       mcrypt_encrypt(
-        MCRYPT_RIJNDAEL_256, 
-        md5(SALT), 
-        serialize($mixed), 
-        MCRYPT_MODE_CBC, 
+        MCRYPT_RIJNDAEL_256,
+        md5(SALT),
+        serialize($mixed),
+        MCRYPT_MODE_CBC,
         md5(md5(SALT))
       )
-    ), 
-    '+/=', 
+    ),
+    '+/=',
     '-_,'
   );
 }
@@ -20,12 +20,12 @@ function decrypt($mixed){
 	return unserialize(
     rtrim(
       mcrypt_decrypt(
-        MCRYPT_RIJNDAEL_256, 
-        md5(SALT), 
-        base64_decode(strtr($mixed, '-_,', '+/=')), 
-        MCRYPT_MODE_CBC, 
+        MCRYPT_RIJNDAEL_256,
+        md5(SALT),
+        base64_decode(strtr($mixed, '-_,', '+/=')),
+        MCRYPT_MODE_CBC,
         md5(md5(SALT))
-      ), 
+      ),
       "\0"
     )
   );
@@ -67,13 +67,13 @@ function redirect_hash($hash) {
 }
 
 /**
- * Future planning: base64 encoded class info sent in, detected here, 
- * redirect to secure.php with proper checks, send back to here with prompt 
- * for choosing a road to add it to, then load that road in the background 
+ * Future planning: base64 encoded class info sent in, detected here,
+ * redirect to secure.php with proper checks, send back to here with prompt
+ * for choosing a road to add it to, then load that road in the background
  * (no redirect) and change the hash.
  *
  * Also changing roads by refresh shouldn't be necessary...
- * 
+ *
  * Also fix the wire library already
  */
 
@@ -89,17 +89,17 @@ function dieJSON($obj) {
  * Create an array of info on a particular class of a particular year.
  */
 function pullClass(
-    $class, 
-    $year = false, 
-    $classterm = 0, 
-    $override = false, 
+    $class,
+    $year = false,
+    $classterm = 0,
+    $override = false,
     $substitute = '') {
-  
+
   $row = CourseRoadDB::getBestClassInfo($class, $year);
   if (!$row) {
     return 'noclass';
   }
-  
+
   // Some returned columns are unhelpful and are thus discarded.
   unset($row['id']);
   unset($row['design_units']);
@@ -110,7 +110,7 @@ function pullClass(
   unset($row['last_modified']);
   unset($row['notes']);
   unset($row['exception']);
-  
+
   // Format assorted other rows. While classes are usually considered as "8.01",
   // it's easier to keep refer to them as "8_01" [for classes, etc.]
   $row['id'] = str_replace('.', '_', $row['subject_id']);
@@ -124,20 +124,20 @@ function pullClass(
   $row['permission'] = (strpos($row['reqs'], 'Permission') != false);
   $row['reqs'] = json_decode($row['reqs']);
   $reqs = $row['reqs'] ? 'Reqs: [X]' : 'No reqs :D';
-  
+
   if ($row['reqstr']) {
     $row['reqstr'] = 'Requisites: ' . $row['reqstr'] . '<br>';
   }
-  
+
   $row['total_units'] = floatval($row['total_units']);
-  
+
   // Occasionally, the Warehouse tries to say that a class has 0 units. Since
   // that doesn't make much sense, default these exceptions to 12 units.
   $default_unit_count = 12;
   if (!$row['total_units']) {
     $row['total_units'] = $default_unit_count;
   }
-  
+
   // Build the class' HTML for the info box when it's selected.
   $row['info'] = makeClassInfoHTML($row);
 
@@ -154,7 +154,7 @@ function pullClass(
   if (!$row['joint_subjects'][0]) {
     $row['joint_subjects'] = false;
   }
-  
+
   $row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
   foreach($row['equiv_subjects'] as &$subj) {
     $subj = rtrim($subj, 'J');
@@ -162,13 +162,13 @@ function pullClass(
   if (!$row['equiv_subjects'][0]) {
     $row['equiv_subjects'] = false;
   }
-  
+
   if ($row['joint_subjects']) {
     $joint_subjects_classes = implode(' ', $row['joint_subjects']);
     $joint_subjects_classes = str_replace('.', '_', $joint_subjects_classes);
     $row['divclasses'] .= ' ' . $joint_subjects_classes;
   }
-  
+
   if ($row['gir'] && $row['gir'][0] === 'H') {
     $row['gir'] = '';
   }
@@ -181,40 +181,40 @@ function pullClass(
   if ($row['hass']) {
     $row['divclasses'] .= ' HASS ' . $row['hass'];
   }
-  
+
   // Extraclasses handles cases where a class universally also counts for
-  // something else, like 18.100B and 18.100. This is set manually in the 
+  // something else, like 18.100B and 18.100. This is set manually in the
   // warehouse_exceptions table.
   if ($row['extraclasses']) {
     $row['divclasses'] .= ' ' . str_replace('.', '_', $row['extraclasses']);
   }
-  
+
   $row['special'] = ($row['gir'] || $row['ci'] || $row['hass']);
   $row['classterm'] = $classterm;
   $row['override'] = $override;
   $row['substitute'] = $substitute;
   $row['custom'] = false;
-  
+
   // year = 2013 --> year_range = '12-'13
   $row['year_range'] = (
     "'" . substr($row['year'] - 1, -2) . "-'" . substr($row['year'], -2)
   );
-  
+
   // year_desired holds the year the class attempted to match. This allows for
   // classes which will be in the '14-'15 cycle to be defined now with '13-'14,
   // but should '14-'15 become available, that version with be loaded instead.
   // Thus, year_desired holds the user's desired year.
   $row['year_desired'] = $year ? $year : (date('Y') + (date('m') > 3));
-  
-  // Generate HTML for a dropdown list of the other offered years 
+
+  // Generate HTML for a dropdown list of the other offered years
   $row['otheryears'] = makeYearsOfferedHTML($row['subject_id'], $row['year']);
-  
+
   $row['yearspan'] = (
     '<span title="The data for this class is from the '. $row['year_range'] .
-    'version of the subject. Click to use another year\'s version." '. 
+    'version of the subject. Click to use another year\'s version." '.
     'href="#" class="dummylink">' . $row['year_range'] . '</span>'
   );
-  
+
   // $row['div'] actually stores the HTML of the class bubble.
   $row['div'] = <<<EOD
 <div id="{$row['divid']}" class="{$row['divclasses']}">
@@ -247,13 +247,13 @@ function makeYearRange($year) {
 function makeClassInfoHTML($row) {
   $catalog_link_base = 'http://student.mit.edu/catalog/search.cgi?search=';
   $catalog_link = $catalog_link_base . $row['subject_id'];
-  
+
   $evaluations_link_base = (
     'https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=' .
     'Search&subjectCode='
   );
   $evaluations_link = $evaluations_link_base . $row['subject_id'];
-  
+
   return <<<EOD
 Additional info for <strong>{$row['subject_id']}</strong>:<br>
 <strong>{$row['subject_title']}</strong><br>
@@ -278,7 +278,7 @@ function makeYearsOfferedHTML($subject_id, $year) {
     $html .= ($year_offered === $year) ? " selected='true'" : '';
     $html .= ">$year_range</option>";
   }
-  $html .= "\n<select>"; 
+  $html .= "\n<select>";
   return $html;
 }
 
@@ -286,10 +286,10 @@ function makeYearsOfferedHTML($subject_id, $year) {
  * Create an array of info on a custom-created class.
  */
 function pullCustom(
-    $name, 
-    $units, 
-    $classterm = 0, 
-    $override = false, 
+    $name,
+    $units,
+    $classterm = 0,
+    $override = false,
     $substitute = "") {
 
   $row = array();
@@ -310,7 +310,7 @@ EOD;
   $row['override'] = $override;
   $row['substitute'] = $substitute;
   $row['custom'] = true;
-  
+
   // $row['div'] actually stores the HTML of the class bubble.
   $row['div'] = <<<EOD
 <div id="{$row['divid']}" class="{$row['divclasses']}">
@@ -330,7 +330,7 @@ EOD;
 
 function buildClassesArray($hash) {
   $_SESSION['crhash'] = $hash;
-  
+
   // Pull out the latest matching saved road's classes and majors
   $classdata = CourseRoadDB::getClassDataFromRoad($hash);
   if (!$classdata) {
@@ -342,7 +342,7 @@ function buildClassesArray($hash) {
     die();
   }
   $majors = json_decode($majors, true);
-  
+
   // json holds the pulled data on each saved class.
   $json = array();
   foreach($classes as &$class) {
@@ -354,18 +354,18 @@ function buildClassesArray($hash) {
     }
     if (isset($class['custom'])) {
       $json[] = pullCustom(
-        $class['name'], 
-        $class['units'], 
-        $class['term'], 
-        $class['override'], 
+        $class['name'],
+        $class['units'],
+        $class['term'],
+        $class['override'],
         $class['substitute']
       );
     }else{
       $tempclass = pullClass(
-        $class['id'], 
-        $class['year'], 
-        $class['term'], 
-        $class['override'], 
+        $class['id'],
+        $class['year'],
+        $class['term'],
+        $class['override'],
         $class['substitute']
       );
       if ($tempclass != 'noclass') {
