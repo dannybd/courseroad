@@ -5,7 +5,7 @@
 "use strict";
 
 var WireIt, majors, user, CSRF_token;
-var add_new_term, classterm, hash_to_use, loggedin, triedlogin;
+var add_new_term, classterm, loggedin, triedlogin;
 
 var Defaults = {
   requisiteCount: {
@@ -968,13 +968,7 @@ var crSetup = function () {
   setInterval(function () {
     addAllWires(false);
   }, 10000);
-  if (hash_to_use) {
-    var jsonmajors = hash_to_use.pop();
-    $('select.majorminor').each(function (i) {
-      $(this).val(jsonmajors[i]).attr('selected', true);
-    });
-    getClasses(hash_to_use);
-  } else if (window.location.hash) {
+  if (window.location.hash) {
     // Load hash's classes on pageload
     $('#loading').show();
     userHashChange = false;

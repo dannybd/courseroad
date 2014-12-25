@@ -722,7 +722,6 @@ header('Content-type: text/html; charset=utf-8');
     needPermission: <?= $_SESSION['user']['need_permission'] ?>
   };
   var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
-  var hash_to_use = 0;
   var CSRF_token = '<?= $_SESSION['csrf_token'] ?>';
   $(crSetup);
 </script>
