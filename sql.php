@@ -31,6 +31,77 @@ class CourseRoadDB {
     return $results;
   }
 
+  public static function getBestClassInfo($class, $year=false) {
+    // If we have a year, then prioritize classes based on their distance to
+    // that year; otherwise, prioritize based on most recent year first.
+    $sort_by_year = $year ? "ABS(`year`-?) ASC" : "`year` DESC";
+
+    // Prioritize rows found within the exceptions table over rows found in the
+    // regular table.
+    $statement = self::$db->prepare(
+      "SELECT *, '0' AS exception FROM `warehouse` " .
+      "WHERE `subject_id` = ? UNION ALL " .
+      "SELECT *, '1' AS exception FROM `warehouse_exceptions` " .
+      "WHERE `subject_id` = ? " .
+      "ORDER BY $sort_by_year, exception DESC, `last_modified` DESC;"
+    );
+    if ($year) {
+      $statement->bind_param('ssi', $class, $class, $year);
+    } else {
+      $statement->bind_param('ss', $class, $class);
+    }
+    $statement->execute();
+    $row = $statement->get_result()->fetch_assoc();
+    $statement->free_result();
+    return $row;
+  }
+
+  public static function getYearsClassOffered($class) {
+    $statement = self::$db->prepare(
+      "SELECT DISTINCT `year` FROM `warehouse` " .
+      "WHERE `subject_id` = ? ORDER BY `year` DESC"
+    );
+    $statement->bind_param('s', $class);
+    $statement->execute();
+    $statement->bind_result($year);
+    $years_offered = array();
+    while ($statement->fetch()) {
+      $years_offered[] = $year;
+    }
+    $statement->free_result();
+    return $years_offered;
+  }
+
+  public static function hashExists($hash) {
+    $statement = self::$db->prepare(
+      "SELECT `hash` from `roads2` WHERE `hash` = ? OR " .
+      "(`user` = ? AND `public` = '1') LIMIT 1"
+    );
+    $statement->bind_param('ss', $hash, $hash);
+    $statement->execute();
+    $statement->bind_result($num_public_roads);
+    $statement->fetch();
+    $statement->free_result();
+    return (bool) $num_public_roads;
+  }
+
+  /**
+   * Check to make sure that the newly saved hash won't overwrite a prior
+   * hash with a different set of classes or majors.
+   */
+  public static function isHashSafe($hash, $classes, $majors) {
+    $statement = self::$db->prepare(
+      "SELECT COUNT(*) FROM `roads2` WHERE `hash` = ? " .
+      "AND `classes` != ? AND `majors` != ?"
+    );
+    $statement->bind_param('sss', $hash, $classes, $majors);
+    $statement->execute();
+    $statement->bind_result($conflicting_hashes);
+    $statement->fetch();
+    $statement->free_result();
+    return $conflicting_hashes === 0;
+  }
+
   public static function saveNewRoad($hash, $athena, $classes, $majors) {
     $statement = self::$db->prepare(
       "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `ip`) " .
@@ -99,36 +170,6 @@ class CourseRoadDB {
     }
     $statement->close();
     return $ret;
-  }
-
-  public static function hashExists($hash) {
-    $statement = self::$db->prepare(
-      "SELECT `hash` from `roads2` WHERE `hash` = ? OR " .
-      "(`user` = ? AND `public` = '1') LIMIT 1"
-    );
-    $statement->bind_param('ss', $hash, $hash);
-    $statement->execute();
-    $statement->bind_result($num_public_roads);
-    $statement->fetch();
-    $statement->free_result();
-    return (bool) $num_public_roads;
-  }
-
-  /**
-   * Check to make sure that the newly saved hash won't overwrite a prior
-   * hash with a different set of classes or majors.
-   */
-  public static function isHashSafe($hash, $classes, $majors) {
-    $statement = self::$db->prepare(
-      "SELECT COUNT(*) FROM `roads2` WHERE `hash` = ? " .
-      "AND `classes` != ? AND `majors` != ?"
-    );
-    $statement->bind_param('sss', $hash, $classes, $majors);
-    $statement->execute();
-    $statement->bind_result($conflicting_hashes);
-    $statement->fetch();
-    $statement->free_result();
-    return $conflicting_hashes === 0;
   }
 
   public static function changeRoadHash($oldhash, $newhash) {
@@ -235,47 +276,6 @@ class CourseRoadDB {
     }
     $statement->close();
     return $ret;
-  }
-
-  public static function getBestClassInfo($class, $year=false) {
-    // If we have a year, then prioritize classes based on their distance to
-    // that year; otherwise, prioritize based on most recent year first.
-    $sort_by_year = $year ? "ABS(`year`-?) ASC" : "`year` DESC";
-
-    // Prioritize rows found within the exceptions table over rows found in the
-    // regular table.
-    $statement = self::$db->prepare(
-      "SELECT *, '0' AS exception FROM `warehouse` " .
-      "WHERE `subject_id` = ? UNION ALL " .
-      "SELECT *, '1' AS exception FROM `warehouse_exceptions` " .
-      "WHERE `subject_id` = ? " .
-      "ORDER BY $sort_by_year, exception DESC, `last_modified` DESC;"
-    );
-    if ($year) {
-      $statement->bind_param('ssi', $class, $class, $year);
-    } else {
-      $statement->bind_param('ss', $class, $class);
-    }
-    $statement->execute();
-    $row = $statement->get_result()->fetch_assoc();
-    $statement->free_result();
-    return $row;
-  }
-
-  public static function getYearsClassOffered($class) {
-    $statement = self::$db->prepare(
-      "SELECT DISTINCT `year` FROM `warehouse` " .
-      "WHERE `subject_id` = ? ORDER BY `year` DESC"
-    );
-    $statement->bind_param('s', $class);
-    $statement->execute();
-    $statement->bind_result($year);
-    $years_offered = array();
-    while ($statement->fetch()) {
-      $years_offered[] = $year;
-    }
-    $statement->free_result();
-    return $years_offered;
   }
 
 }
