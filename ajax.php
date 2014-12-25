@@ -42,7 +42,7 @@ get_csrf_token();
 // Yields a JSON-encoded list of classes which match the autocompletion field
 // in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
-  $results = CourseRoadDB::fetchAutocompleteResults($db, $_POST['autocomplete']);
+  $results = CourseRoadDB::genAutocompleteResults($_POST['autocomplete']);
   dieJSON($results);
 }
 
@@ -96,16 +96,11 @@ if (!isset($_SESSION['user'])) {
 
 // If logged in, repopulate the user prefs with their real values.
 if ($loggedin) {
-  $tempuser = mysql_fetch_assoc(mysql_query(
-    "SELECT * FROM `users` WHERE `athena`='$athena'"
-  ));
-  if ($tempuser) {
-    $_SESSION['user']['class_year'] = $tempuser['class_year'];
-    $_SESSION['user']['view_req_lines'] = $tempuser['view_req_lines'];
-    $_SESSION['user']['autocomplete'] = $tempuser['autocomplete'];
-    $_SESSION['user']['need_permission'] = $tempuser['need_permission'];
-    unset($tempuser);
+  $userprefs = CourseRoadDB::genUserPrefs($athena);
+  foreach ($userprefs as $pref_key => $pref_value) {
+    $_SESSION['user'][$pref_key] = $pref_value;
   }
+  unset($userprefs);
 }
 
 /**
@@ -142,12 +137,7 @@ if (isset($_POST['saveNewRoad'])) {
       $_SESSION['trycert'] = true;
     }
   }
-  // id, hash, user, classes, majors, public, desc, ip, added
-  $sql = (
-    "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `ip`) VALUES " .
-    "('$hash', '$athena', '$classes', '$majors', '{$_SERVER['REMOTE_ADDR']}');"
-  );
-  mysql_query($sql);
+  CourseRoadDB::saveNewRoad($hash, $athena, $classes, $majors);
   // The **auth** lets the user's browser know to try to log in
   die(isset($_SESSION['trycert']) ? '**auth**' : $hash); 
 }
@@ -169,14 +159,13 @@ if (isset($_POST['savedroads'])) {
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
   }
-  $sql = "SELECT * FROM `roads2` WHERE `user`='$athena' ORDER BY `added` DESC";
-  $query = mysql_query($sql);
+  $saved_roads = CourseRoadDB::genSavedRoads($athena);
   echo "<table>\n";
   echo "<tr>";
   echo (
     "<th style=\"min-width:50px\" title=\"Select if you'd like one of " . 
     "your saved roads to be available more easily at " .
-    "courseroad.mit.edu/index.php#{$_SESSION['athena']}\">Public</th>"
+    "courseroad.mit.edu/index.php#$athena\">Public</th>"
   );
   echo "<th style=\"min-width:118px\">Hash</th>";
   echo "<th style=\"min-width:118px\">Added</th>";
@@ -186,23 +175,17 @@ if (isset($_POST['savedroads'])) {
   echo "<th>Delete?</th>";
   echo "</tr>\n";
   echo "<tr>";
-  $numrows = mysql_query(
-    "SELECT COUNT(*) FROM `roads2` " .
-    "WHERE `hash` LIKE '$athena/%' AND `public`='1'"
-  );
-  $numrows = mysql_fetch_array($numrows);
-  $numrows = $numrows[0];
   echo (
     "<td><input type=\"radio\" name=\"setPublicRoad\" " .
     "class=\"setPublicRoad\" value=\"null\" " .
-    ($numrows ? "" : "checked=\"true\" ") . "/></td>"
+    (CourseRoadDB::hasPublicRoad($athena) ? "" : "checked=\"true\" ") . "/></td>"
   );
   echo (
     "<td colspan=\"6\">Select this row to prevent any of your " .
     "saved roads from being your publicly-facing road.</td>"
   );
   echo "</tr>\n";
-  while($row = mysql_fetch_array($query)) {
+  foreach($saved_roads as &$row) {
     $row['classes'] = decrypt($row['classes']);
     $row['majors'] = decrypt($row['majors']);
     $hash = stripslashes($row['hash']);
