@@ -332,7 +332,7 @@ function buildClassesArray($hash) {
   $_SESSION['crhash'] = $hash;
   
   // Pull out the latest matching saved road's classes and majors
-  $classdata = CourseRoadDB::genClassDataFromRoad($hash);
+  $classdata = CourseRoadDB::getClassDataFromRoad($hash);
   if (!$classdata) {
     die();
   }
@@ -379,7 +379,7 @@ function buildClassesArray($hash) {
 
 function importUserPrefs($athena) {
   // If logged in, repopulate the user prefs with their real values.
-  $userprefs = CourseRoadDB::genUserPrefs($athena);
+  $userprefs = CourseRoadDB::getUserPrefs($athena);
   foreach ($userprefs as $pref_key => $pref_value) {
     $_SESSION['user'][$pref_key] = $pref_value;
   }

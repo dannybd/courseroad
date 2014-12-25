@@ -14,7 +14,7 @@ class CourseRoadDB {
     }
   }
 
-  public static function genAutocompleteResults($query) {
+  public static function getAutocompleteResults($query) {
     $results = array();
     $statement = self::$db->prepare(
       "SELECT DISTINCT `subject_id` FROM `warehouse` " .
@@ -118,7 +118,7 @@ class CourseRoadDB {
     return $ret;
   }
 
-  public static function genClassDataFromRoad($hash) {
+  public static function getClassDataFromRoad($hash) {
     $statement = self::$db->prepare(
       "SELECT `classes`, `majors` FROM `roads2` " .
       "WHERE (`hash` = ? OR (`hash` LIKE ? AND `public`='1')) " .
@@ -132,7 +132,7 @@ class CourseRoadDB {
     return $classdata ?: array();
   }
 
-  public static function genSavedRoads($athena) {
+  public static function getSavedRoads($athena) {
     $statement = self::$db->prepare(
       "SELECT `hash`, `classes`, `majors`, `public`, `comment`, `added` " .
       "FROM `roads2` WHERE `user` = ? ORDER BY `added` DESC"
@@ -245,7 +245,7 @@ class CourseRoadDB {
     return $ret;
   }
 
-  public static function genUserPrefs($athena) {
+  public static function getUserPrefs($athena) {
     $statement = self::$db->prepare(
       "SELECT `class_year`, `view_req_lines`, `autocomplete`, " .
       "`need_permission` FROM `users` WHERE `athena` = ?"

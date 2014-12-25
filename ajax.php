@@ -42,7 +42,7 @@ get_csrf_token();
 // Yields a JSON-encoded list of classes which match the autocompletion field
 // in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
-  $results = CourseRoadDB::genAutocompleteResults($_POST['autocomplete']);
+  $results = CourseRoadDB::getAutocompleteResults($_POST['autocomplete']);
   dieJSON($results);
 }
 
@@ -153,7 +153,7 @@ if (isset($_POST['savedroads'])) {
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
   }
-  $saved_roads = CourseRoadDB::genSavedRoads($athena);
+  $saved_roads = CourseRoadDB::getSavedRoads($athena);
   echo "<table>\n";
   echo "<tr>";
   echo (
