@@ -3,34 +3,34 @@
  * CourseRoad: A Four-Year Planner for the MIT Undergraduate Community
  * August 17, 2012
  * By: Danny Ben-David (dannybd@mit.edu)
- * 
+ *
  * CourseRoad is published under the MIT License, as follows:
  *
  * Copyright (c) 2012 Danny Ben-David (dannybd@mit.edu)
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), to 
- * deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 // connect to database
-require('connect.php'); 
+require('connect.php');
 session_start();
-require('functions.php'); 
+require('functions.php');
 
 get_csrf_token();
 
@@ -42,23 +42,19 @@ if (isset($_GET['addclasses'])) {
   if (!isset($_GET['year'])) {
     $_GET['year'] = false;
   }
-  
+
   if (!isset($_GET['term'])) {
     $_GET['term'] = 1;
   }
-  
+
   // SESSION.add_new_term holds onto the new term's data
   $_SESSION['add_new_term'] = array(
     'year' => $_GET['year'],
     'term' => $_GET['term'],
     'classes' => explode(',', $_GET['addclasses'])
   );
-  
-  if (isset($_GET['hash'])) {
-    if (!CourseRoadDB::hashExists($_GET['hash'])) {
-      $_GET['hash'] = '';
-    }
-  } else {
+
+  if (!isset($_GET['hash']) || !CourseRoadDB::hashExists($_GET['hash'])) {
     $_GET['hash'] = '';
   }
 }
@@ -86,10 +82,10 @@ if ($add_new_term){
   $json = array();
   foreach($add_new_term['classes'] as $class) {
     $tempclass = pullClass(
-      rtrim($class,'J'), 
-      $add_new_term['year'], 
+      rtrim($class, 'J'),
+      $add_new_term['year'],
       $add_new_term['term']
-    ); 
+    );
     if ($tempclass != 'noclass') {
       $json[] = $tempclass;
     }
@@ -125,13 +121,13 @@ if ($loggedin) {
 }
 
 /**
- * This can help force through updates to the linked js and css files 
+ * This can help force through updates to the linked js and css files
  * in browsers that love to hold on to cached versions; for debugging only.
  */
 $nocache = isset($_GET['nocache']);
 //Uncomment during development
-$nocache = true; 
-$nocache = $nocache ? '?nocache=' . time() : '?v3.0'; 
+$nocache = true;
+$nocache = $nocache ? '?nocache=' . time() : '?v3.0';
 
 header('Content-type: text/html; charset=utf-8');
 ?>
@@ -161,43 +157,43 @@ header('Content-type: text/html; charset=utf-8');
       <div class="infotabs-about-subheader flakyCSS">
         A four-year planner for the MIT community.
       </div>
-      <a id="openhelp" href="#" class="dummylink">Help</a> ~ 
+      <a id="openhelp" href="#" class="dummylink">Help</a> ~
       <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a>
       <br>
       <?=
-        ($loggedin 
-          ? "Hello, <strong>$athena</strong>! " 
+        ($loggedin
+          ? "Hello, <strong>$athena</strong>! "
           : "<input type=\"button\" id=\"userlogin\" " .
           "class=\"bubble loaders\" value=\"Login\"" .
-          ($_SESSION['triedcert'] 
+          ($_SESSION['triedcert']
             ? " disabled=\"disabled\" title=\"Sorry, we couldn't log you in. " .
               "Try reopening your browser.\">"
             : ">"
           )
         );
       ?>
-      <input 
-        type="button" 
-        id="showusersettings" 
-        class="bubble loaders" 
+      <input
+        type="button"
+        id="showusersettings"
+        class="bubble loaders"
         value="User Settings">
     </div>
     <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
       Class Type:&nbsp;
-      <input 
-        type="radio" 
-        name="getnewclasstype" 
-        id="getnewclasstype-subject" 
-        value="subject" 
+      <input
+        type="radio"
+        name="getnewclasstype"
+        id="getnewclasstype-subject"
+        value="subject"
         checked>
       <label for="getnewclasstype-subject" title="18.01, CMS.631, etc.">
         Subject
       </label>
       &nbsp;
-      <input 
-        type="radio" 
-        name="getnewclasstype" 
-        id="getnewclasstype-custom" 
+      <input
+        type="radio"
+        name="getnewclasstype"
+        id="getnewclasstype-custom"
         value="custom">
       <label for="getnewclasstype-custom" title="Summer UROP, Lab Assistant, etc.">
         Custom
@@ -205,12 +201,12 @@ header('Content-type: text/html; charset=utf-8');
       <br>
       <span>Add</span>
       <div id="getnewclass-class"  class="getnewclasstypes visible">
-        <input 
-          id="getnewclassid" 
-          type="text" 
-          name="classid" 
-          placeholder="18.01" 
-          pattern="[A-Za-z0-9\.]*" 
+        <input
+          id="getnewclassid"
+          type="text"
+          name="classid"
+          placeholder="18.01"
+          pattern="[A-Za-z0-9\.]*"
           autofocus>
       </div>
       <div id="getnewclass-custom" class="getnewclasstypes">
@@ -219,7 +215,7 @@ header('Content-type: text/html; charset=utf-8');
         (<input id="getnewclassunits" type="text" name="classunits" placeholder="0" pattern="[0-9\.]*"> units)
       </div>
       <br>
-      &nbsp;to 
+      &nbsp;to
       <select id="getnewclassterm" name="classterm">
         <option value="0">Prior Credit</option>
         <option value="1">Freshman Fall</option>
@@ -249,12 +245,12 @@ header('Content-type: text/html; charset=utf-8');
         <button type="button" id="changeclassterm-down" class="bubble loaders changeclassterm ui-button" value="1">
           <span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>
         </button>
-      <br> 
+      <br>
       <input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
     </div>
     <div id="infotabs-save"class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
       <input type="button" id="savemap" class="bubble loaders" value="Save Courses">
-      <input type="button" id="mapcerts" class="bubble loaders" value="<?= isset($_SESSION['athena'])?"View Saved Roads":"Save with Login (requires certs)"; ?>"><br><br>
+      <input type="button" id="mapcerts" class="bubble loaders" value="<?= $loggedin ? "View Saved Roads" : "Save with Login (requires certs)"; ?>"><br><br>
     </div>
   </div>
   <div id="COREchecker" class="leftbarholder">
@@ -274,7 +270,7 @@ header('Content-type: text/html; charset=utf-8');
     &nbsp;&nbsp;&nbsp;A <span id="HASS_Arts" class="checkbox1 corecheck HASS HA">[<span>&#x2713;</span>]</span>
           &nbsp;H <span id="HASS_Humanities" class="checkbox1 corecheck HASS HH">[<span>&#x2713;</span>]</span>
           &nbsp;S <span id="HASS_Social_Sciences" class="checkbox1 corecheck HASS HS">[<span>&#x2713;</span>]</span><br>
-    &nbsp;&nbsp;&nbsp;Other HASS: 
+    &nbsp;&nbsp;&nbsp;Other HASS:
     <span id="HASS_E"  class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
     <span id="HASS_E2" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
     <span id="HASS_E3" class="checkbox1 corecheck HASS HE">[<span>&#x2713;</span>]</span>
@@ -667,7 +663,7 @@ header('Content-type: text/html; charset=utf-8');
       <br>
       If you save roads while signed in, the road will be attached to your athena username with a timestamp, thus hiding the link from being easily discoverable.<br>
       You can personally choose to change these hashes by clicking the "Save" tab, clicking "View Saved Roads", and editing the hash from there.<br>
-      You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<em>username</em>. 
+      You can also choose to enable one of your saved roads as public: a public road will be viewable to anyone who goes to courseroad.mit.edu/<em>username</em>.
       <br>
       You'll also have the option to supply your graduation year to CourseRoad, in case you want the class year versions to be accurate (see above in "What are the years displayed on each class?").
       <br>
@@ -711,14 +707,14 @@ header('Content-type: text/html; charset=utf-8');
   (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
   g.async=1;g.src="https://ssl.google-analytics.com/ga.js";
   s.parentNode.insertBefore(g,s)}(document,"script"));
-  // These are not trusted variables, but they do aid in displaying 
+  // These are not trusted variables, but they do aid in displaying
   // different (non-secure) things based on login status.
   var loggedin = <?= intval($loggedin) ?>;
-  var triedlogin = <?= intval($_SESSION['triedcert']) ?>; 
+  var triedlogin = <?= intval($_SESSION['triedcert']) ?>;
   var user = {
-    classYear: <?= $_SESSION['user']['class_year'] ?>, 
-    viewReqLines: <?= $_SESSION['user']['view_req_lines'] ?>, 
-    autocomplete: <?= $_SESSION['user']['autocomplete'] ?>, 
+    classYear: <?= $_SESSION['user']['class_year'] ?>,
+    viewReqLines: <?= $_SESSION['user']['view_req_lines'] ?>,
+    autocomplete: <?= $_SESSION['user']['autocomplete'] ?>,
     needPermission: <?= $_SESSION['user']['need_permission'] ?>
   };
   var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
