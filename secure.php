@@ -35,18 +35,12 @@ $athena = mysql_real_escape_string($athena);
 $fullname = mysql_real_escape_string($fullname);
 
 // Create a row for the user (default values are chosen for class_year et al.)
-mysql_query("INSERT INTO `users`(`athena`) VALUES ('$athena')");
+CourseRoadDB::addUser($athena);
 
 // The user could have changed preferences before logging in: if preferences
 // have been edited, then update the row
 if (@$_SESSION['user'] and $_SESSION['user']['edited']) {
-  mysql_query(
-    "UPDATE `users` SET " .
-    "`class_year`='{$_SESSION['user']['class_year']}', " .
-    "`view_req_lines`='{$_SESSION['user']['view_req_lines']}', " .
-    "`autocomplete`='{$_SESSION['user']['autocomplete']}' " .
-    "WHERE `athena`='$athena'"
-  );
+  CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
 }
 
 // We've attempted auth
@@ -58,15 +52,7 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 // If we're also trying to Save with Log In, then update the hash and copy
 // the old row.
 if (isset($_SESSION['trycert'])) {
-  $_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
-  $sql = (
-    "INSERT INTO `roads2` " .
-    "(`hash`, `user`, `classes`, `majors`, `comment`, `ip`) " .
-    "(SELECT '{$_SESSION['saveas']}', '$athena', `classes`, `majors`, " .
-    "`comment`, `ip` FROM `roads2` WHERE `hash`='{$_SESSION['crhash']}' " .
-    "AND `classes` != '[]' ORDER BY `added` DESC LIMIT 0,1)"
-  );
-  mysql_query($sql);
+  CourseRoadDB::copyRoad($_SESSION['crhash'], $_SESSION['saveas'], $athena);
 }
 
 /*

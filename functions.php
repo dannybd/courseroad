@@ -66,15 +66,6 @@ function redirect_hash($hash) {
   die();
 }
 
-function valid_hash($hash) {
-  $hash = mysql_real_escape_string($hash);
-  $query = mysql_query(
-    "SELECT `hash` from `roads2` WHERE `hash` = '$hash' OR " .
-    "(`user` = '$hash' AND `public` = '1') LIMIT 1"
-  );
-  return mysql_num_rows($query) > 0;
-}
-
 /**
  * Future planning: base64 encoded class info sent in, detected here, 
  * redirect to secure.php with proper checks, send back to here with prompt 
@@ -104,21 +95,7 @@ function pullClass(
     $override = false, 
     $substitute = '') {
   
-  // If we have a year, then prioritize classes based on their distance to that
-  // year; otherwise, prioritize based on most recent year first.
-  $sort_by_year = $year ? "ABS(`year`-'$year') ASC," : "`year` DESC,";
-  
-  // Prioritize rows found within the exceptions table over rows found in the
-  // regular table.
-  $sql = (
-    "SELECT *, '0' AS exception FROM `warehouse` " . 
-    "WHERE `subject_id`='$class' UNION ALL " .
-    "SELECT *, '1' AS exception FROM `warehouse_exceptions` " .
-    "WHERE `subject_id`='$class' ORDER BY $sort_by_year " .  
-    "exception DESC, `last_modified` DESC;"
-  );
-  // $row now holds the desired class' information row
-  $row = mysql_fetch_assoc(mysql_query($sql));
+  $row = CourseRoadDB::getBestClassInfo($class, $year);
   if (!$row) {
     return 'noclass';
   }
@@ -294,16 +271,12 @@ EOD;
  */
 function makeYearsOfferedHTML($subject_id, $year) {
   $html = '<select>';
-  $query = mysql_query(
-    "SELECT DISTINCT `year` FROM `warehouse` " .
-    "WHERE `subject_id`='$subject_id' ORDER BY `year` DESC"
-  );
-  while($row2 = mysql_fetch_assoc($query)) {
-    $year2 = $row2['year'];
-    $year_range2 = makeYearRange($year2);
-    $html .= "\n\t<option value='$year2'";
-    $html .= ($year2 === $year) ? " selected='true'" : '';
-    $html .= ">$year_range2</option>";
+  $years_offered = CourseRoadDB::getYearsClassOffered($subject_id);
+  foreach ($years_offered as $year_offered) {
+    $year_range = makeYearRange($year_offered);
+    $html .= "\n\t<option value='$year_offered'";
+    $html .= ($year_offered === $year) ? " selected='true'" : '';
+    $html .= ">$year_range</option>";
   }
   $html .= "\n<select>"; 
   return $html;
@@ -360,22 +333,15 @@ function buildClassesArray($hash) {
   $_SESSION['crhash'] = $hash;
   
   // Pull out the latest matching saved road's classes and majors
-  $sql = (
-    "SELECT `classes`,`majors` FROM `roads2` " . 
-    "WHERE (`hash`='$hash' OR (`hash` LIKE '$hash/%' AND `public`='1')) " .
-    "ORDER BY `added` DESC LIMIT 0,1"
-  );
-  $query = mysql_query($sql);
-  
-  $classes = '';
-  $majors = '';
-  // Include the while loop in case there isn't a match.
-  while($row = mysql_fetch_array($query)) {
-    // decrypt is defined in connect.php
-    $classes = json_decode(decrypt($row['classes']), true);
-    $majors = stripslashes(decrypt($row['majors']));
+  $classdata = CourseRoadDB::genClassDataFromRoad($hash);
+  if (!$classdata) {
+    die();
   }
-  if ($classes === '') die();
+  $classes = json_decode(decrypt($classdata['classes']), true);
+  $majors = stripslashes(decrypt($classdata['majors']));
+  if ($classes === '') {
+    die();
+  }
   $majors = json_decode($majors, true);
   
   // json holds the pulled data on each saved class.
@@ -412,15 +378,12 @@ function buildClassesArray($hash) {
   return $json;
 }
 
-/**
- * Check to make sure that the newly saved hash won't overwrite a prior
- * hash with a different set of classes or majors.
- */
-function hash_is_safe($hash, $classes, $majors) {
-  return mysql_num_rows(mysql_query(
-    "SELECT 1 FROM `roads2` WHERE `hash`='$hash' " .
-    "AND `classes`!='$classes' AND `majors`!='$majors' LIMIT 0,1"
-  ));
+function importUserPrefs($athena) {
+  // If logged in, repopulate the user prefs with their real values.
+  $userprefs = CourseRoadDB::genUserPrefs($athena);
+  foreach ($userprefs as $pref_key => $pref_value) {
+    $_SESSION['user'][$pref_key] = $pref_value;
+  }
 }
 
 ?>

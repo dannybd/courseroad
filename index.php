@@ -55,7 +55,7 @@ if (isset($_GET['addclasses'])) {
   );
   
   if (isset($_GET['hash'])) {
-    if (!valid_hash($_GET['hash'])) {
+    if (!CourseRoadDB::hashExists($_GET['hash'])) {
       $_GET['hash'] = '';
     }
   } else {
@@ -136,16 +136,7 @@ if (!isset($_SESSION['user'])) {
 
 // If logged in, repopulate the user prefs with their real values.
 if ($loggedin) {
-  $tempuser = mysql_fetch_assoc(mysql_query(
-    "SELECT * FROM `users` WHERE `athena`='$athena'"
-  ));
-  if ($tempuser) {
-    $_SESSION['user']['class_year'] = $tempuser['class_year'];
-    $_SESSION['user']['view_req_lines'] = $tempuser['view_req_lines'];
-    $_SESSION['user']['autocomplete'] = $tempuser['autocomplete'];
-    $_SESSION['user']['need_permission'] = $tempuser['need_permission'];
-    unset($tempuser);
-  }
+  importUserPrefs($athena);
 }
 
 /**

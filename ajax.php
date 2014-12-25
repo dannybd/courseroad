@@ -3,38 +3,38 @@
  * CourseRoad: A Four-Year Planner for the MIT Undergraduate Community
  * August 17, 2012
  * By: Danny Ben-David (dannybd@mit.edu)
- * 
+ *
  * CourseRoad is published under the MIT License, as follows:
  *
  * Copyright (c) 2012 Danny Ben-David (dannybd@mit.edu)
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), to 
- * deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 error_reporting(0);
 // connect to database
-require('connect.php'); 
+require('connect.php');
 session_start();
-require('functions.php'); 
+require('functions.php');
 
 // Makes it easier to test POST code
 if (__DEV__ && isset($_GET['dev'])) {
-  $_POST = $_POST + $_GET; 
+  $_POST = $_POST + $_GET;
 }
 
 get_csrf_token();
@@ -46,7 +46,7 @@ if (isset($_POST['autocomplete'])) {
   dieJSON($results);
 }
 
-// Loads class data from the database and serves up the JSON which CourseRoad 
+// Loads class data from the database and serves up the JSON which CourseRoad
 // requires to load that class.
 if (isset($_POST['getclass'])){
   $class = mysql_real_escape_string($_POST['getclass']);
@@ -96,16 +96,12 @@ if (!isset($_SESSION['user'])) {
 
 // If logged in, repopulate the user prefs with their real values.
 if ($loggedin) {
-  $userprefs = CourseRoadDB::genUserPrefs($athena);
-  foreach ($userprefs as $pref_key => $pref_value) {
-    $_SESSION['user'][$pref_key] = $pref_value;
-  }
-  unset($userprefs);
+  importUserPrefs($athena);
 }
 
 /**
- * This runs if the user has click "save road". It determines the login 
- * status of the user and sets the hash to be either random characters 
+ * This runs if the user has click "save road". It determines the login
+ * status of the user and sets the hash to be either random characters
  * or something like username/20120504051511
  */
 if (isset($_POST['saveNewRoad'])) {
@@ -114,18 +110,18 @@ if (isset($_POST['saveNewRoad'])) {
   $majors = mysql_real_escape_string(encrypt($_POST['majors']));
   $hash = substr(
     strtr(
-      base64_encode(md5($classes . $majors)), 
-      '+/=', 
+      base64_encode(md5($classes . $majors)),
+      '+/=',
       '-_,'
     ), 0, 5
   );
-  for (
-    $i = ''; 
-    hash_is_safe($hash . $i, $classes, $majors); 
-    $i === '' 
-      ? $i = 0 
-      : $i++
-  );
+  if (!CourseRoadDB::isHashSafe($hash, $classes, $majors)) {
+    for (
+      $i = 0;
+      !CourseRoadDB::isHashSafe($hash . $i, $classes, $majors);
+      $i++
+    );
+  }
   $hash .= $i;
   $_SESSION['crhash'] = $hash;
   $trycert = false;
@@ -139,11 +135,11 @@ if (isset($_POST['saveNewRoad'])) {
   }
   CourseRoadDB::saveNewRoad($hash, $athena, $classes, $majors);
   // The **auth** lets the user's browser know to try to log in
-  die(isset($_SESSION['trycert']) ? '**auth**' : $hash); 
+  die(isset($_SESSION['trycert']) ? '**auth**' : $hash);
 }
 
 if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
-  // This only happens when the check has failed, and the user isn't 
+  // This only happens when the check has failed, and the user isn't
   // authenticated.
   $_SESSION['triedcert'] = true;
   unset($_SESSION['trycert']);
@@ -163,7 +159,7 @@ if (isset($_POST['savedroads'])) {
   echo "<table>\n";
   echo "<tr>";
   echo (
-    "<th style=\"min-width:50px\" title=\"Select if you'd like one of " . 
+    "<th style=\"min-width:50px\" title=\"Select if you'd like one of " .
     "your saved roads to be available more easily at " .
     "courseroad.mit.edu/index.php#$athena\">Public</th>"
   );
@@ -229,7 +225,7 @@ if (isset($_POST['savedroads'])) {
     echo '<td>' . implode(', ', $classes2) . '</td>';
     echo (
       "<td><span class=\"saved-roads-comment\">" .
-      $row['comment'] . "</span><span ". 
+      $row['comment'] . "</span><span ".
       "class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span></td>"
     );
     echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
@@ -249,33 +245,29 @@ if (isset($_POST['setPublicRoad'])) {
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die();
   }
-  mysql_query(
-    "UPDATE `roads2` SET `public`= CASE " .
-    "WHEN `hash`='$hash' THEN '1' ELSE '0' END WHERE `user`='$athena'"
-  );
+  CourseRoadDB:setPublicRoad($hash, $athena);
   die('ok');
 }
 
 // When the user changes a road's hash
 if (isset($_POST['changeroadhash'])) {
   require_csrf();
-  $hash = mysql_real_escape_string($_POST['changeroadhash']);
+  $oldhash = mysql_real_escape_string($_POST['changeroadhash']);
   $newhash = mysql_real_escape_string(
     $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36))
   );
-  if (!$loggedin || 
-      preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) || 
+  if (!$loggedin ||
+      preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) ||
       !strlen($_POST['newhash'])) {
-    die($hash);
+    die($oldhash);
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
-    die($hash);
+  if (($athena != strstr($oldhash, '/', true)) && ($oldhash != 'null')) {
+    die($oldhash);
   }
-  if (mysql_num_rows(mysql_query(
-    "SELECT * FROM `roads2` WHERE `hash`='$newhash'"))) {
-    die($hash);
+  if (CourseRoadDB::hashExists($newhash)) {
+    die($oldhash);
   }
-  mysql_query("UPDATE `roads2` SET `hash`='$newhash' WHERE `hash`='$hash'");
+  CourseRoadDB::updateRoadHash($oldhash, $newhash);
   die($newhash);
 }
 
@@ -292,7 +284,7 @@ if (isset($_POST['commentonroad'])) {
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die();
   }
-  mysql_query("UPDATE `roads2` SET `comment`='$comment' WHERE `hash`='$hash'");
+  CourseRoadDB::setRoadComment($hash, $comment);
   die(stripslashes($comment));
 }
 
@@ -302,7 +294,9 @@ if (isset($_POST['deleteroad'])) {
   $hash = mysql_real_escape_string($_POST['deleteroad']);
   if (!$loggedin) die();
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) die();
-  if ($hash != 'null') mysql_query("DELETE FROM `roads2` WHERE `hash`='$hash'");
+  if ($hash != 'null') {
+    CourseRoadDB::deleteRoad($hash, $athena);
+  }
   die('ok');
 }
 
@@ -321,12 +315,7 @@ if (isset($_POST['usersettings'])) {
   );
   $_SESSION['user']['edited'] = $loggedin ? 0 : 1;
   if ($loggedin) {
-    mysql_query(
-      "UPDATE `users` SET `class_year`='{$_SESSION['user']['class_year']}', " .
-      "`view_req_lines`='{$_SESSION['user']['view_req_lines']}', " . 
-      "`autocomplete`='{$_SESSION['user']['autocomplete']}' " .
-      "WHERE `athena`='$athena'"
-    );
+    CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
   }
   $view_req_lines = $_SESSION['user']['view_req_lines']
     ? 'checked="checked"'
@@ -336,13 +325,13 @@ if (isset($_POST['usersettings'])) {
     : '';
   echo <<<EOD
     <label for="usersettings_class_year">Class Year: </label>
-    <input id="usersettings_class_year" type="text" name="class_year" 
+    <input id="usersettings_class_year" type="text" name="class_year"
       value="{$_SESSION['user']['class_year']}"><br>
     <label for="usersettings_view_req_lines">Toggle requisite lines: </label>
-    <input id="usersettings_view_req_lines" type="checkbox" 
+    <input id="usersettings_view_req_lines" type="checkbox"
       name="view_req_lines" value="1" $view_req_lines><br>
     <label for="usersettings_autocomplete">Toggle autocomplete: </label>
-    <input id="usersettings_autocomplete" type="checkbox" name="autocomplete" 
+    <input id="usersettings_autocomplete" type="checkbox" name="autocomplete"
       value="1" $autocomplete><br>
 EOD;
   die();
@@ -350,10 +339,10 @@ EOD;
 
 if (__DEV__ && isset($_GET['user'])) {
   $msg = (
-    "user<br><pre>" . 
-    print_r(@$_SESSION, true) . 
-    "\n\n\n" . 
-    print_r(@$_SERVER, true) . 
+    "user<br><pre>" .
+    print_r(@$_SESSION, true) .
+    "\n\n\n" .
+    print_r(@$_SERVER, true) .
     "</pre>"
   );
   die($msg);
