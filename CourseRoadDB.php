@@ -428,7 +428,7 @@ class CourseRoadDB {
    * @param string $newhash a string of the new road hash
    * @param string $athena  a string of the user's username
    *
-   * @return array data on update success
+   * @return array data on copy success
    * @access public
    * @static
    */
@@ -449,9 +449,20 @@ class CourseRoadDB {
     return $ret;
   }
 
+  /**
+   * Adds a user to the users table, with default values
+   *
+   * Use updateUserPrefs($athena, $userprefs) below to set other values
+   *
+   * @param string $athena a string of the user's username
+   *
+   * @return array data on insert success
+   * @access public
+   * @static
+   */
   public static function addUser($athena) {
     $statement = self::$_db->prepare(
-      "INSERT INTO `users`(`athena`) VALUES (?)"
+      "INSERT INTO `users` (`athena`) VALUES (?)"
     );
     $statement->bind_param('s', $athena);
     if ($statement->execute()) {
@@ -463,6 +474,15 @@ class CourseRoadDB {
     return $ret;
   }
 
+  /**
+   * Get a given user's preferences from the users table
+   *
+   * @param string $athena a string of the user's username
+   *
+   * @return array data of that user's preferences
+   * @access public
+   * @static
+   */
   public static function getUserPrefs($athena) {
     $statement = self::$_db->prepare(
       "SELECT `class_year`, `view_req_lines`, `autocomplete`, " .
@@ -475,16 +495,29 @@ class CourseRoadDB {
     return $userprefs ?: array();
   }
 
+  /**
+   * Update a given user's preferences
+   *
+   * @param string $athena    a string of the user's username
+   * @param array  $userprefs an associative array of user prefs. Must include
+   *                          class_year, view_req_lines, autocomplete,
+   *                          need_permission as keys.
+   *
+   * @return array data on update success
+   * @access public
+   * @static
+   */
   public static function updateUserPrefs($athena, $userprefs) {
     $statement = self::$_db->prepare(
       "UPDATE `users` SET `class_year` = ?, `view_req_lines` = ?, " .
-      "`autocomplete` = ?, ` WHERE `athena` = ?"
+      "`autocomplete` = ?, `need_permission` = ?, ` WHERE `athena` = ?"
     );
     $statement->bind_param(
-      'ssss',
+      'sssss',
       $userprefs['class_year'],
       $userprefs['view_req_lines'],
       $userprefs['autocomplete'],
+      $userprefs['need_permission'],
       $athena
     );
     if ($statement->execute()) {
