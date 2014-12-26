@@ -239,7 +239,7 @@ if (isset($_POST['setPublicRoad'])) {
   if (!$loggedin) {
     die('not logged in');
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
+  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
     die('bad hash');
   }
   CourseRoadDB::setPublicRoad($hash, $athena);
@@ -256,7 +256,7 @@ if (isset($_POST['changeroadhash'])) {
       !strlen($_POST['newhash'])) {
     die($oldhash);
   }
-  if (($athena != strstr($oldhash, '/', true)) && ($oldhash != 'null')) {
+  if (($athena != hash_owner($oldhash)) && ($oldhash != 'null')) {
     die($oldhash);
   }
   if (CourseRoadDB::hashExists($newhash)) {
@@ -274,7 +274,7 @@ if (isset($_POST['commentonroad'])) {
   if (!$loggedin) {
     die($hash);
   }
-  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
+  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
     die();
   }
   CourseRoadDB::setRoadComment($hash, $comment, $athena);
@@ -286,7 +286,7 @@ if (isset($_POST['deleteroad'])) {
   require_csrf();
   $hash = $_POST['deleteroad'];
   if (!$loggedin) die();
-  if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) die();
+  if (($athena != hash_owner($hash)) && ($hash != 'null')) die();
   if ($hash != 'null') {
     CourseRoadDB::deleteRoad($hash, $athena);
   }

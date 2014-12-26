@@ -385,4 +385,6 @@ function importUserPrefs($athena) {
   }
 }
 
-?>
+function hash_owner($hash) {
+  return strstr($hash, '/', true);
+}
