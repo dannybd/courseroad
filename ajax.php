@@ -187,7 +187,7 @@ if (isset($_POST['savedroads'])) {
     echo (
       "<td><input type=\"radio\" name=\"setPublicRoad\" " .
       "class=\"setPublicRoad\" value=\"$hash\" " .
-      ($row['public'] === "1" ? "checked=\"true\" " : "") . "/></td>"
+      ($row['public'] === 1 ? "checked=\"true\" " : "") . "/></td>"
     );
     echo (
       "<td><span class=\"saved-roads-hash\">" .
@@ -237,12 +237,12 @@ if (isset($_POST['setPublicRoad'])) {
   require_csrf();
   $hash = $_POST['setPublicRoad'];
   if (!$loggedin) {
-    die();
+    die('not logged in');
   }
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
-    die();
+    die('bad hash');
   }
-  CourseRoadDB:setPublicRoad($hash, $athena);
+  CourseRoadDB::setPublicRoad($hash, $athena);
   die('ok');
 }
 
