@@ -8,5 +8,3 @@ $db_salt = 'SALT';
 
 $baseURL = 'https://COURSEROAD_URL.com';
 define('__DEV__', false);
-
-?>
