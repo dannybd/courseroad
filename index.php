@@ -77,7 +77,7 @@ if (isset($_SESSION['add_new_term'])) {
 
 // If we're trying to add an additional term's worth of information, then
 // collect that.
-if ($add_new_term){
+if ($add_new_term) {
   $json = array();
   foreach($add_new_term['classes'] as $class) {
     $tempclass = pullClass(
@@ -105,13 +105,7 @@ $athena = $loggedin ? $_SESSION['athena'] : false;
 // Without logging in, we don't have a user pref map, so this set the default.
 // class_year is assumed to be that of the freshmen.
 if (!isset($_SESSION['user'])) {
-  $_SESSION['user'] = array(
-    'class_year' => strval(date('Y') + (date('m') > 7) + 3),
-    'view_req_lines' => 1,
-    'autocomplete' => 1,
-    'need_permission' => 0,
-    'edited' => 0
-  );
+  $_SESSION['user'] = getDefaultUserPrefs();
 }
 
 // If logged in, repopulate the user prefs with their real values.

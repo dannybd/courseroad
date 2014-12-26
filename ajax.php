@@ -82,13 +82,7 @@ $athena = $loggedin ? $_SESSION['athena'] : false;
 // Without logging in, we don't have a user pref map, so this sets the default.
 // class_year is assumed to be that of the freshmen.
 if (!isset($_SESSION['user'])) {
-  $_SESSION['user'] = array(
-    'class_year' => strval(date('Y') + (date('m') > 7) + 3),
-    'view_req_lines' => 1,
-    'autocomplete' => 1,
-    'need_permission' => 0,
-    'edited' => 0
-  );
+  $_SESSION['user'] = getDefaultUserPrefs();
 }
 
 // If logged in, repopulate the user prefs with their real values.

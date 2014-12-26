@@ -346,6 +346,16 @@ function buildClassesArray($hash) {
   return $json;
 }
 
+function getDefaultUserPrefs() {
+  return array(
+    'class_year' => strval(date('Y') + (date('m') > 7) + 3),
+    'view_req_lines' => 1,
+    'autocomplete' => 1,
+    'need_permission' => 0,
+    'edited' => 0
+  );
+}
+
 function importUserPrefs($athena) {
   // If logged in, repopulate the user prefs with their real values.
   $userprefs = CourseRoadDB::getUserPrefs($athena);
