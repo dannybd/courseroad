@@ -1,22 +1,75 @@
 <?php
 
+/**
+ * Provides methods for talking to the CourseRoad database
+ *
+ * Contains static methods for accessing the database for all purposes. If
+ * something in the codebase needs to talk to the database for any reason,
+ * it should use an existing static method defined in here or a new static
+ * method should be defined for its purpose.
+ *
+ * The database link, $_db, needs to be initialized by calling:
+ * <code>
+ * CourseRoadDB::initialize($databaseURL, $username, $password, $database);
+ * </code>
+ *
+ * SELECT methods in here should pull data and may format it for returning
+ * UPDATE/INSERT/DELETE methods should execute and return information about
+ * whether the action succeeded.
+ */
 class CourseRoadDB {
 
+  /**
+   * Overwrite the constructor to prevent CourseRoadDB singletons
+   */
   private function __construct() {}
-  private static $db;
 
+  /**
+   * Database link (to be initialized in initialize())
+   *
+   * @var $_db
+   * @access private
+   */
+  private static $_db;
+
+  /**
+   * Initializes the database link $_db with its variables
+   *
+   * Creates a new mysqli object and stores that database link for use in the
+   * other static methods of the class.
+   *
+   * @param string $databaseURL the string of the database's URL to connect to
+   * @param string $username    the string of the database username
+   * @param string $password    the string of the database password
+   * @param string $database    the string of the database name to connect to
+   *
+   * @return void
+   * @throws die kills the page if we cannot connect. Why bother continuing?
+   *
+   * @access public
+   * @static
+   */
   public static function initialize(
     $databaseURL, $username, $password, $database
   ) {
-    self::$db = new mysqli($databaseURL, $username, $password, $database);
-    if(self::$db->connect_errno > 0){
-      die('Unable to connect to database [' . self::$db->connect_error . ']');
+    self::$_db = new mysqli($databaseURL, $username, $password, $database);
+    if(self::$_db->connect_errno > 0){
+      die('Unable to connect to database [' . self::$_db->connect_error . ']');
     }
   }
 
+  /**
+   * Fetches the top autocompleted subject ids from a given query
+   *
+   * @param string $query a string which is part/all of a course id
+   *
+   * @return array<string> the top results of the search
+   *
+   * @access public
+   * @static
+   */
   public static function getAutocompleteResults($query) {
-    $results = array();
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT DISTINCT `subject_id` FROM `warehouse` " .
       "WHERE `subject_id` LIKE ? ORDER BY `subject_id` LIMIT 6"
     );
@@ -24,6 +77,7 @@ class CourseRoadDB {
     $statement->bind_param('s', $search);
     $statement->execute();
     $statement->bind_result($subject_id);
+    $results = array();
     while ($statement->fetch()) {
       $results[] = $subject_id;
     }
@@ -31,6 +85,29 @@ class CourseRoadDB {
     return $results;
   }
 
+  /**
+   * Fetches the class info for a course id as close to the desired year as
+   * possible
+   *
+   * If no year is requested, we pull the class info from the most recent year
+   * the class was in the catalog; if a year is requested, then we pull from
+   * the closest year as possible for which catalog info exists.
+   *
+   * We also query the exceptions table, where courses can be copied and
+   * modified manually in case there are issues or discrepancies in their
+   * representation. Given entries in each table, this method prioritizes
+   * the entry from the exceptions table.
+   *
+   * @param string $class a string of a course id
+   * @param int    $year  an int of the year a course is offered, based on the
+   *                      the latter year in the school year representation.
+   *                      Spring 2014 counts as 2014, Fall 2014 counts as 2015.
+   *
+   * @return array the relevant class info. NULL if no course found.
+   *
+   * @access public
+   * @static
+   */
   public static function getBestClassInfo($class, $year=false) {
     // If we have a year, then prioritize classes based on their distance to
     // that year; otherwise, prioritize based on most recent year first.
@@ -38,7 +115,7 @@ class CourseRoadDB {
 
     // Prioritize rows found within the exceptions table over rows found in the
     // regular table.
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT *, '0' AS exception FROM `warehouse` " .
       "WHERE `subject_id` = ? UNION ALL " .
       "SELECT *, '1' AS exception FROM `warehouse_exceptions` " .
@@ -56,8 +133,19 @@ class CourseRoadDB {
     return $row;
   }
 
+  /**
+   * Pulls a list of years a class has been offered
+   *
+   * @param string $class a string of a course id
+   *
+   * @return array<int> the years that class was offered, based on the latter
+   *                    year in the school year representation. Spring 2014
+   *                    counts as 2014, Fall 2014 counts as 2015.
+   * @access public
+   * @static
+   */
   public static function getYearsClassOffered($class) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT DISTINCT `year` FROM `warehouse` " .
       "WHERE `subject_id` = ? ORDER BY `year` DESC"
     );
@@ -72,8 +160,20 @@ class CourseRoadDB {
     return $years_offered;
   }
 
+  /**
+   * Determines whether a hash maps to a road in the database
+   *
+   * Checks both the hash directly, and whether the hash is actually a user's
+   * name (and that user has a public road set).
+   *
+   * @param string $hash a string of the road hash to check
+   *
+   * @return bool whether hash exists in database
+   * @access public
+   * @static
+   */
   public static function hashExists($hash) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT `hash` from `roads2` WHERE `hash` = ? OR " .
       "(`user` = ? AND `public` = '1') LIMIT 1"
     );
@@ -86,11 +186,23 @@ class CourseRoadDB {
   }
 
   /**
-   * Check to make sure that the newly saved hash won't overwrite a prior
-   * hash with a different set of classes or majors.
+   * Checks whether a hash is safe to overwrite
+   *
+   * Make sure that the newly saved hash won't overwrite a prior road
+   * with a different set of classes or majors, but with the same road.
+   * Useful for making sure a saved road's hash doesn't hide access to a road
+   * saved earlier.
+   *
+   * @param string $hash    a string of the road hash to check
+   * @param string $classes a string of the class list of the road-to-be-saved
+   * @param string $majors  a string of the major list of the road-to-be-saved
+   *
+   * @return bool whether hash is safe to overwrite
+   * @access public
+   * @static
    */
   public static function isHashSafe($hash, $classes, $majors) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT COUNT(*) FROM `roads2` WHERE `hash` = ? " .
       "AND `classes` != ? AND `majors` != ?"
     );
@@ -102,8 +214,23 @@ class CourseRoadDB {
     return $conflicting_hashes === 0;
   }
 
+  /**
+   * Saves new road into database with given data
+   *
+   * Note that this method does NOT check if a hash is safe to overwrite before
+   * running.
+   *
+   * @param string $hash    a string of the road hash to check
+   * @param string $athena  a string of the user's username. '' if none.
+   * @param string $classes a string of the class list of the road-to-be-saved
+   * @param string $majors  a string of the major list of the road-to-be-saved
+   *
+   * @return array data on save success
+   * @access public
+   * @static
+   */
   public static function saveNewRoad($hash, $athena, $classes, $majors) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `ip`) " .
       "VALUES (?, ?, ?, ?, ?);"
     );
@@ -112,16 +239,28 @@ class CourseRoadDB {
     if ($statement->execute()) {
       $ret = array(true, $statement->insert_id);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
+  /**
+   * Pulls class and major data for a given road
+   *
+   * Also accounts for whether the hash is actually a user's username (and that
+   * user has a public road set).
+   *
+   * @param string $hash a string of the road hash
+   *
+   * @return array class and major data
+   * @access public
+   * @static
+   */
   public static function getClassDataFromRoad($hash) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT `classes`, `majors` FROM `roads2` " .
-      "WHERE (`hash` = ? OR (`hash` LIKE ? AND `public`='1')) " .
+      "WHERE (`hash` = ? OR (`hash` LIKE ? AND `public` = '1')) " .
       "ORDER BY `added` DESC LIMIT 0,1"
     );
     $hashlike = "$hash/%";
@@ -132,8 +271,17 @@ class CourseRoadDB {
     return $classdata ?: array();
   }
 
+  /**
+   * Pulls a list of saved roads and their data of a given user
+   *
+   * @param string $athena a string of the user's username
+   *
+   * @return array a list of saved roads (each element is an array of road data)
+   * @access public
+   * @static
+   */
   public static function getSavedRoads($athena) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT `hash`, `classes`, `majors`, `public`, `comment`, `added` " .
       "FROM `roads2` WHERE `user` = ? ORDER BY `added` DESC"
     );
@@ -144,9 +292,18 @@ class CourseRoadDB {
     return $saved_roads;
   }
 
+  /**
+   * Checks whether a given user has a public road set
+   *
+   * @param string $athena a string of the user's username
+   *
+   * @return bool whether they have a public road set
+   * @access public
+   * @static
+   */
   public static function hasPublicRoad($athena) {
-    $statement = self::$db->prepare(
-      "SELECT COUNT(*) FROM `roads2` WHERE `hash` LIKE ? AND `public`='1'"
+    $statement = self::$_db->prepare(
+      "SELECT COUNT(*) FROM `roads2` WHERE `hash` LIKE ? AND `public` = '1'"
     );
     $hash = "$athena/%";
     $statement->bind_param('s', $hash);
@@ -157,65 +314,126 @@ class CourseRoadDB {
     return (bool) $num_public_roads;
   }
 
+  /**
+   * Sets a hash as a public road for a given user
+   *
+   * Since only one road per user may be public, this also sets all of their
+   * other roads to not be the public road at the same time. If you feed in no
+   * hash at all, then this unsets any public road for that user.
+   *
+   * @param string $hash   a string of the road hash to set as the public
+   * @param string $athena a string of the user's username
+   *
+   * @return array data on update success
+   * @access public
+   * @static
+   */
   public static function setPublicRoad($hash, $athena) {
-    $statement = self::$db->prepare(
-      "UPDATE `roads2` SET `public`= CASE " .
-      "WHEN `hash`= ? THEN '1' ELSE '0' END WHERE `user` = ?"
+    $statement = self::$_db->prepare(
+      "UPDATE `roads2` SET `public` = CASE " .
+      "WHEN `hash` = ? THEN '1' ELSE '0' END WHERE `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
-  public static function changeRoadHash($oldhash, $newhash) {
-    $statement = self::$db->prepare(
-      "UPDATE `roads2` SET `hash`= ? WHERE `hash`= ?"
+  /**
+   * Changes a road's hash when a user renames one of their saved roads
+   *
+   * @param string $oldhash a string of the old road hash
+   * @param string $newhash a string of the new road hash
+   * @param string $athena  a string of the user's username
+   *
+   * @return array data on update success
+   * @access public
+   * @static
+   */
+  public static function changeRoadHash($oldhash, $newhash, $athena) {
+    $statement = self::$_db->prepare(
+      "UPDATE `roads2` SET `hash` = ? WHERE `hash` = ? AND `user` = ?"
     );
-    $statement->bind_param('ss', $newhash, $oldhash);
+    $statement->bind_param('sss', $newhash, $oldhash, $athena);
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
-  public static function setRoadComment($hash, $comment) {
-    $statement = self::$db->prepare(
-      "UPDATE `roads2` SET `comment`= ? WHERE `hash`= ?"
+  /**
+   * Sets a comment on a user's saved road
+   *
+   * @param string $oldhash a string of the road hash
+   * @param string $comment a string of the road comment
+   * @param string $athena  a string of the user's username
+   *
+   * @return array data on update success
+   * @access public
+   * @static
+   */
+  public static function setRoadComment($hash, $comment, $athena) {
+    $statement = self::$_db->prepare(
+      "UPDATE `roads2` SET `comment` = ? WHERE `hash` = ? AND `user` = ?"
     );
-    $statement->bind_param('ss', $comment, $hash);
+    $statement->bind_param('sss', $comment, $hash, $athena);
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
+  /**
+   * Deletes a user's saved road
+   *
+   * @param string $hash   a string of the road hash
+   * @param string $athena a string of the user's username
+   *
+   * @return array data on delete success
+   * @access public
+   * @static
+   */
   public static function deleteRoad($hash, $athena) {
-    $statement = self::$db->prepare(
-      "DELETE FROM `roads2` WHERE `hash`= ? AND `user` = ?"
+    $statement = self::$_db->prepare(
+      "DELETE FROM `roads2` WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
+  /**
+   * Copies a road's hash when a user saves with login
+   *
+   * When a user logs in, we need to duplicate their just-saved road into a
+   * road saved under their username. This copies the road and saves it with
+   * the correct user.
+   *
+   * @param string $oldhash a string of the old road hash
+   * @param string $newhash a string of the new road hash
+   * @param string $athena  a string of the user's username
+   *
+   * @return array data on update success
+   * @access public
+   * @static
+   */
   public static function copyRoad($oldhash, $newhash, $athena) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "INSERT INTO `roads2` " .
       "(`hash`, `user`, `classes`, `majors`, `comment`, `ip`) " .
       "(SELECT ?, ?, `classes`, `majors`, `comment`, `ip` " .
@@ -225,28 +443,28 @@ class CourseRoadDB {
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
   public static function addUser($athena) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "INSERT INTO `users`(`athena`) VALUES (?)"
     );
     $statement->bind_param('s', $athena);
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;
   }
 
   public static function getUserPrefs($athena) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "SELECT `class_year`, `view_req_lines`, `autocomplete`, " .
       "`need_permission` FROM `users` WHERE `athena` = ?"
     );
@@ -258,7 +476,7 @@ class CourseRoadDB {
   }
 
   public static function updateUserPrefs($athena, $userprefs) {
-    $statement = self::$db->prepare(
+    $statement = self::$_db->prepare(
       "UPDATE `users` SET `class_year` = ?, `view_req_lines` = ?, " .
       "`autocomplete` = ?, ` WHERE `athena` = ?"
     );
@@ -272,7 +490,7 @@ class CourseRoadDB {
     if ($statement->execute()) {
       $ret = array(true);
     } else {
-      $ret = array(false, self::$db->errno, self::$db->error);
+      $ret = array(false, self::$_db->errno, self::$_db->error);
     }
     $statement->close();
     return $ret;

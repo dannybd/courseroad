@@ -262,7 +262,7 @@ if (isset($_POST['changeroadhash'])) {
   if (CourseRoadDB::hashExists($newhash)) {
     die($oldhash);
   }
-  CourseRoadDB::updateRoadHash($oldhash, $newhash);
+  CourseRoadDB::changeRoadHash($oldhash, $newhash, $athena);
   die($newhash);
 }
 
@@ -277,7 +277,7 @@ if (isset($_POST['commentonroad'])) {
   if (($athena != strstr($hash, '/', true)) && ($hash != 'null')) {
     die();
   }
-  CourseRoadDB::setRoadComment($hash, $comment);
+  CourseRoadDB::setRoadComment($hash, $comment, $athena);
   die(stripslashes($comment));
 }
 
