@@ -236,13 +236,7 @@ class CourseRoadDB {
     );
     $ip = $_SERVER['REMOTE_ADDR'];
     $statement->bind_param('sssss', $hash, $athena, $classes, $majors, $ip);
-    if ($statement->execute()) {
-      $ret = array(true, $statement->insert_id);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -334,13 +328,7 @@ class CourseRoadDB {
       "WHEN `hash` = ? THEN '1' ELSE '0' END WHERE `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -359,13 +347,7 @@ class CourseRoadDB {
       "UPDATE `roads2` SET `hash` = ? WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('sss', $newhash, $oldhash, $athena);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -384,13 +366,7 @@ class CourseRoadDB {
       "UPDATE `roads2` SET `comment` = ? WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('sss', $comment, $hash, $athena);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -408,13 +384,7 @@ class CourseRoadDB {
       "DELETE FROM `roads2` WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -440,13 +410,7 @@ class CourseRoadDB {
       "FROM `roads2` WHERE `hash` = ? ORDER BY `added` DESC LIMIT 0,1)"
     );
     $statement->bind_param('sss', $newhash, $athena, $oldhash);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -465,13 +429,7 @@ class CourseRoadDB {
       "INSERT INTO `users` (`athena`) VALUES (?)"
     );
     $statement->bind_param('s', $athena);
-    if ($statement->execute()) {
-      $ret = array(true);
-    } else {
-      $ret = array(false, self::$_db->errno, self::$_db->error);
-    }
-    $statement->close();
-    return $ret;
+    return self::_executeStatement($statement);
   }
 
   /**
@@ -520,6 +478,23 @@ class CourseRoadDB {
       $userprefs['need_permission'],
       $athena
     );
+    return self::_executeStatement($statement);
+  }
+
+  /**
+   * Execute a given mysqli statement and return sucess & debug info
+   *
+   * Used for UPDATE/INSERT/DELETE statements, to make sure that they happened
+   * properly. The returned array leads with a boolean which indicates query
+   * success or failure.
+   *
+   * @param object $statement mysqli statement for execution
+   *
+   * @return array data on success and debug info as well on failure
+   * @access private
+   * @static
+   */
+  private static function _executeStatement($statement) {
     if ($statement->execute()) {
       $ret = array(true);
     } else {
