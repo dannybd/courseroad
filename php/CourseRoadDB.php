@@ -33,15 +33,24 @@ class CourseRoadDB {
   private static $_db;
 
   /**
+   * Salt used in encryption/decryption during database storage
+   *
+   * @var $_salt
+   * @access private
+   */
+  private static $_salt;
+
+  /**
    * Initializes the database link $_db with its variables
    *
    * Creates a new mysqli object and stores that database link for use in the
    * other static methods of the class.
    *
-   * @param string $databaseURL the string of the database's URL to connect to
-   * @param string $username    the string of the database username
-   * @param string $password    the string of the database password
-   * @param string $database    the string of the database name to connect to
+   * @param string $db_URL      the string of the database's URL to connect to
+   * @param string $db_username the string of the database username
+   * @param string $db_password the string of the database password
+   * @param string $db_name     the string of the database name to connect to
+   * @param string $db_salt     the string of the salt used for c
    *
    * @return void
    * @throws die kills the page if we cannot connect. Why bother continuing?
@@ -50,12 +59,70 @@ class CourseRoadDB {
    * @static
    */
   public static function initialize(
-    $databaseURL, $username, $password, $database
+    $db_URL, $db_username, $db_password, $db_name, $db_salt
   ) {
-    self::$_db = new mysqli($databaseURL, $username, $password, $database);
+    self::$_db = new mysqli($db_URL, $db_username, $db_password, $db_name);
     if(self::$_db->connect_errno > 0){
       die('Unable to connect to database [' . self::$_db->connect_error . ']');
     }
+    self::$_salt = $db_salt;
+  }
+
+  /**
+   * Encrypts content for storage in the database
+   *
+   * The goal is to obfuscate some of the data in the database so it isn't
+   * in plaintext if the database is leaked.
+   *
+   * @param mixed $mixed content to encrypt
+   *
+   * @return string the encrypted content
+   *
+   * @access public
+   * @static
+   */
+  public static function encrypt($mixed) {
+    return strtr(
+      base64_encode(
+        mcrypt_encrypt(
+          MCRYPT_RIJNDAEL_256,
+          md5(self::$_salt),
+          serialize($mixed),
+          MCRYPT_MODE_CBC,
+          md5(md5(self::$_salt))
+        )
+      ),
+      '+/=',
+      '-_,'
+    );
+  }
+
+  /**
+   * Decrypts content which was stored in the database
+   *
+   * The goal is to obfuscate some of the data in the database so it isn't
+   * in plaintext if the database is leaked.
+   *
+   * @param string $mixed encrypted content
+   *
+   * @return mixed the decrypted content
+   *
+   * @access public
+   * @static
+   */
+  public static function decrypt($mixed) {
+    return unserialize(
+      rtrim(
+        mcrypt_decrypt(
+          MCRYPT_RIJNDAEL_256,
+          md5(self::$_salt),
+          base64_decode(strtr($mixed, '-_,', '+/=')),
+          MCRYPT_MODE_CBC,
+          md5(md5(self::$_salt))
+        ),
+        "\0"
+      )
+    );
   }
 
   /**

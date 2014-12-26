@@ -1,36 +1,5 @@
 <?php
 
-function encrypt($mixed){
-	return strtr(
-    base64_encode(
-      mcrypt_encrypt(
-        MCRYPT_RIJNDAEL_256,
-        md5(SALT),
-        serialize($mixed),
-        MCRYPT_MODE_CBC,
-        md5(md5(SALT))
-      )
-    ),
-    '+/=',
-    '-_,'
-  );
-}
-
-function decrypt($mixed){
-	return unserialize(
-    rtrim(
-      mcrypt_decrypt(
-        MCRYPT_RIJNDAEL_256,
-        md5(SALT),
-        base64_decode(strtr($mixed, '-_,', '+/=')),
-        MCRYPT_MODE_CBC,
-        md5(md5(SALT))
-      ),
-      "\0"
-    )
-  );
-}
-
 function new_csrf_token() {
   return hash('sha512', SALT . microtime('true') . rand());
 }
@@ -336,8 +305,8 @@ function buildClassesArray($hash) {
   if (!$classdata) {
     die();
   }
-  $classes = json_decode(decrypt($classdata['classes']), true);
-  $majors = stripslashes(decrypt($classdata['majors']));
+  $classes = json_decode(CourseRoadDB::decrypt($classdata['classes']), true);
+  $majors = stripslashes(CourseRoadDB::decrypt($classdata['majors']));
   if ($classes === '') {
     die();
   }

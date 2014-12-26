@@ -103,8 +103,8 @@ if ($loggedin) {
  */
 if (isset($_POST['saveNewRoad'])) {
   require_csrf();
-  $classes = encrypt($_POST['classes']);
-  $majors = encrypt($_POST['majors']);
+  $classes = CourseRoadDB::encrypt($_POST['classes']);
+  $majors = CourseRoadDB::encrypt($_POST['majors']);
   $hash = substr(
     strtr(
       base64_encode(md5($classes . $majors)),
@@ -179,8 +179,8 @@ if (isset($_POST['savedroads'])) {
   );
   echo "</tr>\n";
   foreach($saved_roads as &$row) {
-    $row['classes'] = decrypt($row['classes']);
-    $row['majors'] = decrypt($row['majors']);
+    $row['classes'] = CourseRoadDB::decrypt($row['classes']);
+    $row['majors'] = CourseRoadDB::decrypt($row['majors']);
     $hash = stripslashes($row['hash']);
     $roadURL = "?hash=$hash";
     echo "<tr data-hash=\"$hash\">";

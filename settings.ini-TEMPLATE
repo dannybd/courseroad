@@ -1,10 +1,11 @@
 <?php
 
-$username = 'USERNAME';
-$password = 'PASSWORD';
-define('SALT', 'SALTGOESHERE');
-$database = 'DATABASE_NAME';
-$databaseURL = 'example.com';
+$db_URL = 'example.com';
+$db_username = 'USERNAME';
+$db_password = 'PASSWORD';
+$db_name = 'DATABASE_NAME';
+$db_salt = 'SALT';
+
 $baseURL = 'https://COURSEROAD_URL.com';
 define('__DEV__', false);
 
