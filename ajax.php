@@ -26,7 +26,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-error_reporting(0);
+
 // connect to database
 require('connect.php');
 require('functions.php');
@@ -120,24 +120,13 @@ if (isset($_POST['saveNewRoad'])) {
     if ($loggedin) {
       $saveas = date('YmdHis');
       $hash = $athena . '/' . $saveas;
-    }else if (!$_SESSION['triedcert']) {
+    } else if (!$_SESSION['triedcert']) {
       $_SESSION['trycert'] = true;
     }
   }
   CourseRoadDB::saveNewRoad($hash, $athena, $classes, $majors);
   // The **auth** lets the user's browser know to try to log in
   die(isset($_SESSION['trycert']) ? '**auth**' : $hash);
-}
-
-if (isset($_SESSION['trycert']) || isset($_GET['triedlogin'])) {
-  // This only happens when the check has failed, and the user isn't
-  // authenticated.
-  $_SESSION['triedcert'] = true;
-  unset($_SESSION['trycert']);
-  if (!isset($_SESSION['crhash'])) {
-    $_SESSION['crhash'] = 'error401';
-  }
-  redirect_hash($_SESSION['crhash']);
 }
 
 // Returns the desired table of saved roads when the user is logged in
