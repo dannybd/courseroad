@@ -1320,9 +1320,9 @@ var crSetup = function () {
           window.location.href = secureURL;
         } else {
           setNewHash(data);
+          $('#mapcerts').val('Save with Login (requires certs)')
+            .prop('disabled', false);
         }
-        $('#mapcerts').val('Save with Login (requires certs)')
-          .prop('disabled', false);
       });
     }
   });
