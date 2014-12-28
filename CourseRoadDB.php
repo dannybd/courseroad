@@ -257,7 +257,7 @@ class CourseRoadDB {
    */
   public static function hashExists($hash) {
     $statement = self::$_db->prepare(
-      "SELECT `hash` from `roads2` WHERE `hash` = ? OR " .
+      "SELECT `hash` from `roads` WHERE `hash` = ? OR " .
       "(`user` = ? AND `public` = '1') LIMIT 1"
     );
     $statement->bind_param('ss', $hash, $hash);
@@ -286,7 +286,7 @@ class CourseRoadDB {
    */
   public static function isHashSafe($hash, $classes, $majors) {
     $statement = self::$_db->prepare(
-      "SELECT COUNT(*) FROM `roads2` WHERE `hash` = ? " .
+      "SELECT COUNT(*) FROM `roads` WHERE `hash` = ? " .
       "AND `classes` != ? AND `majors` != ?"
     );
     $statement->bind_param('sss', $hash, $classes, $majors);
@@ -314,7 +314,7 @@ class CourseRoadDB {
    */
   public static function saveNewRoad($hash, $athena, $classes, $majors) {
     $statement = self::$_db->prepare(
-      "INSERT INTO `roads2` (`hash`, `user`, `classes`, `majors`, `ip`) " .
+      "INSERT INTO `roads` (`hash`, `user`, `classes`, `majors`, `ip`) " .
       "VALUES (?, ?, ?, ?, ?);"
     );
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -336,7 +336,7 @@ class CourseRoadDB {
    */
   public static function getClassDataFromRoad($hash) {
     $statement = self::$_db->prepare(
-      "SELECT `classes`, `majors` FROM `roads2` " .
+      "SELECT `classes`, `majors` FROM `roads` " .
       "WHERE (`hash` = ? OR (`hash` LIKE ? AND `public` = '1')) " .
       "ORDER BY `added` DESC LIMIT 0,1"
     );
@@ -360,7 +360,7 @@ class CourseRoadDB {
   public static function getSavedRoads($athena) {
     $statement = self::$_db->prepare(
       "SELECT `hash`, `classes`, `majors`, `public`, `comment`, `added` " .
-      "FROM `roads2` WHERE `user` = ? ORDER BY `added` DESC"
+      "FROM `roads` WHERE `user` = ? ORDER BY `added` DESC"
     );
     $statement->bind_param('s', $athena);
     $statement->execute();
@@ -380,7 +380,7 @@ class CourseRoadDB {
    */
   public static function hasPublicRoad($athena) {
     $statement = self::$_db->prepare(
-      "SELECT COUNT(*) FROM `roads2` WHERE `hash` LIKE ? AND `public` = '1'"
+      "SELECT COUNT(*) FROM `roads` WHERE `hash` LIKE ? AND `public` = '1'"
     );
     $hash = "$athena/%";
     $statement->bind_param('s', $hash);
@@ -407,7 +407,7 @@ class CourseRoadDB {
    */
   public static function setPublicRoad($hash, $athena) {
     $statement = self::$_db->prepare(
-      "UPDATE `roads2` SET `public` = CASE " .
+      "UPDATE `roads` SET `public` = CASE " .
       "WHEN `hash` = ? THEN '1' ELSE '0' END WHERE `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
@@ -427,7 +427,7 @@ class CourseRoadDB {
    */
   public static function changeRoadHash($oldhash, $newhash, $athena) {
     $statement = self::$_db->prepare(
-      "UPDATE `roads2` SET `hash` = ? WHERE `hash` = ? AND `user` = ?"
+      "UPDATE `roads` SET `hash` = ? WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('sss', $newhash, $oldhash, $athena);
     return self::_executeStatement($statement);
@@ -446,7 +446,7 @@ class CourseRoadDB {
    */
   public static function setRoadComment($hash, $comment, $athena) {
     $statement = self::$_db->prepare(
-      "UPDATE `roads2` SET `comment` = ? WHERE `hash` = ? AND `user` = ?"
+      "UPDATE `roads` SET `comment` = ? WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('sss', $comment, $hash, $athena);
     return self::_executeStatement($statement);
@@ -464,7 +464,7 @@ class CourseRoadDB {
    */
   public static function deleteRoad($hash, $athena) {
     $statement = self::$_db->prepare(
-      "DELETE FROM `roads2` WHERE `hash` = ? AND `user` = ?"
+      "DELETE FROM `roads` WHERE `hash` = ? AND `user` = ?"
     );
     $statement->bind_param('ss', $hash, $athena);
     return self::_executeStatement($statement);
@@ -487,10 +487,10 @@ class CourseRoadDB {
    */
   public static function copyRoad($oldhash, $newhash, $athena) {
     $statement = self::$_db->prepare(
-      "INSERT INTO `roads2` " .
+      "INSERT INTO `roads` " .
       "(`hash`, `user`, `classes`, `majors`, `comment`, `ip`) " .
       "(SELECT ?, ?, `classes`, `majors`, `comment`, `ip` " .
-      "FROM `roads2` WHERE `hash` = ? ORDER BY `added` DESC LIMIT 0,1)"
+      "FROM `roads` WHERE `hash` = ? ORDER BY `added` DESC LIMIT 0,1)"
     );
     $statement->bind_param('sss', $newhash, $athena, $oldhash);
     return self::_executeStatement($statement);
