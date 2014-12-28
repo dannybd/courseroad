@@ -47,6 +47,7 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 // If we're also trying to Save with Log In, then update the hash and copy
 // the old row.
 if (isset($_SESSION['trycert'])) {
+  $_SESSION['saveas'] = $_SESSION['athena'].'/'.date("YmdHis");
   CourseRoadDB::copyRoad($_SESSION['crhash'], $_SESSION['saveas'], $athena);
 }
 
