@@ -69,6 +69,22 @@ class CourseRoadDB {
   }
 
   /**
+   * Accessor for the private database link (for __DEV__ mode only)
+   *
+   * @return object the database link
+   * @throws die trying to load the db object outside of __DEV__ mode
+   *
+   * @access public
+   * @static
+   */
+  public static function getDB() {
+    if (__DEV__) {
+      return self::$_db;
+    }
+    die('Illegal call to CourseRoadDB::getDB() outside of __DEV__ mode');
+  }
+
+  /**
    * Encrypts content for storage in the database
    *
    * The goal is to obfuscate some of the data in the database so it isn't
