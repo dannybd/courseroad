@@ -118,8 +118,7 @@ if (isset($_POST['saveNewRoad'])) {
   $trycert = false;
   if ($_POST['trycert']) {
     if ($loggedin) {
-      $saveas = date('YmdHis');
-      $hash = $athena . '/' . $saveas;
+      $hash = default_owned_hash_name($athena);
     } else if (!$_SESSION['triedcert']) {
       $_SESSION['trycert'] = true;
     }
