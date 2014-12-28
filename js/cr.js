@@ -942,7 +942,9 @@ function setNewHash(hash) {
   document.title = 'CourseRoad: ' + window.location.hash.substr(1);
 }
 
-var secureURL = 'https://courseroad.mit.edu:444/secure.php';
+var secureURL = (
+  window.location.origin + ':444' + window.location.pathname + 'secure.php'
+);
 
 // var reasonToTrySave = false;
 var preventUpdateWires = false;
