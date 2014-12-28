@@ -705,20 +705,20 @@ body.no-wires .WireIt-Wire {
 
 .ui-sortable-placeholder  {
   background-color: #EEE;
-  border: 1px dotted black; 
+  border: 1px dotted black;
   border-radius: 6px;
   -webkit-border-radius: 6px;
   display: inline-block;
   filter: alpha(opacity=30);
   margin: 0px 12px -6px;
-  min-height: 3em !important; 
+  min-height: 3em !important;
   opacity: 0.3;
   text-align: left;
-  visibility: visible !important; 
+  visibility: visible !important;
   width: 130px !important;
 }
 .ui-sortable-placeholder *  {
-  visibility: hidden; 
+  visibility: hidden;
 }
 
 #trash {

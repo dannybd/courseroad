@@ -411,15 +411,15 @@ function addWires(div, addwires) {
     ( data.checkterm || data.classterm === 0 )
   );
   div.removeClass('classdivgood').removeAttr('title');
-  if (data.status) { 
+  if (data.status) {
     div.addClass('classdivgood');
   }
   if (!data.checkrepeat) {
     div.attr('title', data.subject_id + ' is not counting for credit');
   }
   if (!data.checkterm) {
-    div.attr('title', data.subject_id + ' is not available ' + 
-      (['in the Fall term', 'during IAP', 
+    div.attr('title', data.subject_id + ' is not available ' +
+      (['in the Fall term', 'during IAP',
       'in the Spring term', 'in the Summer term'])[(data.classterm - 1) %
       4]);
   }
@@ -1172,7 +1172,7 @@ var crSetup = function () {
       var terms = ['fall', 'iap', 'spring', 'summer'];
       terms.forEach(function (term) {
         $('.' + term).addClass(
-          ui.item.data('custom') || 
+          ui.item.data('custom') ||
           ui.item.data(term) ? 'OKterm' : 'notOKterm'
         );
       });
@@ -1260,7 +1260,7 @@ var crSetup = function () {
     disabled: !user.autocomplete
   });
   $('.getnewclasstypes input').keydown(function (event) {
-    if (event.which === 13) { 
+    if (event.which === 13) {
       getClass();
     }
   });
@@ -1520,7 +1520,7 @@ var Konami = function (callback) {
       capture: false,
       orig_keys: '',
       keys: [
-        'UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 
+        'UP', 'UP', 'DOWN', 'DOWN', 'LEFT',
         'RIGHT', 'LEFT', 'RIGHT', 'TAP', 'TAP'
       ],
       code: function (link) {
