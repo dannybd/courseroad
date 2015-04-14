@@ -222,7 +222,13 @@ function makeClassInfoHTML($row) {
     'Search&subjectCode='
   );
   $evaluations_link = $evaluations_link_base . $row['subject_id'];
-
+  $joint_subjects = "";
+  if ($row['joint_subjects']) {
+    $joint_subjects = "This class meets with {$row['joint_subjects']}.";
+  }
+  if ($row['equiv_subjects']) {
+    $joint_subjects .= "This class is equivalent to {$row['equiv_subjects']}.";
+  }
   return <<<EOD
 Additional info for <strong>{$row['subject_id']}</strong>:<br>
 <strong>{$row['subject_title']}</strong><br>
@@ -230,7 +236,8 @@ Additional info for <strong>{$row['subject_id']}</strong>:<br>
 <a href="{$evaluations_link}" target="_blank">Class Evalutions</a><br>
 {$row['reqstr']}
 <p class='infounits'>{$row['unitload']} ({$row['total_units']} units)</p><br>
-<p class='infoinfo'>{$row['desc']}</p>
+<p class='infoinfo'>{$row['desc']}</p><br>
+<p><em>{$joint_subjects}</em></p>
 EOD;
 }
 
