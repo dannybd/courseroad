@@ -480,16 +480,16 @@ function checkClasses() {
     }
     var GIR = data.gir;
     if (GIR) {
-      $effect = $('.corecheck.unused.GIR.' + GIR + ':first');
+      $effect = $('.corecheck.unused.GIR.' + GIR);
       if ($effect.length) {
-        $effect.removeClass('unused').addClass('used')
+        $effect.eq(0).removeClass('unused').addClass('used')
           .attr('title', data.subject_id);
         if (GIR === 'LAB') {
-          if (!$effect.length) {
-            totalUnits += data.total_units - 6;
+          if (data.total_units > 6 && $effect.length > 1) {
+            $effect.eq(1).removeClass('unused').addClass('used')
+              .attr('title', data.subject_id);
           }
-          $effect.removeClass('unused').addClass('used')
-            .attr('title', data.subject_id);
+          totalUnits += data.total_units - 6 * $effect.length;
         }
         forUnits = false;
       }
