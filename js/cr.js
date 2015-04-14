@@ -928,6 +928,18 @@ function swapClassYear(oldclass, newyear) {
   }, 'json');
 }
 
+function getCurrentAcademicYear() {
+  var date = new Date();
+  return date.getFullYear() + (date.getMonth() > 7);
+}
+
+function getCurrentSemesterID() {
+  // 0 for Fall, 1 for IAP, 2 for Spring, 3 for Summer
+  var termByMonth = [1, 2, 2, 2, 2, 3, 3, 3, 0, 0, 0, 0];
+  var term = termByMonth[(new Date()).getMonth()];
+  return (getCurrentAcademicYear() - user.classYear + 3) * 4 + term;
+}
+
 function badCSRF(msg) {
   return msg === '**csrf**';
 }
@@ -1266,6 +1278,10 @@ var crSetup = function () {
       getClass();
     }
   });
+  $('#getnewclassterm').val(Math.max(0, Math.min(
+    $('#getnewclassterm option').length - 1,
+    getCurrentSemesterID() + 1
+  )));
   $('button.changeclassterm').click(function () {
     $('.getnewclasstypes.visible input:first').focus();
     $('#getnewclassterm').val(Math.max(0, Math.min($(
