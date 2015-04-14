@@ -280,25 +280,25 @@ window.majors = {
 
   m4_new: [0,
     [1, "4.021", "4.02A"],
-    "4.401", "4.550", "4.022", "4.440",
+    "4.022", "4.023", "4.024", "4.302", "4.401", "4.440", "4.500",
     [1, "4.501", "4.503"],
+    "4.603",
     [1, "4.605", "4.614", "4.635"],
-    "4.023", "4.411", "4.603", "4.024", "4.302",
-    [1, "4.025", {id: "2 Restricted Electives", skip: 1}],
-    [1, "4.119", "4.THT"],
-    "4.THU",
-    [{
-      count: 1,
-      desc: "set of Restricted Electives",
-      },
-      {id: "Art, Culture and Technology:", skip: 1},
-      [0, "4.307", "4.322", "4.341", "4.354", "4.368"],
-      {id: "Building Technology:", skip: 1},
-      [0, "4.411", "4.42", "4.432", "4.444"],
-      {id: "Computation:", skip: 1},
-      [0, "4.504", "4.520", "4.522"],
-      {id: "History and Theory of Architecture", skip: 1},
-      [0, "4.601", "4.602", "4.651"]
+    [1, "4.025",
+      [
+        {
+          count: 2,
+          desc: "Restricted Electives",
+        },
+        {id: "Art, Culture and Technology:", skip: 1},
+        [0, "4.307", "4.322", "4.341", "4.354", "4.368"],
+        {id: "Building Technology:", skip: 1},
+        [0, "4.411", "4.42", "4.432", "4.444"],
+        {id: "Computation:", skip: 1},
+        [0, "4.504", "4.520", "4.522"],
+        {id: "History and Theory of Architecture", skip: 1},
+        [0, "4.601", "4.602", "4.651"]
+      ]
     ]
   ],
 
