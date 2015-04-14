@@ -1787,19 +1787,42 @@ window.majors = {
   }, "21W.756"]],
 
   miManagement: [0,
-    [1, "15.301", "15.668"], "15.501", "15.812",
-    {
-      id: "3 Course 15 subjects (other than UROP, Special Studies, " +
+    [1, "15.301", "15.310", "15.668"], "15.501", "15.812",
+    [ {
+        count: 3,
+        desc: "MIT Sloan subjects (other than UROP, Special Studies, " +
           "Special Seminars, and general elective transfer credit) that " +
-          "are not designated as restricted to students in other " +
-          "Sloan School programs",
-      skip: 1
-  }],
+          "meet the following restrictions"
+      },
+      {
+        id: "UROP, Special Studies, Special Seminars, or general-elective" + 
+          "transfer credit may not be used",
+        skip: 1
+      },
+      {
+        id: "A full elective must carry at least nine units of credit. " +
+          "Two six-unit subjects count as a single elective",
+        skip: 1
+      },
+      {
+        id: "15.301, 15.310, and 15.668 may not be used as electives",
+        skip: 1
+      },
+      {
+        id: "Students may use 18.443 as a substitution for 15.075 " +
+          "(as an elective option)",
+        skip: 1
+      },
+      {
+        id: "14.01 may also be used as an elective",
+        skip: 1
+      }]
+  ],
 
   miManagement_science: [0,
-    [1, "6.041", "18.440"], "14.01", [1, "15.053",
-      "15.058"
-    ],
+    [1, "14.01", "15.016"],
+    "15.053",
+    [1, "6.041", "18.440"],
     [1, "15.075", "18.443"],
     {
       id: "2 Course 15 restricted electives",
