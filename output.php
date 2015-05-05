@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+error_reporting(E_ALL);
 header("Content-type: text/javascript;");
 
 if(isset($_GET['date'])) {
@@ -8,7 +8,11 @@ if(isset($_GET['date'])) {
 if(!isset($_GET['magnets'])) {
   die();
 }
+
 require("connect.php");
+// DEV ONLY
+$db = CourseRoadDB::getDB();
+
 $filename = "../../../cron_scripts/output.html";
 $file = file_get_contents($filename);
 preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s",$file,$matches);
@@ -17,6 +21,7 @@ if(!count($matches)) {
   file_put_contents($filename,"");
   die("No matches/changes\n");
 }
+
 $headers = explode(',', 
   'Academic Year,Subject Id,Subject Code,Subject Number,Source Subject Id,' .
   'Print Subject Id,Is Printed In Bulletin,Department Code,Department Name,' .
@@ -46,7 +51,8 @@ for ($i=0; $i < count($matches); $i++) {
   if($matches[$i] === "&nbsp;") {
     $matches[$i] = "";
   }
-  $courses[$row][$headers[$pos]] = mysql_real_escape_string(
+  $courses[$row][$headers[$pos]] = mysqli_real_escape_string(
+    $db,
     html_entity_decode(trim($matches[$i]))
   );
 }
@@ -78,7 +84,8 @@ foreach($courses as &$course) {
   $course2[] = $course['Grade_Rule'];        //grade_rule
   $course2[] = $course['Prerequisites'];      //reqstr
   //parse things here
-  $course2[] = mysql_real_escape_string(
+  $course2[] = mysqli_real_escape_string(
+    $db,
     json_encode(parseReqs2($course['Prerequisites']))
   );      //reqs
   $course2[] = $course['Subject_Description'];  //desc
@@ -106,7 +113,7 @@ foreach($courses as &$course) {
     "INSERT INTO `warehouse` VALUES (NULL, '" . implode("', '",$course2) .
     "', CURRENT_TIMESTAMP, '', '');"
   );
-  mysql_query($sql);
+  mysqli_query($db, $sql);
   echo "\n$sql\n\n";
 }
 

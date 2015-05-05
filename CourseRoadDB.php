@@ -78,10 +78,10 @@ class CourseRoadDB {
    * @static
    */
   public static function getDB() {
-    if (__DEV__) {
-      return self::$_db;
+    if (!__DEV__) {
+      die('Illegal call to CourseRoadDB::getDB() outside of __DEV__ mode');
     }
-    die('Illegal call to CourseRoadDB::getDB() outside of __DEV__ mode');
+    return self::$_db;
   }
 
   /**
