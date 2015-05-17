@@ -1407,6 +1407,47 @@ window.majors = {
     ]
   ],
 
+  m21_M_2: [0,
+    [{
+      count: 2,
+      desc: "(for CI-M) from",
+      globalMatchesSkip: 1
+      },
+      "21M.624", "21M.732", "21M.733", "21M.735", "21M.785", "21M.830"
+    ],
+    [
+			{
+				count: 36,
+				type: "total_units",
+				desc: "units (Theoretical Studies) from",
+				special: 1
+			},
+			"21M.611", "21M.703", "21M.710", "21M.711", "21M.715", "21M.800",
+      "21M.846", "21M.863"
+		],
+    [
+			{
+				count: 60,
+				type: "total_units",
+				desc: "units (Practical Studies) from",
+				special: 1
+			},
+			"21M.600", "21M.603", "21M.604", "21M.605", "21M.606", "21M.624",
+      "21M.645", "21M.704", "21M.705", "21M.732", "21M.733", "21M.734",
+      "21M.735", "21M.785", "21M.790", "21M.830", "21M.840"
+		],
+    [
+			{
+				count: 12,
+				type: "total_units",
+				desc: "units (Performance and Design Practica) from",
+				special: 1
+			},
+			"21M.805", "21M.815", "21M.851"
+		],
+    "21M.THT", "21M.THU"
+  ],
+
   m21_S: [0],
 
   m21_W_creative: [0,
@@ -1799,7 +1840,7 @@ window.majors = {
           "meet the following restrictions"
       },
       {
-        id: "UROP, Special Studies, Special Seminars, or general-elective" + 
+        id: "UROP, Special Studies, Special Seminars, or general-elective" +
           "transfer credit may not be used",
         skip: 1
       },
