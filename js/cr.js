@@ -723,12 +723,12 @@ function checkOff(majordiv, lvl, cls) {
 }
 
 function checkMajor(selector) {
-  var val = $(selector).val();
+  var majorId = $(selector).val();
   var div = $(selector).data('div');
   var span = $(selector).prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
-  var majorReqs = majors[val] || [0];
-  if (val === 'm0') {
+  var majorReqs = majors[majorId] || [0];
+  if (majorId === 'm0') {
     $(div).html('');
     return false;
   }
@@ -737,7 +737,7 @@ function checkMajor(selector) {
   $(div).html(buildMajor(majorReqs)).append(
     '<span class="letmeknow"><br>See an error? Let me know ' +
     '<a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20' +
-    val + '">here<\/a>.<\/span>'
+    majorId + '">here<\/a>.<\/span>'
   );
   draggableChecklist();
   checkRequisites(majorReqs, checkOff, [div, 'lvl', 'cls']);
@@ -1420,7 +1420,8 @@ var crSetup = function courseRoadSetup() {
   }, 2500);
   $('select.majorminor option').each(function () {
     var majorId = $(this).val();
-    if (!majors[majorId] || majors[majorId].length === 1) {
+    if (majorId in majors && majors[majorId].length === 1) {
+      console.log(majorId, majors[majorId]);
       $(this).remove();
     }
   });
