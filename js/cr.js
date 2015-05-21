@@ -8,27 +8,51 @@ var WireIt, majors, user, CSRF_token;
 var add_new_term, classterm, loggedin, triedlogin;
 
 var Defaults = {
+  // The count is the zeroth element in a requisite branch. It sets the
+  // threshold expectations for the success of that branch.
   requisiteCount: {
+    // Threshold count needed to satisfy branch
     count: 0,
-    type: '',
-    desc: 'from',
+    // Boolean for checking where we are counting differently
     special: 0,
-    globalMatchesSkip: 0, // Do not add classes to globalMatches
-    globalMatchesIgnore: 0, // Ignore whether classes are in globalMatches
+    // '' means just count the following, 'total_units' if the threshold is for
+    // units instead
+    type: '',
+    // Displays in the output as "X from:"
+    desc: 'from',
+    // Do not add classes to globalMatches
+    globalMatchesSkip: 0,
+    // Ignore whether classes are in globalMatches
+    globalMatchesIgnore: 0,
+    // Do not short-circuit branch logic once count threshold is met
     runinfull: 0,
-    pullmatches: 0 // Hold onto match information for subtrees
+    // Hold onto match information for subtrees
+    pullmatches: 0
   },
 
   requisiteClass: {
+    // The displayed name of the class. This may be a subject id, or a range,
+    // or a generalized skipped message
     id: '',
+    // An optional message for display, appended without spacing to the id
     desc: '',
+    // Do not process this as a requisite. Usually used for adding notes to
+    // a major display inline with other requisites.
     skip: 0,
+    // Set whether the class acts as a corequisite (and can thus be taken in
+    // the same semester)
     coreq: 0,
+    // Boolean for whether a range is in use
     range: 0,
+    // Department used for range
     dept: '',
+    // Beginning of range
     from: '',
+    // End of range
     to: '',
+    // Do not add classes to globalMatches
     globalMatchesSkip: 0,
+    // Ignore whether classes are in globalMatches
     globalMatchesIgnore: 0
   }
 };
