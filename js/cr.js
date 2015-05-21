@@ -177,10 +177,10 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     for (j = 0; j < classNames.length; j++) {
       if (newMatch.matchRegex || newMatch.excludeRegex) {
         if (newMatch.excludeRegex &&
-          newMatch.excludeRegex.match(classNames[j])) {
+          newMatch.excludeRegex.test(classNames[j])) {
           continue;
         }
-        if (newMatch.matchRegex && newMatch.matchRegex.match(classNames[j]) ) {
+        if (newMatch.matchRegex && newMatch.matchRegex.test(classNames[j])) {
           return true;
         }
       } else {
