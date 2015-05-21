@@ -2100,16 +2100,14 @@ window.majors = {
   ],
 
   miPolitical_science: [0,
-    [1,
-      {
-        id: "Intro class (two digit decimal)",
-        skip: 1
-    }],
-    [4,
-      {
-        id: "Advanced classes (three digit decimal)",
-        skip: 1
-    }],
+    {
+      id: "1 intro class (two digit decimal)",
+      skip: 1
+    },
+    {
+      id: "4 advanced classes (three digit decimal)",
+      skip: 1
+    },
     [1,
       {
         id: "17.01-999",
