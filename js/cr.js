@@ -50,6 +50,8 @@ var Defaults = {
     from: '',
     // End of range
     to: '',
+    // Regex string to match classes against for a range or complex id matching
+    matchRegex: '',
     // Do not add classes to globalMatches
     globalMatchesSkip: 0,
     // Ignore whether classes are in globalMatches
@@ -167,14 +169,22 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     matchParams.count -= $(this).data(matchParams.type);
   };
   var filterRangeMatches = function filterRangeMatches() {
-    var rng = [newMatch.dept, '.' + newMatch.from, '.' + newMatch.to];
+    var newMatchRange = [newMatch.dept, '.' + newMatch.from, '.' + newMatch.to];
     var data = $(this).data();
-    var temp2 = [data.subject_id].concat(data.joint_subjects || []);
-    for (j = 0; j < temp2.length; j++) {
-      var temp3 = [temp2[j].split('.')[0], '.' + temp2[j].split('.')[1]];
-      if ((temp3[0] === rng[0]) && (rng[1] <= temp3[1]) && (temp3[1] <=
-        rng[2])) {
-        return true;
+    var classNames = [data.subject_id].concat(data.joint_subjects || []);
+    for (j = 0; j < classNames.length; j++) {
+      if (newMatch.matchRegex) {
+        if (newMatch.matchRegex.match(classNames[j])) {
+          return true;
+        }
+      } else {
+        var classNameParts = classNames[j].split('.');
+        classNameParts[1] = '.' + classNameParts[1];
+        if ((classNameParts[0] === newMatchRange[0]) &&
+          (newMatchRange[1] <= classNameParts[1]) &&
+          (classNameParts[1] <= newMatchRange[2])) {
+          return true;
+        }
       }
     }
     return false;
