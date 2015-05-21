@@ -698,21 +698,20 @@ function checkMajor(selector) {
   var div = $(selector).data('div');
   var span = $(selector).prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
-  if (majors[val] === undefined) {
-    majors[val] = [0];
-  }
+  var majorReqs = majors[val] || [0];
   if (val === 'm0') {
     $(div).html('');
     return false;
   }
   span.attr('data-value', $(selector).find('option:selected').text())
     .removeAttr('data-empty');
-  $(div).html(buildMajor(majors[val])).append(
+  $(div).html(buildMajor(majorReqs)).append(
     '<span class="letmeknow"><br>See an error? Let me know ' +
     '<a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20' +
-    val + '">here<\/a>.<\/span>');
+    val + '">here<\/a>.<\/span>'
+  );
   draggableChecklist();
-  checkRequisites(majors[val], checkOff, [div, 'lvl', 'cls']);
+  checkRequisites(majorReqs, checkOff, [div, 'lvl', 'cls']);
 }
 
 function buildMajor(arr, level) {
@@ -1391,7 +1390,7 @@ var crSetup = function () {
     $('#accordion').accordion('resize');
   }, 2500);
   $('select.majorminor option').each(function () {
-    if (majors[$(this).val()] === undefined) {
+    if (!($(this).val() in majors)) {
       $(this).remove();
     }
   });
