@@ -5,17 +5,19 @@ header("Content-type: text/javascript;");
 if(isset($_GET['date'])) {
   die(date("d-M-Y", time()-10*86400));
 }
-if(!isset($_GET['magnets'])) {
-  die();
-}
 
 require("connect.php");
+
 // DEV ONLY
 $db = CourseRoadDB::getDB();
 
 $filename = "../../../cron_scripts/output.html";
 $file = file_get_contents($filename);
-preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s",$file,$matches);
+if (isset($_GET['verbose'])) {
+  echo preg_replace( "/\s*[\r\n]\s*/", "", $file);
+}
+
+preg_match_all("/<td[^>]*>\n(.*?)\n<\/td>/s", $file, $matches);
 $matches = $matches[1];
 if(!count($matches)) {
   file_put_contents($filename,"");
@@ -113,8 +115,8 @@ foreach($courses as &$course) {
     "INSERT INTO `warehouse` VALUES (NULL, '" . implode("', '",$course2) .
     "', CURRENT_TIMESTAMP, '', '');"
   );
-  mysqli_query($db, $sql);
   echo "\n$sql\n\n";
+  mysqli_query($db, $sql);
 }
 
 function parseReqs2($str){
@@ -191,5 +193,5 @@ function req($str, $isCoreq){
   return $isCoreq?array("id"=>$str, "coreq"=>1):$str;
 }
 
-file_put_contents($filename,"");
+file_put_contents($filename, "");
 ?>
