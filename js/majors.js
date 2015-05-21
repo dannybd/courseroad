@@ -328,6 +328,8 @@ window.majors = {
         {
           id: "6.100-182",
           range: 1,
+          matchRegex: /^6\.1[0-8]\d$/,
+          excludeRegex: /^6\.18[3-9]$/,
           dept: "6",
           from: "100",
           to: "182"
@@ -404,6 +406,8 @@ window.majors = {
         {
           id: "6.100-182",
           range: 1,
+          matchRegex: /^6\.1[0-8]\d$/,
+          excludeRegex: /^6\.18[3-9]$/,
           dept: "6",
           from: "100",
           to: "182"
@@ -563,6 +567,8 @@ window.majors = {
       {
         id: "8.03-999",
         range: 1,
+        matchRegex: /^8\.\d+$/,
+        excludeRegex: /^8\.0[0-2]$/,
         dept: "8",
         from: "03",
         to: "999"
@@ -595,6 +601,8 @@ window.majors = {
       {
         id: "18.04-999",
         range: 1,
+        matchRegex: /^18\..+$/,
+        excludeRegex: /^18\.0[0-3]$/,
         dept: "18",
         from: "04",
         to: "999"
@@ -604,6 +612,8 @@ window.majors = {
       {
         id: "8.03-999",
         range: 1,
+        matchRegex: /^8\..+$/,
+        excludeRegex: /^8\.0[0-2]$/,
         dept: "8",
         from: "03",
         to: "999"
@@ -657,6 +667,7 @@ window.majors = {
         {
           id: "10.001-039",
           range: 1,
+          matchRegex: /^10\.0[0-3]\d$/,
           dept: "10",
           from: "001",
           to: "039"
@@ -665,6 +676,8 @@ window.majors = {
         {
           id: "10.401-791",
           range: 1,
+          matchRegex: /^10\.[4-7]\d\d$/,
+          excludeRegex: /^10\.(400|79[2-9])$/,
           dept: "10",
           from: "401",
           to: "791"
@@ -673,6 +686,7 @@ window.majors = {
         {
           id: "10.793-800",
           range: 1,
+          matchRegex: /^10\.(79[3-9]|800)$/,
           dept: "10",
           from: "793",
           to: "800"
@@ -681,6 +695,7 @@ window.majors = {
         {
           id: "10.817-899",
           range: 1,
+          matchRegex: /^10\.8(1[7-9]|[2-9]\d)$/,
           dept: "10",
           from: "817",
           to: "899"
@@ -714,28 +729,37 @@ window.majors = {
       id: "4 Engineering concentration",
       skip: 1
     },
-    [1, "10.THU", [
+    [1,
+      "10.THU",
+      [
         {
           count: 12,
           type: "total_units",
           desc: "units from",
           special: 1
-      },
+        },
         {
           id: "10.490-494",
           range: 1,
+          matchRegex: /^10\.49[0-4]$/,
           dept: "10",
           from: "490",
           to: "494"
-      }],
-      [2, "10.910", [1,
-        {
-          id: "10.492-494",
-          range: 1,
-          dept: "10",
-          from: "492",
-          to: "494"
-      }]]
+        }
+      ],
+      [2,
+        "10.910",
+        [1,
+          {
+            id: "10.492-494",
+            range: 1,
+            matchRegex: /^10\.49[234]$/,
+            dept: "10",
+            from: "492",
+            to: "494"
+          }
+        ]
+      ]
     ]
   ],
 
@@ -975,6 +999,7 @@ window.majors = {
       {
         id: "17.00-099",
         range: 1,
+        matchRegex: /^17\./,
         dept: "17",
         from: "00",
         to: "099"
@@ -983,6 +1008,7 @@ window.majors = {
       {
         id: "17.20-299",
         range: 1,
+        matchRegex: /^17\.2/,
         dept: "17",
         from: "20",
         to: "299"
@@ -991,6 +1017,7 @@ window.majors = {
       {
         id: "17.30-399",
         range: 1,
+        matchRegex: /^17\.3/,
         dept: "17",
         from: "30",
         to: "399"
@@ -1005,6 +1032,7 @@ window.majors = {
       {
         id: "17.40-599",
         range: 1,
+        matchRegex: /^17\.[45]/,
         dept: "17",
         from: "40",
         to: "599"
@@ -1040,6 +1068,8 @@ window.majors = {
       {
         id: "18.04-999",
         range: 1,
+        matchRegex: /^18\..+$/,
+        excludeRegex: /^18\.0[0-3]$/,
         dept: "18",
         from: "04",
         to: "999"
@@ -1056,6 +1086,7 @@ window.majors = {
       {
         id: "18.100-999",
         range: 1,
+        matchRegex: /^18\.[1-9]\d\d$/,
         dept: "18",
         from: "100",
         to: "999"
@@ -1109,6 +1140,7 @@ window.majors = {
       {
         id: "18.100-999",
         range: 1,
+        matchRegex: /^18\.[1-9]\d\d$/,
         dept: "18",
         from: "100",
         to: "999"
@@ -1166,6 +1198,8 @@ window.majors = {
       {
         id: "18.04-999",
         range: 1,
+        matchRegex: /^18\..+$/,
+        excludeRegex: /^18\.0[0-3]$/,
         dept: "18",
         from: "04",
         to: "999"
@@ -1174,6 +1208,7 @@ window.majors = {
       {
         id: "6.170-179",
         range: 1,
+        matchRegex: /^6\.17\d$/,
         dept: "6",
         from: "170",
         to: "179"
@@ -1185,6 +1220,7 @@ window.majors = {
       {
         id: "6.100-999",
         range: 1,
+        matchRegex: /^6\.[1-9]\d\d$/,
         dept: "6",
         from: "100",
         to: "999"
@@ -1316,6 +1352,8 @@ window.majors = {
       {
         id: "21H.001-999",
         range: 1,
+        matchRegex: /^21H\.\d{3}$/,
+        excludeRegex: /^21H\.000$/,
         dept: "21H",
         from: "001",
         to: "999"
@@ -1361,6 +1399,7 @@ window.majors = {
       {
         id: "21M.401-499",
         range: 1,
+        matchRegex: /^21M\.4\d\d$/,
         dept: "21M",
         from: "401",
         to: "499"
@@ -1368,6 +1407,7 @@ window.majors = {
       {
         id: "21M.300-399",
         range: 1,
+        matchRegex: /^21M\.3\d\d$/,
         dept: "21M",
         from: "300",
         to: "399"
@@ -1376,6 +1416,7 @@ window.majors = {
       {
         id: "21M.291-299",
         range: 1,
+        matchRegex: /^21M\.29[1-9]$/,
         dept: "21M",
         from: "291",
         to: "299"
@@ -1384,6 +1425,7 @@ window.majors = {
         {
           id: "21M.300-399",
           range: 1,
+          matchRegex: /^21M\.3\d\d$/,
           dept: "21M",
           from: "300",
           to: "399"
@@ -1392,6 +1434,7 @@ window.majors = {
         {
           id: "21M.200-299",
           range: 1,
+          matchRegex: /^21M\.2\d\d$/,
           dept: "21M",
           from: "200",
           to: "299"
@@ -1400,6 +1443,7 @@ window.majors = {
         {
           id: "21M.400-499",
           range: 1,
+          matchRegex: /^21M\.4\d\d$/,
           dept: "21M",
           from: "400",
           to: "499"
@@ -1483,6 +1527,8 @@ window.majors = {
       {
         id: "STS.001-999",
         range: 1,
+        matchRegex: /^STS\.\d{3}$/,
+        excludeRegex: /^STS.000$/,
         dept: "STS",
         from: "001",
         to: "999"
@@ -1591,6 +1637,8 @@ window.majors = {
       {
         id: "STS.025-090",
         range: 1,
+        matchRegex: /^STS\.0([2-8]\d|90)$/,
+        excludeRegex: /^STS\.02[0-4]$/,
         dept: "STS",
         from: "025",
         to: "090"
@@ -1889,6 +1937,8 @@ window.majors = {
       {
         id: "STS.001-011",
         range: 1,
+        matchRegex: /^STS\.0(0\d|1[01])$/,
+        excludeRegex: /^STS\.000$/,
         dept: "STS",
         from: "001",
         to: "011"
@@ -1897,6 +1947,8 @@ window.majors = {
       {
         id: "STS.025-089",
         range: 1,
+        matchRegex: /^STS\.0([2-8]\d)$/,
+        excludeRegex: /^STS\.02[0-4]$/,
         dept: "STS",
         from: "025",
         to: "089"
@@ -1905,6 +1957,8 @@ window.majors = {
       {
         id: "STS.001-089",
         range: 1,
+        matchRegex: /^STS\.0[0-8]\d$/,
+        excludeRegex: /^STS\.000$/,
         dept: "STS",
         from: "001",
         to: "089"
@@ -1916,6 +1970,7 @@ window.majors = {
       {
         id: "21M.200-299",
         range: 1,
+        matchRegex: /^21M\.2\d\d$/,
         dept: "21M",
         from: "200",
         to: "299"
@@ -1924,6 +1979,7 @@ window.majors = {
       {
         id: "21M.400-499",
         range: 1,
+        matchRegex: /^21M\.4\d\d$/,
         dept: "21M",
         from: "400",
         to: "499"
@@ -1932,6 +1988,7 @@ window.majors = {
         {
           id: "21M.200-299",
           range: 1,
+          matchRegex: /^21M\.2\d\d$/,
           dept: "21M",
           from: "200",
           to: "299"
@@ -1940,6 +1997,7 @@ window.majors = {
         {
           id: "21M.300-399",
           range: 1,
+          matchRegex: /^21M\.3\d\d$/,
           dept: "21M",
           from: "300",
           to: "399"
@@ -1947,6 +2005,7 @@ window.majors = {
         {
           id: "21M.550-589",
           range: 1,
+          matchRegex: /^21M\.5[5-8]\d$/,
           dept: "21M",
           from: "550",
           to: "589"
@@ -1955,6 +2014,8 @@ window.majors = {
         {
           id: "21M.401-499",
           range: 1,
+          matchRegex: /^21M\.4\d\d$/,
+          excludeRegex: /^21M\.400$/,
           dept: "21M",
           from: "401",
           to: "499"
@@ -2039,6 +2100,7 @@ window.majors = {
       {
         id: "18.100-999",
         range: 1,
+        matchRegex: /^18\.[1-9]\d\d$/,
         dept: "18",
         from: "100",
         to: "999"
@@ -2047,6 +2109,8 @@ window.majors = {
       {
         id: "18.03-999",
         range: 1,
+        matchRegex: /^18\..+$/,
+        excludeRegex: /^18\.0[0-3]$/,
         dept: "18",
         from: "03",
         to: "999"
@@ -2092,6 +2156,8 @@ window.majors = {
         {
           id: "8.03-999",
           range: 1,
+          matchRegex: /^8\..+$/,
+          excludeRegex: /^8\.0[0-2]$/,
           dept: "8",
           from: "03",
           to: "999"
@@ -2100,22 +2166,31 @@ window.majors = {
   ],
 
   miPolitical_science: [0,
-    {
-      id: "1 intro class (two digit decimal)",
-      skip: 1
-    },
-    {
-      id: "4 advanced classes (three digit decimal)",
-      skip: 1
-    },
+    [1,
+      {
+        id: "Intro class (two digit decimal)",
+        range: 1,
+        matchRegex: /^17\.\d{2}$/
+      }
+    ],
+    [4,
+      {
+        id: "Advanced classes (three digit decimal)",
+        range: 1,
+        matchRegex: /^17\.\d{3}$/
+      }
+    ],
     [1,
       {
         id: "17.01-999",
         range: 1,
+        matchRegex: /^17\..+$/,
+        excludeRegex: /^17\.00$/,
         dept: "17",
         from: "01",
         to: "999"
-    }]
+      }
+    ]
   ],
 
   miChinese: [0,
@@ -2144,6 +2219,7 @@ window.majors = {
       {
         id: "21F.308-313",
         range: 1,
+        matchRegex: /^21F\.3(0[89]|1[0-3])$/,
         dept: "21F",
         from: "308",
         to: "313"
@@ -2152,6 +2228,8 @@ window.majors = {
       {
         id: "21F.320-348",
         range: 1,
+        matchRegex: /^21F\.3[2-4]\d$/,
+        excludeRegex: /^21F\.349$/,
         dept: "21F",
         from: "320",
         to: "348"
@@ -2165,33 +2243,42 @@ window.majors = {
       {
         id: "21F.405-412",
         range: 1,
+        matchRegex: /^21F\.4(0[5-9]|1[0-2])$/,
         dept: "21F",
         from: "405",
         to: "412"
-    }],
-    [2, "21F.019", "21F.055", "21F.059", "21F.098",
+      }
+    ],
+    [2,
+      "17.651", "21F.019", "21F.055", "21F.059", "21F.098",
       {
         id: "21F.414-420",
         range: 1,
+        matchRegex: /^21F\.4(1[4-9]|20)$/,
         dept: "21F",
         from: "414",
         to: "420"
-    }],
+      }
+    ],
     [1,
       {
         id: "21F.405-412",
         range: 1,
+        matchRegex: /^21F\.4(0[5-9]|1[0-2])$/,
         dept: "21F",
         from: "405",
         to: "412"
-    }, "21F.019", "21F.055", "21F.059", "21F.098",
+      },
+      "17.651", "21F.019", "21F.055", "21F.059", "21F.098",
       {
         id: "21F.414-420",
         range: 1,
+        matchRegex: /^21F\.4(1[4-9]|20)$/,
         dept: "21F",
         from: "414",
         to: "420"
-    }]
+      }
+    ]
   ],
 
   miSpanish: [0,
@@ -2201,6 +2288,7 @@ window.majors = {
       {
         id: "21F.711-714",
         range: 1,
+        matchRegex: /^21F\.71[1-4]$/,
         dept: "21F",
         from: "711",
         to: "714"
@@ -2209,14 +2297,17 @@ window.majors = {
       {
         count: 2,
         desc: "(at least) from"
-    }, "21F.010", "21F.084",
+      },
+      "21F.010", "21F.084",
       {
         id: "21F.716-740",
         range: 1,
+        matchRegex: /^21F\.7(1[6-9]|[23]\d|40)$/,
         dept: "21F",
         from: "716",
         to: "740"
-    }]
+      }
+    ]
   ],
 
   miJapanese: [0,
@@ -2294,6 +2385,8 @@ window.majors = {
       {
         id: "21L.000-044",
         range: 1,
+        matchRegex: /^21L\.0[0-4]\d$/,
+        excludeRegex: /^21L\.04[5-9]$/,
         dept: "21L",
         from: "000",
         to: "044"
@@ -2302,6 +2395,8 @@ window.majors = {
       {
         id: "21L.420-522",
         range: 1,
+        matchRegex: /^21L\.(4[2-9]|5[0-2])\d$/,
+        excludeRegex: /^21L\.52[3-9]$/,
         dept: "21L",
         from: "420",
         to: "522"
@@ -2310,6 +2405,8 @@ window.majors = {
         {
           id: "21L.000-044",
           range: 1,
+          matchRegex: /^21L\.0[0-4]\d$/,
+          excludeRegex: /^21L\.04[5-9]$/,
           dept: "21L",
           from: "000",
           to: "044"
@@ -2318,6 +2415,8 @@ window.majors = {
         {
           id: "21L.420-522",
           range: 1,
+          matchRegex: /^21L\.(4[2-9]|5[0-2])\d$/,
+          excludeRegex: /^21L\.52[3-9]$/,
           dept: "21L",
           from: "420",
           to: "522"
@@ -2327,6 +2426,7 @@ window.majors = {
       {
         id: "21L.701-715",
         range: 1,
+        matchRegex: /^21L\.7(0[1-9]|1[0-5])$/,
         dept: "21L",
         from: "701",
         to: "715"
@@ -2422,6 +2522,8 @@ window.majors = {
           {
             id: "20.340-499",
             range: 1,
+            matchRegex: /^20\.[34]\d\d$/,
+            excludeRegex: /^20\.3[0-3]\d$/,
             dept: "20",
             from: "340",
             to: "499"
@@ -2430,6 +2532,8 @@ window.majors = {
           {
             id: "20.340-499",
             range: 1,
+            matchRegex: /^20\.[34]\d\d$/,
+            excludeRegex: /^20\.3[0-3]\d$/,
             dept: "20",
             from: "340",
             to: "499"
@@ -2438,6 +2542,8 @@ window.majors = {
           {
             id: "20.340-499",
             range: 1,
+            matchRegex: /^20\.[34]\d\d$/,
+            excludeRegex: /^20\.3[0-3]\d$/,
             dept: "20",
             from: "340",
             to: "499"
@@ -2446,6 +2552,7 @@ window.majors = {
           {
             id: "HST.520-529",
             range: 1,
+            matchRegex: /^HST\.52\d$/,
             dept: "HST",
             from: "520",
             to: "529"
@@ -2454,6 +2561,7 @@ window.majors = {
           {
             id: "HST.520-529",
             range: 1,
+            matchRegex: /^HST\.52\d$/,
             dept: "HST",
             from: "520",
             to: "529"
@@ -2462,6 +2570,7 @@ window.majors = {
           {
             id: "HST.520-529",
             range: 1,
+            matchRegex: /^HST\.52\d$/,
             dept: "HST",
             from: "520",
             to: "529"
@@ -2470,6 +2579,7 @@ window.majors = {
           {
             id: "HST.540-549",
             range: 1,
+            matchRegex: /^HST\.54\d$/,
             dept: "HST",
             from: "540",
             to: "549"
@@ -2478,6 +2588,7 @@ window.majors = {
           {
             id: "HST.540-549",
             range: 1,
+            matchRegex: /^HST\.54\d$/,
             dept: "HST",
             from: "540",
             to: "549"
@@ -2486,6 +2597,7 @@ window.majors = {
           {
             id: "HST.540-549",
             range: 1,
+            matchRegex: /^HST\.54\d$/,
             dept: "HST",
             from: "540",
             to: "549"
