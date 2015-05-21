@@ -23,7 +23,7 @@
  * Individual strings for subjects can be replaced with objects, if additional
  * details are needed. This is primarily evident in certain cases:
  * 	- Coreqs: {id: "18.03", coreq: 1}
- * 	- Ranges: {id: "18.03-18.06", range: 1, dept: "18", from:"03", to:"06"}
+ * 	- Ranges: {id: "18.03-18.06", range: 1, regexMatch: /^18\.0[3-6]$/}
  * 	- Descriptions: {id: "18.03", desc: "(optional)"}
  * 	- Skip: {id: "Just a marker; ignore me", skip: 1}
  */
