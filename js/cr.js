@@ -163,10 +163,10 @@ function checkRequisites(arr, callback, callbackArgs, level) {
   var temp2;
   var newMatch;
   var i, j;
-  var requisiteBranchMatchParams = function () {
+  var requisiteBranchMatchParams = function requisiteBranchMatchParams() {
     matchParams.count -= $(this).data(matchParams.type);
   };
-  var filterRangeMatches = function () {
+  var filterRangeMatches = function filterRangeMatches() {
     var rng = [newMatch.dept, '.' + newMatch.from, '.' + newMatch.to];
     var data = $(this).data();
     var temp2 = [data.subject_id].concat(data.joint_subjects || []);
@@ -179,7 +179,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     }
     return false;
   };
-  var iterateRangeMatches = function () {
+  var iterateRangeMatches = function iterateRangeMatches() {
     if (
         ~$.inArray(this, globalMatches) &&
         !matchParams.globalMatchesIgnore &&
@@ -209,7 +209,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       ];
     }
   };
-  var iterateClassMatches = function () {
+  var iterateClassMatches = function iterateClassMatches() {
     if (~$.inArray(this, globalMatches) &&
         !matchParams.globalMatchesIgnore &&
         !newMatch.globalMatchesIgnore) {
@@ -926,7 +926,7 @@ function runBeforeUnload() {
 }
 
 var userHashChange = true;
-window.onhashchange = function () {
+window.onhashchange = function onHashChange() {
   // userHashChange means that if the user types in a new hash in the URL,
   // the browser will reload, but if the hash changes due to saving a new
   // version or something it won't.
@@ -983,7 +983,7 @@ var secureURL = (
 
 // var reasonToTrySave = false;
 var preventUpdateWires = false;
-var crSetup = function () {
+var crSetup = function courseRoadSetup() {
   crSetup = undefined;
   $('#getnewclass').tabs({
     collapsible: false,
