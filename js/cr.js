@@ -175,22 +175,11 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     var data = $(this).data();
     var classNames = [data.subject_id].concat(data.joint_subjects || []);
     for (j = 0; j < classNames.length; j++) {
-      if (newMatch.matchRegex || newMatch.excludeRegex) {
-        if (newMatch.excludeRegex &&
-          newMatch.excludeRegex.test(classNames[j])) {
-          continue;
-        }
-        if (newMatch.matchRegex && newMatch.matchRegex.test(classNames[j])) {
-          return true;
-        }
-      } else {
-        var classNameParts = classNames[j].split('.');
-        classNameParts[1] = '.' + classNameParts[1];
-        if ((classNameParts[0] === newMatchRange[0]) &&
-          (newMatchRange[1] <= classNameParts[1]) &&
-          (classNameParts[1] <= newMatchRange[2])) {
-          return true;
-        }
+      if (newMatch.excludeRegex && newMatch.excludeRegex.test(classNames[j])) {
+        continue;
+      }
+      if (newMatch.matchRegex && newMatch.matchRegex.test(classNames[j])) {
+        return true;
       }
     }
     return false;
