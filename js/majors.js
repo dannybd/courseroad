@@ -1561,7 +1561,6 @@ window.majors = {
 
   mWGS: [0],
 
-
   miArchitecture: [0,
     [1,
       {id: "Old system:", skip: 1},

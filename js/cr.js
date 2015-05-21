@@ -1419,7 +1419,8 @@ var crSetup = function courseRoadSetup() {
     $('#accordion').accordion('resize');
   }, 2500);
   $('select.majorminor option').each(function () {
-    if (!($(this).val() in majors)) {
+    var majorId = $(this).val();
+    if (!majors[majorId] || majors[majorId].length === 1) {
       $(this).remove();
     }
   });
