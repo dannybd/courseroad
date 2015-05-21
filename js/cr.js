@@ -50,8 +50,10 @@ var Defaults = {
     from: '',
     // End of range
     to: '',
-    // Regex string to match classes against for a range or complex id matching
+    // Regex string to match classes for a range or complex id matching
     matchRegex: '',
+    // Regex string to NOT match classes for a range or complex id matching
+    excludeRegex: '',
     // Do not add classes to globalMatches
     globalMatchesSkip: 0,
     // Ignore whether classes are in globalMatches
@@ -173,8 +175,12 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     var data = $(this).data();
     var classNames = [data.subject_id].concat(data.joint_subjects || []);
     for (j = 0; j < classNames.length; j++) {
-      if (newMatch.matchRegex) {
-        if (newMatch.matchRegex.match(classNames[j])) {
+      if (newMatch.matchRegex || newMatch.excludeRegex) {
+        if (newMatch.excludeRegex &&
+          newMatch.excludeRegex.match(classNames[j])) {
+          continue;
+        }
+        if (newMatch.matchRegex && newMatch.matchRegex.match(classNames[j]) ) {
           return true;
         }
       } else {
