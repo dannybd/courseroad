@@ -783,7 +783,7 @@ img.trashhover,svg.trashhover {
   body{ border: 1px solid black !important; }
   #leftbar{ position: absolute !important; }
   #leftbar>div{ position: absolute !important; }
-  #getnewclass, #overrider, #nowreading, .WireIt-Wire, span.majorminor[data-empty], select.majorminor, span.letmeknow{ display: none !important; }
+  #getnewclass, #overrider, #nowreading, .WireIt-Wire, span.majorminor[data-empty], select.majorminor, span.letmeknow, .noprint{ display: none !important; }
   #COREchecker{ display: block !important; height: auto !important; top: 0 !important; bottom: 0 !important; border: none !important; }
   .checkbox1[title]:after{ content: " (" attr(title) ") "; }
   span.majorminor[data-value]:after{ content: attr(data-value); font-weight: bold; }

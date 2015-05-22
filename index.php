@@ -247,6 +247,7 @@ header('Content-type: text/html; charset=utf-8');
     </div>
   </div>
   <div id="COREchecker" class="leftbarholder">
+  <strong title="CourseRoad isn't the official system, and so what you see here isn't a guarantee. Go check the official audit to be sure.">Unofficial Audit<sup class="noprint">[?]</sup>:</strong><br>
   <strong>General Institute Requirements:</strong><br>
     Physics I: <span id="Physics_I" class="checkbox1 corecheck GIR PHY1">[<span>&#x2713;</span>]</span><br>
     Physics II: <span id="Physics_II" class="checkbox1 corecheck GIR PHY2">[<span>&#x2713;</span>]</span><br>
