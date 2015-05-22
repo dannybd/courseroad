@@ -1009,15 +1009,12 @@ var crSetup = function courseRoadSetup() {
    * }, 10000);
    */
   // Populate the majorminor selectors
-  for (var majorId in majors) {
-    if (!majors.hasOwnProperty(majorId)) {
-      continue;
-    }
+  Object.keys(majors).forEach(function (majorId) {
     var dropdowns = !/^mi/.test(majorId) ? 'choosemajor' : 'chooseminor'
     $('select.' + dropdowns).append(
       '<option value="' + majorId + '">' + majors[majorId].name + '</option>'
     );
-  }
+  });
   setInterval(function () {
     addAllWires(false);
   }, 10000);
