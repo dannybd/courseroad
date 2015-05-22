@@ -727,11 +727,12 @@ function checkMajor(selector) {
   var div = $(selector).data('div');
   var span = $(selector).prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
-  var majorReqs = majors[majorId] || [0];
-  if (majorId === 'm0') {
+  var majorData = majors[majorId];
+  if (!majorData || majorData.disable) {
     $(div).html('');
     return false;
   }
+  var majorReqs = majorData.reqs || [0];
   span.attr('data-value', $(selector).find('option:selected').text())
     .removeAttr('data-empty');
   $(div).html(buildMajor(majorReqs)).append(
@@ -1420,8 +1421,7 @@ var crSetup = function courseRoadSetup() {
   }, 2500);
   $('select.majorminor option').each(function () {
     var majorId = $(this).val();
-    if (majorId in majors && majors[majorId].length === 1) {
-      console.log(majorId, majors[majorId]);
+    if (majorId in majors && majors[majorId].disable) {
       $(this).remove();
     }
   });
