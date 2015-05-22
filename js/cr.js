@@ -1510,11 +1510,6 @@ var crSetup = function courseRoadSetup() {
       $(window).off('beforeunload', runBeforeUnload);
     });
   });
-  $('.termname span').wrapInner(
-    '<a href="http://picker.mit.edu/browse.html?courses=" ' +
-    'class="spannamepicker" target="_blank" title="Click to head over to ' +
-    'Picker to check your classes for this semester."></a>'
-  );
 };
 
 /*
