@@ -180,7 +180,7 @@ function pullClass(
 
   $row['yearspan'] = (
     '<span title="The data for this class is from the '. $row['year_range'] .
-    'version of the subject. Click to use another year\'s version." '.
+    ' version of the subject. Click to use another year\'s version." '.
     'href="#" class="dummylink">' . $row['year_range'] . '</span>'
   );
 

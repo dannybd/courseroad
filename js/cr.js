@@ -432,13 +432,9 @@ function addWires(div, addwires) {
       data.checkrepeat = false;
     }
   }
-  data.status = (
-    (
-      (data.reqstatus && data.checkrepeat && data.offered_this_year) ||
-      data.override
-    ) &&
-    ( data.checkterm || data.classterm === 0 )
-  );
+  var classReqsMet = data.override || (data.reqstatus && data.checkrepeat);
+  var classTermOkay = data.checkterm || data.classterm === 0;
+  data.status = data.offered_this_year && classReqsMet && classTermOkay;
   div.removeClass('classdivgood').removeAttr('title');
   if (data.status) {
     div.addClass('classdivgood');
@@ -941,6 +937,9 @@ window.onhashchange = function onHashChange() {
 };
 
 function swapClassYear(oldclass, newyear) {
+  if (!oldclass.data('subject_id')) {
+    return false;
+  }
   oldclass.addClass('classdivlow');
   $.post('ajax.php', {
     getclass: oldclass.data('subject_id'),
