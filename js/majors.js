@@ -2895,7 +2895,8 @@ window.majors = {
     ]
   },
 
-  miWGS: [0,
+  miWGS: {
+    reqs: [0,
       {id: "Tier I:", skip: 1},
       "WGS.101",
       {id: "Tier II:", skip: 1},
@@ -2910,6 +2911,7 @@ window.majors = {
       ],
       {id: "Tier III:", skip: 1},
       "WGS.301"
-  ]
+    ]
+  }
 
 };
