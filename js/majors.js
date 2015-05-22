@@ -30,6 +30,7 @@
 
 window.majors = {
   m1_A: {
+    name: "1A -- Engineering",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"],
       [1, "1.00", "1.010"], "1.101", "1.102"
@@ -37,6 +38,7 @@ window.majors = {
   },
 
   m1_C: {
+    name: "1C -- Civil Engineering",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       "1.00", "1.010", "1.011", "1.035", "1.036", "1.041", "1.101", "1.102",
@@ -45,6 +47,7 @@ window.majors = {
   },
 
   m1_E: {
+    name: "1E -- Environmental Engineering Science",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       [1, "1.00", "1.010"], "1.061", "1.070", "1.080", "1.083", "1.106", "1.107",
@@ -54,6 +57,7 @@ window.majors = {
   },
 
   m1_ENG: {
+    name: "1ENG -- Civil and Environmental Flexible Degree",
     reqs: [0,
       [1, "1.00", "1.000"], "1.010", [1, "1.073", "1.074"], "18.03", "1.013",
       [
@@ -94,6 +98,7 @@ window.majors = {
   },
 
   m2: {
+    name: "2 -- Mechanical Engineering",
     reqs: [0,
       [1, "2.001", [2, "2.01", "2.02B"]],
       [1,
@@ -153,6 +158,7 @@ window.majors = {
   },
 
   m2_A_old: {
+    name: "2A (old) -- Engineering",
     reqs: [0,
       "2.001", "2.003", "2.005", "2.009",
       [1, "2.670", "2.00", "2.00A", "2.00B", "2.678"],
@@ -166,6 +172,7 @@ window.majors = {
   },
 
   m2_A_new: {
+    name: "2A (new) -- Engineering",
     reqs: [0,
       [1, "2.00", "2.00A", "2.00B", "2.007"], "2.678",
       [2, "2.086", [1, "2.087", "18.03", "18.034"]],
@@ -183,6 +190,7 @@ window.majors = {
   },
 
   m2_OE: {
+    name: "2-OE -- Ocean Engineering",
     reqs: [0,
       [1, "2.001", [2, "2.01", "2.02B"]],
       [1,
@@ -218,6 +226,7 @@ window.majors = {
   },
 
   m3: {
+    name: "3 -- Materials Science and Engineering",
     reqs: [0,
       [
         {
@@ -248,6 +257,7 @@ window.majors = {
   },
 
   m3_A: {
+    name: "3A -- Materials Science and Engineering",
     reqs: [0,
       [5,
         "3.012",
@@ -269,6 +279,7 @@ window.majors = {
   },
 
   m3_C: {
+    name: "3C -- Archaeology and Materials",
     reqs: [0,
       "3.012", "3.014", [1, "3.016", "18.03", "18.034"],
       [1, "3.021", "1.00", "6.01"], "3.022", [1, "3.032", "3.044"], "3.THU",
@@ -279,6 +290,7 @@ window.majors = {
   },
 
   m4_archdesign: {
+    name: "4 -- Architecture (Architectural Design)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.113", "4.114", "4.115", "4.440", "4.603", "4.605",
@@ -293,6 +305,7 @@ window.majors = {
   },
 
   m4_buildingtech: {
+    name: "4 -- Architecture (Building Technology)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401",
       "4.500", "4.411", "4.440", "4.605", "4.THT", "4.THU",
@@ -308,6 +321,7 @@ window.majors = {
   },
 
   m4_computation: {
+    name: "4 -- Architecture (Computation)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.501", "4.503", "4.504", "4.505", "4.605", "4.THT", "4.THU",
@@ -319,6 +333,7 @@ window.majors = {
   },
 
   m4_history: {
+    name: "4 -- Architecture (History, Theory, and Criticism)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.601", "4.605", [1, "4.602", "4.641", "4.651"],
@@ -335,6 +350,7 @@ window.majors = {
   },
 
   m4_artculture: {
+    name: "4 -- Architecture (Art, Culture, and Technology)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.322", "4.341", "4.351", "4.601", "4.THT", "4.THU",
@@ -350,6 +366,7 @@ window.majors = {
   },
 
   m4_new: {
+    name: "4 -- Architecture (New, as of 09/14)",
     reqs: [0,
       [1, "4.021", "4.02A"],
       "4.022", "4.023", "4.024", "4.302", "4.401", "4.440", "4.500",
@@ -376,6 +393,7 @@ window.majors = {
   },
 
   m5: {
+    name: "5 -- Chemistry",
     reqs: [0,
       "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36",
       "5.37", "5.38",
@@ -390,6 +408,7 @@ window.majors = {
   },
 
   m6_1: {
+    name: "6-1 -- Electrical Science and Engineering",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -455,6 +474,7 @@ window.majors = {
   },
 
   m6_2: {
+    name: "6-2 -- Electrical Engineering and Computer Science",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -530,6 +550,7 @@ window.majors = {
   },
 
   m6_3: {
+    name: "6-3 -- Computer Science and Engineering",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -585,6 +606,7 @@ window.majors = {
   },
 
   m6_7: {
+    name: "6-7 -- Computer Science and Molecular Biology",
     reqs: [0,
       [1, "18.03", "18.034", "18.06"], "6.01", "6.042", "5.12",
       [1, "5.60", "7.10", "20.110"],
@@ -596,6 +618,7 @@ window.majors = {
   },
 
   m7: {
+    name: "7 -- Biology",
     reqs: [0,
     [1, "5.111", "5.112", "3.091"],
       "5.12", [1, "20.110", "7.10", "5.60"],
@@ -615,6 +638,7 @@ window.majors = {
   },
 
   m7a: {
+    name: "7A -- Biology",
     reqs: [0,
       [1, "5.111", "5.112", "3.091"],
       [1, "20.110", "7.10", "5.60"],
@@ -640,6 +664,7 @@ window.majors = {
   },
 
   m8_flexible: {
+    name: "8 -- Physics (Flexible)",
     reqs: [0,
       "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"],
       [1, "8.05", "8.20", "8.033"],
@@ -688,6 +713,7 @@ window.majors = {
   },
 
   m8_focused: {
+    name: "8 -- Physics (Focused)",
     reqs: [0,
       "8.03", [1, "18.03", "18.034"], "8.04", "8.044", "8.033",
       "8.05",
@@ -717,6 +743,7 @@ window.majors = {
   },
 
   m9: {
+    name: "9 -- Brain and Cognitive Sciences",
     reqs: [0,
       [
         {count: 5, desc: "Tier 1 subjects"},
@@ -748,6 +775,7 @@ window.majors = {
   },
 
   m10: {
+    name: "10 -- Chemical Engineering",
     reqs: [0,
       "5.12", [1, "5.07", "7.05"], "5.310", "5.60", "10.10", "10.213",
       [1, "10.28", "10.26", "10.27", "10.29"],
@@ -791,6 +819,7 @@ window.majors = {
   },
 
   m10_B: {
+    name: "10B -- Chemical-Biological Engineering",
     reqs: [0,
       "5.12", "5.60", [1, "7.02", "10.702"], "7.03", [1, "5.07", "7.05"],
       "7.06", "10.10", "10.213", [1, "10.28", "10.26", "10.27", "10.29"],
@@ -801,6 +830,7 @@ window.majors = {
   },
 
   m10_ENG: {
+    name: "10-ENG -- Engineering",
     reqs: [0,
       "5.12", [1, "18.03", "18.034"], "10.10", "10.213", "10.301", "10.302",
       "10.37", [1, "10.28", "10.26", "10.27", "10.29", "10.467"],
@@ -850,6 +880,7 @@ window.majors = {
   },
 
   m10_C: {
+    name: "10C -- Chemical Engineering",
     reqs: [0,
       "5.60", "10.10", "10.213", "10.301", "10.302", "18.03",
       [1, "3.014", "6.152", "5.36", "10.702", "10.28", "10.26", "10.27", "10.29"],
@@ -861,6 +892,7 @@ window.majors = {
   },
 
   m11_enviro: {
+    name: "11 -- Urban and Environmental Policy and Planning",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
       [
@@ -877,39 +909,42 @@ window.majors = {
   },
 
   m11_society: {
+    name: "11 -- Urban Society, History, and Politics",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
-    [
-      {
-        count: 57,
-        type: "total_units",
-        desc: "units",
-        special: 1
-      },
-      "11.013", "11.014", "11.015", "11.019", "11.026", "11.150", "11.152",
-    ],
+      [
+        {
+          count: 57,
+          type: "total_units",
+          desc: "units",
+          special: 1
+        },
+        "11.013", "11.014", "11.015", "11.019", "11.026", "11.150", "11.152",
+      ],
       "11.027", "11.THT", "11.THU"
     ]
   },
 
   m11_international: {
+    name: "11 -- Urban and International Development",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
-    [
-      {
-          count: 57,
-          type: "total_units",
-          desc: "units",
-          special: 1
-      },
-      "11.005", "11.025", "11.140", "11.144", "11.147", "11.164", "11.165",
-      "11.166",
-    ],
+      [
+        {
+            count: 57,
+            type: "total_units",
+            desc: "units",
+            special: 1
+        },
+        "11.005", "11.025", "11.140", "11.144", "11.147", "11.164", "11.165",
+        "11.166",
+      ],
       "11.027", "11.THT", "11.THU"
     ]
   },
 
   m12: {
+    name: "12 -- Earth, Atmospheric, and Planetary Sciences",
     reqs: [0,
       "12.001", "12.002", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP",
       "12.THU",
@@ -957,6 +992,7 @@ window.majors = {
   },
 
   m14: {
+    name: "14 -- Economics",
     reqs: [0,
       "14.01", "14.02", "14.04", "14.05", "14.30", "14.32", "14.33", "14.THU",
       [
@@ -975,6 +1011,7 @@ window.majors = {
   },
 
   m15: {
+    name: "15 -- Management / Management Science",
     reqs: [0,
       [1, "1.00", "6.00", "6.005"],
       [1, "6.041", "18.440"], "14.01", "14.02", [1, "15.053", "15.058"],
@@ -989,6 +1026,7 @@ window.majors = {
   },
 
   m16_1: {
+    name: "16-1 -- Aerospace Engineering (2015s ONLY)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07",
       [1, "16.09", "6.041"],
@@ -1004,6 +1042,7 @@ window.majors = {
   },
 
   m16_2: {
+    name: "16-2 -- Aerospace Engineering with Information Technology (2015s ONLY)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07",
       [1, "16.09", "6.041"],
@@ -1019,6 +1058,7 @@ window.majors = {
   },
 
   m16: {
+    name: "16 -- Aerospace Engineering (2016s and on)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004",
       [1,
@@ -1059,6 +1099,7 @@ window.majors = {
   },
 
   m16_ENG: {
+    name: "16-ENG -- Engineering",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004",
       [1,
@@ -1077,7 +1118,8 @@ window.majors = {
         {
           id: "Engineering concentration electives",
           skip: 1
-      }],
+        }
+      ],
       [
         {
           count: 12,
@@ -1106,6 +1148,7 @@ window.majors = {
   },
 
   m17: {
+    name: "17 -- Political Science",
     reqs: [0,
       "17.869", "17.871", "17.THT", "17.THU",
       [1,
@@ -1147,6 +1190,7 @@ window.majors = {
   },
 
   m18_general: {
+    name: "18 -- Mathematics (General Option)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [2,
@@ -1187,12 +1231,14 @@ window.majors = {
           id: "18.100-999",
           range: 1,
           matchRegex: /^18\.[1-9]\d\d$/
-      }],
+        }
+      ],
       [1, "18.700", "18.701", "18.06"]
     ]
   },
 
   m18_applied: {
+    name: "18 -- Mathematics (Applied Option)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [2,
@@ -1212,7 +1258,8 @@ window.majors = {
           globalMatchesIgnore: 1
         },
         "18.310A"
-      ], "18.311", [1, "18.04", "18.112"],
+      ],
+      "18.311", [1, "18.04", "18.112"],
       [1, "18.06", "18.700"],
       {
         id: "Group I class: Probability and statistics, combinatorics, " +
@@ -1236,6 +1283,7 @@ window.majors = {
   },
 
   m18_theoretical: {
+    name: "18 -- Mathematics (Theoretical Option)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [1, "18.100B", "18.100C"], "18.701", "18.702", "18.901",
@@ -1292,6 +1340,7 @@ window.majors = {
   },
 
   m18_C: {
+    name: "18-C -- Mathematics with Computer Science",
     reqs: [0,
       [1, "18.03", "18.034"],
       [1, "18.06", "18.700", "18.701"], "18.410", "6.01", "6.006",
@@ -1348,6 +1397,7 @@ window.majors = {
   },
 
   m20: {
+    name: "20 -- Biological/Biomedical Engineering",
     reqs: [0,
       [1, "18.03", "18.034"],
       [1, "20.110", "20.111"], "5.12", "20.109", "7.03", [1, "6.00", "6.01"],
@@ -1402,13 +1452,15 @@ window.majors = {
       ]
     ]
   },
-  
+
   m21: {
+    name: "21 -- Russian Studies",
     disable: 1,
     reqs: [0]
   },
 
   m21_german: {
+    name: "21 -- German Studies",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1425,6 +1477,7 @@ window.majors = {
   },
 
   m21_A: {
+    name: "21A -- Anthropology",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1441,11 +1494,13 @@ window.majors = {
   },
 
   m21_E: {
+    name: "21E -- Humanities and Engineering",
     disable: 1,
     reqs: [0]
   },
 
   m21_F_french: {
+    name: "21F -- French Studies",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1462,6 +1517,7 @@ window.majors = {
   },
 
   m21_F_spanish: {
+    name: "21F -- Spanish Studies",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1478,6 +1534,7 @@ window.majors = {
   },
 
   m21_H: {
+    name: "21H -- History",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1506,6 +1563,7 @@ window.majors = {
   },
 
   m21_L: {
+    name: "21L -- Literature",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1526,6 +1584,7 @@ window.majors = {
   },
 
   m21_M: {
+    name: "21M -- Music",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1581,6 +1640,7 @@ window.majors = {
   },
 
   m21_M_2: {
+    name: "21M-2 -- Theater Arts (new!)",
     reqs: [0,
       [
         {
@@ -1625,11 +1685,13 @@ window.majors = {
   },
 
   m21_S: {
+    name: "21S -- Humanities and Science",
     disable: 1,
     reqs: [0]
   },
 
   m21_W_creative: {
+    name: "21W -- Writing (Creative Writing focus)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1654,6 +1716,7 @@ window.majors = {
   },
 
   m21_W_science: {
+    name: "21W -- Writing (Science Writing focus)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1677,6 +1740,7 @@ window.majors = {
   },
 
   m21_W_digital: {
+    name: "21W -- Writing (Digital Media focus)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -1697,6 +1761,7 @@ window.majors = {
   },
 
   m22: {
+    name: "22 -- Nuclear Science & Engineering",
     reqs: [0,
       "2.005", [1, "6.00", "12.010"], "8.03", [1, "18.03", "18.034"],
       "18.06", "22.01", "22.071", "22.02", "22.033", "22.05", "22.09",
@@ -1706,6 +1771,7 @@ window.majors = {
   },
 
   m24_1: {
+    name: "24-1 -- Philosophy",
     reqs: [0,
       {
         id: "CIH Philosophy subject",
@@ -1735,6 +1801,7 @@ window.majors = {
   },
 
   m24_2_linguistics: {
+    name: "24-2 -- Linguistics",
     reqs: [0,
       "24.900", "24.901", "24.902", "24.903", "24.918",
       [1, "24.909", "24.910", "24.914"],
@@ -1749,6 +1816,7 @@ window.majors = {
   },
 
   m24_2_philosophy: {
+    name: "24-2 -- Philosophy / Linguistics",
     reqs: [0,
       "24.900", "24.201", "24.241", "24.251", "24.260",
       [1, "24.08", "24.09"],
@@ -1766,6 +1834,7 @@ window.majors = {
   },
 
   mCMS: {
+    name: "CMS -- Comparative Media Studies",
     reqs: [0,
       "21L.011", "CMS.100",
       [1, "CMS.400", "CMS.403", "CMS.405", "CMS.407"],
@@ -1793,6 +1862,7 @@ window.majors = {
   },
 
   mSTS: {
+    name: "STS -- Science, Technology and Society",
     reqs: [0,
       [1,
         "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008",
@@ -1814,11 +1884,13 @@ window.majors = {
   },
 
   mWGS: {
+    name: "WGS -- Women's and Gender Studies",
     disable: 1,
     reqs: [0]
   },
 
   miArchitecture: {
+    name: "Minor in Architecture",
     reqs: [0,
       [1,
         {id: "Old system:", skip: 1},
@@ -1859,6 +1931,7 @@ window.majors = {
   },
 
   miHist_Architecture_Art: {
+    name: "Minor in the History of Architecture and Art",
     reqs: [0,
       [1, "4.601", "4.602"],
       [1, "4.605", "4.614"],
@@ -1883,6 +1956,7 @@ window.majors = {
   },
 
   miArt_culture_tech: {
+    name: "Minor in Art, Culture and Technology",
     reqs: [0,
       {id: "Tier 1:", skip: 1},
       [1, "4.301", "4.302"],
@@ -1895,6 +1969,7 @@ window.majors = {
   },
 
   miUrban_studies_and_planning: {
+    name: "Minor in Urban Studies and Planning",
     reqs: [0,
       "11.001", "11.002",
       [3,
@@ -1907,6 +1982,7 @@ window.majors = {
   },
 
   miInternational_development: {
+    name: "Minor in International Development",
     reqs: [0,
       [2, "11.005", "11.025", "11.140"],
       [4,
@@ -1917,6 +1993,7 @@ window.majors = {
   },
 
   miToxicology_and_enviro_health: {
+    name: "Minor in Toxicology and Environmental Health",
     reqs: [0,
       "20.102", "20.104", "20.106",
       [1, "20.109", "5.310", "7.02", "10.702"],
@@ -1928,12 +2005,14 @@ window.majors = {
   },
 
   miCivil_Engineering: {
+    name: "Minor in Civil Engineering",
     reqs: [0,
       "1.050", "1.060", "1.101", "1.102", "1.035", [1, "1.041", "1.036"]
     ]
   },
 
   miEnvrio_Engineering_Science: {
+    name: "Minor in Environmental Engineering Science",
     reqs: [0,
       "1.018", "1.020", "1.101", "1.102", "1.080",
       "1.107", "1.801", "11.002", "11.122", "14.01"
@@ -1941,6 +2020,7 @@ window.majors = {
   },
 
   miAnthropology: {
+    name: "Minor in Anthropology",
     reqs: [0,
       [1, "21A.00", "21A.01"],
       {
@@ -1952,6 +2032,7 @@ window.majors = {
   },
 
   miCMS: {
+    name: "Minor in Comparative Media Studies",
     reqs: [0,
       [1, "21L.011", "CMS.100"],
       [1, "CMS.400", "CMS.403", "CMS.405", "CMS.407"],
@@ -1964,6 +2045,7 @@ window.majors = {
   },
 
   miBiology: {
+    name: "Minor in Biology",
     reqs: [0,
       "5.12", "7.03", "7.05",
       [2,
@@ -1975,6 +2057,7 @@ window.majors = {
   },
 
   miBrain_Cog_Sci: {
+    name: "Minor in Brain and Cognitive Sciences",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "9.00", "9.01", "9.40",
@@ -1989,6 +2072,7 @@ window.majors = {
   },
 
   miChemistry: {
+    name: "Minor in Chemistry",
     reqs: [0,
       "5.03", "5.12", "5.310", "5.60",
       [2,
@@ -2005,6 +2089,7 @@ window.majors = {
   },
 
   miEarth_Atmos_Planetary: {
+    name: "Minor in Earth, Atmospheric, and Planetary Sciences",
     reqs: [0,
       [2, "12.001", "12.002", "12.003", "12.006", "12.102", "12.400"],
       [1, "18.03", "18.034", "5.60"],
@@ -2038,6 +2123,7 @@ window.majors = {
   },
 
   miEcon: {
+    name: "Minor in Economics",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "14.01", "14.02",
@@ -2061,6 +2147,7 @@ window.majors = {
   },
 
   miWriting: {
+    name: "Minor in Writing",
     reqs: [0,
       [
         {
@@ -2100,6 +2187,7 @@ window.majors = {
   },
 
   miManagement: {
+    name: "Minor in Management",
     reqs: [0,
       [1, "15.301", "15.310", "15.668"], "15.501", "15.812",
       [
@@ -2137,6 +2225,7 @@ window.majors = {
   },
 
   miManagement_science: {
+    name: "Minor in Management Science",
     reqs: [0,
       [1, "14.01", "15.016"],
       "15.053",
@@ -2150,6 +2239,7 @@ window.majors = {
   },
 
   miSTS: {
+    name: "Minor in Science, Technology, and Society",
     reqs: [0,
       "STS.091",
       [1,
@@ -2177,6 +2267,7 @@ window.majors = {
   },
 
   miMusic: {
+    name: "Minor in Music",
     reqs: [0,
       [1, "21M.011", "21M.030", "21M.051"],
       "21M.301",
@@ -2226,6 +2317,7 @@ window.majors = {
   },
 
   miTheater_arts: {
+    name: "Minor in Theater Arts",
     reqs: [0,
       [1, "21M.611", "21M.618", "21M.703", "21M.710", "21M.711", "21M.846"],
       [4,
@@ -2247,6 +2339,7 @@ window.majors = {
   },
 
   miPhilosophy: {
+    name: "Minor in Philosophy",
     reqs: [0,
       {
         id: "Any CIH philosophy subject",
@@ -2267,6 +2360,7 @@ window.majors = {
   },
 
   miLinguistics: {
+    name: "Minor in Linguistics",
     reqs: [0,
       "24.900", "24.901", "24.902", "24.903",
       [2,
@@ -2277,6 +2371,7 @@ window.majors = {
   },
 
   miMSE: {
+    name: "Minor in Material Science and Engineering",
     reqs: [0,
       [
         {
@@ -2303,6 +2398,7 @@ window.majors = {
   },
 
   miArchaeology: {
+    name: "Minor in Archaeology and Materials",
     reqs: [0,
       "3.012", "3.014", "3.022", "3.986", "3.985",
       [1, "3.07", "3.14", "3.051", "3.052", "3.984"]
@@ -2310,6 +2406,7 @@ window.majors = {
   },
 
   miMathematics: {
+    name: "Minor in Mathematics",
     reqs: [0,
       [
         {
@@ -2340,6 +2437,7 @@ window.majors = {
   },
 
   miMechE: {
+    name: "Minor in Mechanical Engineering",
     reqs: [0,
       [
         {
@@ -2362,12 +2460,14 @@ window.majors = {
   },
 
   miNuclear_science: {
+    name: "Minor in Nuclear Science and Engineering",
     reqs: [0,
       "22.01", "22.02", [2, "22.05", "22.06", "22.058", "22.09"]
     ]
   },
 
   miPhysics: {
+    name: "Minor in Physics",
     reqs: [0,
       [1, "18.03", "18.034"],
       [
@@ -2389,6 +2489,7 @@ window.majors = {
   },
 
   miPolitical_science: {
+    name: "Minor in Political Science",
     reqs: [0,
       [1,
         {
@@ -2416,6 +2517,7 @@ window.majors = {
   },
 
   miChinese: {
+    name: "Minor in Chinese",
     reqs: [0,
       [1,
         [2, [1, "21F.103", "21F.173"], "21F.104"],
@@ -2442,6 +2544,7 @@ window.majors = {
   },
 
   miFrench: {
+    name: "Minor in French",
     reqs: [0,
       [1, "21F.303", "21F.373"],
       [1, "21F.304", "21F.374"],
@@ -2467,6 +2570,7 @@ window.majors = {
   },
 
   miGerman: {
+    name: "Minor in German",
     reqs: [0,
       [1, "21F.403", "21F.473"],
       [1, "21F.404", "21F.474"],
@@ -2502,6 +2606,7 @@ window.majors = {
   },
 
   miSpanish: {
+    name: "Minor in Spanish",
     reqs: [0,
       [1, "21F.703", "21F.773"],
       [1, "21F.704", "21F.774"],
@@ -2529,6 +2634,7 @@ window.majors = {
   },
 
   miJapanese: {
+    name: "Minor in Japanese",
     reqs: [0,
       [1,
         [2, [1, "21F.503", "21F.573"], "21F.504"],
@@ -2546,6 +2652,7 @@ window.majors = {
 
 
   miAsian: {
+    name: "Minor in Asian and Asian Diaspora Studies",
     reqs: [0,
       [
         {
@@ -2592,6 +2699,7 @@ window.majors = {
 
 
   miHistory: {
+    name: "Minor in History",
     reqs: [0,
       "21H.390",
       {
@@ -2612,6 +2720,7 @@ window.majors = {
   },
 
   miLiterature: {
+    name: "Minor in Literature",
     reqs: [0,
       [1,
         {
@@ -2653,6 +2762,7 @@ window.majors = {
   },
 
   miAncient_and_medieval: {
+    name: "Minor in Ancient and Medieval Studies",
     reqs: [0,
       [
         {
@@ -2680,6 +2790,7 @@ window.majors = {
   },
 
   miApplied_international: {
+    name: "Minor in Applied International Studies",
     reqs: [0,
       {
         id: "Six classes from any program in SHASS, including at least 2 " +
@@ -2710,6 +2821,7 @@ window.majors = {
   },
 
   miPremed: {
+    name: "Pre-Med Path",
     reqs: [0,
       [1, "7.02", "20.109", "10.702", "9.12"],
       [1,
@@ -2724,6 +2836,7 @@ window.majors = {
   },
 
   miAstronomy: {
+    name: "Minor in Astronomy",
     reqs: [0,
       "8.03", "8.282",
       [1, "18.03", "18.034"],
@@ -2740,6 +2853,7 @@ window.majors = {
   },
 
   miBiomed: {
+    name: "Minor in Biomedical Engineering",
     reqs: [0,
       [1, "18.03", "18.034", "3.016"],
       [1, "1.010", "2.086", "6.041", "18.05"],
@@ -2820,6 +2934,7 @@ window.majors = {
   },
 
   miEnergy_studies: {
+    name: "Minor in Energy Studies",
     reqs: [0,
       [1,
         "8.21",
@@ -2848,6 +2963,7 @@ window.majors = {
   },
 
   miPsych: {
+    name: "Minor in Psychology",
     reqs: [0,
       "9.00",
       [2,
@@ -2882,6 +2998,7 @@ window.majors = {
   },
 
   miPublic_policy: {
+    name: "Minor in Public Policy",
     reqs: [0,
       [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"],
       {
@@ -2896,6 +3013,7 @@ window.majors = {
   },
 
   miWGS: {
+    name: "Minor in Women's & Gender Students",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "WGS.101",
