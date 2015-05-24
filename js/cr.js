@@ -82,6 +82,11 @@ var Defaults = {
       width: 1,
       OK: false
     }
+  },
+
+  callbackArgs: {
+    LVL: '__lvl__',
+    OBJ: '__obj__'
   }
 };
 
@@ -131,20 +136,17 @@ function getMatchObject(match) {
 /**
  * Allows for supplying a callback function to run when a class is found which
  * successfully acts as a requisite for the requirements. The arguments can be
- * stocked with the strings 'cls' and/or 'lvl' to pass the callback information
- * on either the class which met the requirement or the level in the requisites
- * which was met.
+ * stocked with values from Defaults.callbackArgs to force substitutions.
  */
 function applyCallbackFn(obj, callback, callbackArgs, level, i, newMatch) {
   // Copy args
   var tempArgs = callbackArgs.slice();
-  var clsPosition = $.inArray('cls', tempArgs);
-  if (~clsPosition) {
-    tempArgs[clsPosition] = $.extend({}, newMatch, {
-      div: obj
-    });
+  // OBJ is replaced with the object provided in this method's
+  var objPosition = $.inArray(Defaults.callbackArgs.OBJ, tempArgs);
+  if (~objPosition) {
+    tempArgs[objPosition] = $.extend({}, newMatch, {div: obj});
   }
-  var lvlPosition = $.inArray('lvl', tempArgs);
+  var lvlPosition = $.inArray(Defaults.callbackArgs.LVL, tempArgs);
   if (~lvlPosition) {
     tempArgs[lvlPosition] = level.concat([i]);
   }
@@ -187,10 +189,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
 
   // Holds the unsatisfied requisites in a string for display to the user.
   var unsatisfiedRequisitesInfo = [];
-  var requisiteBranch;
-  var temp2;
-  var newMatch;
-  var i, j;
+  var requisiteBranch, callbackResult, newMatch, i, j;
   var requisiteBranchMatchParams = function requisiteBranchMatchParams() {
     matchParams.count -= $(this).data(matchParams.type);
   };
@@ -216,10 +215,10 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       return true;
     }
     // Calls callback with tempargs as its arguments.
-    var temp2 = applyCallbackFn(
+    var callbackResult = applyCallbackFn(
       $(this), callback, callbackArgs, level, i, newMatch
     );
-    if (temp2) {
+    if (callbackResult) {
       matchParams.count -= (
         matchParams.special ? $(this).data(matchParams.type) : 1
       );
@@ -245,10 +244,10 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       return true;
     }
     // Calls callback with tempargs as its arguments.
-    var temp2 = applyCallbackFn(
+    var callbackResult = applyCallbackFn(
       $(this), callback, callbackArgs, level, i, newMatch
     );
-    if (temp2) {
+    if (callbackResult) {
       matchParams.count -= (
         matchParams.special ? $(this).data(matchParams.type) : 1
       );
@@ -278,7 +277,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       }
 
       if (requisiteBranch[0]) {
-        temp2 = applyCallbackFn(
+        callbackResult = applyCallbackFn(
           arr[i], callback, callbackArgs, level, i, newMatch
         );
       } else {
@@ -322,7 +321,7 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     ));
     classmatches.each(iterateClassMatches);
     // If it's not a class, or callback failed, then we need to note that.
-    if (!classmatches.length || !temp2) {
+    if (!classmatches.length || !callbackResult) {
       unsatisfiedRequisitesInfo.push(
         (newMatch.coreq === 1) ?
           ('[' + newMatch.id + newMatch.desc + ']') :
@@ -406,7 +405,11 @@ function addWires(div, addwires) {
   data.terminals.wires = [];
   data.reqstatus = true;
   if (data.reqs) {
-    var reqcheck = checkRequisites(data.reqs, newWire, [div, 'cls']);
+    var reqcheck = checkRequisites(
+      data.reqs,
+      newWire,
+      [div, Defaults.callbackArgs.OBJ]
+    );
     data.reqstatus = reqcheck[0];
     var tempstr = reqcheck[1];
     if (data.reqstatus || data.override || !data.classterm) {
@@ -738,7 +741,11 @@ function checkMajor(selector) {
     majorId + '">here</a>.</span>'
   );
   draggableChecklist();
-  checkRequisites(majorReqs, checkOff, [div, 'lvl', 'cls']);
+  checkRequisites(
+    majorReqs,
+    checkOff,
+    [div, Defaults.callbackArgs.LVL, Defaults.callbackArgs.OBJ]
+  );
 }
 
 function buildMajor(branch, level) {
