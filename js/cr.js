@@ -491,14 +491,14 @@ function checkClasses() {
   $('#COREchecker span.checkbox1').removeAttr('title');
   $('.corecheck').addClass('unused').removeClass('used');
   $('.classdiv').each(function (i) {
-    var div = this;
-    var $this = $(this);
-    var data = $this.data();
-    var $effect;
-    var j;
+    var self = this;
+    var $self = $(self);
+    var data = $self.data();
     if (!data.checkrepeat) {
+      // Repeat classes shouldn't count twice
       return true;
     }
+    // Determine whether a class should count for units or not
     var forUnits = true;
     if (!data.special) {
       totalUnits += data.total_units;
@@ -506,7 +506,7 @@ function checkClasses() {
     }
     var GIR = data.gir;
     if (GIR) {
-      $effect = $('.corecheck.unused.GIR.' + GIR);
+      var $effect = $('.corecheck.unused.GIR.' + GIR);
       if ($effect.length) {
         $effect.eq(0).removeClass('unused').addClass('used')
           .attr('title', data.subject_id);
@@ -520,7 +520,7 @@ function checkClasses() {
         forUnits = false;
       }
     }
-    var otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(div)
+    var otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(self)
       .filter(function () {
         return ($(this).data('classterm') === data.classterm) &&
           ($(this).index('.classdiv') < i);
@@ -528,8 +528,8 @@ function checkClasses() {
     if (data.ci && !otherCIPrecedingInTerm.length) {
       $effect = $('.corecheck.unused.CI.' + data.ci + ':first');
       if ($effect.length) {
-        $effect.removeClass('unused').addClass('used').attr('title', $this
-          .data('subject_id'));
+        $effect.removeClass('unused').addClass('used')
+          .attr('title', data.subject_id);
         forUnits = false;
       }
     }
@@ -538,11 +538,11 @@ function checkClasses() {
       if (~hass[0].indexOf(',')) {
         hass = hass[0].split(',');
       }
-      for (j = 0; j < hass.length; j++) {
+      for (var j = 0; j < hass.length; j++) {
         $effect = $('.corecheck.unused.HASS.' + hass[j] + ':first');
         if ($effect.length) {
           $effect.removeClass('unused').addClass('used')
-            .attr('title', $(div).data('subject_id'));
+            .attr('title', $self.data('subject_id'));
           forUnits = false;
         } else {
           if ((hass.length > 1) && (j !== (hass.length - 1))) {
