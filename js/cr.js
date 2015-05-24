@@ -290,11 +290,12 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     newMatch = getMatchObject(arr[i]);
 
     if (newMatch.skip) {
+      matchParams.count--;
       continue;
     }
     if (newMatch.id === 'Permission' && !user.needPermission) {
       if (matchParams.initialCount === arr.length - 1) {
-        matchParams.count --;
+        matchParams.count--;
       }
       continue;
     }
