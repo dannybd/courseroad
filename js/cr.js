@@ -587,14 +587,6 @@ function addAllWires(reloadNotify) {
     var temp = addWires($this);
     status = status && temp;
   });
-  $('.term').each(function () {
-    $(this).find('.termname span a').attr('href',
-      'http://picker.mit.edu/browse.html?courses=' +
-      $(this).find('.classdiv:not(.custom)').map(function () {
-        return $(this).data('subject_code');
-      }).get().join('%3B')
-    );
-  });
   updateWires();
   checkClasses();
   $('select.majorminor').each(function () {
