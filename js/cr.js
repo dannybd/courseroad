@@ -709,9 +709,6 @@ function getClasses(classarr, reloadNotify) {
 /*** Major/minor functions ***/
 
 function checkOff(majordiv, lvl, cls) {
-  // $(majordiv+' .majorchk.majorchk_'+lvl.join('_')+':not(.chk):first')
-  //   .addClass('chk').html('[X]')
-  //   .attr('title',$.isArray(cls.div)?null:cls.div.data('subject_id'));
   var boxes = $(majordiv + ' .majorchk.majorchk_' + lvl.join('_') +
     ':not(.chk):first');
   boxes.addClass('chk').attr('title', $.isArray(cls.div) ? null : cls.div.data(
@@ -720,115 +717,86 @@ function checkOff(majordiv, lvl, cls) {
 }
 
 function checkMajor(selector) {
-  var majorId = $(selector).val();
-  var div = $(selector).data('div');
-  var span = $(selector).prev('span.majorminor');
+  var $selector = $(selector)
+  var majorId = $selector.val();
+  var div = $selector.data('div');
+  var $div = $(div);
+  var span = $selector.prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
   var majorData = majors[majorId];
   if (!majorData || majorData.disable) {
-    $(div).html('');
+    $div.html('');
     return false;
   }
   var majorReqs = majorData.reqs || [0];
-  span.attr('data-value', $(selector).find('option:selected').text())
+  span.attr('data-value', $selector.find('option:selected').text())
     .removeAttr('data-empty');
-  $(div).html(buildMajor(majorReqs)).append(
+  $div.html(buildMajor(majorReqs)).append(
     '<span class="letmeknow"><br>See an error? Let me know ' +
     '<a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20Error%20in%20' +
-    majorId + '">here<\/a>.<\/span>'
+    majorId + '">here</a>.</span>'
   );
   draggableChecklist();
   checkRequisites(majorReqs, checkOff, [div, 'lvl', 'cls']);
 }
 
-function buildMajor(arr, level) {
+function buildMajor(branch, level) {
+  // Helper function to render the checkbox HTML for a given path
+  function buildCheckbox(arr) {
+    return (
+      '<span class="majorchk majorchk_' + arr.join('_') + ' checkbox1">' +
+      '[<span>&#x2713;</span>]</span>'
+    );
+  }
+  // Level keeps track of the recursive path depth and position
   if (level === undefined) {
-    level = []; // Keep track of recursion.
+    level = [];
   }
-  // allows 'and' arrays to be prefixed with a 0 (easier)
-  // [0, 'a', 'b'] --> [2, 'a', 'b'];
-  if (arr[0] === 0) {
-    arr[0] = arr.length - 1;
-  }
-  var holdobj;
-  if (typeof (arr[0]) === 'number') {
-    holdobj = $.extend({}, Defaults.requisiteCount, {
-      count: parseInt(arr[0], 10)
-    });
-  } else {
-    holdobj = $.extend({}, Defaults.requisiteCount, arr[0]);
-  }
-  // Holds the unsatisfied requisites in a string for display to the user.
-  var tempstr = '';
-  var newMatch;
-  var i;
-  for (i = 1; i < arr.length; i++) {
-    if ($.isArray(arr[i])) {
-      // In case a sub-branch is inside this branch,
-      // we recursively solve that branch and use its result.
-      var req = buildMajor(arr[i], level.concat([i]));
-      tempstr += req;
+  // Hold the rendered HTML to display in a string
+  var branchHTML = '<ul>\n';
+  var matchParams = getMatchParams(branch);
+  for (var i = 1; i < branch.length; i++) {
+    // If this branch element is actually a sub-branch, render it recursively
+    // and append the returned HTML to the current branch
+    if ($.isArray(branch[i])) {
+      branchHTML += buildMajor(branch[i], level.concat(i));
       continue;
     }
-    // Converting both things to objects,
-    // but only the coreq ones will have a 'coreq':1 thing.
-    if (typeof (arr[i]) === 'object') {
-      newMatch = $.extend({}, Defaults.requisiteClass, arr[i]);
-    } else {
-      newMatch = $.extend({}, Defaults.requisiteClass, {
-        id: arr[i]
-      });
-    }
-    // Now check for ranges. These are strings of the form 'X.XXX-X.XXX'
+    var newMatch = getMatchObject(branch[i]);
+    // Check for ranges
     if (newMatch.range) {
-      var innertempstr = '';
-      var j;
-      for (j = 0; j < holdobj.count; j++) {
-        innertempstr += (
-          '<span class="majorchk majorchk_' +
-          level.concat([i]).join('_') +
-          ' checkbox1">[<span>&#x2713;<\/span>]<\/span>'
-        );
+      branchHTML += '<li>';
+      for (var j = 0; j < matchParams.count; j++) {
+        branchHTML += buildCheckbox(level.concat(i));
       }
-      tempstr += (
-        '<li>' + innertempstr + ' The range ' + newMatch.id +
-        newMatch.desc + '<\/li>\n'
-      );
-      // return '<li>'+innertempstr + ' ' + holdobj.count +
-      // 'from the range '+newMatch.id+newMatch.desc+'<\/li>\n';
+      branchHTML += ' The range ' + newMatch.id + newMatch.desc + '</li>\n';
       continue;
     }
     // Now only strings
-    tempstr += (
-      '<li>' + (
-        newMatch.skip ?
-          '&#x2006;&#x2014; ' :
-          '<span class="majorchk majorchk_' + level.concat([i]).join('_') +
-          ' checkbox1">[<span>&#x2713;<\/span>]<\/span> '
-      ) +
-      (
-        newMatch.skip ?
-          '' :
-          '<span class="checkbox1_text" data-id="' + newMatch.id + '">'
-      ) +
-      newMatch.id +
-      (newMatch.skip ? '' : '</span>') +
-      newMatch.desc + '<\/li>\n'
-    );
+    branchHTML += '<li>';
+    if (newMatch.skip) {
+      branchHTML += '&#x2006;&#x2014; ' + newMatch.id + newMatch.desc;
+    } else {
+      branchHTML += (
+        buildCheckbox(level.concat(i)) +
+        ' <span class="checkbox1_text" data-id="' + newMatch.id + '">' +
+        newMatch.id + '</span>' + newMatch.desc
+      );
+    }
+    branchHTML += '</li>\n';
   }
-  tempstr = '<ul>\n' + tempstr + '<\/ul>\n';
-  if (holdobj.special) {
-    tempstr = holdobj.count + ' ' + holdobj.desc + ':\n' + tempstr;
+  branchHTML += '</ul>\n';
+  if (matchParams.special) {
+    branchHTML = matchParams.count + ' ' + matchParams.desc + ':\n' + branchHTML;
   } else if (
-      level.length || (!level.length && (holdobj.count !== arr.length - 1))) {
+      level.length || (!level.length && (matchParams.count !== branch.length - 1))) {
     // the != part find the '2 from following' strings
-    tempstr = holdobj.count + ' ' + holdobj.desc + ':\n' + tempstr;
+    branchHTML = matchParams.count + ' ' + matchParams.desc + ':\n' + branchHTML;
   }
   if (!level.length) {
-    return '<strong>Requirements:<\/strong><br>\n' + tempstr;
+    return '<strong>Requirements:</strong><br>\n' + branchHTML;
   }
-  return '<li><span class="majorchk majorchk_' + level.join('_') +
-    ' checkbox1">[<span>&#x2713;<\/span>]<\/span> ' + tempstr + '<\/li>\n';
+  return '<li>' + buildCheckbox(level) + ' ' + branchHTML + '</li>\n';
 }
 
 function draggableChecklist() {
