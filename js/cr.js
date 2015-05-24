@@ -823,11 +823,11 @@ function draggableChecklist() {
 /*** Helper functions ***/
 
 function unhighlightClasses() {
+  $('#leftbar').addClass('unhighlight');
   $('#overridercheck').prop('disabled', true);
   $('#overrider span').css('opacity', 0);
   $('.classdiv').removeClass('classdivhigh classdivlow');
   $('.WireIt-Wire').removeClass('WireIt-Wire-low');
-  $('#nowreading').html('Click on a class to see more info.');
 }
 
 function deGIR(str) {
@@ -1050,8 +1050,9 @@ var crSetup = function courseRoadSetup() {
     // and displays info on that class in the lower right
     $('.classdiv').not($(this)).removeClass('classdivhigh');
     $('.classdiv').removeClass('classdivlow');
-    $(this).toggleClass('classdivhigh');
+    $(this).addClass('classdivhigh');
     if ($('.classdivhigh').length === 1) {
+      $('#leftbar').removeClass('unhighlight');
       $('#overrider span').css('opacity', 1);
       $('.classdiv').not($(this)).addClass('classdivlow');
       $('.WireIt-Wire').addClass('WireIt-Wire-low');

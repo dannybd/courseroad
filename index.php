@@ -138,7 +138,7 @@ header('Content-type: text/html; charset=utf-8');
   <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
 <body>
-<div id="leftbar">
+<div id="leftbar" class="unhighlight">
   <div id="getnewclass" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
       <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#infotabs-about">About</a></li>
@@ -294,7 +294,7 @@ header('Content-type: text/html; charset=utf-8');
     <strong>Total Units: <span id="totalunits">0</span></strong>
   </div>
   <div id="overrider" class="leftbarholder"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQUISITES: </label><input id="overridercheck" type="checkbox"></span></div>
-  <div id="nowreading" class="leftbarholder">Click on a class to see more info.</div>
+  <div id="nowreading" class="leftbarholder"></div>
 </div>
 <div id="rightbar">
   <div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>
