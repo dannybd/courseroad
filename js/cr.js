@@ -58,6 +58,30 @@ var Defaults = {
     globalMatchesSkip: 0,
     // Ignore whether classes are in globalMatches
     globalMatchesIgnore: 0
+  },
+
+  wireStyleOptions: {
+    prereq: {
+      color: '#888888',
+      bordercolor: '#B8B8B8',
+      borderwidth: 1,
+      width: 2,
+      OK: true
+    },
+    coreq: {
+      color: '#000000',
+      bordercolor: '#000000',
+      borderwidth: 1,
+      width: 1,
+      OK: true
+    },
+    error: {
+      color: '#ff0000',
+      bordercolor: '#dd0000',
+      borderwidth: 1,
+      width: 1,
+      OK: false
+    }
   }
 };
 
@@ -350,29 +374,6 @@ function newWire(from, to) {
   var fromterm = from.data('classterm');
   var toterm = to.div.data('classterm');
   var dterm = Math.abs(fromterm - toterm);
-  var options = {
-    prereq: {
-      color: '#888888',
-      bordercolor: '#B8B8B8',
-      borderwidth: 1,
-      width: 2,
-      OK: true
-    },
-    coreq: {
-      color: '#000000',
-      bordercolor: '#000000',
-      borderwidth: 1,
-      width: 1,
-      OK: true
-    },
-    error: {
-      color: '#ff0000',
-      bordercolor: '#dd0000',
-      borderwidth: 1,
-      width: 1,
-      OK: false
-    }
-  };
   var option = 'prereq';
   if (to.coreq) {
     option = 'coreq';
@@ -388,10 +389,10 @@ function newWire(from, to) {
       from.data('terminals').terminal,
       to.div.data('terminals').terminal,
       document.body,
-      options[option]
+      Defaults.wireStyleOptions[option]
     ));
   }
-  return (options[option].OK);
+  return Defaults.wireStyleOptions[option].OK;
 }
 
 // Frankly, this function has outgrown its name.
