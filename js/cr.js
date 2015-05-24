@@ -786,17 +786,17 @@ function buildMajor(branch, level) {
     branchHTML += '</li>\n';
   }
   branchHTML += '</ul>\n';
-  if (matchParams.special) {
+  if (matchParams.special || level.length) {
     branchHTML = matchParams.count + ' ' + matchParams.desc + ':\n' + branchHTML;
-  } else if (
-      level.length || (!level.length && (matchParams.count !== branch.length - 1))) {
-    // the != part find the '2 from following' strings
+  } else if (!level.length && (matchParams.count !== branch.length - 1)) {
+    // If the top level of recursion is looking for something other than
+    // "all of the following" then we need to display that information
     branchHTML = matchParams.count + ' ' + matchParams.desc + ':\n' + branchHTML;
   }
-  if (!level.length) {
-    return '<strong>Requirements:</strong><br>\n' + branchHTML;
+  if (level.length) {
+    return '<li>' + buildCheckbox(level) + ' ' + branchHTML + '</li>\n';
   }
-  return '<li>' + buildCheckbox(level) + ' ' + branchHTML + '</li>\n';
+  return '<strong>Requirements:</strong><br>\n' + branchHTML;
 }
 
 function draggableChecklist() {
