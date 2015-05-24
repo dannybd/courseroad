@@ -290,8 +290,10 @@ header('Content-type: text/html; charset=utf-8');
       <option value="m0">---Select a Minor---</option>
     </select><br>
     <div id="minorreqs2" class="majorminor"></div>
+    <!--
     -----------------<br>
     <strong>Total Units: <span id="totalunits">0</span></strong>
+    --><br>
   </div>
   <div id="overrider" class="leftbarholder"><span><label for="overridercheck" title="Check this box if you received credit for this class, overriding standard requisites.">OVERRIDE REQUISITES: </label><input id="overridercheck" type="checkbox"></span></div>
   <div id="nowreading" class="leftbarholder"></div>
