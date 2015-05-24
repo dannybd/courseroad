@@ -276,6 +276,7 @@ div.majorminor li li {
 }
 .unhighlight #overrider:after {
   content: 'Click on a class to see more info.';
+  font-style: italic;
   left: 2px;
   position: absolute;
   text-align: center;
