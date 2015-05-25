@@ -354,7 +354,7 @@ function buildClassesArray($hash) {
 }
 
 function getCurrentAcademicYear() {
-  return date('Y') + (date('m') > 7)
+  return date('Y') + (date('m') > 7);
 }
 
 function getDefaultUserPrefs() {
@@ -365,6 +365,22 @@ function getDefaultUserPrefs() {
     'need_permission' => 0,
     'edited' => 0
   );
+}
+
+function fetch_ldap_data($user) {
+  $user = escapeshellarg($user);
+  $ldap = explode("\n", shell_exec(
+    "ldapsearch -LLL -x -h ldap-too -b 'ou=users,ou=moira,dc=mit,dc=edu' " .
+    "'uid=$user'"
+  ));
+  $data = array();
+  foreach ($ldap as $row) {
+    list($k, $v) = explode(': ', $row, 2);
+    if ($k) {
+      $data[$k] = $v;
+    }
+  }
+  return $data;
 }
 
 function importUserPrefs($athena) {
