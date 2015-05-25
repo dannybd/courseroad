@@ -113,15 +113,6 @@ if ($loggedin) {
   importUserPrefs($athena);
 }
 
-/**
- * This can help force through updates to the linked js and css files
- * in browsers that love to hold on to cached versions; for debugging only.
- */
-$nocache = isset($_GET['nocache']);
-//Uncomment during development
-$nocache = true;
-$nocache = $nocache ? '?nocache=' . time() : '?v3.0';
-
 header('Content-type: text/html; charset=utf-8');
 header('X-UA-Compatible: IE=edge');
 ?>
@@ -131,7 +122,7 @@ header('X-UA-Compatible: IE=edge');
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/cr.css<?= $nocache ?>">
+  <link rel="stylesheet" type="text/css" href="<?= nocache_link('css/cr.css') ?>">
   <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
 <body>
@@ -446,8 +437,8 @@ header('X-UA-Compatible: IE=edge');
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 <script src="js/wireit-min.js"></script>
-<script src="js/majors.js<?= $nocache ?>"></script>
-<script src="js/cr.js<?= $nocache ?>"></script>
+<script src="<?= nocache_link('js/majors.js') ?>"></script>
+<script src="<?= nocache_link('js/cr.js') ?>"></script>
 <script>
   var _gaq=[["_setAccount","UA-31018454-1"],
   ["_trackPageview",location.pathname+location.search+location.hash]];

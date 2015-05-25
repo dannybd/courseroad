@@ -398,3 +398,7 @@ function hash_owner($hash) {
 function default_owned_hash_name($owner) {
   return $owner.'/'.date("YmdHis");
 }
+
+function nocache_link($uri) {
+  return "$uri?nocache=" . md5(file_get_contents($uri));
+}
