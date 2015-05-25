@@ -564,7 +564,7 @@ class CourseRoadDB {
   public static function updateUserPrefs($athena, $userprefs) {
     $statement = self::$_db->prepare(
       "UPDATE `users` SET `class_year` = ?, `view_req_lines` = ?, " .
-      "`autocomplete` = ?, `need_permission` = ?, ` WHERE `athena` = ?"
+      "`autocomplete` = ?, `need_permission` = ? WHERE `athena` = ?"
     );
     $statement->bind_param(
       'sssss',
