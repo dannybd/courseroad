@@ -472,6 +472,7 @@ header('Content-type: text/html; charset=utf-8');
     autocomplete: <?= $_SESSION['user']['autocomplete'] ?>,
     needPermission: <?= $_SESSION['user']['need_permission'] ?>
   };
+  _gaq.push(['_setCustomVar', 1, 'Class Year', user.classYear, 1]);
   var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
   var CSRF_token = '<?= $_SESSION['csrf_token'] ?>';
   $(crSetup);
