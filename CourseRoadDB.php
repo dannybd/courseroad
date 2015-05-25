@@ -537,6 +537,19 @@ class CourseRoadDB {
   }
 
   /**
+   * Check whether a given user exists
+   *
+   * @param string $athena a string of the user's username
+   *
+   * @return bool whether user exists
+   * @access public
+   * @static
+   */
+  public static function userExists($athena) {
+    return !!self::getUserPrefs($athena);
+  }
+
+  /**
    * Update a given user's preferences
    *
    * @param string $athena    a string of the user's username

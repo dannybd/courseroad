@@ -353,9 +353,13 @@ function buildClassesArray($hash) {
   return $json;
 }
 
+function getCurrentAcademicYear() {
+  return date('Y') + (date('m') > 7)
+}
+
 function getDefaultUserPrefs() {
   return array(
-    'class_year' => strval(date('Y') + (date('m') > 7) + 3),
+    'class_year' => strval(getCurrentAcademicYear() + 3),
     'view_req_lines' => 1,
     'autocomplete' => 1,
     'need_permission' => 0,
