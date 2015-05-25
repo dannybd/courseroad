@@ -28,21 +28,27 @@ if (!isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
 
 // The cert is valid and the user is trying to log in. Pull data from the cert
 $athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], '@', true); // florey
-$fullname = @$_SERVER['SSL_CLIENT_S_DN_CN']; // Jack Florey
 
-// Create a row for the user (default values are chosen for class_year et al.)
-CourseRoadDB::addUser($athena);
-
-// The user could have changed preferences before logging in: if preferences
-// have been edited, then update the row
-if (@$_SESSION['user'] and $_SESSION['user']['edited']) {
-  CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
+// Assert the existence of the user session prefs
+if (!isset($_SESSION['user'])) {
+  $_SESSION['user'] = getDefaultUserPrefs();
 }
+// Try to determine the user's class year from LDAP data
+if (!CourseRoadDB::userExists($athena)) {
+  $ldap_data = fetch_ldap_data($athena);
+  $cur_year = @$ldap_data['mitDirStudentYear'] ?: 1;
+  $_SESSION['user']['class_year'] = strval(
+    getCurrentAcademicYear() + 4 - $cur_year
+  );
+}
+
+// Create a row for the user (default values are chosen for class_year et al)
+CourseRoadDB::addUser($athena);
+CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
 
 // We've attempted auth
 $_SESSION['triedcert'] = true;
 $_SESSION['athena'] = $athena;
-$_SESSION['fullname'] = $fullname;
 $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 
 // If we're also trying to Save with Log In, then update the hash and copy
