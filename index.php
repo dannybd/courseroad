@@ -123,14 +123,11 @@ $nocache = true;
 $nocache = $nocache ? '?nocache=' . time() : '?v3.0';
 
 header('Content-type: text/html; charset=utf-8');
+header('X-UA-Compatible: IE=edge');
 ?>
-<!DOCTYPE html>
-<!--[if IE 7]><html lang="en-us" class="ie ie7 lte9 lte8 no-js"><![endif]-->
-<!--[if IE 8]><html lang="en-us" class="ie ie8 lte9 lte8 no-js"><![endif]-->
-<!--[if IE 9]><html lang="en-us" class="ie ie9 lte9 no-js"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-us" class="no-js"><!--<![endif]-->
+<!doctype html>
+<html class="no-js" lang="en-us">
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -445,17 +442,12 @@ header('Content-type: text/html; charset=utf-8');
   </div>
   <input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
-<!--[if lt IE 9]><script type="text/javascript" src="/js/excanvas.compiled.js"></script><![endif]-->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
-<!-- Spoofs IE9+ as not IE to YUI 2.9, so the wires render properly. -->
-<!--[if gte IE 9]><script>ie9=1;</script><![endif]-->
-<!--[if !(IE)]><!--><script type="text/javascript">Function('/*@cc_on return document.documentMode===10@*/')()&&(ie9=1);</script><!--<![endif]-->
 <script src="js/wireit-min.js"></script>
 <script src="js/majors.js<?= $nocache ?>"></script>
 <script src="js/cr.js<?= $nocache ?>"></script>
-<!--script src="/js/d3.js"></script-->
 <script>
   var _gaq=[["_setAccount","UA-31018454-1"],
   ["_trackPageview",location.pathname+location.search+location.hash]];
