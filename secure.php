@@ -26,8 +26,8 @@ if (!isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
   redirect_hash('-no-email');
 }
 
-// The cert is valid and the user is trying to log in. Pull data from the cert
-$athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], '@', true); // florey
+// The cert is valid and the user is trying to log in, so extract their athena
+$athena = strstr($_SERVER['SSL_CLIENT_S_DN_Email'], '@', true);
 
 // Assert the existence of the user session prefs
 if (!isset($_SESSION['user'])) {
@@ -37,14 +37,16 @@ if (!isset($_SESSION['user'])) {
 if (!CourseRoadDB::userExists($athena)) {
   $ldap_data = fetch_ldap_data($athena);
   $cur_year = @$ldap_data['mitDirStudentYear'] ?: 1;
-  $_SESSION['user']['class_year'] = strval(
-    getCurrentAcademicYear() + 4 - $cur_year
-  );
+  $_SESSION['user']['class_year'] = getCurrentAcademicYear() + 4 - $cur_year;
+  $_SESSION['user']['edited'] = true;
 }
 
 // Create a row for the user (default values are chosen for class_year et al)
 CourseRoadDB::addUser($athena);
-CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
+if ($_SESSION['user']['edited']) {
+  CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
+}
+
 
 // We've attempted auth
 $_SESSION['triedcert'] = true;

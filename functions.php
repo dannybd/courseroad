@@ -359,7 +359,7 @@ function getCurrentAcademicYear() {
 
 function getDefaultUserPrefs() {
   return array(
-    'class_year' => strval(getCurrentAcademicYear() + 3),
+    'class_year' => getCurrentAcademicYear() + 3,
     'view_req_lines' => 1,
     'autocomplete' => 1,
     'need_permission' => 0,
