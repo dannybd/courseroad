@@ -58,6 +58,12 @@ if (isset($_GET['addclasses'])) {
   }
 }
 
+// Record failed login attempts (when user denies login after pressing Login)
+if (isset($_GET['triedlogin'])) {
+  $_SESSION['triedcert'] = true;
+  redirect_hash('error401');
+}
+
 // A visible "?hash=" in the URL is unwanted, so we redirect to remove it,
 // but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
