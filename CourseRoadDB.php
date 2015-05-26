@@ -359,10 +359,11 @@ class CourseRoadDB {
    */
   public static function getSavedRoads($athena) {
     $statement = self::$_db->prepare(
-      "SELECT `hash`, `classes`, `majors`, `public`, `comment`, `added` " .
-      "FROM `roads` WHERE `user` = ? ORDER BY `added` DESC"
+      "SELECT `hash`, `classes`, `majors`, `public`, `comment`, `added` FROM " .
+      "`roads` WHERE `user` = ? AND `hash` LIKE ? ORDER BY `added` DESC"
     );
-    $statement->bind_param('s', $athena);
+    $hash = "$athena/%";
+    $statement->bind_param('ss', $athena, $hash);
     $statement->execute();
     $saved_roads = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
     $statement->free_result();
