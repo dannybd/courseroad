@@ -1257,6 +1257,7 @@ var crSetup = function courseRoadSetup() {
       preventUpdateWires = false;
       ui.draggable.remove();
       $('.trash').removeClass('trashhover', 'fast');
+      unhighlightClasses();
       addAllWires(true);
     }
   });
