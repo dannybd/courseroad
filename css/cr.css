@@ -170,6 +170,8 @@ span.newload {
 button.changeclassterm span{ display: block; }
 
 .ui-icon { width: 16px; height: 16px; background-image: url(/images/ui-icons.png); }
+.ui-icon-close { background-position: -80px -128px; }
+.ui-icon-pencil { background-position: -64px -112px; }
 .ui-icon-triangle-1-n { background-position: 0 -16px; }
 .ui-icon-triangle-1-s { background-position: -64px -16px; }
 
