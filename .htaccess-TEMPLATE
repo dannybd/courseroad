@@ -15,17 +15,20 @@ Header set Cache-Control "max-age=604800, public"
 Options +FollowSymLinks
 RewriteEngine On
 
-# FIXME: Replace COURSEROAD_URL [no slash; mine is courseroad.mit.edu]
+# FIXME: Set your own domain and path here
+# Set central CourseRoad domain [no trailing slash]
+SetEnvIf CR_HOST ^$ CR_HOST=courseroad.mit.edu
+# Set CourseRoad path [leading slash, no trailing slash]
+SetEnvIf CR_PATH ^$ CR_PATH=/
 
-# Force HTTPS
-RewriteCond %{HTTPS} off
-RewriteCond %{REQUEST_URI} !^/output.php [NC]
-RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI}
+# Set pages which won't be redirected by force HTTPS or a different domain
+SetEnvIf REQUEST_URI /output.php$ NOREDIRECT=1
 
-# Force to central CourseRoad domain
-RewriteCond %{SERVER_NAME} !^COURSEROAD_URL$
-RewriteCond %{REQUEST_URI} !^/output.php [NC]
-RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI} [R]
+# Force HTTPS and central CourseRoad domain
+RewriteCond %{ENV:NOREDIRECT} !1 [NC]
+RewriteCond %{HTTPS} off [OR]
+RewriteCond expr "tolower(%{SERVER_NAME}) != tolower(%{ENV:CR_HOST})"
+RewriteRule (.*) https://%{ENV:CR_HOST}%{REQUEST_URI} [R]
 
 # Access to secure.php requires certificates
 <Files secure.php>
@@ -37,13 +40,13 @@ RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI} [R]
 # the site. This isn't ideal, but allows beta testers to still test login
 # functionality and the like.
 # RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
-# RewriteCond %{REQUEST_URI} !^/503.php [NC]
-# RewriteRule .* /503.php
+# RewriteCond %{REQUEST_URI} !^%{ENV:CR_PATH}/503.php [NC]
+# RewriteRule .* %{ENV:CR_PATH}/503.php
 
 # [url]/username --> [url]/index.php?hash=username
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^\.]+)$ /index.php?hash=$1
+RewriteRule ^([^\.]+)$ %{ENV:CR_PATH}/index.php?hash=$1
 
 # Define ErrorDocuments
 ErrorDocument 401 /index.php?triedlogin=1
