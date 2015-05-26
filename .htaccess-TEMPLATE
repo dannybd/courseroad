@@ -36,12 +36,15 @@ RewriteRule (.*) https://%{ENV:CR_HOST}%{REQUEST_URI} [R]
   Require valid-user
 </Files>
 
+# Uncomment the next line to use beta mode.
+# SetEnvIf BETA_MODE ^$ BETA_MODE=1
 # Deploy for beta testing, requiring users with a set cookie to still access
 # the site. This isn't ideal, but allows beta testers to still test login
 # functionality and the like.
-# RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
-# RewriteCond %{REQUEST_URI} !^%{ENV:CR_PATH}/503.php [NC]
-# RewriteRule .* %{ENV:CR_PATH}/503.php
+RewriteCond %{ENV:BETA_MODE} 1 [NC]
+RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
+RewriteCond %{REQUEST_URI} !/503.php [NC]
+RewriteRule .* %{ENV:CR_PATH}/503.php
 
 # [url]/username --> [url]/index.php?hash=username
 RewriteCond %{REQUEST_FILENAME} !-f

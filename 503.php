@@ -2,14 +2,6 @@
 
 require('settings.ini');
 
-$page_is_active = true;
-
-// This page should not exist if inactive; send it back to HQ
-if (!$page_is_active) {
-  header("Location: $baseURL");
-  die();
-}
-
 // The general idea being to give beta-testers a cookie to identify them.
 // This cookie is read to give access if the proper lines are uncommented in
 // .htaccess.
@@ -18,13 +10,12 @@ $passphrase = md5('guest');
 if (@$_GET['access'] === $passphrase) {
   // Cookie lasts a year
   setcookie('beta', 'notquitesecurebutgoodenough', time()+60*60*24*365);
-  header("Location: $baseURL/index.php?hash=welcome");
+  header("Location: ./index.php?hash=welcome");
   die();
 }
 
 // To be seen by those without beta-tester access.
 // Headers specify the 503 code, but to retry in a day's time.
-
 header("HTTP/1.1 503 Service Temporarily Unavailable");
 header("Status: 503 Service Temporarily Unavailable");
 header("Retry-After: 86400");
