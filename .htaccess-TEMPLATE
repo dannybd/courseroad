@@ -5,41 +5,37 @@ AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml appl
 Header set Cache-Control "max-age=604800, public"
 </filesMatch>
 
-# These are used for a daily update of the class versions from the warehouse.
-<Files update>
-order allow,deny
-deny from all
-</Files>
-
-<Files output.html>
-order allow,deny
-deny from all
+# These are used for a daily update of the class versions
+# from the Data Warehouse.
+<Files *.sh>
+  Order Allow,Deny
+  Deny from all
 </Files>
 
 Options +FollowSymLinks
 RewriteEngine On
 
-# REPLACE COURSEROAD_URL [mine is courseroad.mit.edu, no slash]
+# FIXME: Replace COURSEROAD_URL [no slash; mine is courseroad.mit.edu]
 
 # Force HTTPS
 RewriteCond %{HTTPS} off
-RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI}
 
-# Force to central courseroad domain
-RewriteCond %{SERVER_NAME} !^courseroad.mit.edu$
-RewriteCond %{REQUEST_URI} !^/scraper.php [NC]
+# Force to central CourseRoad domain
+RewriteCond %{SERVER_NAME} !^COURSEROAD_URL$
 RewriteCond %{REQUEST_URI} !^/output.php [NC]
 RewriteRule (.*) https://COURSEROAD_URL%{REQUEST_URI} [R]
 
 # Access to secure.php requires certificates
 <Files secure.php>
-AuthType SSLCert
-Require valid-user
+  AuthType SSLCert
+  Require valid-user
 </Files>
 
-# Only deployed for beta-testing
+# Deploy for beta testing, requiring users with a set cookie to still access
+# the site. This isn't ideal, but allows beta testers to still test login
+# functionality and the like.
 # RewriteCond %{HTTP_COOKIE} !beta=notquitesecurebutgoodenough [NC]
 # RewriteCond %{REQUEST_URI} !^/503.php [NC]
 # RewriteRule .* /503.php
