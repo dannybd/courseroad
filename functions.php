@@ -28,7 +28,7 @@ function require_csrf() {
 
 function redirect_hash($hash) {
   global $baseURL;
-  $link = "$baseURL/#$hash";
+  $link = "$baseURL#$hash";
   header("Location: $link");
   echo "Redirecting to <a href=\"$link\">$link</a>. ";
   echo "Click on that link if you're not redirected.";
