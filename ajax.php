@@ -33,6 +33,7 @@ require('functions.php');
 
 // Makes it easier to test POST code
 if (__DEV__ && isset($_GET['dev'])) {
+  error_reporting(E_ALL);
   $_POST = $_POST + $_GET;
 }
 
