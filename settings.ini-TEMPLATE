@@ -6,5 +6,4 @@ $db_password = 'PASSWORD';
 $db_name = 'DATABASE_NAME';
 $db_salt = 'SALT';
 
-$baseURL = 'https://COURSEROAD_URL.com';
 define('__DEV__', false);
