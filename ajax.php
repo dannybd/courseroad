@@ -34,9 +34,7 @@ if (__DEV__ && isset($_GET['dev'])) {
   $_POST = $_POST + $_GET;
 }
 
-// connect to database
-require('connect.php');
-require('functions.php');
+require 'functions.php';
 
 get_csrf_token();
 

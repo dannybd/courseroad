@@ -27,9 +27,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// connect to database
-require('connect.php');
-require('functions.php');
+require 'functions.php';
 
 get_csrf_token();
 

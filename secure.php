@@ -3,8 +3,7 @@
 // if the certs are found it will add the user data to the session accordingly
 // and then pass the browser back to whence it came.
 
-require('connect.php');
-require('functions.php');
+require 'functions.php';
 
 // If someone's trying to access this page directly (without trying to first
 // auth on index.php) then send them back to index.php

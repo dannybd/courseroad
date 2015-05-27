@@ -6,7 +6,7 @@ if(isset($_GET['date'])) {
   die(date("d-M-Y", time()-10*86400));
 }
 
-require("connect.php");
+require 'connect.php';
 
 // DEV ONLY
 $db = CourseRoadDB::getDB();
