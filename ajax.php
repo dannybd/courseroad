@@ -115,7 +115,7 @@ if (isset($_POST['saveNewRoad'])) {
   }
   $hash .= $i;
   $_SESSION['crhash'] = $hash;
-  $trycert = false;
+  $_SESSION['trycert'] = false;
   if ($_POST['trycert']) {
     if ($loggedin) {
       $hash = default_owned_hash_name($athena);
@@ -124,8 +124,10 @@ if (isset($_POST['saveNewRoad'])) {
     }
   }
   CourseRoadDB::saveNewRoad($hash, $athena, $classes, $majors);
-  // The **auth** lets the user's browser know to try to log in
-  die(isset($_SESSION['trycert']) ? '**auth**' : $hash);
+  dieJSON(array(
+    'redirectToAuth' => $_SESSION['trycert'],
+    'hash' => $hash
+  ));
 }
 
 // Returns the desired table of saved roads when the user is logged in

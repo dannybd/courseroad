@@ -1310,17 +1310,17 @@ var crSetup = function courseRoadSetup() {
       }
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
-        if (data === '**auth**') {
+        if (data.redirectToAuth) {
           // This redirects us to the secure cert check.
           window.location.href = secureURL;
         } else {
-          setNewHash(data);
+          setNewHash(data.hash);
         }
       } else {
-        setNewHash(data);
+        setNewHash(data.hash);
       }
       $('#savemap').val('Save Courses').prop('disabled', false);
-    });
+    }, 'json');
   });
   if (!loggedin && triedlogin) {
     $('#mapcerts').hide();
@@ -1337,15 +1337,20 @@ var crSetup = function courseRoadSetup() {
         trycert: true,
         csrf: CSRF_token
       }, function (data) {
+        if (badCSRF(data)) {
+          alertBadCSRF();
+          $('#mapcerts').val('Save Courses').prop('disabled', false);
+          return false;
+        }
         $(window).off('beforeunload', runBeforeUnload);
-        if (data === '**auth**') {
+        if (data.redirectToAuth) {
           window.location.href = secureURL;
         } else {
-          setNewHash(data);
+          setNewHash(data.hash);
           $('#mapcerts').val('Save with Login (requires certs)')
             .prop('disabled', false);
         }
-      });
+      }, 'json');
     }
   });
   $('select.majorminor').on('change', function () {
