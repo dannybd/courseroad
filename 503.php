@@ -1,7 +1,5 @@
 <?php
 
-require('settings.ini');
-
 // The general idea being to give beta-testers a cookie to identify them.
 // This cookie is read to give access if the proper lines are uncommented in
 // .htaccess.
