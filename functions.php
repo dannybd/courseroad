@@ -4,7 +4,7 @@
 require 'connect.php';
 
 function new_csrf_token() {
-  return hash('sha512', SALT . microtime('true') . rand());
+  return hash('sha512', mt_rand() . mt_rand() . mt_rand());
 }
 
 function get_csrf_token() {
