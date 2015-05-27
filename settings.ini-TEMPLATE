@@ -1,6 +1,6 @@
 <?php
 
-$db_URL = 'example.com';
+$db_URL = 'EXAMPLE.COM';
 $db_username = 'USERNAME';
 $db_password = 'PASSWORD';
 $db_name = 'DATABASE_NAME';

@@ -50,7 +50,7 @@ class CourseRoadDB {
    * @param string $db_username the string of the database username
    * @param string $db_password the string of the database password
    * @param string $db_name     the string of the database name to connect to
-   * @param string $db_salt     the string of the salt used for c
+   * @param string $db_salt     the string of the salt used for encryption
    *
    * @return void
    * @throws die kills the page if we cannot connect. Why bother continuing?
