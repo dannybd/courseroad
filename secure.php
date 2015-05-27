@@ -5,19 +5,17 @@
 
 require 'functions.php';
 
-// If someone's trying to access this page directly (without trying to first
-// auth on index.php) then send them back to index.php
-if (!@$_SESSION['wenttoindex']) {
-  redirect_hash('');
-}
-
-// Remove this session variable, as it is no longer useful.
-unset($_SESSION['wenttoindex']);
-
 // Give SESSION.crhash a default value as an empty string
 if (!isset($_SESSION['crhash'])) {
   $_SESSION['crhash'] = '';
 }
+
+// Stop attempts to access this page directly without the main page or attempts
+// to load it twice
+if (!@$_SESSION['wenttoindex'] || @$_SESSION['wenttosecure']) {
+  redirect_hash($_SESSION['crhash']);
+}
+$_SESSION['wenttosecure'] = true;
 
 // If the certificate used to authenticate is somehow missing an email address,
 // then we can't do anything more with it.
@@ -46,7 +44,6 @@ if ($_SESSION['user']['edited']) {
   CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
 }
 
-
 // We've attempted auth
 $_SESSION['triedcert'] = true;
 $_SESSION['athena'] = $athena;
@@ -55,6 +52,7 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 // If we're also trying to Save with Log In, then update the hash and copy
 // the old row.
 if (isset($_SESSION['trycert'])) {
+  $_SESSION['trycert'] = false;
   $_SESSION['saveas'] = default_owned_hash_name($_SESSION['athena']);
   CourseRoadDB::copyRoad($_SESSION['crhash'], $_SESSION['saveas'], $athena);
 }
