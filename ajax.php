@@ -152,7 +152,8 @@ if (isset($_POST['savedroads'])) {
   echo (
     "<td><input type=\"radio\" name=\"setPublicRoad\" " .
     "class=\"setPublicRoad\" value=\"null\" " .
-    (CourseRoadDB::hasPublicRoad($athena) ? "" : "checked=\"true\" ") . "/></td>"
+    (CourseRoadDB::hasPublicRoad($athena) ? "" : "checked=\"true\" ") .
+    "/></td>"
   );
   echo (
     "<td colspan=\"6\">Select this row to prevent any of your " .
