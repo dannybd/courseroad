@@ -216,63 +216,111 @@ if (isset($_POST['savedroads'])) {
 
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['setPublicRoad'])) {
-  require_csrf();
-  $hash = $_POST['setPublicRoad'];
+  require_csrf(/*json*/ true);
+  $hash = $_POST['hash'];
   if (!$loggedin) {
-    die('not logged in');
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'not logged in'
+    ));
   }
   if (($athena != hash_owner($hash)) && ($hash != 'null')) {
-    die('bad hash');
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'bad hash'
+    ));
   }
   CourseRoadDB::setPublicRoad($hash, $athena);
-  die('ok');
+  dieJSON(array('success' => true));
 }
 
 // When the user changes a road's hash
-if (isset($_POST['changeroadhash'])) {
-  require_csrf();
-  $oldhash = $_POST['changeroadhash'];
+if (isset($_POST['changeRoadHash'])) {
+  require_csrf(/*json*/ true);
+  $oldhash = $_POST['oldhash'];
   $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
   if (!$loggedin ||
       preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) ||
       !strlen($_POST['newhash'])) {
-    die($oldhash);
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Not logged in',
+      'hash' => $oldhash
+    ));
   }
   if (($athena != hash_owner($oldhash)) && ($oldhash != 'null')) {
-    die($oldhash);
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Bad owner or hash',
+      'hash' => $oldhash
+    ));
   }
   if (CourseRoadDB::hashExists($newhash)) {
-    die($oldhash);
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'New hash is already taken',
+      'hash' => $oldhash
+    ));
   }
   CourseRoadDB::changeRoadHash($oldhash, $newhash, $athena);
-  die($newhash);
+  dieJSON(array(
+    'success' => true,
+    'hash' => $newhash
+  ));
 }
 
 // And when the user adds a comment
-if (isset($_POST['commentonroad'])) {
-  require_csrf();
-  $hash = $_POST['commentonroad'];
-  $comment = htmlentities(substr($_POST['commentforroad'], 0, 100));
+if (isset($_POST['setRoadComment'])) {
+  require_csrf(/*json*/ true);
+  $hash = $_POST['hash'];
+  $comment = htmlentities(substr($_POST['comment'], 0, 100));
   if (!$loggedin) {
-    die($hash);
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Not logged in',
+      'hash' => $oldhash
+    ));
   }
   if (($athena != hash_owner($hash)) && ($hash != 'null')) {
-    die();
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Bad owner or hash',
+      'hash' => $oldhash
+    ));
   }
   CourseRoadDB::setRoadComment($hash, $comment, $athena);
-  die(stripslashes($comment));
+  dieJSON(array(
+    'success' => true,
+    'hash' => $hash,
+    'comment' => stripslashes($comment)
+  ));
 }
 
 //Similarly, runs when the user deletes a road.
-if (isset($_POST['deleteroad'])) {
-  require_csrf();
-  $hash = $_POST['deleteroad'];
-  if (!$loggedin) die();
-  if (($athena != hash_owner($hash)) && ($hash != 'null')) die();
+if (isset($_POST['deleteRoad'])) {
+  require_csrf(/*json*/ true);
+  $hash = $_POST['hash'];
+  if (!$loggedin) {
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Not logged in',
+      'hash' => $oldhash
+    ));
+  }
+  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Bad owner or hash',
+      'hash' => $oldhash
+    ));
+  }
   if ($hash != 'null') {
     CourseRoadDB::deleteRoad($hash, $athena);
   }
-  die('ok');
+  dieJSON(array(
+    'success' => true,
+    'hash' => $hash
+  ));
 }
 
 // When the user saves changes to their user prefs, we update their prefs if

@@ -1085,13 +1085,72 @@ var crSetup = function courseRoadSetup() {
     $('.my-dialog').dialog('close');
   }).on('click', '.setPublicRoad', function () {
     $.post('ajax.php', {
-      setPublicRoad: $(this).val(),
+      setPublicRoad: 1,
+      hash: $(this).val(),
       csrf: CSRF_token
     }, function (data) {
       if (badCSRF(data)) {
         alertBadCSRF();
       }
-    });
+    }, 'json');
+  }).on('click', '.saved-roads-edit-hash', function () {
+    var newhash = prompt(
+      'Enter a new hash for this saved road below ' +
+      '(max. 36 characters, letters, numbers, and hyphens only):',
+      $(this).prev().text());
+    if (newhash === false) {
+      return false;
+    }
+    newhash = newhash.substr(0, 36);
+    var prev = $(this).prev();
+    prev.addClass('newload');
+    $.post('ajax.php', {
+      changeRoadHash: 1,
+      oldhash: $(this).parents('tr').data('hash'),
+      newhash: newhash,
+      csrf: CSRF_token
+    }, function (data) {
+      prev.removeClass('newload');
+      if (badCSRF(data)) {
+        alertBadCSRF();
+      }
+      if (data.error) {
+        return false;
+      }
+      var hashToUse = data.hash;
+      if (prev.parents('tr').data('hash') === getHash()) {
+        setNewHash(hashToUse);
+      }
+      prev.text(hashToUse.substr(hashToUse.indexOf('/') + 1))
+          .parents('tr').data('hash', hashToUse).attr('data-hash', hashToUse)
+          .find(':radio').val(hashToUse).parents('tr')
+          .find('a.hashlink').attr('href', '?hash=' + hashToUse);
+    }, 'json');
+  }).on('click', '.saved-roads-edit-comment', function () {
+    var prev = $(this).prev();
+    var comment = prompt(
+      'Enter your comment for this saved road below (max. 100 characters):',
+      prev.text());
+    if (comment === false) {
+      return false;
+    }
+    comment = comment.substr(0, 100);
+    prev.addClass('newload');
+    $.post('ajax.php', {
+      setRoadComment: 1,
+      hash: $(this).parents('tr').data('hash'),
+      comment: comment,
+      csrf: CSRF_token
+    }, function (data) {
+      prev.removeClass('newload');
+      if (badCSRF(data)) {
+        alertBadCSRF();
+      }
+      if (data.error) {
+        return false;
+      }
+      prev.text(data.comment);
+    }, 'json');
   }).on('click', '.deleteroad', function () {
     if (!confirm(
       'Are you sure you want to delete this road? This action cannot be undone.'
@@ -1100,14 +1159,15 @@ var crSetup = function courseRoadSetup() {
     }
     var parent = $(this).parents('tr');
     $.post('ajax.php', {
-      deleteroad: parent.data('hash'),
+      deleteRoad: 1,
+      hash: parent.data('hash'),
       csrf: CSRF_token
     }, function (data) {
       if (badCSRF(data)) {
         alertBadCSRF();
         return false;
       }
-      if (data === 'ok') {
+      if (!data.error) {
         parent.fadeOut('slow').delay(2000).queue(function () {
           $(this).remove();
         });
@@ -1115,59 +1175,7 @@ var crSetup = function courseRoadSetup() {
       if (parent.data('hash') === getHash()) {
         $(window).on('beforeunload', runBeforeUnload);
       }
-    });
-  }).on('click', '.saved-roads-edit-hash', function () {
-    var newhash2 = prompt(
-      'Enter a new hash for this saved road below ' +
-      '(max. 36 characters, letters, numbers, and hyphens only):',
-      $(this).prev().text());
-    if (newhash2 === false) {
-      return false;
-    }
-    newhash2 = newhash2.substr(0, 36);
-    var prev = $(this).prev();
-    prev.addClass('newload');
-    $.post('ajax.php', {
-      changeroadhash: $(this).parents('tr').data('hash'),
-      newhash: newhash2,
-      csrf: CSRF_token
-    }, function (data) {
-      if (badCSRF(data)) {
-        prev.removeClass('newload');
-        alertBadCSRF();
-        return false;
-      }
-      if (prev.parents('tr').data('hash') === getHash()) {
-        setNewHash(data);
-      }
-      prev.text(data.substr(data.indexOf('/') + 1))
-          .removeClass('newload').parents('tr')
-          .data('hash', data).attr('data-hash', data)
-          .find(':radio').val(data).parents('tr')
-          .find('a.hashlink').attr('href', '?hash=' + data);
-    });
-  }).on('click', '.saved-roads-edit-comment', function () {
-    var comment = prompt(
-      'Enter your comment for this saved road below (max. 100 characters):',
-      $(this).prev().text());
-    if (comment === false) {
-      return false;
-    }
-    comment = comment.substr(0, 100);
-    var prev = $(this).prev();
-    prev.addClass('newload');
-    $.post('ajax.php', {
-      commentonroad: $(this).parents('tr').data('hash'),
-      commentforroad: comment,
-      csrf: CSRF_token
-    }, function (data) {
-      if (badCSRF(data)) {
-        alertBadCSRF();
-        prev.removeClass('newload');
-        return false;
-      }
-      prev.text(data).removeClass('newload');
-    });
+    }, 'json');
   }).on('click', '.dummylink', function (e) {
     e.preventDefault();
   });
