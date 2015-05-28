@@ -901,8 +901,9 @@ window.onhashchange = function onHashChange() {
   // userHashChange means that if the user types in a new hash in the URL,
   // the browser will reload, but if the hash changes due to saving a new
   // version or something it won't.
-  userHashChange = !userHashChange || window.location.reload();
-  document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+  userHashChange && window.location.reload();
+  userHashChange = true;
+  setPageTitle();
 };
 
 function swapClassYear(oldclass, newyear) {
@@ -937,23 +938,33 @@ function getCurrentSemesterID() {
   return (getCurrentAcademicYear() - user.classYear + 3) * 4 + term;
 }
 
-function badCSRF(msg) {
-  return msg === '**csrf**';
+function badCSRF(data) {
+  return data.csrfError || data === '**csrf**';
 }
 
 function alertBadCSRF() {
   alert('Whoops! Looks like your session expired. Try refreshing the page.');
 }
 
+function getHash() {
+  return window.location.hash.substr(1);
+}
+
 function setNewHash(hash) {
   userHashChange = false;
   window.location.hash = hash;
-  document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+  setPageTitle();
 }
 
-var secureURL = (
-  window.location.origin + ':444' + window.location.pathname + 'secure.php'
-);
+function setPageTitle() {
+  document.title = 'CourseRoad: ' + getHash();
+}
+
+function redirectToAuth() {
+  window.location.href = (
+    window.location.origin + ':444' + window.location.pathname + 'secure.php'
+  );
+}
 
 // var reasonToTrySave = false;
 var preventUpdateWires = false;
@@ -986,32 +997,26 @@ var crSetup = function courseRoadSetup() {
   setInterval(function () {
     addAllWires(false);
   }, 10000);
-  if (window.location.hash) {
+  if (getHash()) {
     // Load hash's classes on pageload
     $('#loading').show();
-    userHashChange = false;
-    window.location.hash = window.location.hash.replace(/\/+$/, '');
-    document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+    // Strip trailing slashes from the hash
+    setNewHash(getHash().replace(/\/+$/, ''));
     $.post('ajax.php', {
-      gethash: window.location.hash,
+      gethash: getHash(),
       csrf: CSRF_token
     }, function (data) {
       $('#loading').hide();
-      if (badCSRF(data)) {
-        alertBadCSRF();
+      badCSRF(data) && alertBadCSRF();
+      if (data.error) {
         return false;
       }
-      if (data === '') {
-        return false;
-      }
-      var json = $.parseJSON(data);
-      var jsonmajors = json.pop();
       $('select.majorminor').each(function (i) {
-        $(this).val(jsonmajors[i]).attr('selected', true);
+        $(this).val(data.majors[i]).attr('selected', true);
       });
-      getClasses(json, false);
+      getClasses(data.classes, false);
       $(window).off('beforeunload', runBeforeUnload);
-    });
+    }, 'json');
     userHashChange = true;
   }
   if (add_new_term) {
@@ -1107,7 +1112,7 @@ var crSetup = function courseRoadSetup() {
           $(this).remove();
         });
       }
-      if (window.location.hash.substr(1) === parent.data('hash')) {
+      if (parent.data('hash') === getHash()) {
         $(window).on('beforeunload', runBeforeUnload);
       }
     });
@@ -1132,10 +1137,8 @@ var crSetup = function courseRoadSetup() {
         alertBadCSRF();
         return false;
       }
-      if (window.location.hash.substr(1) === prev.parents('tr').data('hash')) {
-        userHashChange = false;
-        window.location.hash = data;
-        document.title = 'CourseRoad: ' + window.location.hash.substr(1);
+      if (prev.parents('tr').data('hash') === getHash()) {
+        setNewHash(data);
       }
       prev.text(data.substr(data.indexOf('/') + 1))
           .removeClass('newload').parents('tr')
@@ -1311,8 +1314,7 @@ var crSetup = function courseRoadSetup() {
       $(window).off('beforeunload', runBeforeUnload);
       if (loggedin) {
         if (data.redirectToAuth) {
-          // This redirects us to the secure cert check.
-          window.location.href = secureURL;
+          redirectToAuth();
         } else {
           setNewHash(data.hash);
         }
@@ -1344,7 +1346,7 @@ var crSetup = function courseRoadSetup() {
         }
         $(window).off('beforeunload', runBeforeUnload);
         if (data.redirectToAuth) {
-          window.location.href = secureURL;
+          redirectToAuth();
         } else {
           setNewHash(data.hash);
           $('#mapcerts').val('Save with Login (requires certs)')
@@ -1420,9 +1422,7 @@ var crSetup = function courseRoadSetup() {
   doge = new Konami(function () {
     $('#rightbar').addClass('doge');
   });
-  $('#userlogin').click(function () {
-    window.location.href = secureURL;
-  });
+  $('#userlogin').click(redirectToAuth);
   $('#usersettings').dialog({
     autoOpen: false,
     draggable: false,

@@ -62,11 +62,8 @@ if (isset($_POST['getcustom'])){
 
 // Returns the desired hash's class and major data
 if (isset($_POST['gethash'])){
-  require_csrf();
-  // Strip the leading octothrope
-  $hash = substr($_POST['gethash'], 1);
-  $json = buildClassesArray($hash);
-  dieJSON($json);
+  require_csrf(/*json*/ true);
+  dieJSON(buildClassesArray($_POST['gethash']));
 }
 
 // If we haven't tried to log in, then default to false.
@@ -96,7 +93,7 @@ if ($loggedin) {
  * or something like username/20120504051511
  */
 if (isset($_POST['saveNewRoad'])) {
-  require_csrf();
+  require_csrf(/*json*/ true);
   $classes = CourseRoadDB::encrypt($_POST['classes']);
   $majors = CourseRoadDB::encrypt($_POST['majors']);
   $hash = substr(

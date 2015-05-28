@@ -23,8 +23,14 @@ function check_csrf_token() {
   return $_POST['csrf'] === get_csrf_token();
 }
 
-function require_csrf() {
+function require_csrf($json = false) {
   if (!check_csrf_token()) {
+    if ($json) {
+      dieJSON(array(
+        'error' => true,
+        'csrfError' => true
+      ));
+    }
     die('**csrf**');
   }
 }
@@ -317,13 +323,15 @@ function buildClassesArray($hash) {
   }
   $classes = json_decode(CourseRoadDB::decrypt($classdata['classes']), true);
   $majors = stripslashes(CourseRoadDB::decrypt($classdata['majors']));
-  if ($classes === '') {
-    die();
-  }
   $majors = json_decode($majors, true);
+  if (!$classes) {
+    return array(
+      'error' => true,
+      'errorDesc' => 'No classes'
+    );
+  }
 
-  // json holds the pulled data on each saved class.
-  $json = array();
+  $class_data = array();
   foreach($classes as &$class) {
     if (!isset($class['override'])) {
       $class['override'] = false;
@@ -332,7 +340,7 @@ function buildClassesArray($hash) {
       $class['substitute'] = '';
     }
     if (isset($class['custom'])) {
-      $json[] = pullCustom(
+      $class_data[] = pullCustom(
         $class['name'],
         $class['units'],
         $class['term'],
@@ -348,12 +356,14 @@ function buildClassesArray($hash) {
         $class['substitute']
       );
       if ($tempclass != 'noclass') {
-        $json[] = $tempclass;
+        $class_data[] = $tempclass;
       }
     }
   }
-  $json[] = $majors;
-  return $json;
+  return array(
+    'classes' => $class_data,
+    'majors' => $majors
+  );
 }
 
 function getCurrentAcademicYear() {
