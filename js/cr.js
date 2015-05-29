@@ -1230,7 +1230,7 @@ var crSetup = function courseRoadSetup() {
         subjectId: event.target.innerHTML,
         year: properYear(classterm)
       };
-      $.post('ajax.php', postData, function (data) {
+      $.post('ajax.php', postData, function fetchCheckboxClassData(data) {
         if (data.error) {
           return false;
         }
