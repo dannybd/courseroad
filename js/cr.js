@@ -987,7 +987,8 @@ var crSetup = function courseRoadSetup() {
     // Strip trailing slashes from the hash
     setNewHash(getHash().replace(/\/+$/, ''));
     $.post('ajax.php', {
-      gethash: getHash(),
+      getHash: 1,
+      hash: getHash(),
       csrf: CSRF_token
     }, function fetchHashData(data) {
       $('#loading').hide();
@@ -1346,7 +1347,7 @@ var crSetup = function courseRoadSetup() {
     open: function openViewRoads() {
       $('#savedroads').html('Loading...');
       $.post('ajax.php', {
-        savedroads: 1,
+        viewSavedRoads: 1,
         csrf: CSRF_token
       }, function savedRoadsResponse(data) {
         if (badCSRF(data)) {
@@ -1407,7 +1408,7 @@ var crSetup = function courseRoadSetup() {
   });
   $('#usersettings_save').click(function saveUserSettings() {
     var data = {
-      usersettings: 1,
+      viewUserSettings: 1,
       class_year: $('#usersettings_class_year').val(),
       toggle_view_req_lines: (
         $('#usersettings_view_req_lines').prop('checked') ? 1 : 0

@@ -61,9 +61,9 @@ if (isset($_POST['getCustom'])){
 }
 
 // Returns the desired hash's class and major data
-if (isset($_POST['gethash'])){
+if (isset($_POST['getHash'])){
   require_csrf(/*json*/ true);
-  dieJSON(buildClassesArray($_POST['gethash']));
+  dieJSON(buildClassesArray($_POST['hash']));
 }
 
 // If we haven't tried to log in, then default to false.
@@ -128,7 +128,7 @@ if (isset($_POST['saveNewRoad'])) {
 }
 
 // Returns the desired table of saved roads when the user is logged in
-if (isset($_POST['savedroads'])) {
+if (isset($_POST['viewSavedRoads'])) {
   require_csrf();
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
@@ -325,7 +325,7 @@ if (isset($_POST['deleteRoad'])) {
 
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
-if (isset($_POST['usersettings'])) {
+if (isset($_POST['viewUserSettings'])) {
   require_csrf();
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
