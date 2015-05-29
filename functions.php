@@ -3,6 +3,11 @@
 // connect to database
 require 'connect.php';
 
+function get_base_url() {
+  $path_name = dirname(strtok($_SERVER['REQUEST_URI'], '?'));
+  return "https://{$_SERVER['SERVER_NAME']}$path_name";
+}
+
 function new_csrf_token() {
   return hash('sha512', mt_rand() . mt_rand() . mt_rand());
 }
@@ -36,8 +41,7 @@ function require_csrf($json = false) {
 }
 
 function redirect_hash($hash) {
-  global $baseURL;
-  $link = "$baseURL#$hash";
+  $link = get_base_url()."#$hash";
   header("Location: $link");
   echo "Redirecting to <a href=\"$link\">$link</a>. ";
   echo "Click on that link if you're not redirected.";

@@ -65,7 +65,7 @@ echo "\n\nSESSION:\n";
 print_r($_SESSION);
 unset($_SESSION['trycert']);
 echo "\n\n--------------</pre>";
-echo "<p><a href='$baseURL/#{$_SESSION['saveas']}'>Click</a></p>";
+echo "<p><a href='".get_base_url()."/#{$_SESSION['saveas']}'>Click</a></p>";
 /*/
 redirect_hash($_SESSION['saveas']);
 //*/
