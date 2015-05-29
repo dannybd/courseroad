@@ -97,6 +97,11 @@ var Defaults = {
     editable: false
   },
 
+  keyCodes: {
+    DELETE: 46,
+    ENTER: 13
+  },
+
   modalProperties: {
     autoOpen: false,
     draggable: false,
@@ -1064,7 +1069,7 @@ var crSetup = function courseRoadSetup() {
   }).on('click', 'canvas.WireIt-Wire', unhighlightClasses).keydown(function
     keydownClassDelete(event) {
     var cls = $('.classdiv.classdivhigh');
-    if (event.which === 46 && cls.length && confirm(
+    if (event.which === Defaults.keyCodes.DELETE && cls.length && confirm(
       'Are you sure you want to delete ' + (cls.data('subject_id') || ('"' +
         cls.data('subject_title') + '"')) + '?')) {
       cls.remove();
@@ -1271,7 +1276,7 @@ var crSetup = function courseRoadSetup() {
     disabled: !user.autocomplete
   });
   $('.getnewclasstypes input').keydown(function pressEnterToGetClass(event) {
-    if (event.which === 13) {
+    if (event.which === Defaults.keyCodes.ENTER) {
       getClass();
     }
   });
@@ -1390,8 +1395,7 @@ var crSetup = function courseRoadSetup() {
   });
   $(window).resize(updateWires);
   $('.flakyCSS').removeClass('flakyCSS');
-  var doge;
-  doge = new Konami(function konamiSurprise() {
+  var doge = new Konami(function konamiSurprise() {
     $('#rightbar').addClass('doge');
   });
   $('#userlogin').click(redirectToAuth);
@@ -1411,7 +1415,7 @@ var crSetup = function courseRoadSetup() {
       ),
       csrf: CSRF_token
     };
-    var old_class_year = user.classYear;
+    var oldClassYear = user.classYear;
     $.post('ajax.php', data, function saveUserSettingsResponse(html) {
       if (badCSRF(html)) {
         alertBadCSRF();
@@ -1428,12 +1432,11 @@ var crSetup = function courseRoadSetup() {
 
       $('#usersettings_saved').show().delay(1000).fadeOut('slow');
       $('body').toggleClass('no-wires', !user.viewReqLines);
-      if (old_class_year !== user.classYear && confirm(
+      if (oldClassYear !== user.classYear && confirm(
         'You changed your saved class year. Would you like to edit the year ' +
         'versions of your classes to match that change? ' +
         '(Clicking Cancel will prevent this behavior)'
       )) {
-        console.log('Let\'s go.');
         $('.classdiv:not(.custom)').each(function updateAllClassYears() {
           if ($(this).data('year_desired') === properYear($(this).data(
             'classterm'))) {
