@@ -194,4 +194,3 @@ function req($str, $isCoreq){
 }
 
 file_put_contents($filename, "");
-?>

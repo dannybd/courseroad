@@ -24,7 +24,7 @@ header("Retry-After: 86400");
   <meta charset="utf-8">
   <title>CourseRoad is upgrading!</title>
   <style>
-    body{
+    body {
       background-color: #EEE;
       font-family: Arial;
     }

@@ -365,4 +365,3 @@ if (__DEV__ && isset($_GET['dev'])) {
     '$_SERVER' => @$_SERVER
   ));
 }
-?>

@@ -57,16 +57,4 @@ if (isset($_SESSION['trycert'])) {
   CourseRoadDB::copyRoad($_SESSION['crhash'], $_SESSION['saveas'], $athena);
 }
 
-/*
-echo @$sql;
-echo "success<pre>SERVER:\n";
-print_r($_SERVER);
-echo "\n\nSESSION:\n";
-print_r($_SESSION);
-unset($_SESSION['trycert']);
-echo "\n\n--------------</pre>";
-echo "<p><a href='".get_base_url()."/#{$_SESSION['saveas']}'>Click</a></p>";
-/*/
 redirect_hash($_SESSION['saveas']);
-//*/
-?>
