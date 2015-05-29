@@ -59,7 +59,7 @@ if (isset($_GET['addclasses'])) {
 // Record failed login attempts (when user denies login after pressing Login)
 if (isset($_GET['triedlogin'])) {
   $_SESSION['triedcert'] = true;
-  redirect_hash('error401');
+  redirect_hash($_SESSION['crhash']);
 }
 
 // A visible "?hash=" in the URL is unwanted, so we redirect to remove it,
@@ -338,12 +338,12 @@ header('X-UA-Compatible: IE=edge');
   <img src="images/trashx.png" alt="" class="trash">
 </div>
 <div id="loading" class="bubble"><h1>Loading...</h1></div>
-<div id="viewroads" class="bubble my-dialog my-dialog-hide">
+<div id="viewroads" class="bubble my-dialog">
   <div id="viewroads_close" class="my-dialog-close">Close this</div>
   <h3 id="viewroads_header" class="my-dialog-header">Your saved roads:</h3>
   <div id="savedroads">Loading...</div>
 </div>
-<div id="help" class="bubble my-dialog my-dialog-hide">
+<div id="help" class="bubble my-dialog">
   <div id="help_close" class="my-dialog-close">Close this</div>
   <h2 id="help_welcome" class="my-dialog-header">CourseRoad Help</h2>
   <div id="accordion">
@@ -427,7 +427,7 @@ header('X-UA-Compatible: IE=edge');
     </div>
   </div>
 </div>
-<div id="usersettings" class="bubble my-dialog my-dialog-hide">
+<div id="usersettings" class="bubble my-dialog">
   <div id="usersettings_close" class="my-dialog-close">Close this</div>
   <h3 id="usersettings_header" class="my-dialog-header">User Settings<?= $athena?" for $athena":"" ?>:</h3>
   <div id="usersettings_div">

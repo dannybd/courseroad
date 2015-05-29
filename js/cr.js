@@ -1359,7 +1359,6 @@ var crSetup = function courseRoadSetup() {
       });
     }
   });
-  $('.my-dialog').removeClass('.my-dialog-hide');
   // Runs the help dialog down below
   $('#help').dialog({
     autoOpen: false,
