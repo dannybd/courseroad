@@ -600,7 +600,7 @@ function addAllWires(reloadNotify) {
   $('select.majorminor').each(checkMajor);
   // console.log('addAllWires');
   if (reloadNotify) {
-    $(window).on('beforeunload', runBeforeUnload);
+    askBeforeLeaving(true);
   }
   return status;
 }
@@ -893,6 +893,10 @@ function runBeforeUnload() {
   );
 }
 
+function askBeforeLeaving(startAsking) {
+  $(window)[startAsking ? 'on' : 'off']('beforeunload', runBeforeUnload);
+}
+
 var userHashChange = true;
 window.onhashchange = function onHashChange() {
   // userHashChange means that if the user types in a new hash in the URL,
@@ -995,13 +999,13 @@ var crSetup = function courseRoadSetup() {
         $(this).val(data.majors[i]).attr('selected', true);
       });
       getClasses(data.classes, false);
-      $(window).off('beforeunload', runBeforeUnload);
+      askBeforeLeaving(false);
     }, 'json');
     userHashChange = true;
   }
   if (add_new_term) {
     getClasses(add_new_term, true);
-    $(window).on('beforeunload', runBeforeUnload);
+    askBeforeLeaving(true);
   }
   add_new_term = 0;
   $('body').on('click', '.classdivyear span', function enableOtherYears() {
@@ -1151,7 +1155,7 @@ var crSetup = function courseRoadSetup() {
         });
       }
       if (parent.data('hash') === getHash()) {
-        $(window).on('beforeunload', runBeforeUnload);
+        askBeforeLeaving(true);
       }
     }, 'json');
   }).on('click', '.dummylink', function dontFollowDummyLinks(e) {
@@ -1288,7 +1292,7 @@ var crSetup = function courseRoadSetup() {
         $('#savemap').val('Save Courses').prop('disabled', false);
         return false;
       }
-      $(window).off('beforeunload', runBeforeUnload);
+      askBeforeLeaving(false);
       if (loggedin) {
         if (data.redirectToAuth) {
           redirectToAuth();
@@ -1321,7 +1325,7 @@ var crSetup = function courseRoadSetup() {
           $('#mapcerts').val('Save Courses').prop('disabled', false);
           return false;
         }
-        $(window).off('beforeunload', runBeforeUnload);
+        askBeforeLeaving(false);
         if (data.redirectToAuth) {
           redirectToAuth();
         } else {
@@ -1448,7 +1452,7 @@ var crSetup = function courseRoadSetup() {
       $('#getnewclassid').autocomplete(
         'option', 'disabled', !user.autocomplete
       );
-      $(window).off('beforeunload', runBeforeUnload);
+      askBeforeLeaving(false);
     });
   });
 };
