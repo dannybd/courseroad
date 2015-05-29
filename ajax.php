@@ -358,14 +358,11 @@ EOD;
   die();
 }
 
-if (__DEV__ && isset($_GET['user'])) {
-  $msg = (
-    "user<br><pre>" .
-    print_r(@$_SESSION, true) .
-    "\n\n\n" .
-    print_r(@$_SERVER, true) .
-    "</pre>"
-  );
-  die($msg);
+if (__DEV__ && isset($_GET['dev'])) {
+  dieJSON(array(
+    'debug' => true,
+    '$_SESSION' => @$_SESSION,
+    '$_SERVER' => @$_SERVER
+  ));
 }
 ?>
