@@ -233,9 +233,9 @@ header('X-UA-Compatible: IE=edge');
       <br>
       <input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
     </div>
-    <div id="infotabs-save"class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
-      <input type="button" id="savemap" class="bubble loaders" value="Save Courses">
-      <input type="button" id="mapcerts" class="bubble loaders" value="<?= $loggedin ? "View Saved Roads" : "Save with Login (requires certs)"; ?>"><br><br>
+    <div id="infotabs-save" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+      <input type="button" id="save-courses" class="bubble loaders" value="Save Courses">
+      <input type="button" id="roads-or-login-save" class="bubble loaders" value="<?= $loggedin ? "View Saved Roads" : "Save with Login (requires certs)"; ?>"><br><br>
     </div>
   </div>
   <div id="COREchecker" class="leftbarholder">

@@ -1279,8 +1279,8 @@ var crSetup = function courseRoadSetup() {
       parseInt($('#getnewclassterm').val(), 10) + parseInt($(this).val(), 10)
     )));
   });
-  $('#savemap').click(function saveNewRoad() {
-    $('#savemap').val('Saving...').prop('disabled', true);
+  $('#save-courses').click(function saveNewRoad() {
+    $('#save-courses').val('Saving...').prop('disabled', true);
     $.post('ajax.php', {
       saveNewRoad: 1,
       classes: minclass(true),
@@ -1290,7 +1290,7 @@ var crSetup = function courseRoadSetup() {
     }, function saveNewRoadResponse(data) {
       if (badCSRF(data)) {
         alertBadCSRF();
-        $('#savemap').val('Save Courses').prop('disabled', false);
+        $('#save-courses').val('Save Courses').prop('disabled', false);
         return false;
       }
       askBeforeLeaving(false);
@@ -1303,39 +1303,39 @@ var crSetup = function courseRoadSetup() {
       } else {
         setNewHash(data.hash);
       }
-      $('#savemap').val('Save Courses').prop('disabled', false);
+      $('#save-courses').val('Save Courses').prop('disabled', false);
     }, 'json');
   });
   if (!loggedin && triedlogin) {
-    $('#mapcerts').hide();
+    $('#roads-or-login-save').hide();
   }
-  $('#mapcerts').click(function viewRoadsOrForceSaveWithLogin() {
+  $('#roads-or-login-save').click(function viewRoadsOrForceSaveWithLogin() {
     if (loggedin) {
       $('#viewroads').dialog('open');
-    } else {
-      $('#mapcerts').val('Saving...').prop('disabled', true);
-      $.post('ajax.php', {
-        saveNewRoad: 1,
-        classes: minclass(true),
-        majors: minmajors(true),
-        trycert: true,
-        csrf: CSRF_token
-      }, function saveWithLoginResponse(data) {
-        if (badCSRF(data)) {
-          alertBadCSRF();
-          $('#mapcerts').val('Save Courses').prop('disabled', false);
-          return false;
-        }
-        askBeforeLeaving(false);
-        if (data.redirectToAuth) {
-          redirectToAuth();
-        } else {
-          setNewHash(data.hash);
-          $('#mapcerts').val('Save with Login (requires certs)')
-            .prop('disabled', false);
-        }
-      }, 'json');
+      return false;
     }
+    $('#roads-or-login-save').val('Saving...').prop('disabled', true);
+    $.post('ajax.php', {
+      saveNewRoad: 1,
+      classes: minclass(true),
+      majors: minmajors(true),
+      trycert: true,
+      csrf: CSRF_token
+    }, function saveWithLoginResponse(data) {
+      if (badCSRF(data)) {
+        alertBadCSRF();
+        $('#roads-or-login-save').val('Save Courses').prop('disabled', false);
+        return false;
+      }
+      askBeforeLeaving(false);
+      if (data.redirectToAuth) {
+        redirectToAuth();
+      } else {
+        setNewHash(data.hash);
+        $('#roads-or-login-save').val('Save with Login (requires certs)')
+          .prop('disabled', false);
+      }
+    }, 'json');
   });
   $('select.majorminor').on('change', checkMajor);
   $('#viewroads').dialog({
