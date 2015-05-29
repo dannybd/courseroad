@@ -95,6 +95,13 @@ var Defaults = {
 
   terminalProperties: {
     editable: false
+  },
+
+  modalProperties: {
+    autoOpen: false,
+    draggable: false,
+    resizeable: false,
+    modal: true
   }
 };
 
@@ -1338,12 +1345,8 @@ var crSetup = function courseRoadSetup() {
     }, 'json');
   });
   $('select.majorminor').on('change', checkMajor);
-  $('#viewroads').dialog({
-    autoOpen: false,
+  $('#viewroads').dialog($.extend({}, Defaults.modalProperties, {
     width: 900,
-    draggable: false,
-    resizeable: false,
-    modal: true,
     open: function openViewRoads() {
       $('#savedroads').html('Loading...');
       $.post('ajax.php', {
@@ -1358,15 +1361,11 @@ var crSetup = function courseRoadSetup() {
         $('#savedroads').html(data);
       });
     }
-  });
+  }));
   // Runs the help dialog down below
-  $('#help').dialog({
-    autoOpen: false,
-    width: 600,
-    draggable: false,
-    resizeable: false,
-    modal: true
-  });
+  $('#help').dialog($.extend({}, Defaults.modalProperties, {
+    width: 600
+  }));
   $('#accordion').accordion({
     autoHeight: false,
     collapsible: true,
@@ -1396,12 +1395,7 @@ var crSetup = function courseRoadSetup() {
     $('#rightbar').addClass('doge');
   });
   $('#userlogin').click(redirectToAuth);
-  $('#usersettings').dialog({
-    autoOpen: false,
-    draggable: false,
-    resizeable: false,
-    modal: true
-  });
+  $('#usersettings').dialog(Defaults.modalProperties);
   $('#showusersettings').click(function showUserSettings() {
     $('#usersettings').dialog('open');
   });
