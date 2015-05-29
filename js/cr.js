@@ -654,6 +654,21 @@ function properYear(classterm) {
     parseInt(3 - Math.floor((classterm - 1) / 4), 10) - user.supersenior;
 }
 
+function fetchClassData(postData, oldclass) {
+  if (!(postData.getClass || postData.getCustom)) {
+    return false;
+  }
+  $.post('ajax.php', postData, function fetchClassDataResponse(data) {
+    if (data.error) {
+      return false;
+    }
+    data.classterm = classterm;
+    data.override = false;
+    oldclass ? classFromJSON(data, 0, oldclass) : classFromJSON(data);
+    addAllWires(true);
+  }, 'json');
+}
+
 function getClass() {
   // pulls down and interprets the class data
   var classterm = $('#getnewclassterm').val();
@@ -682,19 +697,7 @@ function getClass() {
   }
   $('#getnewclass .ui-autocomplete').hide();
   $('.getnewclasstypes input').val('');
-  $.post('ajax.php', postData, function fetchClassData(data) {
-    if (data.error) {
-      return false;
-    }
-    data.classterm = classterm;
-    data.override = false;
-    classFromJSON(data);
-    addAllWires(true);
-    // FIXME: How necessary are these two lines?
-    $('.getnewclasstypes.visible input:first').focus();
-    $('#getnewclass .ui-autocomplete').hide();
-    return true;
-  }, 'json');
+  fetchClassData(postData);
 }
 
 // Used for initial pageload when a hash is present:
@@ -915,20 +918,12 @@ function swapClassYear(oldclass, newyear) {
     return false;
   }
   oldclass.addClass('classdivlow');
-  $.post('ajax.php', {
+  var postData = {
     getClass: 1,
     subjectId: oldclass.data('subject_id'),
     year: newyear
-  }, function fetchClassDataWithNewYear(data) {
-    if (data.error) {
-      return false;
-    }
-    data.classterm = oldclass.data('classterm');
-    data.override = oldclass.data('override');
-    classFromJSON(data, 0, oldclass);
-    addAllWires(true);
-    unhighlightClasses();
-  }, 'json');
+  };
+  fetchClassData(postData, oldclass);
 }
 
 function getCurrentAcademicYear() {
@@ -1230,15 +1225,7 @@ var crSetup = function courseRoadSetup() {
         subjectId: event.target.innerHTML,
         year: properYear(classterm)
       };
-      $.post('ajax.php', postData, function fetchCheckboxClassData(data) {
-        if (data.error) {
-          return false;
-        }
-        data.classterm = classterm;
-        data.override = false;
-        classFromJSON(data);
-        addAllWires(true);
-      }, 'json');
+      fetchClassData(postData);
       draggableChecklist();
     }
   });
