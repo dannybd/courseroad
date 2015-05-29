@@ -76,7 +76,10 @@ function pullClass(
   $row = CourseRoadDB::getBestClassInfo($class, $year);
   if (!$row) {
     // FIXME: return array instead
-    return 'noclass';
+    return array(
+      'error' => true,
+      'errorDesc' => 'No class'
+    );
   }
 
   // Some returned columns are unhelpful and are thus discarded.

@@ -47,16 +47,16 @@ if (isset($_POST['autocomplete'])) {
 
 // Loads class data from the database and serves up the JSON which CourseRoad
 // requires to load that class.
-if (isset($_POST['getclass'])){
-  $class = $_POST['getclass'];
-  $year = isset($_POST['getyear']) ? $_POST['getyear'] : false;
+if (isset($_POST['getClass'])){
+  $class = $_POST['subjectId'];
+  $year = isset($_POST['year']) ? $_POST['year'] : false;
   dieJSON(pullClass($class, $year));
 }
 
 // Same, but for a custom class. These are used by the Add tab.
-if (isset($_POST['getcustom'])){
-  $name = htmlentities($_POST['getcustom']);
-  $units = isset($_POST['getunits']) ? floatval($_POST['getunits']) : false;
+if (isset($_POST['getCustom'])){
+  $name = htmlentities($_POST['name']);
+  $units = isset($_POST['units']) ? floatval($_POST['units']) : false;
   dieJSON(pullCustom($name, $units));
 }
 

@@ -657,7 +657,7 @@ function properYear(classterm) {
 function getClass() {
   // pulls down and interprets the class data
   var classterm = $('#getnewclassterm').val();
-  var data;
+  var postData;
   user.supersenior = (
     ($('.year.supersenior').is(':visible') || classterm > 16) ? 1 : 0
   );
@@ -665,31 +665,30 @@ function getClass() {
     if (!$('#getnewclassname').val()) {
       return false;
     }
-    data = {
-      getcustom: $('#getnewclassname').val(),
-      getunits: $('#getnewclassunits').val() || 0
+    postData = {
+      getCustom: 1,
+      name: $('#getnewclassname').val(),
+      units: $('#getnewclassunits').val() || 0
     };
   } else {
     if (!$('#getnewclassid').val()) {
       return false;
     }
-    data = {
-      getclass: $('#getnewclassid').val(),
-      getyear: 0
+    postData = {
+      getClass: 1,
+      subjectId: $('#getnewclassid').val(),
+      year: properYear(classterm)
     };
-    // FIXME: move into above
-    data.getyear = properYear(classterm);
   }
   $('#getnewclass .ui-autocomplete').hide();
   $('.getnewclasstypes input').val('');
-  $.post('ajax.php', data, function fetchClassData(json) {
-    // FIXME: return object always
-    if (~$.inArray(json, ['error', 'noclass', ''])) {
+  $.post('ajax.php', postData, function fetchClassData(data) {
+    if (data.error) {
       return false;
     }
-    json.classterm = classterm;
-    json.override = false;
-    classFromJSON(json);
+    data.classterm = classterm;
+    data.override = false;
+    classFromJSON(data);
     addAllWires(true);
     // FIXME: How necessary are these two lines?
     $('.getnewclasstypes.visible input:first').focus();
@@ -917,16 +916,16 @@ function swapClassYear(oldclass, newyear) {
   }
   oldclass.addClass('classdivlow');
   $.post('ajax.php', {
-    getclass: oldclass.data('subject_id'),
-    getyear: newyear
-  }, function fetchClassDataWithNewYear(json) {
-    // FIXME: return object always
-    if (~$.inArray(json, ['error', 'noclass', ''])) {
+    getClass: 1,
+    subjectId: oldclass.data('subject_id'),
+    year: newyear
+  }, function fetchClassDataWithNewYear(data) {
+    if (data.error) {
       return false;
     }
-    json.classterm = oldclass.data('classterm');
-    json.override = oldclass.data('override');
-    classFromJSON(json, 0, oldclass);
+    data.classterm = oldclass.data('classterm');
+    data.override = oldclass.data('override');
+    classFromJSON(data, 0, oldclass);
     addAllWires(true);
     unhighlightClasses();
   }, 'json');
@@ -1226,19 +1225,18 @@ var crSetup = function courseRoadSetup() {
     drop: function dragCheckboxDrop() {
       $('.term').removeClass('notOKterm');
       classterm = $(this).index('.term');
-      // FIXME: code duplication from getClass()
-      var data = {
-        getclass: event.target.innerHTML,
-        getyear: 0
+      var postData = {
+        getClass: 1,
+        subjectId: event.target.innerHTML,
+        year: properYear(classterm)
       };
-      data.getyear = properYear(classterm);
-      $.post('ajax.php', data, function (json) {
-        if (~$.inArray(json, ['error', 'noclass', ''])) {
+      $.post('ajax.php', postData, function (data) {
+        if (data.error) {
           return false;
         }
-        json.classterm = classterm;
-        json.override = false;
-        classFromJSON(json);
+        data.classterm = classterm;
+        data.override = false;
+        classFromJSON(data);
         addAllWires(true);
       }, 'json');
       draggableChecklist();
