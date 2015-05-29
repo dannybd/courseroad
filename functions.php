@@ -75,7 +75,6 @@ function pullClass(
 
   $row = CourseRoadDB::getBestClassInfo($class, $year);
   if (!$row) {
-    // FIXME: return array instead
     return array(
       'error' => true,
       'errorDesc' => 'No class'
@@ -316,7 +315,6 @@ EOD;
   return $row;
 }
 
-// FIXME: Allow parallelization
 function buildClassesArray($hash) {
   $_SESSION['crhash'] = $hash;
 
