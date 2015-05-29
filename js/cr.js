@@ -87,6 +87,14 @@ var Defaults = {
   callbackArgs: {
     LVL: '__lvl__',
     OBJ: '__obj__'
+  },
+
+  classData: {
+    override: false
+  },
+
+  terminalProperties: {
+    editable: false
   }
 };
 
@@ -589,10 +597,7 @@ function addAllWires(reloadNotify) {
   });
   updateWires();
   checkClasses();
-  // FIXME: use bind somehow
-  $('select.majorminor').each(function () {
-    checkMajor(this);
-  });
+  $('select.majorminor').each(checkMajor);
   // console.log('addAllWires');
   if (reloadNotify) {
     $(window).on('beforeunload', runBeforeUnload);
@@ -606,18 +611,14 @@ function classFromJSON(json, loadspeed, replacediv) {
   if (loadspeed === undefined) {
     loadspeed = 'slow';
   }
-  json = $.extend({}, {
-    override: false
-  }, json);
+  json = $.extend({}, Defaults.classData, json);
   if (json.classterm > 16) {
     $('.supersenior.hidden').removeClass('hidden', loadspeed);
   }
   if (json.classterm && json.classterm % 4 === 0) {
-    // FIXME: anon function
     $('.term .termname').eq(json.classterm)
-      .fadeIn(loadspeed).parent().slideDown(loadspeed, function () {
-        updateWires();
-      }).siblings('.yearname').addClass('showsummer', loadspeed);
+      .fadeIn(loadspeed).parent().slideDown(loadspeed, updateWires)
+      .siblings('.yearname').addClass('showsummer', loadspeed);
   }
   json.info = deGIR(json.info);
   if (replacediv === undefined) {
@@ -625,28 +626,20 @@ function classFromJSON(json, loadspeed, replacediv) {
   } else {
     replacediv.replaceWith(json.div);
   }
-  var id = json.divid;
-  var newdiv = $('#' + id);
+  var $newdiv = $('#' + json.divid);
   if (json.reqs === null) {
     json.reqs = false;
   }
   json.reqstatus = true;
   if (json.override) {
-    newdiv.addClass('classdivoverride');
+    $newdiv.addClass('classdivoverride');
   }
-  var attr;
-  for (attr in json) {
-    if (json.hasOwnProperty(attr)) {
-      newdiv.data(attr, json[attr]);
-    }
-  }
-  newdiv.data('terminals', {
-    terminal: new WireIt.Terminal(newdiv[0], {
-      editable: false
-    }),
+  $.extend($newdiv.data(), json);
+  $newdiv.data('terminals', {
+    terminal: new WireIt.Terminal($newdiv.get(0), Defaults.terminalProperties),
     wires: []
   });
-  return newdiv;
+  return $newdiv;
 }
 
 function properYear(classterm) {
@@ -654,7 +647,7 @@ function properYear(classterm) {
     parseInt(3 - Math.floor((classterm - 1) / 4), 10) - user.supersenior;
 }
 
-function fetchClassData(postData, oldclass) {
+function fetchClassData(postData, classterm, oldclass) {
   if (!(postData.getClass || postData.getCustom)) {
     return false;
   }
@@ -695,16 +688,15 @@ function getClass() {
       year: properYear(classterm)
     };
   }
-  $('#getnewclass .ui-autocomplete').hide();
+  hideAutocomplete();
   $('.getnewclasstypes input').val('');
-  fetchClassData(postData);
+  fetchClassData(postData, classterm);
 }
 
 // Used for initial pageload when a hash is present:
 // takes in an array containing objects describing the classes.
-function getClasses(classarr, reloadNotify) {
-  // FIXME: anon function
-  classarr.forEach(function (cls) {
+function getClasses(classList, reloadNotify) {
+  classList.forEach(function loadEachClassFromJSON(cls) {
     classFromJSON(cls, 0);
   });
   addAllWires(reloadNotify);
@@ -720,8 +712,8 @@ function checkOff(majordiv, lvl, cls) {
   return boxes.length;
 }
 
-function checkMajor(selector) {
-  var $selector = $(selector)
+function checkMajor() {
+  var $selector = $(this);
   var majorId = $selector.val();
   var div = $selector.data('div');
   var $div = $(div);
@@ -855,8 +847,7 @@ function deGIR(str) {
  * Used primarily in saved classes
  */
 function minclass(stringify) {
-  // FIXME: temp varname
-  var temp = $('.classdiv').map(function mapClassToMinData() {
+  var minData = $('.classdiv').map(function mapClassToMinData() {
     var $this = $(this);
     var arr;
     if ($this.data('custom')) {
@@ -880,18 +871,17 @@ function minclass(stringify) {
     }
     return arr;
   }).get();
-  return stringify ? JSON.stringify(temp) : temp;
+  return stringify ? JSON.stringify(minData) : minData;
 }
 
 function minmajors(stringify) {
-  // FIXME: temp varname
-  var temp = [
+  var minData = [
     $('#choosemajor').val(),
     $('#choosemajor2').val(),
     $('#chooseminor').val(),
     $('#chooseminor2').val()
   ];
-  return stringify ? JSON.stringify(temp) : temp;
+  return stringify ? JSON.stringify(minData) : minData;
 }
 
 /*** UI/Page-loading functions ***/
@@ -923,7 +913,7 @@ function swapClassYear(oldclass, newyear) {
     subjectId: oldclass.data('subject_id'),
     year: newyear
   };
-  fetchClassData(postData, oldclass);
+  fetchClassData(postData, classterm, oldclass);
 }
 
 function getCurrentAcademicYear() {
@@ -966,6 +956,10 @@ function redirectToAuth() {
   );
 }
 
+function hideAutocomplete() {
+  $('#getnewclass .ui-autocomplete').hide();
+}
+
 // var reasonToTrySave = false;
 var preventUpdateWires = false;
 var crSetup = function courseRoadSetup() {
@@ -982,10 +976,7 @@ var crSetup = function courseRoadSetup() {
       '<option value="' + majorId + '">' + majors[majorId].name + '</option>'
     );
   });
-  // FIXME: use bind somehow
-  setInterval(function () {
-    addAllWires(false);
-  }, 10000);
+  setInterval(addAllWires.bind(window, false), 10000);
   if (getHash()) {
     // Load hash's classes on pageload
     $('#loading').show();
@@ -1019,10 +1010,7 @@ var crSetup = function courseRoadSetup() {
       return false;
     }
     par.data('changing', true);
-    // FIXME: better way to do this?
-    $(this).replaceWith(function getOtherYears() {
-      return par.data('otheryears');
-    });
+    $(this).replaceWith(par.data('otheryears'));
     par.data('changing', false);
     par.find('.classdivyear select').focus();
   }).on('change blur', '.classdivyear select', function disableOtherYears() {
@@ -1225,7 +1213,7 @@ var crSetup = function courseRoadSetup() {
         subjectId: event.target.innerHTML,
         year: properYear(classterm)
       };
-      fetchClassData(postData);
+      fetchClassData(postData, classterm);
       draggableChecklist();
     }
   });
@@ -1254,10 +1242,7 @@ var crSetup = function courseRoadSetup() {
       addAllWires(true);
     }
   });
-  $('#getnewclassid').blur(function hideAutocomplete() {
-    // FIXME: Code duplication with getClass()
-    $('#getnewclass .ui-autocomplete').hide();
-  }).focus();
+  $('#getnewclassid').blur(hideAutocomplete).focus();
   $('#getnewclasssubmit').click(getClass);
   $('input[name="getnewclasstype"]').change(function switchAddClassType() {
     $('.getnewclasstypes').toggleClass('visible').filter('.visible')
@@ -1347,10 +1332,7 @@ var crSetup = function courseRoadSetup() {
       }, 'json');
     }
   });
-  // FIXME: Use bind somehow
-  $('select.majorminor').on('change', function () {
-    checkMajor(this);
-  });
+  $('select.majorminor').on('change', checkMajor);
   $('#viewroads').dialog({
     autoOpen: false,
     width: 900,
@@ -1372,6 +1354,7 @@ var crSetup = function courseRoadSetup() {
       });
     }
   });
+  $('.my-dialog').removeClass('.my-dialog-hide');
   // Runs the help dialog down below
   $('#help').dialog({
     autoOpen: false,

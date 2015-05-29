@@ -9,7 +9,7 @@ body {
   min-width: 950px;
   padding: 0;
 }
-.no-js #viewroads, .no-js #help, .no-js #usersettings, .no-js #trash img {
+.no-js .my-dialog, .no-js #trash img {
   display: none;
 }
 .no-js #trash {
@@ -45,7 +45,7 @@ body {
   margin: 0;
   padding: 5px;
 }
-.ui-resizable-handle {
+.my-dialog-hide, .ui-resizable-handle {
   display: none !important;
 }
 #savedroads {
