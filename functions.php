@@ -68,6 +68,18 @@ function dieJSON($obj) {
   die(json_encode($obj));
 }
 
+function requirePostDataFields() {
+  $post_fields = func_get_args();
+  foreach ($post_fields as $field) {
+    if (!isset($_POST[$field])) {
+      dieJSON(array(
+        'error' => true,
+        'errorDesc' => "Missing $field value"
+      ));
+    }
+  }
+}
+
 /**
  * Create an array of info on a particular class of a particular year.
  */

@@ -46,6 +46,7 @@ if (isset($_POST['autocomplete'])) {
 // Loads class data from the database and serves up the JSON which CourseRoad
 // requires to load that class.
 if (isset($_POST['getClass'])){
+  requirePostDataFields('subjectId');
   $class = $_POST['subjectId'];
   $year = isset($_POST['year']) ? $_POST['year'] : false;
   dieJSON(pullClass($class, $year));
@@ -53,6 +54,7 @@ if (isset($_POST['getClass'])){
 
 // Same, but for a custom class. These are used by the Add tab.
 if (isset($_POST['getCustom'])){
+  requirePostDataFields('name');
   $name = htmlentities($_POST['name']);
   $units = isset($_POST['units']) ? floatval($_POST['units']) : false;
   dieJSON(pullCustom($name, $units));
@@ -61,6 +63,7 @@ if (isset($_POST['getCustom'])){
 // Returns the desired hash's class and major data
 if (isset($_POST['getHash'])){
   requireCSRF(/*json*/ true);
+  requirePostDataFields('hash');
   dieJSON(buildClassesArray($_POST['hash']));
 }
 
@@ -92,6 +95,7 @@ if ($loggedin) {
  */
 if (isset($_POST['saveNewRoad'])) {
   requireCSRF(/*json*/ true);
+  requirePostDataFields('classes', 'majors');
   $classes = CourseRoadDB::encrypt($_POST['classes']);
   $majors = CourseRoadDB::encrypt($_POST['majors']);
   $hash = substr(
@@ -215,6 +219,7 @@ if (isset($_POST['viewSavedRoads'])) {
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['setPublicRoad'])) {
   requireCSRF(/*json*/ true);
+  requirePostDataFields('hash');
   $hash = $_POST['hash'];
   if (!$loggedin) {
     dieJSON(array(
@@ -235,6 +240,7 @@ if (isset($_POST['setPublicRoad'])) {
 // When the user changes a road's hash
 if (isset($_POST['changeRoadHash'])) {
   requireCSRF(/*json*/ true);
+  requirePostDataFields('oldhash', 'newhash');
   $oldhash = $_POST['oldhash'];
   $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
   if (!$loggedin ||
@@ -270,6 +276,7 @@ if (isset($_POST['changeRoadHash'])) {
 // And when the user adds a comment
 if (isset($_POST['setRoadComment'])) {
   requireCSRF(/*json*/ true);
+  requirePostDataFields('hash', 'comment');
   $hash = $_POST['hash'];
   $comment = htmlentities(substr($_POST['comment'], 0, 100));
   if (!$loggedin) {
@@ -297,6 +304,7 @@ if (isset($_POST['setRoadComment'])) {
 //Similarly, runs when the user deletes a road.
 if (isset($_POST['deleteRoad'])) {
   requireCSRF(/*json*/ true);
+  requirePostDataFields('hash');
   $hash = $_POST['hash'];
   if (!$loggedin) {
     dieJSON(array(
@@ -359,6 +367,7 @@ EOD;
 if (__DEV__ && isset($_GET['dev'])) {
   dieJSON(array(
     'debug' => true,
+    '$_GET' => @$_GET,
     '$_SESSION' => @$_SESSION,
     '$_SERVER' => @$_SERVER
   ));
