@@ -3,33 +3,34 @@
 // connect to database
 require 'connect.php';
 
-function get_base_url() {
+function getBaseURL() {
   $path_name = dirname(strtok($_SERVER['REQUEST_URI'], '?'));
   return "https://{$_SERVER['SERVER_NAME']}$path_name";
 }
 
-function new_csrf_token() {
+function newCSRFToken() {
   return hash('sha512', mt_rand() . mt_rand() . mt_rand());
 }
 
-function get_csrf_token() {
+function getCSRFToken() {
   if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = new_csrf_token();
+    $_SESSION['csrf_token'] = newCSRFToken();
   }
   return $_SESSION['csrf_token'];
 }
+getCSRFToken();
 
-function check_csrf_token() {
+function checkCSRFToken() {
   if (!isset($_POST['csrf'])) {
     return false;
   }
   // TODO: Fix CSRF tokens to not time out so soon
   return true;
-  return $_POST['csrf'] === get_csrf_token();
+  return $_POST['csrf'] === getCSRFToken();
 }
 
-function require_csrf($json = false) {
-  if (!check_csrf_token()) {
+function requireCSRF($json = false) {
+  if (!checkCSRFToken()) {
     if ($json) {
       dieJSON(array(
         'error' => true,
@@ -40,8 +41,8 @@ function require_csrf($json = false) {
   }
 }
 
-function redirect_hash($hash) {
-  $link = get_base_url()."#$hash";
+function redirectHash($hash) {
+  $link = getBaseURL()."#$hash";
   header("Location: $link");
   echo "Redirecting to <a href=\"$link\">$link</a>. ";
   echo "Click on that link if you're not redirected.";
@@ -386,7 +387,7 @@ function getDefaultUserPrefs() {
   );
 }
 
-function fetch_ldap_data($user) {
+function fetchDataFromLDAP($user) {
   $user = escapeshellarg($user);
   $ldap = explode("\n", shell_exec(
     "ldapsearch -LLL -x -h ldap-too -b 'ou=users,ou=moira,dc=mit,dc=edu' " .
@@ -410,14 +411,14 @@ function importUserPrefs($athena) {
   }
 }
 
-function hash_owner($hash) {
+function hashOwner($hash) {
   return strstr($hash, '/', true);
 }
 
-function default_owned_hash_name($owner) {
+function defaultOwnedHashName($owner) {
   return $owner.'/'.date("YmdHis");
 }
 
-function nocache_link($uri) {
+function noCacheLink($uri) {
   return "$uri?nocache=" . md5(file_get_contents($uri));
 }

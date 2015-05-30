@@ -36,8 +36,6 @@ if (__DEV__ && isset($_GET['dev'])) {
 
 require 'functions.php';
 
-get_csrf_token();
-
 // Yields a JSON-encoded list of classes which match the autocompletion field
 // in the Add Class tab.
 if (isset($_POST['autocomplete'])) {
@@ -62,7 +60,7 @@ if (isset($_POST['getCustom'])){
 
 // Returns the desired hash's class and major data
 if (isset($_POST['getHash'])){
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   dieJSON(buildClassesArray($_POST['hash']));
 }
 
@@ -93,7 +91,7 @@ if ($loggedin) {
  * or something like username/20120504051511
  */
 if (isset($_POST['saveNewRoad'])) {
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   $classes = CourseRoadDB::encrypt($_POST['classes']);
   $majors = CourseRoadDB::encrypt($_POST['majors']);
   $hash = substr(
@@ -115,7 +113,7 @@ if (isset($_POST['saveNewRoad'])) {
   $_SESSION['trycert'] = false;
   if ($_POST['trycert']) {
     if ($loggedin) {
-      $hash = default_owned_hash_name($athena);
+      $hash = defaultOwnedHashName($athena);
     } else if (!$_SESSION['triedcert']) {
       $_SESSION['trycert'] = true;
     }
@@ -129,7 +127,7 @@ if (isset($_POST['saveNewRoad'])) {
 
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['viewSavedRoads'])) {
-  require_csrf();
+  requireCSRF();
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
   }
@@ -216,7 +214,7 @@ if (isset($_POST['viewSavedRoads'])) {
 
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['setPublicRoad'])) {
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   $hash = $_POST['hash'];
   if (!$loggedin) {
     dieJSON(array(
@@ -224,7 +222,7 @@ if (isset($_POST['setPublicRoad'])) {
       'errorDesc' => 'not logged in'
     ));
   }
-  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
+  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'bad hash'
@@ -236,7 +234,7 @@ if (isset($_POST['setPublicRoad'])) {
 
 // When the user changes a road's hash
 if (isset($_POST['changeRoadHash'])) {
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   $oldhash = $_POST['oldhash'];
   $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
   if (!$loggedin ||
@@ -248,7 +246,7 @@ if (isset($_POST['changeRoadHash'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hash_owner($oldhash)) && ($oldhash != 'null')) {
+  if (($athena != hashOwner($oldhash)) && ($oldhash != 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
@@ -271,7 +269,7 @@ if (isset($_POST['changeRoadHash'])) {
 
 // And when the user adds a comment
 if (isset($_POST['setRoadComment'])) {
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   $hash = $_POST['hash'];
   $comment = htmlentities(substr($_POST['comment'], 0, 100));
   if (!$loggedin) {
@@ -281,7 +279,7 @@ if (isset($_POST['setRoadComment'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
+  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
@@ -298,7 +296,7 @@ if (isset($_POST['setRoadComment'])) {
 
 //Similarly, runs when the user deletes a road.
 if (isset($_POST['deleteRoad'])) {
-  require_csrf(/*json*/ true);
+  requireCSRF(/*json*/ true);
   $hash = $_POST['hash'];
   if (!$loggedin) {
     dieJSON(array(
@@ -307,7 +305,7 @@ if (isset($_POST['deleteRoad'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hash_owner($hash)) && ($hash != 'null')) {
+  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
@@ -326,7 +324,7 @@ if (isset($_POST['deleteRoad'])) {
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['viewUserSettings'])) {
-  require_csrf();
+  requireCSRF();
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
     $_POST['toggle_view_req_lines'] == '1' ? 1 : 0

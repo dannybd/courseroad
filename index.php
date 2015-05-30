@@ -29,8 +29,6 @@
 
 require 'functions.php';
 
-get_csrf_token();
-
 // Beginnings of an external API hook. From a comma-separated list of classes,
 // a year value and a term, this will drop a set of classes into CourseRoad, to
 // be saved by the user.
@@ -59,13 +57,13 @@ if (isset($_GET['addclasses'])) {
 // Record failed login attempts (when user denies login after pressing Login)
 if (isset($_GET['triedlogin'])) {
   $_SESSION['triedcert'] = true;
-  redirect_hash($_SESSION['crhash']);
+  redirectHash($_SESSION['crhash']);
 }
 
 // A visible "?hash=" in the URL is unwanted, so we redirect to remove it,
 // but first store the hash to make loading faster.
 if (isset($_GET['hash'])) {
-  redirect_hash(urldecode($_GET['hash']));
+  redirectHash(urldecode($_GET['hash']));
 }
 
 // Store that we've been to index.php.
@@ -126,7 +124,7 @@ header('X-UA-Compatible: IE=edge');
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="<?= nocache_link('css/cr.css') ?>">
+  <link rel="stylesheet" type="text/css" href="<?= noCacheLink('css/cr.css') ?>">
   <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
 <body>
@@ -441,8 +439,8 @@ header('X-UA-Compatible: IE=edge');
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 <script src="js/wireit-min.js"></script>
-<script src="<?= nocache_link('js/majors.js') ?>"></script>
-<script src="<?= nocache_link('js/cr.js') ?>"></script>
+<script src="<?= noCacheLink('js/majors.js') ?>"></script>
+<script src="<?= noCacheLink('js/cr.js') ?>"></script>
 <script>
   var _gaq=[["_setAccount","UA-31018454-1"],
   ["_trackPageview",location.pathname+location.search+location.hash]];

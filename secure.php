@@ -13,14 +13,14 @@ if (!isset($_SESSION['crhash'])) {
 // Stop attempts to access this page directly without the main page or attempts
 // to load it twice
 if (!@$_SESSION['wenttoindex'] || @$_SESSION['wenttosecure']) {
-  redirect_hash($_SESSION['crhash']);
+  redirectHash($_SESSION['crhash']);
 }
 $_SESSION['wenttosecure'] = true;
 
 // If the certificate used to authenticate is somehow missing an email address,
 // then we can't do anything more with it.
 if (!isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
-  redirect_hash('-no-email');
+  redirectHash('-no-email');
 }
 
 // The cert is valid and the user is trying to log in, so extract their athena
@@ -32,7 +32,7 @@ if (!isset($_SESSION['user'])) {
 }
 // Try to determine the user's class year from LDAP data
 if (!CourseRoadDB::userExists($athena)) {
-  $ldap_data = fetch_ldap_data($athena);
+  $ldap_data = fetchDataFromLDAP($athena);
   $cur_year = @$ldap_data['mitDirStudentYear'] ?: 1;
   $_SESSION['user']['class_year'] = getCurrentAcademicYear() + 4 - $cur_year;
   $_SESSION['user']['edited'] = true;
@@ -53,8 +53,8 @@ $_SESSION['saveas'] = $_SESSION['crhash'] . '';
 // the old row.
 if (isset($_SESSION['trycert'])) {
   $_SESSION['trycert'] = false;
-  $_SESSION['saveas'] = default_owned_hash_name($_SESSION['athena']);
+  $_SESSION['saveas'] = defaultOwnedHashName($_SESSION['athena']);
   CourseRoadDB::copyRoad($_SESSION['crhash'], $_SESSION['saveas'], $athena);
 }
 
-redirect_hash($_SESSION['saveas']);
+redirectHash($_SESSION['saveas']);
