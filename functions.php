@@ -29,11 +29,8 @@ function checkCSRFToken() {
   return $_POST['csrf'] === getCSRFToken();
 }
 
-function requireCSRF($json = true) {
+function requireCSRF() {
   if (!checkCSRFToken()) {
-    if (!$json) {
-      die('**csrf**');
-    }
     dieJSON(array(
       'error' => true,
       'csrfError' => true

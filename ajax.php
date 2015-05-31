@@ -62,7 +62,7 @@ if (isset($_POST['getCustom'])){
 
 // Returns the desired hash's class and major data
 if (isset($_POST['getHash'])){
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('hash');
   dieJSON(buildClassesArray($_POST['hash']));
 }
@@ -94,7 +94,7 @@ if ($loggedin) {
  * or something like username/20120504051511
  */
 if (isset($_POST['saveNewRoad'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('classes', 'majors');
   $classes = CourseRoadDB::encrypt($_POST['classes']);
   $majors = CourseRoadDB::encrypt($_POST['majors']);
@@ -131,7 +131,7 @@ if (isset($_POST['saveNewRoad'])) {
 
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['viewSavedRoads'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   if (!$loggedin) {
     dieJSON(array(
       'error' => true,
@@ -226,7 +226,7 @@ if (isset($_POST['viewSavedRoads'])) {
 
 // Runs when the user sets one of their roads to be their public road
 if (isset($_POST['setPublicRoad'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('hash');
   $hash = $_POST['hash'];
   if (!$loggedin) {
@@ -247,7 +247,7 @@ if (isset($_POST['setPublicRoad'])) {
 
 // When the user changes a road's hash
 if (isset($_POST['changeRoadHash'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('oldhash', 'newhash');
   $oldhash = $_POST['oldhash'];
   $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
@@ -283,7 +283,7 @@ if (isset($_POST['changeRoadHash'])) {
 
 // And when the user adds a comment
 if (isset($_POST['setRoadComment'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('hash', 'comment');
   $hash = $_POST['hash'];
   $comment = htmlentities(substr($_POST['comment'], 0, 100));
@@ -311,7 +311,7 @@ if (isset($_POST['setRoadComment'])) {
 
 //Similarly, runs when the user deletes a road.
 if (isset($_POST['deleteRoad'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   requirePostDataFields('hash');
   $hash = $_POST['hash'];
   if (!$loggedin) {
@@ -340,7 +340,7 @@ if (isset($_POST['deleteRoad'])) {
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['viewUserSettings'])) {
-  requireCSRF(/*json*/ true);
+  requireCSRF();
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
     $_POST['toggle_view_req_lines'] == '1' ? 1 : 0
