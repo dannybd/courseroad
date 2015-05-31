@@ -289,7 +289,9 @@ function pullCustom(
   $row['divid'] = $row['id'] . '__' . rand();
   $row['subject_title'] = $name;
   $row['total_units'] = floatval($units);
-  if (!$row['total_units']) $row['total_units'] = 0;
+  if (!$row['total_units']) {
+    $row['total_units'] = 0;
+  }
   $row['info'] = <<<EOD
 <strong>{$row['subject_title']}</strong><br>
 <p class='infounits'>({$row['total_units']} units)</p><br>
