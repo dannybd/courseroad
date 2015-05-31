@@ -1358,13 +1358,16 @@ var crSetup = function courseRoadSetup() {
         viewSavedRoads: 1,
         csrf: CSRF_token
       }, function savedRoadsResponse(data) {
+        debugger;
         if (badCSRF(data)) {
           alertBadCSRF();
           $('#viewroads').dialog('close');
+        }
+        if (data.error) {
           return false;
         }
-        $('#savedroads').html(data);
-      });
+        $('#savedroads').html(data.html);
+      }, 'json');
     }
   }));
   // Runs the help dialog down below
@@ -1419,6 +1422,8 @@ var crSetup = function courseRoadSetup() {
     $.post('ajax.php', postData, function saveUserSettingsResponse(data) {
       if (badCSRF(data)) {
         alertBadCSRF();
+      }
+      if (data.error) {
         return false;
       }
       $('#usersettings_div').html(data.html);
@@ -1450,7 +1455,7 @@ var crSetup = function courseRoadSetup() {
         'option', 'disabled', !user.autocomplete
       );
       askBeforeLeaving(false);
-    });
+    }, 'json');
   });
 };
 

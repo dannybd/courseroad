@@ -131,68 +131,72 @@ if (isset($_POST['saveNewRoad'])) {
 
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['viewSavedRoads'])) {
-  requireCSRF(/*json*/ false);
+  requireCSRF(/*json*/ true);
   if (!$loggedin) {
-    die('Sorry, you need to log in again.');
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Not logged in',
+      'html' => 'Sorry, you need to log in again.'
+    ));
   }
   $saved_roads = CourseRoadDB::getSavedRoads($athena);
-  echo "<table>\n";
-  echo "<tr>";
-  echo (
-    "<th style=\"min-width:50px\" title=\"Select if you'd like one of " .
-    "your saved roads to be available more easily at " .
-    "courseroad.mit.edu/index.php#$athena\">Public</th>"
+  $html = '<table>';
+  $html .= '<tr>';
+  $html .= (
+    '<th style="min-width:50px" title="Select if you\'d like one of ' .
+    'your saved roads to be available more easily at ' .
+    'courseroad.mit.edu/index.php#'.$athena.'">Public</th>'
   );
-  echo "<th style=\"min-width:118px\">Hash</th>";
-  echo "<th style=\"min-width:118px\">Added</th>";
-  echo "<th style=\"min-width:95px\">Major(s)</th>";
-  echo "<th>Classes</th>";
-  echo "<th style=\"min-width:30px;max-width:120px;\">Comment</th>";
-  echo "<th>Delete?</th>";
-  echo "</tr>\n";
-  echo "<tr>";
-  echo (
-    "<td><input type=\"radio\" name=\"setPublicRoad\" " .
-    "class=\"setPublicRoad\" value=\"null\" " .
-    (CourseRoadDB::hasPublicRoad($athena) ? "" : "checked=\"true\" ") .
-    "/></td>"
+  $html .= '<th style="min-width:118px">Hash</th>';
+  $html .= '<th style="min-width:118px">Added</th>';
+  $html .= '<th style="min-width:95px">Major(s)</th>';
+  $html .= '<th>Classes</th>';
+  $html .= '<th style="min-width:30px;max-width:120px;">Comment</th>';
+  $html .= '<th>Delete?</th>';
+  $html .= '</tr>';
+  $html .= '<tr>';
+  $html .= (
+    '<td><input type="radio" name="setPublicRoad" ' .
+    'class="setPublicRoad" value="null" ' .
+    (CourseRoadDB::hasPublicRoad($athena) ? '' : 'checked="true" ') .
+    '/></td>'
   );
-  echo (
-    "<td colspan=\"6\">Select this row to prevent any of your " .
-    "saved roads from being your publicly-facing road.</td>"
+  $html .= (
+    '<td colspan="6">Select this row to prevent any of your ' .
+    'saved roads from being your publicly-facing road.</td>'
   );
-  echo "</tr>\n";
+  $html .= '</tr>';
   foreach($saved_roads as &$row) {
     $row['classes'] = CourseRoadDB::decrypt($row['classes']);
     $row['majors'] = CourseRoadDB::decrypt($row['majors']);
     $hash = stripslashes($row['hash']);
     $roadURL = "?hash=$hash";
-    echo "<tr data-hash=\"$hash\">";
-    echo (
-      "<td><input type=\"radio\" name=\"setPublicRoad\" " .
-      "class=\"setPublicRoad\" value=\"$hash\" " .
-      ($row['public'] === 1 ? "checked=\"true\" " : "") . "/></td>"
+    $html .= "<tr data-hash=\"$hash\">";
+    $html .= (
+      '<td><input type="radio" name="setPublicRoad" ' .
+      'class="setPublicRoad" value="'.$hash.'" ' .
+      ($row['public'] === 1 ? 'checked="true" ' : '') . '/></td>'
     );
-    echo (
-      "<td><span class=\"saved-roads-hash\">" .
-      substr(strstr($hash, "/"), 1) . "</span><span " .
-      "class=\"saved-roads-edit-hash ui-icon ui-icon-pencil\"></span></td>"
+    $html .= (
+      '<td><span class="saved-roads-hash">' . substr(strstr($hash, '/'), 1) .
+      '</span><span class="saved-roads-edit-hash ui-icon ui-icon-pencil">' .
+      '</span></td>'
     );
-    echo (
+    $html .= (
       "<td><a class=\"hashlink\" href=\"$roadURL\">" .
-      stripslashes($row['added']) . "</a></td>"
+      stripslashes($row['added']) . '</a></td>'
     );
     $majors = stripslashes($row['majors']);
     if ($majors[0] != '[') {
       $majors = "[\"$majors\"]";
     }
     $majors = str_replace(',"m0"', '', $majors);
-    $majors = implode(",<br>\n", json_decode($majors));
-    echo "<td>$majors</td>";
+    $majors = implode(',<br>', json_decode($majors));
+    $html .= "<td>$majors</td>";
     $classes = json_decode($row['classes'], true);
     $classes2 = array();
     foreach($classes as &$class2) {
-      if (isset($class2["custom"])) {
+      if (isset($class2['custom'])) {
         $class2['id'] = '(' . $class2['name'] . ')';
       }
       if (!isset($class2['id'])) {
@@ -203,17 +207,21 @@ if (isset($_POST['viewSavedRoads'])) {
       }
       $classes2[] = $class2['id'];
     }
-    echo '<td>' . implode(', ', $classes2) . '</td>';
-    echo (
-      "<td><span class=\"saved-roads-comment\">" .
-      $row['comment'] . "</span><span ".
-      "class=\"saved-roads-edit-comment ui-icon ui-icon-pencil\"></span></td>"
+    $html .= '<td>' . implode(', ', $classes2) . '</td>';
+    $html .= (
+      '<td>' .
+      '<span class="saved-roads-comment">' . $row['comment'] . '</span>' .
+      '<span class="saved-roads-edit-comment ui-icon ui-icon-pencil"></span>' .
+      '</td>'
     );
-    echo "<td><span class=\"deleteroad ui-icon ui-icon-close\"></span></td>";
-    echo "</tr>\n";
+    $html .= '<td><span class="deleteroad ui-icon ui-icon-close"></span></td>';
+    $html .= '</tr>';
   }
-  echo "</table>";
-  die();
+  $html .= '</table>';
+  dieJSON(array(
+    'success' => true,
+    'html' => $html
+  ));
 }
 
 // Runs when the user sets one of their roads to be their public road
