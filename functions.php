@@ -50,17 +50,6 @@ function redirectHash($hash) {
 }
 
 /**
- * Future planning: base64 encoded class info sent in, detected here,
- * redirect to secure.php with proper checks, send back to here with prompt
- * for choosing a road to add it to, then load that road in the background
- * (no redirect) and change the hash.
- *
- * Also changing roads by refresh shouldn't be necessary...
- *
- * Also fix the wire library already
- */
-
-/**
  * Set the header type to Javascript and JSON encode the result.
  */
 function dieJSON($obj) {
