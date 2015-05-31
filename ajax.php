@@ -131,7 +131,7 @@ if (isset($_POST['saveNewRoad'])) {
 
 // Returns the desired table of saved roads when the user is logged in
 if (isset($_POST['viewSavedRoads'])) {
-  requireCSRF();
+  requireCSRF(/*json*/ false);
   if (!$loggedin) {
     die('Sorry, you need to log in again.');
   }
@@ -332,7 +332,7 @@ if (isset($_POST['deleteRoad'])) {
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['viewUserSettings'])) {
-  requireCSRF();
+  requireCSRF(/*json*/ false);
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
     $_POST['toggle_view_req_lines'] == '1' ? 1 : 0

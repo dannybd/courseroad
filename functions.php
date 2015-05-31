@@ -29,15 +29,15 @@ function checkCSRFToken() {
   return $_POST['csrf'] === getCSRFToken();
 }
 
-function requireCSRF($json = false) {
+function requireCSRF($json = true) {
   if (!checkCSRFToken()) {
-    if ($json) {
-      dieJSON(array(
-        'error' => true,
-        'csrfError' => true
-      ));
+    if (!$json) {
+      die('**csrf**');
     }
-    die('**csrf**');
+    dieJSON(array(
+      'error' => true,
+      'csrfError' => true
+    ));
   }
 }
 
