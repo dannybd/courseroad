@@ -336,12 +336,12 @@ function checkRequisites(arr, callback, callbackArgs, level) {
       continue;
     }
     // Now only bona fide classes
-    var classmatches = $('.classdiv.' + (
+    var $classmatches = $('.classdiv.' + (
       newMatch.id.toUpperCase().replace('.', '_').replace(':', '.')
     ));
-    classmatches.each(iterateClassMatches);
+    $classmatches.each(iterateClassMatches);
     // If it's not a class, or callback failed, then we need to note that.
-    if (!classmatches.length || !callbackResult) {
+    if (!$classmatches.length || !callbackResult) {
       unsatisfiedRequisitesInfo.push(
         (newMatch.coreq === 1) ?
           ('[' + newMatch.id + newMatch.desc + ']') :
@@ -544,12 +544,12 @@ function checkClasses() {
         forUnits = false;
       }
     }
-    var otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(self)
+    var $otherCIPrecedingInTerm = $('.classdiv.CI:not(.CIM)').not(self)
       .filter(function findOtherCIPrecedingInTerm() {
         return ($(this).data('classterm') === data.classterm) &&
           ($(this).index('.classdiv') < i);
     });
-    if (data.ci && !otherCIPrecedingInTerm.length) {
+    if (data.ci && !$otherCIPrecedingInTerm.length) {
       $effect = $('.corecheck.unused.CI.' + data.ci + ':first');
       if ($effect.length) {
         $effect.removeClass('unused').addClass('used')
@@ -717,11 +717,11 @@ function getClasses(classList, reloadNotify) {
 /*** Major/minor functions ***/
 
 function checkOff(majordiv, lvl, cls) {
-  var boxes = $(majordiv + ' .majorchk.majorchk_' + lvl.join('_') +
+  var $boxes = $(majordiv + ' .majorchk.majorchk_' + lvl.join('_') +
     ':not(.chk):first');
-  boxes.addClass('chk').attr('title', $.isArray(cls.div) ? null : cls.div.data(
+  $boxes.addClass('chk').attr('title', $.isArray(cls.div) ? null : cls.div.data(
     'subject_id'));
-  return boxes.length;
+  return $boxes.length;
 }
 
 function checkMajor() {
@@ -1026,29 +1026,29 @@ var crSetup = function courseRoadSetup() {
   }
   add_new_term = 0;
   $('body').on('click', '.classdivyear span', function enableOtherYears() {
-    var par = $(this).parents('.classdiv');
-    if (par.data('changing')) {
+    var $oldclass = $(this).parents('.classdiv');
+    if ($oldclass.data('changing')) {
       return false;
     }
-    par.data('changing', true);
-    $(this).replaceWith(par.data('otheryears'));
-    par.data('changing', false);
-    par.find('.classdivyear select').focus();
+    $oldclass.data('changing', true);
+    $(this).replaceWith($oldclass.data('otheryears'));
+    $oldclass.data('changing', false);
+    $oldclass.find('.classdivyear select').focus();
   }).on('change blur', '.classdivyear select', function disableOtherYears() {
     var val = $(this).val();
-    var oldclass = $(this).parents('.classdiv');
-    if (oldclass.data('changing')) {
+    var $oldclass = $(this).parents('.classdiv');
+    if ($oldclass.data('changing')) {
       return false;
     }
-    oldclass.data('changing', true);
-    if (val === oldclass.data('year')) {
+    $oldclass.data('changing', true);
+    if (val === $oldclass.data('year')) {
       $(this).replaceWith(function getYearSpan() {
-        return oldclass.data('yearspan');
+        return $oldclass.data('yearspan');
       });
-      oldclass.data('changing', false);
+      $oldclass.data('changing', false);
       return false;
     }
-    swapClassYear(oldclass, val);
+    swapClassYear($oldclass, val);
   }).on('click', '.classdiv', function highlightClass() {
     // Highlights the selected class, dims the others,
     // and displays info on that class in the lower right
@@ -1072,11 +1072,16 @@ var crSetup = function courseRoadSetup() {
     }
   }).on('click', 'canvas.WireIt-Wire', unhighlightClasses).keydown(function
     keydownClassDelete(event) {
-    var cls = $('.classdiv.classdivhigh');
-    if (event.which === Defaults.keyCodes.DELETE && cls.length && confirm(
-      'Are you sure you want to delete ' + (cls.data('subject_id') || ('"' +
-        cls.data('subject_title') + '"')) + '?')) {
-      cls.remove();
+    var $oldclass = $('.classdiv.classdivhigh');
+    var classname = (
+      $oldclass.data('subject_id') ||
+      ('"' + $oldclass.data('subject_title') + '"')
+    );
+    if (
+      event.which === Defaults.keyCodes.DELETE && $oldclass.length &&
+      confirm('Are you sure you want to delete ' + classname + '?')
+    ) {
+      $oldclass.remove();
       unhighlightClasses();
       addAllWires(true);
     }
@@ -1096,20 +1101,21 @@ var crSetup = function courseRoadSetup() {
     var newhash = prompt(
       'Enter a new hash for this saved road below ' +
       '(max. 36 characters, letters, numbers, and hyphens only):',
-      $(this).prev().text());
+      $(this).prev().text()
+    );
     if (newhash === false) {
       return false;
     }
     newhash = newhash.substr(0, 36);
-    var prev = $(this).prev();
-    prev.addClass('newload');
+    var $hashSpan = $(this).prev();
+    $hashSpan.addClass('newload');
     $.post('ajax.php', {
       changeRoadHash: 1,
       oldhash: $(this).parents('tr').data('hash'),
       newhash: newhash,
       csrf: CSRF_token
     }, function changeRoadHashResponse(data) {
-      prev.removeClass('newload');
+      $hashSpan.removeClass('newload');
       if (badCSRF(data)) {
         alertBadCSRF();
       }
@@ -1117,38 +1123,38 @@ var crSetup = function courseRoadSetup() {
         return false;
       }
       var hashToUse = data.hash;
-      if (prev.parents('tr').data('hash') === getHash()) {
+      if ($hashSpan.parents('tr').data('hash') === getHash()) {
         setNewHash(hashToUse);
       }
-      prev.text(hashToUse.substr(hashToUse.indexOf('/') + 1))
+      $hashSpan.text(hashToUse.substr(hashToUse.indexOf('/') + 1))
           .parents('tr').data('hash', hashToUse).attr('data-hash', hashToUse)
           .find(':radio').val(hashToUse).parents('tr')
           .find('a.hashlink').attr('href', '?hash=' + hashToUse);
     }, 'json');
   }).on('click', '.saved-roads-edit-comment', function setRoadComment() {
-    var prev = $(this).prev();
+    var $commentSpan = $(this).prev();
     var comment = prompt(
       'Enter your comment for this saved road below (max. 100 characters):',
-      prev.text());
+      $commentSpan.text());
     if (comment === false) {
       return false;
     }
     comment = comment.substr(0, 100);
-    prev.addClass('newload');
+    $commentSpan.addClass('newload');
     $.post('ajax.php', {
       setRoadComment: 1,
       hash: $(this).parents('tr').data('hash'),
       comment: comment,
       csrf: CSRF_token
     }, function setRoadCommentResponse(data) {
-      prev.removeClass('newload');
+      $commentSpan.removeClass('newload');
       if (badCSRF(data)) {
         alertBadCSRF();
       }
       if (data.error) {
         return false;
       }
-      prev.text(data.comment);
+      $commentSpan.text(data.comment);
     }, 'json');
   }).on('click', '.deleteroad', function deleteRoad() {
     if (!confirm(
@@ -1156,7 +1162,7 @@ var crSetup = function courseRoadSetup() {
     )) {
       return false;
     }
-    var parent = $(this).parents('tr');
+    var $parentRow = $(this).parents('tr');
     $.post('ajax.php', {
       deleteRoad: 1,
       hash: parent.data('hash'),
@@ -1167,11 +1173,11 @@ var crSetup = function courseRoadSetup() {
         return false;
       }
       if (!data.error) {
-        parent.fadeOut('slow').delay(2000).queue(function removeDeletedRoad() {
+        $parentRow.fadeOut('slow').delay(2000).queue(function rmDeletedRoad() {
           $(this).remove();
         });
       }
-      if (parent.data('hash') === getHash()) {
+      if ($parentRow.data('hash') === getHash()) {
         askBeforeLeaving(true);
       }
     }, 'json');
@@ -1362,7 +1368,6 @@ var crSetup = function courseRoadSetup() {
         viewSavedRoads: 1,
         csrf: CSRF_token
       }, function savedRoadsResponse(data) {
-        debugger;
         if (badCSRF(data)) {
           alertBadCSRF();
           $('#viewroads').dialog('close');
