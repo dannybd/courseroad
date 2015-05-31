@@ -336,7 +336,7 @@ function buildClassesArray($hash) {
     );
   }
 
-  $class_data = array();
+  $classes_data = array();
   foreach($classes as &$class) {
     if (!isset($class['override'])) {
       $class['override'] = false;
@@ -345,28 +345,28 @@ function buildClassesArray($hash) {
       $class['substitute'] = '';
     }
     if (isset($class['custom'])) {
-      $class_data[] = pullCustom(
+      $classes_data[] = pullCustom(
         $class['name'],
         $class['units'],
         $class['term'],
         $class['override'],
         $class['substitute']
       );
-    }else{
-      $tempclass = pullClass(
+    } else {
+      $classdata = pullClass(
         $class['id'],
         $class['year'],
         $class['term'],
         $class['override'],
         $class['substitute']
       );
-      if ($tempclass != 'noclass') {
-        $class_data[] = $tempclass;
+      if ($classdata != 'noclass') {
+        $classes_data[] = $classdata;
       }
     }
   }
   return array(
-    'classes' => $class_data,
+    'classes' => $classes_data,
     'majors' => $majors
   );
 }
