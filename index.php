@@ -49,7 +49,7 @@ if (isset($_GET['addclasses'])) {
     'classes' => explode(',', $_GET['addclasses'])
   );
 
-  if (!isset($_GET['hash']) || !CourseRoadDB::hashExists($_GET['hash'])) {
+  if (!(isset($_GET['hash']) && CourseRoadDB::hashExists($_GET['hash']))) {
     $_GET['hash'] = '';
   }
 }
@@ -75,11 +75,6 @@ $add_new_term = false;
 if (isset($_SESSION['add_new_term'])) {
   $add_new_term = $_SESSION['add_new_term'];
   unset($_SESSION['add_new_term']);
-}
-
-// If we're trying to add an additional term's worth of information, then
-// collect that.
-if ($add_new_term) {
   $json = array();
   foreach($add_new_term['classes'] as $class) {
     $tempclass = pullClass(
@@ -87,7 +82,7 @@ if ($add_new_term) {
       $add_new_term['year'],
       $add_new_term['term']
     );
-    if ($tempclass != 'noclass') {
+    if (!isset($tempclass['error'])) {
       $json[] = $tempclass;
     }
   }
@@ -143,17 +138,16 @@ header('X-UA-Compatible: IE=edge');
       <a id="openhelp" href="#" class="dummylink">Help</a> ~
       <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a>
       <br>
-      <?=
-        ($loggedin
-          ? "Hello, <strong>$athena</strong>! "
-          : "<input type=\"button\" id=\"userlogin\" " .
-          "class=\"bubble loaders\" value=\"Login\"" .
-          ($_SESSION['triedcert']
-            ? " disabled=\"disabled\" title=\"Sorry, we couldn't log you in. " .
-              "Try reopening your browser.\">"
-            : ">"
-          )
-        );
+      <?
+        if ($loggedin) {
+          echo "Hello, <strong>$athena</strong>! ";
+        } else {
+          echo '<input type="button" id="userlogin" class="bubble loaders" value="Login"';
+          if ($_SESSION['triedcert']) {
+            echo ' disabled="disabled" title="Sorry, we couldn\'t log you in. Try reopening your browser."';
+          }
+          echo '>';
+        }
       ?>
       <input
         type="button"
