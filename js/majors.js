@@ -50,7 +50,8 @@ window.majors = {
     name: "1E -- Environmental Engineering Science",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
-      [1, "1.00", "1.010"], "1.061", "1.070", "1.080", "1.083", "1.106", "1.107",
+      [1, "1.00", "1.010"],
+      "1.061", "1.070", "1.080", "1.083", "1.106","1.107",
       [1, "1.801", "11.002", "11.122", "14.01"], "1.101", "1.102",
       [1, "1.064", "1.071", "1.072", "1.085", "1.089", "5.60"]
     ]
@@ -131,7 +132,7 @@ window.majors = {
         [2,
           "2.087",
           {
-            id: "6 units of math or science (but not engineering or humanities)",
+            id: "6 units of math or science (not engineering or humanities)",
             skip: 1
           }
         ]
@@ -213,7 +214,7 @@ window.majors = {
         [2,
           "2.087",
           {
-            id: "6 units of math or science (but not engineering or humanities)",
+            id: "6 units of math or science (not engineering or humanities)",
             skip: 1
           }
         ]
@@ -412,10 +413,9 @@ window.majors = {
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
-            "Course VI website, however changes in the Course VI requirements " +
-            "occur frequently. For the most up-to-date listings please refer " +
-            "to the Course VI checklist.",
-        skip: 1
+            "Course VI website, however changes in the Course VI " +
+            "requirements occur frequently. For the most up-to-date listings " +
+            "please refer to the Course VI checklist.",
       }, "6.01", "6.02", "6.UAT",
       [1, "6.UAP", {id: "6.UAR", desc: " (w/ SuperUROP)"}],
       [1, "18.03", "18.034", "18.06"],
@@ -478,9 +478,9 @@ window.majors = {
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
-            "Course VI website, however changes in the Course VI requirements " +
-            "occur frequently. For the most up-to-date listings please refer " +
-            "to the Course VI checklist.",
+            "Course VI website, however changes in the Course VI " +
+            "requirements occur frequently. For the most up-to-date listings " +
+            "please refer to the Course VI checklist.",
         skip: 1
       },
       "6.01", "6.02", "6.UAT",
@@ -554,9 +554,9 @@ window.majors = {
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
-            "Course VI website, however changes in the Course VI requirements " +
-            "occur frequently. For the most up-to-date listings please refer " +
-            "to the Course VI checklist.",
+            "Course VI website, however changes in the Course VI " +
+            "requirements occur frequently. For the most up-to-date listings " +
+            "please refer to the Course VI checklist.",
         skip: 1
       },
       "6.01", "6.02", "6.UAT",
@@ -599,8 +599,8 @@ window.majors = {
         {
           count: 1,
           desc: "(for CI-M) from"
-        }, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141", "6.152",
-        "6.161", "6.163", "6.173", "6.182", "6.805"
+        }, "6.021", "6.033", "6.101", "6.111", "6.115", "6.131", "6.141",
+        "6.152", "6.161", "6.163", "6.173", "6.182", "6.805"
       ]
     ]
   },
@@ -652,9 +652,9 @@ window.majors = {
       [1,
         "3.014", "5.36", "5.38",
         {
-          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 module " +
-              "behavior. Try using 0-unit custom classes to mark where the " +
-              "modules <em>should</em> be.",
+          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 " +
+              "module behavior. Try using 0-unit custom classes to mark " +
+              "where the modules <em>should</em> be.",
           skip: 1
         },
         "7.19", "7.30", "7.49", "8.13", "9.02", "9.12", "10.26", "10.27",
@@ -784,9 +784,9 @@ window.majors = {
       [1, "18.03", "18.034"],
       [1, "3.014", "5.36",
         {
-          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 module " +
-              "behavior. Try using 0-unit custom classes to mark where the " +
-              "modules <em>should</em> be.",
+          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 " +
+              "module behavior. Try using 0-unit custom classes to mark " +
+              "where the modules <em>should</em> be.",
           skip: 1
       }, "6.152", "10.28", "10.467", "10.702", "10.26", "10.27", "10.29"],
       [1, [1,
@@ -836,9 +836,9 @@ window.majors = {
       "10.37", [1, "10.28", "10.26", "10.27", "10.29", "10.467"],
       [1, [2, "1.106", "1.107"], "2.671", "3.014", "5.310", "5.35",
         {
-          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 module " +
-              "behavior. Try using 0-unit custom classes to mark where the " +
-              "modules <em>should</em> be.",
+          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 " +
+              "module behavior. Try using 0-unit custom classes to mark " +
+              "where the modules <em>should</em> be.",
           skip: 1
         }, "10.702", "12.335", "20.109"
       ],
@@ -883,7 +883,9 @@ window.majors = {
     name: "10C -- Chemical Engineering",
     reqs: [0,
       "5.60", "10.10", "10.213", "10.301", "10.302", "18.03",
-      [1, "3.014", "6.152", "5.36", "10.702", "10.28", "10.26", "10.27", "10.29"],
+      [1,
+        "3.014", "6.152", "5.36", "10.702", "10.28", "10.26", "10.27", "10.29"
+      ],
       [1,
         "6.021", "6.033", "6.111", "6.805", "14.05", "15.279", "15.301",
         "3.014", "6.152", "5.36", "10.702", "10.28", "10.26", "10.27", "10.29"
@@ -1042,7 +1044,7 @@ window.majors = {
   },
 
   m16_2: {
-    name: "16-2 -- Aerospace Engineering with Information Technology (2015s ONLY)",
+    name: "16-2 -- Aerospace Engineering with IT (2015s ONLY)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07",
       [1, "16.09", "6.041"],
@@ -1170,8 +1172,8 @@ window.majors = {
           matchRegex: /^17\.3/
         },
         {
-          id: "A subject in another field designated as fulfilling the public " +
-              "policy requirement",
+          id: "A subject in another field designated as fulfilling the " +
+              "public policy requirement",
           skip: 1
         }
       ],
@@ -1406,7 +1408,7 @@ window.majors = {
       [
         {
           count: 2,
-          desc: "from (Restricted Electives; at least one must be from Course 20)"
+          desc: "from (Restricted Electives; at least 1 must be from Course 20)"
         },
         {
           id: "Biomechanics and Biophysics",
@@ -1593,7 +1595,9 @@ window.majors = {
         skip: 1
       },
       [1, "21M.220", "21M.260"],
-      [1, "21M.235", "21M.250"], "21M.301", "21M.302", [1, "21M.303", "21M.350"],
+      [1, "21M.235", "21M.250"],
+      "21M.301", "21M.302",
+      [1, "21M.303", "21M.350"],
       [2,
         {
           id: "21M.401-499",
@@ -1915,16 +1919,16 @@ window.majors = {
           {id: "Group A:", skip: 1},
           "4.110", "4.122", "4.170", "4.211", "4.231", "4.233", "4.250",
           {id: "Group B:", skip: 1},
-          "4.301", "4.302", "4.307", "4.312", "4.314", "4.320", "4.322", "4.330",
-          "4.332", "4.341", "4.351", "4.352", "4.354", "4.356", "4.361", "4.366",
-          "4.368", "4.371", "4.373",
+          "4.301", "4.302", "4.307", "4.312", "4.314", "4.320", "4.322",
+          "4.330", "4.332", "4.341", "4.351", "4.352", "4.354", "4.356",
+          "4.361", "4.366", "4.368", "4.371", "4.373",
           {id: "Group C:", skip: 1},
           "4.401", "4.411", "4.42", "4.432", "4.440", "4.444", "4.472", "4.474",
           {id: "Group D:", skip: 1},
           "4.500", "4.501", "4.503", "4.504", "4.520", "4.522",
           {id: "Group E:", skip: 1},
-          "4.601", "4.602", "4.603", "4.606", "4.609", "4.610", "4.613", "4.614",
-          "4.615", "4.635", "4.641", "4.651", "4.671", "4.67", "4.673"
+          "4.601", "4.602", "4.603", "4.606", "4.609", "4.610", "4.613",
+          "4.614", "4.615", "4.635", "4.641", "4.651", "4.671", "4.67", "4.673"
         ]
       ]
     ]
@@ -1938,8 +1942,8 @@ window.majors = {
       [
         {
           count: 3,
-          desc: "(no more than two subjects from either the history of art or " +
-                "the history of architecture) from"
+          desc: "(no more than two subjects from either the history of art " +
+                "or the history of architecture) from"
         },
         "4.603", "4.606", "4.613", "4.615", "4.635", "4.641", "4.645", "4.651",
         "4.671", "4.673"
@@ -1964,7 +1968,9 @@ window.majors = {
       {id: "Tier 2:", skip: 1},
       [2, "4.320", "4.322", "4.330", "4.341", "4.354"],
       {id: "Tier 3:", skip: 1},
-      [2, "4.312", "4.314", "4.332", "4.352", "4.361", "4.366", "4.368", "4.371"]
+      [2,
+        "4.312", "4.314", "4.332", "4.352", "4.361", "4.366", "4.368", "4.371"
+      ]
     ]
   },
 
@@ -2078,9 +2084,9 @@ window.majors = {
       [2,
         "5.04", "5.07", "5.08", "5.13", "5.36", "5.37",
         {
-          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 module " +
-              "behavior. Try using 0-unit custom classes to mark where the " +
-              "modules go in your schedule.",
+          id: "Note: CourseRoad doesn't currently recognize the 5.35-38 " +
+              "module behavior. Try using 0-unit custom classes to mark " +
+              "where the modules go in your schedule.",
           skip: 1
         },
         [2, "5.36U", "5.37U"], "5.43", "5.61", "5.62"
@@ -2095,8 +2101,8 @@ window.majors = {
       [1, "18.03", "18.034", "5.60"],
       [2,
         {
-          id: "Course 12 subjects within one of the EAPS concentration areas, " +
-              "approved by the minor advisor",
+          id: "Course 12 subjects within one of the EAPS concentration " +
+              "areas, approved by the minor advisor",
           skip: 1
       }],
       [
@@ -2387,7 +2393,8 @@ window.majors = {
         ],
         [5,
           "3.012", "3.014", "3.016", "18.03", "18.034", "3.021", "1.00", "6.01",
-          "3.016", "3.022", "3.024", "3.032", "3.034", "3.042", "3.044", "3.THU",
+          "3.016", "3.022", "3.024", "3.032", "3.034", "3.042", "3.044",
+          "3.THU",
           [2, "3.930", "3.931"],
           "3.004", "3.016", "3.021", "3.046", "3.048", "3.051", "3.052",
           "3.053", "3.054", "3.055", "3.063", "3.064", "3.07", "3.072", "3.073",
@@ -2644,8 +2651,8 @@ window.majors = {
       [1, "21F.590", "21F.591", "21F.592", "21F.593", "21F.596"],
       [1,
         "21F.590", "21F.591", "21F.592", "21F.593", "21F.596", "17.433",
-        "17.537", "17.543", "21F.027", "21F.030", "21F.039", "21F.063", "21F.064",
-        "21F.065"
+        "17.537", "17.543", "21F.027", "21F.030", "21F.039", "21F.063",
+        "21F.064", "21F.065"
       ]
     ]
   },
@@ -2776,8 +2783,8 @@ window.majors = {
         "21L.455", "21L.458", "21L.460", "21L.704", "21L.705", "21M.220",
         "24.410", "3.982", "3.983", "3.993", "21H.007", "21H.333", "21H.130",
         "21H.132", "21H.233", "21H.236", "21H.331", "21H.133", "21H.134",
-        "21H.160", "21H.238", "21H.334", "4.444", "21A.211", "21H.411", "21H.521",
-        "21H.522", "24.200",
+        "21H.160", "21H.238", "21H.334", "4.444", "21A.211", "21H.411",
+        "21H.521", "21H.522", "24.200",
         [
           {
             count: 1,
@@ -2809,7 +2816,7 @@ window.majors = {
       },
       {
         id: "A research seminar in international studies and social science " +
-            "(this class counts as one of the 6 total required for the minor). " +
+            "(this class counts as 1 of the 6 total required for the minor). " +
             "In consultation with the instructor, students pick a topic for " +
             "extensive independent research and over the course of the " +
             "semester complete a lengthy term paper. Normally students would " +
@@ -3003,10 +3010,10 @@ window.majors = {
       [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"],
       {
         id: "3 Subjects chosen in one of the following tracks: social and " +
-            "educational policy, environmental policy, infrastructure policy, " +
-            "science and technology policy, labor and industrial policy, " +
-            "international development policy, security and defense policy, " +
-            "and urban and regional policy",
+            "educational policy, environmental policy, infrastructure " +
+            "policy, science and technology policy, labor and industrial  " +
+            "policy, international development policy, security and defense " +
+            "policy, and urban and regional policy",
         skip: 1
       }
     ]
