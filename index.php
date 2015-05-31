@@ -338,15 +338,15 @@ header('X-UA-Compatible: IE=edge');
 <div id="help" class="bubble my-dialog">
   <div id="help_close" class="my-dialog-close">Close this</div>
   <h2 id="help_welcome" class="my-dialog-header">CourseRoad Help</h2>
-  <div id="accordion">
-    <h3><a href="#" class="dummylink">What is CourseRoad?</a></h3>
+  <div id="help_content">
+    <h3>What is CourseRoad?</h3>
     <div>
       CourseRoad allows you to plan out your classes over your MIT undergrad career.<br>
       <br>
       Enter classes you have taken and want to take, and CourseRoad will tell you all about how you're doing on class prerequisites, General Institute Requirements (GIRs), and requirements for majors and minors.<br>
       You can even save course mappings to share with friends and advisors to get feedback!
     </div>
-    <h3><a href="#" class="dummylink">How do I add/move/delete classes?</a></h3>
+    <h3>How do I add/move/delete classes?</h3>
     <div>
       In the upper-left, click the "Add" tab, where you can enter the course numbers of your classes and choose the semester you took them/want to take them.
       You'll see that class added on the main timeline on the right-hand side of the page. This area gets filled with the classes you choose.<br>
@@ -354,21 +354,21 @@ header('X-UA-Compatible: IE=edge');
       If you want to move a class around, simply drag and drop it to another semester.<br><br>
       If you want to delete the class, drag it to the right-hand and drop it on the the black X that appears, or select the class and hit Delete.
     </div>
-    <h3><a href="#" class="dummylink">How do I add a UROP/elective/PE class/thing that isn't an MIT class? (New!)</a></h3>
+    <h3>How do I add a UROP/elective/PE class/thing that isn't an MIT class?</h3>
     <div>
       When you click the "Add" tab in the upper-left, change "Class Type" from Subject to Custom: from there, type the subject's name and units, and proceed as you would normally for a class.
     </div>
-    <h3><a href="#" class="dummylink">What are those weird lines everywhere? Why are some classes red?</a></h3>
+    <h3>What are those weird lines everywhere? Why are some classes red?</h3>
     <div>
       Those lines appear between classes to show you the map of prerequisites and corequisites for your classes. Grey is for prereqs, black is for coreqs.<br>
       <br>
       If you've added a class and all of its requisites are satisfied by the classes you've already added, then it'll turn green. If you're still missing reqs, it'll appear red and you can mouse over the part that says "Reqs: [ ]" to see which classes you still need. Your class might also be red if it's placed in the wrong semester, isn't counting for credit, or isn't available in that year.
     </div>
-    <h3><a href="#" class="dummylink">I have permission to override the requisites for X.XX. How do I show that?</a></h3>
+    <h3>I have permission to override the requisites for X.XX. How do I show that?</h3>
     <div>
       If you've taken a class without taking its requisites (or if CourseRoad's acting up and not recognizing that you've completed said reqs), you can click once on the class (thus highlighting the class in pink) and click "OVERRIDE REQUISITES" in the lower-left. You can also read that course's description and other info in the lower-left as well.
     </div>
-    <h3><a href="#" class="dummylink">What are the years displayed on each class? (New!)</a></h3>
+    <h3>What are the years displayed on each class?</h3>
     <div>
       The year attached to each class represents the <strong>catalog year from which that class' data was taken</strong>. It doesn't necessarily match the year in which you took the class: if the requisites and teachers are the same then and now, then you don't have to worry about it.<br>
       <br>
@@ -376,17 +376,17 @@ header('X-UA-Compatible: IE=edge');
       <br>
       If you're entering a lot of classes and this seems like an issue, try clicking the "About" tab and choosing "User Settings": if you update your class year in that field, CourseRoad will try to add the classes to semesters using data from the year in which you took said classes.
     </div>
-    <h3><a href="#" class="dummylink">What is that checklist for?</a></h3>
+    <h3>What is that checklist for?</h3>
     <div>
       The checklist on the left-hand side lets you keep track of all of your GIRs and major/minor requirements. If you choose majors and minors from the dropdowns, then you'll also see how you're doing on their respective requirements as well.
     </div>
-    <h3><a href="#" class="dummylink">How do I save a "road" for later or to share with others?</a></h3>
+    <h3>How do I save a "road" for later or to share with others?</h3>
     <div>
       If you want to save your course map for later, simply click the "Save" tab in the upper-left, and click "Save Classes". The URL you see in the address bar will become a specialized, saved link to your courses. Copy and share it with whomever you like.<br>
       <br>
       You can also click "Save with Login" to save the road while connecting it to your Kerberos username (i.e. the <em>username</em> in <em>username</em>@mit.edu). Note: this requires that you have certificates installed and enabled on the browser you're using.
     </div>
-    <h3><a href="#" class="dummylink">What good does logging in do? (New!)</a></h3>
+    <h3>What good does logging in do?</h3>
     <div>
       Logging in allows you to:
       <ul>
@@ -396,7 +396,7 @@ header('X-UA-Compatible: IE=edge');
       </ul>
       and more!
     </div>
-    <h3><a href="#" class="dummylink">What about privacy?</a></h3>
+    <h3>What about privacy?</h3>
     <div>
       When you aren't signed in, the save hashes you generate (the stuff after the "#" in the URL) are random and don't contain any information about you, specifically. On my end in those cases, the database is only storing your IP address, the classes and majors/minors you added, and a timestamp.<br>
       <br>
@@ -409,7 +409,7 @@ header('X-UA-Compatible: IE=edge');
       <br>
       tl;dr: don't worry, you're safe :)
     </div>
-    <h3><a href="#" class="dummylink">Further help, who's behind this, and why?</a></h3>
+    <h3>Further help, who's behind this, and why?</h3>
     <div>
       First off, feel free to email me at <a href="mailto:courseroad@mit.edu?subject=[CourseRoad]%20">courseroad@mit.edu</a> if you have any comments/complaints/hate mail/cool historical maps.<br>
       <br>

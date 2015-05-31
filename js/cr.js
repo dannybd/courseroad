@@ -1374,21 +1374,13 @@ var crSetup = function courseRoadSetup() {
   $('#help').dialog($.extend({}, Defaults.modalProperties, {
     width: 600
   }));
-  $('#accordion').accordion({
-    autoHeight: false,
-    collapsible: true,
-    change: function changeAccordion(event, ui) {
-      var temp = ui.newContent.length ? ui.newContent.position().top : 0;
-      temp = 0;
-    }
-  });
   $('#openhelp').click(function openHelpDialog() {
     $('#help').dialog('open').dialog('option', 'position', 'center');
-    $('#accordion').accordion('resize');
+    $('#help_content').scrollTop(0);
   });
   setTimeout(function delayedDialogCentering() {
     $('#help').dialog('option', 'position', 'center');
-    $('#accordion').accordion('resize');
+    $('#help_content').scrollTop(0);
   }, 2500);
   $('select.majorminor option').each(function hideDisabledMajorOptions() {
     var majorId = $(this).val();

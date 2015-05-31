@@ -76,23 +76,10 @@ span.newload {
   position: absolute;
   top: 0;
 }
-#accordion {
+#help_content {
   max-height: 500px;
   overflow-x: hidden;
   overflow-y: scroll;
-}
-.ui-accordion-header {
-  background-color: #DDD;
-  border: 2px solid #B8B8B8;
-  border-radius: 6px;
-  margin: 0;
-  padding: 5px;
-}
-.ui-accordion-header a {
-  color: black;
-  text-decoration: none;
-}
-.ui-accordion-content {
   padding: 5px;
 }
 #usersettings_div {
