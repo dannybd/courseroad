@@ -99,13 +99,13 @@ function pullClass(
   // it's easier to keep refer to them as "8_01" [for classes, etc.]
   $row['id'] = str_replace('.', '_', $row['subject_id']);
   $row['divid'] = $row['id'] . '__' . rand();
-  $row['is_variable_units'] = ($row['is_variable_units'] == '1');
-  $row['offered_this_year'] = ($row['offered_this_year'] == '1');
-  $row['fall'] = ($row['fall'] == '1');
-  $row['iap'] = ($row['iap'] == '1');
-  $row['spring'] = ($row['spring'] == '1');
-  $row['summer'] = ($row['summer'] == '1');
-  $row['permission'] = (strpos($row['reqs'], 'Permission') != false);
+  $row['is_variable_units'] = ($row['is_variable_units'] === '1');
+  $row['offered_this_year'] = ($row['offered_this_year'] === '1');
+  $row['fall'] = ($row['fall'] === '1');
+  $row['iap'] = ($row['iap'] === '1');
+  $row['spring'] = ($row['spring'] === '1');
+  $row['summer'] = ($row['summer'] === '1');
+  $row['permission'] = (strpos($row['reqs'], 'Permission') !== false);
   $row['reqs'] = json_decode($row['reqs']);
   $reqs = $row['reqs'] ? 'Reqs: [X]' : 'No reqs :D';
 
@@ -360,7 +360,7 @@ function buildClassesArray($hash) {
         $class['override'],
         $class['substitute']
       );
-      if ($classdata != 'noclass') {
+      if ($classdata !== 'noclass') {
         $classes_data[] = $classdata;
       }
     }

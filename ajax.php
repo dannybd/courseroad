@@ -187,7 +187,7 @@ if (isset($_POST['viewSavedRoads'])) {
       stripslashes($row['added']) . '</a></td>'
     );
     $majors = stripslashes($row['majors']);
-    if ($majors[0] != '[') {
+    if ($majors[0] !== '[') {
       $majors = "[\"$majors\"]";
     }
     $majors = str_replace(',"m0"', '', $majors);
@@ -235,7 +235,7 @@ if (isset($_POST['setPublicRoad'])) {
       'errorDesc' => 'not logged in'
     ));
   }
-  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
+  if (($athena !== hashOwner($hash)) && ($hash !== 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'bad hash'
@@ -260,7 +260,7 @@ if (isset($_POST['changeRoadHash'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hashOwner($oldhash)) && ($oldhash != 'null')) {
+  if (($athena !== hashOwner($oldhash)) && ($oldhash !== 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
@@ -294,7 +294,7 @@ if (isset($_POST['setRoadComment'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
+  if (($athena !== hashOwner($hash)) && ($hash !== 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
@@ -321,14 +321,14 @@ if (isset($_POST['deleteRoad'])) {
       'hash' => $oldhash
     ));
   }
-  if (($athena != hashOwner($hash)) && ($hash != 'null')) {
+  if (($athena !== hashOwner($hash)) && ($hash !== 'null')) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Bad owner or hash',
       'hash' => $oldhash
     ));
   }
-  if ($hash != 'null') {
+  if ($hash !== 'null') {
     CourseRoadDB::deleteRoad($hash, $athena);
   }
   dieJSON(array(
@@ -343,10 +343,10 @@ if (isset($_POST['viewUserSettings'])) {
   requireCSRF();
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
-    $_POST['toggle_view_req_lines'] == '1' ? 1 : 0
+    $_POST['toggle_view_req_lines'] === '1' ? 1 : 0
   );
   $_SESSION['user']['autocomplete'] = (
-    $_POST['toggle_autocomplete'] == 1 ? 1 : 0
+    $_POST['toggle_autocomplete'] === '1' ? 1 : 0
   );
   $_SESSION['user']['edited'] = $loggedin ? 0 : 1;
   if ($loggedin) {
