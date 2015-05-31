@@ -45,7 +45,7 @@ if (isset($_POST['autocomplete'])) {
 
 // Loads class data from the database and serves up the JSON which CourseRoad
 // requires to load that class.
-if (isset($_POST['getClass'])){
+if (isset($_POST['getClass'])) {
   requirePostDataFields('subjectId');
   $class = $_POST['subjectId'];
   $year = isset($_POST['year']) ? $_POST['year'] : false;
@@ -53,7 +53,7 @@ if (isset($_POST['getClass'])){
 }
 
 // Same, but for a custom class. These are used by the Add tab.
-if (isset($_POST['getCustom'])){
+if (isset($_POST['getCustom'])) {
   requirePostDataFields('name');
   $name = htmlentities($_POST['name']);
   $units = isset($_POST['units']) ? floatval($_POST['units']) : false;
@@ -61,7 +61,7 @@ if (isset($_POST['getCustom'])){
 }
 
 // Returns the desired hash's class and major data
-if (isset($_POST['getHash'])){
+if (isset($_POST['getHash'])) {
   requireCSRF();
   requirePostDataFields('hash');
   dieJSON(buildClassesArray($_POST['hash']));
@@ -166,7 +166,7 @@ if (isset($_POST['viewSavedRoads'])) {
     'saved roads from being your publicly-facing road.</td>'
   );
   $html .= '</tr>';
-  foreach($saved_roads as &$row) {
+  foreach ($saved_roads as &$row) {
     $row['classes'] = CourseRoadDB::decrypt($row['classes']);
     $row['majors'] = CourseRoadDB::decrypt($row['majors']);
     $hash = stripslashes($row['hash']);
@@ -195,7 +195,7 @@ if (isset($_POST['viewSavedRoads'])) {
     $html .= "<td>$majors</td>";
     $classes = json_decode($row['classes'], true);
     $classes2 = array();
-    foreach($classes as &$class2) {
+    foreach ($classes as &$class2) {
       if (isset($class2['custom'])) {
         $class2['id'] = '(' . $class2['name'] . ')';
       }

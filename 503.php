@@ -31,7 +31,7 @@ header('Retry-After: 86400');
 <body>
   <h1>Maintenance time!</h1>
   <p>
-    Don't worry, CourseRoad will be back shortly, new and improved! 
+    Don't worry, CourseRoad will be back shortly, new and improved!
     Sorry for the inconvenience. (I'll try to be quick!)
   </p>
   <p>

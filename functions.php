@@ -132,7 +132,7 @@ function pullClass(
 
   // Joint subjects at MIT are labelled with a J suffix. This trims that off.
   $row['joint_subjects'] = explode(', ', $row['joint_subjects']);
-  foreach($row['joint_subjects'] as &$subj) {
+  foreach ($row['joint_subjects'] as &$subj) {
     $subj = rtrim($subj, 'J');
   }
   if (!$row['joint_subjects'][0]) {
@@ -140,7 +140,7 @@ function pullClass(
   }
 
   $row['equiv_subjects'] = explode(', ', $row['equiv_subjects']);
-  foreach($row['equiv_subjects'] as &$subj) {
+  foreach ($row['equiv_subjects'] as &$subj) {
     $subj = rtrim($subj, 'J');
   }
   if (!$row['equiv_subjects'][0]) {
@@ -337,7 +337,7 @@ function buildClassesArray($hash) {
   }
 
   $classes_data = array();
-  foreach($classes as &$class) {
+  foreach ($classes as &$class) {
     if (!isset($class['override'])) {
       $class['override'] = false;
     }

@@ -62,7 +62,7 @@ class CourseRoadDB {
     $db_URL, $db_username, $db_password, $db_name, $db_salt
   ) {
     self::$_db = new mysqli($db_URL, $db_username, $db_password, $db_name);
-    if(self::$_db->connect_errno > 0){
+    if (self::$_db->connect_errno > 0) {
       die('Unable to connect to database [' . self::$_db->connect_error . ']');
     }
     self::$_salt = $db_salt;

@@ -76,7 +76,7 @@ if (isset($_SESSION['add_new_term'])) {
   $add_new_term = $_SESSION['add_new_term'];
   unset($_SESSION['add_new_term']);
   $json = array();
-  foreach($add_new_term['classes'] as $classname) {
+  foreach ($add_new_term['classes'] as $classname) {
     $classdata = pullClass(
       rtrim($classname, 'J'),
       $add_new_term['year'],
