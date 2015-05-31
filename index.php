@@ -422,11 +422,7 @@ header('X-UA-Compatible: IE=edge');
 <div id="usersettings" class="bubble my-dialog">
   <div id="usersettings_close" class="my-dialog-close">Close this</div>
   <h3 id="usersettings_header" class="my-dialog-header">User Settings<?= $athena?" for $athena":"" ?>:</h3>
-  <div id="usersettings_div">
-    <label for="usersettings_class_year">Class Year: </label><input id="usersettings_class_year" type="text" name="class_year" value="<?= $_SESSION['user']['class_year'] ?>"><br>
-    <label for="usersettings_view_req_lines">Toggle requisite lines: </label><input id="usersettings_view_req_lines" type="checkbox" name="view_req_lines" value="1" <?= $_SESSION['user']['view_req_lines']?'checked="checked"':'' ?>><br>
-    <label for="usersettings_autocomplete">Toggle autocomplete: </label><input id="usersettings_autocomplete" type="checkbox" name="autocomplete" value="1" <?= $_SESSION['user']['autocomplete']?'checked="checked"':'' ?>><br>
-  </div>
+  <div id="usersettings_div"><?= makeUserSettingsHTML(); ?></div>
   <input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

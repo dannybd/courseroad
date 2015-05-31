@@ -344,23 +344,7 @@ if (isset($_POST['viewUserSettings'])) {
   if ($loggedin) {
     CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
   }
-  $view_req_lines = $_SESSION['user']['view_req_lines']
-    ? 'checked="checked"'
-    : '';
-  $autocomplete = $_SESSION['user']['autocomplete']
-    ? 'checked="checked"'
-    : '';
-  echo <<<EOD
-    <label for="usersettings_class_year">Class Year: </label>
-    <input id="usersettings_class_year" type="text" name="class_year"
-      value="{$_SESSION['user']['class_year']}"><br>
-    <label for="usersettings_view_req_lines">Toggle requisite lines: </label>
-    <input id="usersettings_view_req_lines" type="checkbox"
-      name="view_req_lines" value="1" $view_req_lines><br>
-    <label for="usersettings_autocomplete">Toggle autocomplete: </label>
-    <input id="usersettings_autocomplete" type="checkbox" name="autocomplete"
-      value="1" $autocomplete><br>
-EOD;
+  echo makeUserSettingsHTML();
   die();
 }
 
