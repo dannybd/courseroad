@@ -1404,7 +1404,7 @@ var crSetup = function courseRoadSetup() {
     $('#usersettings').dialog('open');
   });
   $('#usersettings_save').click(function saveUserSettings() {
-    var data = {
+    var postData = {
       viewUserSettings: 1,
       class_year: $('#usersettings_class_year').val(),
       toggle_view_req_lines: (
@@ -1416,12 +1416,12 @@ var crSetup = function courseRoadSetup() {
       csrf: CSRF_token
     };
     var oldClassYear = user.classYear;
-    $.post('ajax.php', data, function saveUserSettingsResponse(html) {
-      if (badCSRF(html)) {
+    $.post('ajax.php', postData, function saveUserSettingsResponse(data) {
+      if (badCSRF(data)) {
         alertBadCSRF();
         return false;
       }
-      $('#usersettings_div').html(html);
+      $('#usersettings_div').html(data.html);
       user.classYear = parseInt($('#usersettings_class_year').val(), 10);
       user.viewReqLines = ($('#usersettings_view_req_lines').prop('checked') ?
         1 : 0);

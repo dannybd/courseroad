@@ -332,7 +332,7 @@ if (isset($_POST['deleteRoad'])) {
 // When the user saves changes to their user prefs, we update their prefs if
 // they're logged in and redisplay the userprefs HTML.
 if (isset($_POST['viewUserSettings'])) {
-  requireCSRF(/*json*/ false);
+  requireCSRF(/*json*/ true);
   $_SESSION['user']['class_year'] = intval($_POST['class_year']);
   $_SESSION['user']['view_req_lines'] = (
     $_POST['toggle_view_req_lines'] == '1' ? 1 : 0
@@ -344,8 +344,10 @@ if (isset($_POST['viewUserSettings'])) {
   if ($loggedin) {
     CourseRoadDB::updateUserPrefs($athena, $_SESSION['user']);
   }
-  echo makeUserSettingsHTML();
-  die();
+  dieJSON(array(
+    'success' => true,
+    'html' => makeUserSettingsHTML()
+  ));
 }
 
 if (__DEV__ && isset($_GET['dev'])) {
