@@ -367,7 +367,7 @@ EOD;
 if (__DEV__ && isset($_GET['dev'])) {
   dieJSON(array(
     'debug' => true,
-    '$_GET' => @$_GET,
+    '$_POST' => @$_POST,
     '$_SESSION' => @$_SESSION,
     '$_SERVER' => @$_SERVER
   ));
