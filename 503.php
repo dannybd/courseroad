@@ -17,9 +17,7 @@ if (@$_GET['access'] === $passphrase) {
 header("HTTP/1.1 503 Service Temporarily Unavailable");
 header("Status: 503 Service Temporarily Unavailable");
 header("Retry-After: 86400");
-
-?>
-<!DOCTYPE html>
+?><!doctype html>
 <head>
   <meta charset="utf-8">
   <title>CourseRoad is upgrading!</title>
