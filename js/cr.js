@@ -1472,7 +1472,6 @@ var crSetup = function courseRoadSetup() {
  * Tested in: Safari 4+, Google Chrome 4+, Firefox 3+, IE7+, Mobile Safari 2.2.1
  * and Dolphin Browser
  */
-
 var Konami = function (callback) {
   var konami = {
     addEvent: function (obj, type, fn, ref_obj) {
