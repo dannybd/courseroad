@@ -4,7 +4,7 @@
 require 'connect.php';
 
 function getBaseURL() {
-  $path_name = dirname(strtok($_SERVER['REQUEST_URI'], '?'));
+  $path_name = dirname(strtok($_SERVER['SCRIPT_NAME'], '?'));
   return "https://{$_SERVER['SERVER_NAME']}$path_name";
 }
 

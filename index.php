@@ -86,7 +86,7 @@ if (isset($_SESSION['add_new_term'])) {
       $json[] = $classdata;
     }
   }
-  $add_new_term = json_encode($json);
+  $add_new_term = addslashes(json_encode($json));
 }
 
 // If we haven't tried to log in, then default to false.
