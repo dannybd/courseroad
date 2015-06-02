@@ -24,8 +24,6 @@ function checkCSRFToken() {
   if (!isset($_POST['csrf'])) {
     return false;
   }
-  // TODO: Fix CSRF tokens to not time out so soon
-  return true;
   return $_POST['csrf'] === getCSRFToken();
 }
 
