@@ -38,7 +38,16 @@ function requireCSRF() {
   }
 }
 
+function assertValidHash($hash) {
+  $hash_pattern = '/^[\w\-]*\/?[\w\-]*\/*$/';
+  if (preg_match($hash_pattern, $hash)) {
+    return $hash;
+  }
+  return '';
+}
+
 function redirectHash($hash) {
+  $hash = assertValidHash($hash);
   $link = getBaseURL()."#$hash";
   header("Location: $link");
   echo "Redirecting to <a href=\"$link\">$link</a>. ";
