@@ -1100,7 +1100,7 @@ var crSetup = function courseRoadSetup() {
   }).on('click', '.saved-roads-edit-hash', function changeRoadHash() {
     var newhash = prompt(
       'Enter a new hash for this saved road below ' +
-      '(max. 36 characters, letters, numbers, and hyphens only):',
+      '(max. 36 characters, letters, numbers, underscores, and hyphens only):',
       $(this).prev().text()
     );
     if (newhash === false) {

@@ -229,12 +229,17 @@ if (isset($_POST['changeRoadHash'])) {
   requirePostDataFields('oldhash', 'newhash');
   $oldhash = $_POST['oldhash'];
   $newhash = $athena . '/' . htmlentities(substr($_POST['newhash'], 0, 36));
-  if (!$loggedin ||
-      preg_match('/\/.*?[^A-Za-z0-9\-]/', $newhash) ||
-      !strlen($_POST['newhash'])) {
+  if (!$loggedin) {
     dieJSON(array(
       'error' => true,
       'errorDesc' => 'Not logged in',
+      'hash' => $oldhash
+    ));
+  }
+  if (preg_match('/\/.*?[^\w\-]/', $newhash) || !strlen($_POST['newhash'])) {
+    dieJSON(array(
+      'error' => true,
+      'errorDesc' => 'Malformed hash supplied',
       'hash' => $oldhash
     ));
   }
