@@ -17,9 +17,9 @@ RewriteEngine On
 
 # FIXME: Set your own domain and path here
 # Set central CourseRoad domain [no trailing slash]
-SetEnvIf CR_HOST ^$ CR_HOST=courseroad.mit.edu
+SetEnvIf CR_HOST ^ CR_HOST=courseroad.mit.edu
 # Set CourseRoad path [leading slash, no trailing slash]
-SetEnvIf CR_PATH ^$ CR_PATH=/
+SetEnvIf CR_PATH ^ CR_PATH=/
 
 # Set pages which won't be redirected by force HTTPS or a different domain
 SetEnvIf REQUEST_URI /output.php$ NOREDIRECT=1
