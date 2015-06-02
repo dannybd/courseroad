@@ -1103,7 +1103,7 @@ var crSetup = function courseRoadSetup() {
       '(max. 36 characters, letters, numbers, underscores, and hyphens only):',
       $(this).prev().text()
     );
-    if (newhash === false) {
+    if (newhash === null) {
       return false;
     }
     newhash = newhash.substr(0, 36);
