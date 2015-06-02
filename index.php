@@ -114,7 +114,8 @@ header('X-UA-Compatible: IE=edge');
         A four-year planner for the MIT community.
       </div>
       <a id="openhelp" href="#" class="dummylink">Help</a> ~
-      <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a>
+      <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a> ~
+      <a href="https://github.com/dannybd/courseroad" target="_blank">Github</a>
       <br>
       <?
         if ($loggedin) {
