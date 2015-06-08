@@ -23,7 +23,7 @@
  * Individual strings for subjects can be replaced with objects, if additional
  * details are needed. This is primarily evident in certain cases:
  *   - Coreqs: {id: "18.03", coreq: 1}
- *   - Ranges: {id: "18.03-18.06", range: 1, regexMatch: /^18\.0[3-6]$/}
+ *   - Ranges: {id: "18.03-18.06", range: 1, regexMatch: /^18\.0[3-6]/}
  *   - Descriptions: {id: "18.03", desc: "(optional)"}
  *   - Skip: {id: "Just a marker; ignore me", skip: 1}
  */
@@ -425,8 +425,8 @@ window.majors = {
           {
             id: "6.100-182",
             range: 1,
-            matchRegex: /^6\.1[0-8]\d$/,
-            excludeRegex: /^6\.18[3-9]$/
+            matchRegex: /^6\.1[0-8]\d/,
+            excludeRegex: /^6\.18[3-9]/
         }],
         {
           id: "CS lab",
@@ -513,8 +513,8 @@ window.majors = {
           {
             id: "6.100-182",
             range: 1,
-            matchRegex: /^6\.1[0-8]\d$/,
-            excludeRegex: /^6\.18[3-9]$/
+            matchRegex: /^6\.1[0-8]\d/,
+            excludeRegex: /^6\.18[3-9]/
         }],
         {
           id: "CS lab",
@@ -692,7 +692,7 @@ window.majors = {
         {
           id: "8.03-999",
           range: 1,
-          matchRegex: /^8\.\d+$/,
+          matchRegex: /^8\../,
           excludeRegex: /^8\.0[0-2]/
       }],
       {
@@ -728,15 +728,15 @@ window.majors = {
         {
           id: "18.04-999",
           range: 1,
-          matchRegex: /^18\..+$/,
-          excludeRegex: /^18\.0[0-3]$/
+          matchRegex: /^18\../,
+          excludeRegex: /^18\.0[0-3]/
       }],
       [1, "8.07", "8.08", "8.09"],
       [1,
         {
           id: "8.03-999",
           range: 1,
-          matchRegex: /^8\..+$/,
+          matchRegex: /^8\../,
           excludeRegex: /^8\.0[0-2]/
       }]
     ]
@@ -793,26 +793,26 @@ window.majors = {
           {
             id: "10.001-039",
             range: 1,
-            matchRegex: /^10\.0[0-3]\d$/
+            matchRegex: /^10\.0[0-3]\d/
         }],
         [1,
           {
             id: "10.401-791",
             range: 1,
-            matchRegex: /^10\.[4-7]\d\d$/,
-            excludeRegex: /^10\.(400|79[2-9])$/
+            matchRegex: /^10\.[4-7]\d\d/,
+            excludeRegex: /^10\.(400|79[2-9])/
         }],
         [1,
           {
             id: "10.793-800",
             range: 1,
-            matchRegex: /^10\.(79[3-9]|800)$/
+            matchRegex: /^10\.(79[3-9]|800)/
         }],
         [1,
           {
             id: "10.817-899",
             range: 1,
-            matchRegex: /^10\.8(1[7-9]|[2-9]\d)$/
+            matchRegex: /^10\.8(1[7-9]|[2-9]\d)/
         }]
       ]
     ]
@@ -862,7 +862,7 @@ window.majors = {
           {
             id: "10.490-494",
             range: 1,
-            matchRegex: /^10\.49[0-4]$/
+            matchRegex: /^10\.49[0-4]/
           }
         ],
         [2,
@@ -871,7 +871,7 @@ window.majors = {
             {
               id: "10.492-494",
               range: 1,
-              matchRegex: /^10\.49[234]$/
+              matchRegex: /^10\.49[234]/
             }
           ]
         ]
@@ -1217,8 +1217,8 @@ window.majors = {
         {
           id: "18.04-999",
           range: 1,
-          matchRegex: /^18\..+$/,
-          excludeRegex: /^18\.0[0-3]$/
+          matchRegex: /^18\../,
+          excludeRegex: /^18\.0[0-3]/
         }
       ],
       [
@@ -1232,7 +1232,7 @@ window.majors = {
         {
           id: "18.100-999",
           range: 1,
-          matchRegex: /^18\.[1-9]\d\d$/
+          matchRegex: /^18\.[1-9]\d\d/
         }
       ],
       [1, "18.700", "18.701", "18.06"]
@@ -1295,7 +1295,7 @@ window.majors = {
         {
           id: "18.100-999",
           range: 1,
-          matchRegex: /^18\.[1-9]\d\d$/
+          matchRegex: /^18\.[1-9]\d\d/
       }],
       [
         {
@@ -1361,14 +1361,14 @@ window.majors = {
         {
           id: "18.04-999",
           range: 1,
-          matchRegex: /^18\..+$/,
-          excludeRegex: /^18\.0[0-3]$/
+          matchRegex: /^18\../,
+          excludeRegex: /^18\.0[0-3]/
       }],
       [1, "6.02", "6.041",
         {
           id: "6.170-179",
           range: 1,
-          matchRegex: /^6\.17\d$/
+          matchRegex: /^6\.17\d/
         },
         {
           id: "a Foundation or Header subject",
@@ -1377,7 +1377,7 @@ window.majors = {
         {
           id: "6.100-999",
           range: 1,
-          matchRegex: /^6\.[1-9]\d\d$/
+          matchRegex: /^6\.[1-9]\d\d/
         }
       ],
       [{count: 1, desc: "(for CI-M) from"},
@@ -1548,8 +1548,8 @@ window.majors = {
         {
           id: "21H.001-999",
           range: 1,
-          matchRegex: /^21H\.\d{3}$/,
-          excludeRegex: /^21H\.000$/
+          matchRegex: /^21H\.\d{3}/,
+          excludeRegex: /^21H\.000/
       }],
       "21H.390", "21H.THT", "21H.THU",
       {
@@ -1602,14 +1602,14 @@ window.majors = {
         {
           id: "21M.401-499",
           range: 1,
-          matchRegex: /^21M\.4\d\d$/
+          matchRegex: /^21M\.4\d\d/
       }],
       "21M.500",
       [1,
         {
           id: "21M.300-399",
           range: 1,
-          matchRegex: /^21M\.3\d\d$/
+          matchRegex: /^21M\.3\d\d/
       }],
       [1,
         "21M.215", "21M.223", "21M.226", "21M.283", "21M.284",
@@ -1617,7 +1617,7 @@ window.majors = {
           {
             id: "21M.291-299",
             range: 1,
-            matchRegex: /^21M\.29[1-9]$/
+            matchRegex: /^21M\.29[1-9]/
         }]
       ],
       [1,
@@ -1625,19 +1625,19 @@ window.majors = {
           {
             id: "21M.300-399",
             range: 1,
-            matchRegex: /^21M\.3\d\d$/
+            matchRegex: /^21M\.3\d\d/
         }],
         [1,
           {
             id: "21M.200-299",
             range: 1,
-            matchRegex: /^21M\.2\d\d$/
+            matchRegex: /^21M\.2\d\d/
         }],
         [2,
           {
             id: "21M.400-499",
             range: 1,
-            matchRegex: /^21M\.4\d\d$/
+            matchRegex: /^21M\.4\d\d/
         }]
       ]
     ]
@@ -1737,8 +1737,8 @@ window.majors = {
         {
           id: "STS.001-999",
           range: 1,
-          matchRegex: /^STS\.\d{3}$/,
-          excludeRegex: /^STS.000$/
+          matchRegex: /^STS\.\d{3}/,
+          excludeRegex: /^STS.000/
       }]
     ]
   },
@@ -1876,8 +1876,8 @@ window.majors = {
         {
           id: "STS.025-090",
           range: 1,
-          matchRegex: /^STS\.0([2-8]\d|90)$/,
-          excludeRegex: /^STS\.02[0-4]$/
+          matchRegex: /^STS\.0([2-8]\d|90)/,
+          excludeRegex: /^STS\.02[0-4]/
       }],
       "STS.091", "STS.THT", "STS.THU",
       {
@@ -2252,22 +2252,22 @@ window.majors = {
         {
           id: "STS.001-011",
           range: 1,
-          matchRegex: /^STS\.0(0\d|1[01])$/,
-          excludeRegex: /^STS\.000$/
+          matchRegex: /^STS\.0(0\d|1[01])/,
+          excludeRegex: /^STS\.000/
       }],
       [1,
         {
           id: "STS.025-089",
           range: 1,
-          matchRegex: /^STS\.0([2-8]\d)$/,
-          excludeRegex: /^STS\.02[0-4]$/
+          matchRegex: /^STS\.0([2-8]\d)/,
+          excludeRegex: /^STS\.02[0-4]/
       }],
       [3,
         {
           id: "STS.001-089",
           range: 1,
-          matchRegex: /^STS\.0[0-8]\d$/,
-          excludeRegex: /^STS\.000$/
+          matchRegex: /^STS\.0[0-8]\d/,
+          excludeRegex: /^STS\.000/
       }]
     ]
   },
@@ -2281,13 +2281,13 @@ window.majors = {
         {
           id: "21M.200-299",
           range: 1,
-          matchRegex: /^21M\.2\d\d$/
+          matchRegex: /^21M\.2\d\d/
       }],
       [2,
         {
           id: "21M.400-499",
           range: 1,
-          matchRegex: /^21M\.4\d\d$/
+          matchRegex: /^21M\.4\d\d/
       }],
       [1,
         [2,
@@ -2295,28 +2295,28 @@ window.majors = {
           {
             id: "21M.200-299",
             range: 1,
-            matchRegex: /^21M\.2\d\d$/
+            matchRegex: /^21M\.2\d\d/
           }
         ],
         [2,
           {
             id: "21M.300-399",
             range: 1,
-            matchRegex: /^21M\.3\d\d$/
+            matchRegex: /^21M\.3\d\d/
           },
           "21M.500",
           {
             id: "21M.550-589",
             range: 1,
-            matchRegex: /^21M\.5[5-8]\d$/
+            matchRegex: /^21M\.5[5-8]\d/
           }
         ],
         [4,
           {
             id: "21M.401-499",
             range: 1,
-            matchRegex: /^21M\.4\d\d$/,
-            excludeRegex: /^21M\.400$/
+            matchRegex: /^21M\.4\d\d/,
+            excludeRegex: /^21M\.400/
         }]
       ]
     ]
@@ -2426,14 +2426,14 @@ window.majors = {
           {
             id: "18.100-999",
             range: 1,
-            matchRegex: /^18\.[1-9]\d\d$/
+            matchRegex: /^18\.[1-9]\d\d/
         }],
         [2,
           {
             id: "18.03-999",
             range: 1,
-            matchRegex: /^18\..+$/,
-            excludeRegex: /^18\.0[0-3]$/
+            matchRegex: /^18\../,
+            excludeRegex: /^18\.0[0-3]/
         }],
         {
           id: "[Note: All classes must be of essentially different content]",
@@ -2488,7 +2488,7 @@ window.majors = {
           {
             id: "8.03-999",
             range: 1,
-            matchRegex: /^8\..+$/,
+            matchRegex: /^8\../,
             excludeRegex: /^8\.0[0-2]/
         }]
       ]
@@ -2502,22 +2502,22 @@ window.majors = {
         {
           id: "Intro class (two digit decimal)",
           range: 1,
-          matchRegex: /^17\.\d{2}$/
+          matchRegex: /^17\.\d{2}\D/
         }
       ],
       [4,
         {
           id: "Advanced classes (three digit decimal)",
           range: 1,
-          matchRegex: /^17\.\d{3}$/
+          matchRegex: /^17\.\d{3}/
         }
       ],
       [1,
         {
           id: "17.01-999",
           range: 1,
-          matchRegex: /^17\..+$/,
-          excludeRegex: /^17\.00$/
+          matchRegex: /^17\../,
+          excludeRegex: /^17\.00/
         }
       ]
     ]
@@ -2559,7 +2559,7 @@ window.majors = {
         {
           id: "21F.308-313",
           range: 1,
-          matchRegex: /^21F\.3(0[89]|1[0-3])$/
+          matchRegex: /^21F\.3(0[89]|1[0-3])/
         },
         "21F.315"
       ],
@@ -2568,8 +2568,8 @@ window.majors = {
         {
           id: "21F.320-348",
           range: 1,
-          matchRegex: /^21F\.3[2-4]\d$/,
-          excludeRegex: /^21F\.349$/
+          matchRegex: /^21F\.3[2-4]\d/,
+          excludeRegex: /^21F\.349/
         },
         "21H.241"
       ]
@@ -2585,7 +2585,7 @@ window.majors = {
         {
           id: "21F.405-412",
           range: 1,
-          matchRegex: /^21F\.4(0[5-9]|1[0-2])$/
+          matchRegex: /^21F\.4(0[5-9]|1[0-2])/
         }
       ],
       [2,
@@ -2593,20 +2593,20 @@ window.majors = {
         {
           id: "21F.414-420",
           range: 1,
-          matchRegex: /^21F\.4(1[4-9]|20)$/
+          matchRegex: /^21F\.4(1[4-9]|20)/
         }
       ],
       [1,
         {
           id: "21F.405-412",
           range: 1,
-          matchRegex: /^21F\.4(0[5-9]|1[0-2])$/
+          matchRegex: /^21F\.4(0[5-9]|1[0-2])/
         },
         "17.651", "21F.019", "21F.055", "21F.059", "21F.098",
         {
           id: "21F.414-420",
           range: 1,
-          matchRegex: /^21F\.4(1[4-9]|20)$/
+          matchRegex: /^21F\.4(1[4-9]|20)/
         }
       ]
     ]
@@ -2621,7 +2621,7 @@ window.majors = {
         {
           id: "21F.711-714",
           range: 1,
-          matchRegex: /^21F\.71[1-4]$/
+          matchRegex: /^21F\.71[1-4]/
         },
         "21F.792"
       ],
@@ -2634,7 +2634,7 @@ window.majors = {
         {
           id: "21F.716-740",
           range: 1,
-          matchRegex: /^21F\.7(1[6-9]|[23]\d|40)$/
+          matchRegex: /^21F\.7(1[6-9]|[23]\d|40)/
         }
       ]
     ]
@@ -2733,37 +2733,37 @@ window.majors = {
         {
           id: "21L.000-044",
           range: 1,
-          matchRegex: /^21L\.0[0-4]\d$/,
-          excludeRegex: /^21L\.04[5-9]$/
+          matchRegex: /^21L\.0[0-4]\d/,
+          excludeRegex: /^21L\.04[5-9]/
       }],
       [2,
         {
           id: "21L.420-522",
           range: 1,
-          matchRegex: /^21L\.(4[2-9]|5[0-2])\d$/,
-          excludeRegex: /^21L\.52[3-9]$/
+          matchRegex: /^21L\.(4[2-9]|5[0-2])\d/,
+          excludeRegex: /^21L\.52[3-9]/
       }],
       [1,
         [1,
           {
             id: "21L.000-044",
             range: 1,
-            matchRegex: /^21L\.0[0-4]\d$/,
-            excludeRegex: /^21L\.04[5-9]$/
+            matchRegex: /^21L\.0[0-4]\d/,
+            excludeRegex: /^21L\.04[5-9]/
         }],
         [1,
           {
             id: "21L.420-522",
             range: 1,
-            matchRegex: /^21L\.(4[2-9]|5[0-2])\d$/,
-            excludeRegex: /^21L\.52[3-9]$/
+            matchRegex: /^21L\.(4[2-9]|5[0-2])\d/,
+            excludeRegex: /^21L\.52[3-9]/
         }]
       ],
       [2,
         {
           id: "21L.701-715",
           range: 1,
-          matchRegex: /^21L\.7(0[1-9]|1[0-5])$/
+          matchRegex: /^21L\.7(0[1-9]|1[0-5])/
       }]
     ]
   },
@@ -2882,58 +2882,58 @@ window.majors = {
             {
               id: "20.340-499",
               range: 1,
-              matchRegex: /^20\.[34]\d\d$/,
-              excludeRegex: /^20\.3[0-3]\d$/
+              matchRegex: /^20\.[34]\d\d/,
+              excludeRegex: /^20\.3[0-3]\d/
           }],
           [1,
             {
               id: "20.340-499",
               range: 1,
-              matchRegex: /^20\.[34]\d\d$/,
-              excludeRegex: /^20\.3[0-3]\d$/
+              matchRegex: /^20\.[34]\d\d/,
+              excludeRegex: /^20\.3[0-3]\d/
           }],
           [1,
             {
               id: "20.340-499",
               range: 1,
-              matchRegex: /^20\.[34]\d\d$/,
-              excludeRegex: /^20\.3[0-3]\d$/
+              matchRegex: /^20\.[34]\d\d/,
+              excludeRegex: /^20\.3[0-3]\d/
           }],
           [1,
             {
               id: "HST.520-529",
               range: 1,
-              matchRegex: /^HST\.52\d$/
+              matchRegex: /^HST\.52\d/
           }],
           [1,
             {
               id: "HST.520-529",
               range: 1,
-              matchRegex: /^HST\.52\d$/
+              matchRegex: /^HST\.52\d/
           }],
           [1,
             {
               id: "HST.520-529",
               range: 1,
-              matchRegex: /^HST\.52\d$/
+              matchRegex: /^HST\.52\d/
           }],
           [1,
             {
               id: "HST.540-549",
               range: 1,
-              matchRegex: /^HST\.54\d$/
+              matchRegex: /^HST\.54\d/
           }],
           [1,
             {
               id: "HST.540-549",
               range: 1,
-              matchRegex: /^HST\.54\d$/
+              matchRegex: /^HST\.54\d/
           }],
           [1,
             {
               id: "HST.540-549",
               range: 1,
-              matchRegex: /^HST\.54\d$/
+              matchRegex: /^HST\.54\d/
           }]
         ]
       ]
