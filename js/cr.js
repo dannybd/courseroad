@@ -734,7 +734,8 @@ function checkMajor() {
   var majorData = majors[majorId];
   if (!majorData || majorData.disable) {
     $div.html('');
-    return false;
+    // Continue checking majors and minors even if this one isn't defined
+    return true;
   }
   var majorReqs = majorData.reqs || [0];
   span.attr('data-value', $selector.find('option:selected').text())
