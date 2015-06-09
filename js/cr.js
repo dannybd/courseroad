@@ -1166,7 +1166,7 @@ var crSetup = function courseRoadSetup() {
     var $parentRow = $(this).parents('tr');
     $.post('ajax.php', {
       deleteRoad: 1,
-      hash: parent.data('hash'),
+      hash: $parentRow.data('hash'),
       csrf: CSRF_token
     }, function deleteRoadResponse(data) {
       if (badCSRF(data)) {
