@@ -44,12 +44,6 @@ var Defaults = {
     coreq: 0,
     // Boolean for whether a range is in use
     range: 0,
-    // Department used for range
-    dept: '',
-    // Beginning of range
-    from: '',
-    // End of range
-    to: '',
     // Regex string to match classes for a range or complex id matching
     matchRegex: '',
     // Regex string to NOT match classes for a range or complex id matching
@@ -214,7 +208,6 @@ function checkRequisites(arr, callback, callbackArgs, level) {
     matchParams.count -= $(this).data(matchParams.type);
   };
   var filterRangeMatches = function filterRangeMatches() {
-    var newMatchRange = [newMatch.dept, '.' + newMatch.from, '.' + newMatch.to];
     var data = $(this).data();
     var classNames = [data.subject_id].concat(data.joint_subjects || []);
     for (j = 0; j < classNames.length; j++) {
