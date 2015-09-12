@@ -295,12 +295,13 @@ function pullCustom(
   $row['id'] = substr(preg_replace('/[^A-Za-z]/', '', $name), 0, 8);
   $row['divid'] = $row['id'] . '__' . rand();
   $row['subject_title'] = $name;
+  $html_name = htmlentities($name);
   $row['total_units'] = floatval($units);
   if (!$row['total_units']) {
     $row['total_units'] = 0;
   }
   $row['info'] = <<<EOD
-<strong>{$row['subject_title']}</strong><br>
+<strong>$html_name</strong><br>
 <p class='infounits'>({$row['total_units']} units)</p><br>
 <p class='infoinfo'>[This is a user-defined subject.]</p>
 EOD;
@@ -315,8 +316,8 @@ EOD;
   $row['div'] = <<<EOD
 <div id="{$row['divid']}" class="{$row['divclasses']}">
   <div class="classdivlabel">
-    <div class="classdivtitle" title="{$row['subject_title']}">
-      {$row['subject_title']}
+    <div class="classdivtitle" title="$html_name">
+      $html_name
     </div>
   </div>
   <div class="classdivinfo">

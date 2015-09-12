@@ -33,9 +33,8 @@ if (isset($_POST['getClass'])) {
 // Same, but for a custom class. These are used by the Add tab.
 if (isset($_POST['getCustom'])) {
   requirePostDataFields('name');
-  $name = htmlentities($_POST['name']);
   $units = isset($_POST['units']) ? floatval($_POST['units']) : false;
-  dieJSON(pullCustom($name, $units));
+  dieJSON(pullCustom($_POST['name'], $units));
 }
 
 // Returns the desired hash's class and major data
