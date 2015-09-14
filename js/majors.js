@@ -627,9 +627,9 @@ window.majors = {
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
-            "Course VI website, however changes in the Course VI " +
-            "requirements occur frequently. For the most up-to-date listings " +
-            "please refer to the Course VI checklist.",
+            "Course VI website, but the Course VI requirements change " +
+            "frequently. For the most up-to-date listings please refer to " +
+            "the Course VI checklist.",
         skip: 1
       },
       "6.01",
