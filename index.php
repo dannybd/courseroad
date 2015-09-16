@@ -117,7 +117,7 @@ header('X-UA-Compatible: IE=edge');
       <a href="https://www.facebook.com/courseroad" target="_blank">Facebook Page</a> ~
       <a href="https://github.com/dannybd/courseroad" target="_blank">Github</a>
       <br>
-      <?
+      <?php
         if ($loggedin) {
           echo "Hello, <strong>$athena</strong>! ";
         } else {
