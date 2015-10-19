@@ -1695,6 +1695,40 @@ window.majors = {
     ]
   },
 
+  m21_G_french: {
+    name: "21G -- French Studies",
+    reqs: [0,
+      {
+        id: "Propose to join major " +
+            "(<a href=\"http:\/\/shass.mit.edu\/undergraduate\/majors\" " +
+            "target=\"_blank\">details<\/a>)",
+        skip: 1
+      },
+      "21G.301", "21G.302", "21G.304", "21G.306", "21G.307",
+      [1,
+        "21G.308", "21G.310", "21G.311", "21G.312", "21G.315", "21G.320",
+        "21G.325", "21G.345", "21G.346"
+      ]
+    ]
+  },
+
+  m21_G_spanish: {
+    name: "21G -- Spanish Studies",
+    reqs: [0,
+      {
+        id: "Propose to join major " +
+            "(<a href=\"http:\/\/shass.mit.edu\/undergraduate\/majors\" " +
+            "target=\"_blank\">details<\/a>)",
+        skip: 1
+      },
+      "21G.701", "21G.702", "21G.704", "21G.708", "21G.709",
+      [1,
+        "21G.716", "21G.717", "21G.721", "21G.730", "21G.731", "21G.735",
+        "21G.736", "21G.738", "21G.740"
+      ]
+    ]
+  },
+
   m21_H: {
     name: "21H -- History",
     reqs: [0,
