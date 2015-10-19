@@ -2329,7 +2329,8 @@ window.majors = {
           id: "Course 12 subjects within one of the EAPS concentration " +
               "areas, approved by the minor advisor",
           skip: 1
-      }],
+        }
+      ],
       [
         {
           count: 12,
@@ -2337,19 +2338,25 @@ window.majors = {
           desc: "units from",
           special: 1
         },
-        {
-          id: "Lab:",
-          skip: 1
-        }, "12.115", "12.119", "12.307", "12.410",
-        {
-          id: "Field and IAP:",
-          skip: 1
-        }, "12.120", "12.141", "12.213", "12.214", "12.221", "12.310", "12.411",
-        {
-          id: "Independent Study:",
-          skip: 1
-        }, "12.IND", "12.UR"
+        {id: "Lab:", skip: 1},
+        "12.115", "12.119", "12.307", "12.410",
+        {id: "Field and IAP:", skip: 1},
+        "12.120", "12.141", "12.213", "12.214", "12.221", "12.310", "12.411",
+        {id: "Independent Study:", skip: 1},
+        "12.IND", "12.UR"
       ]
+    ]
+  },
+
+  miAtmospheric_chemistry: {
+    name: "Minor in Atmospheric Chemistry",
+    reqs: [0,
+      {id: "Chemistry, Dynamics, and the Atmosphere:", skip: 1},
+      "12.003", "5.60", "1.085", "12.306",
+      {id: "Observations/Applications:", skip: 1},
+      [1, "1.080", "12.335", "12.338", [2, "12.310", "12.IND"]],
+      {id: "Linkages of Atmospheric Chemistry to Policy:", skip: 1},
+      [1, "12.385", "12.340", "12.346"]
     ]
   },
 
