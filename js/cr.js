@@ -13,6 +13,8 @@ var Defaults = {
   requisiteCount: {
     // Threshold count needed to satisfy branch
     count: 0,
+    // Boolean for tracking whether we care about matching all of the following
+    allOfTheFollowing: false,
     // Boolean for checking where we are counting differently
     special: 0,
     // '' means just count the following, 'total_units' if the threshold is for
@@ -110,18 +112,20 @@ var Defaults = {
  */
 function getMatchParams(arr) {
   var matchedElement = arr[0];
+  var allOfTheFollowing = false;
 
   if (typeof matchedElement === 'number') {
     // Shortcut "all of the following" lists with a 0 in front:
     // [0, "a", "b"] --> [2, "a", "b"];
     if (matchedElement === 0) {
       matchedElement = arr.length - 1;
+      allOfTheFollowing = true;
     }
     matchedElement = { count: parseInt(matchedElement, 10) };
   }
 
   var matchedObject = $.extend({}, Defaults.requisiteCount, matchedElement);
-  matchedObject.initialCount = matchedObject.count;
+  matchedObject.allOfTheFollowing = allOfTheFollowing;
   matchedObject.matchesFound = [];
 
   return matchedObject;
@@ -301,12 +305,9 @@ function checkRequisites(arr, callback, callbackArgs, level) {
 
     newMatch = getMatchObject(arr[i]);
 
-    if (newMatch.skip) {
-      matchParams.count--;
-      continue;
-    }
-    if (newMatch.id === 'Permission' && !user.needPermission) {
-      if (matchParams.initialCount === arr.length - 1) {
+    if (newMatch.skip ||
+      (newMatch.id === 'Permission' && !user.needPermission)) {
+      if (matchParams.allOfTheFollowing) {
         matchParams.count--;
       }
       continue;
