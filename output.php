@@ -239,8 +239,8 @@ function parseRequisites($str) {
       }
     }
   }
-  // Prepend the requisite count, to make this "All of the following"
-  array_unshift($reqlist, count($reqlist));
+  // Prepend 0, to make this "All of the following"
+  array_unshift($reqlist, 0);
   return count($reqlist) > 1 ? $reqlist : false;
 }
 
