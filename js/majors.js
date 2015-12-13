@@ -3288,6 +3288,29 @@ window.majors = {
       {id: "Tier III:", skip: 1},
       "WGS.301"
     ]
-  }
+  },
 
+  miRussian_Eurasian_studies: {
+    name: "Minor in Russian & Eurasian Studies",
+    reqs: [0,
+      {id: "Note: Subjects taken at Harvard or Wellesley may count.", skip: 1},
+      [1,
+        [2, "21G.613", "21G.614"],
+        {id: "Area I: Language", skip: 1},
+        {id: "Two advanced language subjects", skip: 1},
+        {id: "Two additional subjects from Areas II, III, or IV", skip: 1},
+        {
+          id: "(Native speakers may substitute other subjects with permission)",
+          skip: 1
+        }
+      ],
+      [4,
+        {id: "Area II: Humanities and the Arts", skip: 1},
+        {id: "Area III: Social Sciences", skip: 1},
+        "11.142", "17.569", "21H.245",
+        {id: "Area IV: Historical Studies", skip: 1},
+        "21H.244"
+      ]
+    ],
+  }
 };
