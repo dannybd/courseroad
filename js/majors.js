@@ -2387,39 +2387,32 @@ window.majors = {
   miWriting: {
     name: "Minor in Writing",
     reqs: [0,
-      [
-        {
-          count: 6,
-          desc: "(1 from one area of study, five from the others) from"
-        },
-        {
-          id: "Writing and Rhetoric",
-          skip: 1
-        }, "21W.011", "21W.012", "21W.013",
-        {
-          id: "Writing and Experience",
-          skip: 1
-        }, "21W.021", "21W.022", "21W.023", "21W.024",
-        {
-          id: "Science Writing and New Media",
-          skip: 1
-        }, "21W.031", "21W.032", "21W.033", "21W.034", "21W.035",
-        {
-          id: "Writing about Literature",
-          skip: 1
-        }, "21W.041",
-        {
-          id: "Writing with Shakespeare",
-          skip: 1
-        }, "21W.042",
-        {
-          id: "Writing and Reading Short Stories",
-          skip: 1
-        }, "21W.755",
-        {
-          id: "Writing and Reading Poems",
-          skip: 1
-        }, "21W.756"
+      [1,
+        {id: "Writing and Rhetoric", skip: 1},
+        "21W.011", "21W.012", "21W.013",
+        {id: "Writing and Experience", skip: 1},
+        "21W.021", "21W.022", "21W.023", "21W.024",
+        {id: "Science Writing and New Media", skip: 1},
+        "21W.031", "21W.032", "21W.033", "21W.034", "21W.035",
+        {id: "Writing about Literature", skip: 1},
+        "21W.041",
+        {id: "Writing with Shakespeare", skip: 1},
+        "21W.042",
+        {id: "Writing and Reading Short Stories", skip: 1},
+        "21W.755",
+        {id: "Writing and Reading Poems", skip: 1},
+        "21W.756"
+      ],
+      [5,
+        "21W.THT", "21W.THU",
+        {id: "Creative Writing", skip: 1},
+        "21W.757", "21W.758", "21W.759", "21W.762", "21W.770", "21W.771",
+        "21W.777",
+        {id: "Science Writing", skip: 1},
+        "21W.777", "21W.778", "21W.792",
+        {id: "Digital Media", skip: 1},
+        "21W.764", "21W.765", "21W.785", "21W.757", "21W.758", "21W.759",
+        "21W.762", "21W.770", "21W.771", "21W.777"
       ]
     ]
   },
