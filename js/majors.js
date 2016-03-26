@@ -558,7 +558,7 @@ window.majors = {
       ],
       [
         {count: 2, desc: "(EE foundation subjects) from"},
-        "6.002", "6.003", "6.004", "6.007"
+        "6.002", "6.007", "6.003", "6.004"
       ],
       [
         {count: 2, desc: "(CS foundation subjects) from"},
