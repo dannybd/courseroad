@@ -3057,6 +3057,21 @@ window.majors = {
     ]
   },
 
+  mi21_G_spanish: {
+    name: "Minor in Spanish (new, 21G)",
+    reqs: [0,
+      [6,
+        {id: "Tier I (2 or fewer):", skip: 1},
+        "21G.703", "21G.704",
+        {id: "Tier II: (3 or fewer):", skip: 1},
+        "21G.711", "21G.712", "21G.713", "21G.714",
+        {id: "Tier III (2 or more):", skip: 1},
+        "21G.070", "21G.084", "21G.716", "21G.717", "21G.730", "21G.735",
+        "21G.736", "21G.738", "21G.739", "21G.740"
+      ]
+    ]
+  },
+
   miJapanese: {
     name: "Minor in Japanese",
     reqs: [0,
