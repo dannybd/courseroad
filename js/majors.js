@@ -1427,7 +1427,7 @@ window.majors = {
           type: "total_units",
           desc: "units from",
           special: 1
-      },
+        },
           {
           id: "Math or science concentration electives",
           skip: 1
@@ -1654,15 +1654,9 @@ window.majors = {
     name: "18-C -- Mathematics with Computer Science",
     reqs: [0,
       [1, "18.03", "18.034"],
-      [1, "18.06", "18.700", "18.701"], "18.410", "6.01", "6.006",
-      [1,
-        "18.062",
-        {
-          id: "18.310",
-          globalMatchesSkip: 1
-        },
-        "18.310A", "18.314"
-      ],
+      [1, "18.06", "18.700", "18.701"],
+      "18.410", "6.01", "6.006",
+      [1, "18.062", "18.200", "18.200A"],
       [1, "18.400", "18.404"],
       [1, "6.005", "6.033"],
       {id: "Restricted Electives:", skip: 1},
@@ -1673,21 +1667,32 @@ window.majors = {
           matchRegex: /^18\../,
           excludeRegex: /^18\.0[0-3]/
       }],
-      [1, "6.02", "6.041",
+      [
         {
-          id: "6.170-179",
-          range: 1,
-          matchRegex: /^6\.17\d/
+          count: 12,
+          type: "total_units",
+          desc: "units from",
+          special: 1
         },
+        "6.02", "6.041",
+        [1,
+          {
+            id: "6.170-179",
+            range: 1,
+            matchRegex: /^6\.17\d/
+          }
+        ],
         {
           id: "a Foundation or Header subject",
           skip: 1
         },
-        {
-          id: "6.100-999",
-          range: 1,
-          matchRegex: /^6\.[1-9]\d\d/
-        }
+        [1,
+          {
+            id: "6.100-999",
+            range: 1,
+            matchRegex: /^6\.[1-9]\d\d/
+          }
+        ]
       ],
       [{count: 1, desc: "(for CI-M) from"},
         [{count: 2, globalMatchesIgnore: 1},
