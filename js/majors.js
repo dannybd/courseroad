@@ -2592,7 +2592,7 @@ window.majors = {
         skip: 1
       },
       [1,
-        "24.118", "24.241", "24.242", "24, 243", "24.244", "24.245",
+        "24.118", "24.241", "24.242", "24.243", "24.244", "24.245",
         {
           id: "A logic subject in another department e.g. Mathematics",
           skip: 1
