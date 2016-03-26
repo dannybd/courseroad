@@ -1373,21 +1373,7 @@ window.majors = {
     name: "18 -- Mathematics (General Option)",
     reqs: [0,
       [1, "18.03", "18.034"],
-      [
-        {
-          count: 2,
-          desc: "(for CI-M) from"
-        },
-        [1,
-          "18.104", "18.200", "18.204", "18.384", "18.424", "18.434", "18.504",
-          "18.704", "18.784", "18.821", "18.904", "18.994"
-        ],
-        [1,
-          "18.104", "18.200", "18.204", "18.384", "18.424", "18.434", "18.504",
-          "18.704", "18.784", "18.821", "18.904", "18.994",
-          "6.033", "8.06", "14.33", "18.100C", "18.200"
-        ]
-      ],
+      [1, "18.700", "18.701", "18.06"],
       [
         {
           count: 8,
@@ -1417,18 +1403,12 @@ window.majors = {
           matchRegex: /^18\.[1-9]\d\d/
         }
       ],
-      [1, "18.700", "18.701", "18.06"]
-    ]
-  },
-
-  m18_applied: {
-    name: "18 -- Mathematics (Applied Option)",
-    reqs: [0,
-      [1, "18.03", "18.034"],
       [
         {
           count: 2,
-          desc: "(for CI-M) from"
+          desc: "(for CI-M) from",
+          globalMatchesIgnore: 1,
+          globalMatchesSkip: 1
         },
         [1,
           "18.104", "18.200", "18.204", "18.384", "18.424", "18.434", "18.504",
@@ -1439,34 +1419,56 @@ window.majors = {
           "18.704", "18.784", "18.821", "18.904", "18.994",
           "6.033", "8.06", "14.33", "18.100C", "18.200"
         ]
-      ],
-      [1,
+      ]
+    ]
+  },
+
+  m18_applied: {
+    name: "18 -- Mathematics (Applied Option)",
+    reqs: [0,
+      [1, "18.03", "18.034", "18.152", "18.303"],
+      [1, "18.04", "18.112"],
+      [1, "18.06", "18.700", "18.701"],
+      [1, "18.200", "18.200A"],
+      "18.300",
+      [
         {
-          id: "18.310",
-          globalMatchesIgnore: 1
+          count: 4,
+          desc: "(with at least one from each group) from"
         },
-        "18.310A"
+        {
+          id: "Group I class: Probability and statistics, combinatorics, " +
+              "computer science",
+          skip: 1
+        },
+        "18.204",
+        [1, "18.211", "18.212"],
+        [1, "18.400", "18.404"],
+        "18.424", "18.453", "18.434", "18.600", "18.650",
+        {
+          id: "Group II class: Numerical analysis, physical mathematics, " +
+              "nonlinear dynamics",
+          skip: 1
+        },
+        "18.303", "18.330", "18.352", "18.353", "18.354", "18.384"
       ],
-      "18.311", [1, "18.04", "18.112"],
-      [1, "18.06", "18.700"],
-      {
-        id: "Group I class: Probability and statistics, combinatorics, " +
-            "computer science",
-        skip: 1
-      },
-      {
-        id: "Group II class: Numerical analysis, physical mathematics, " +
-            "nonlinear dynamics",
-        skip: 1
-      },
-      {
-        id: "Class from Groups I or II",
-        skip: 1
-      },
-      {
-        id: "Class from Groups I or II",
-        skip: 1
-      }
+      [
+        {
+          count: 2,
+          desc: "(for CI-M) from",
+          globalMatchesIgnore: 1,
+          globalMatchesSkip: 1
+        },
+        [1,
+          "18.104", "18.200", "18.204", "18.384", "18.424", "18.434", "18.504",
+          "18.704", "18.784", "18.821", "18.904", "18.994"
+        ],
+        [1,
+          "18.104", "18.200", "18.204", "18.384", "18.424", "18.434", "18.504",
+          "18.704", "18.784", "18.821", "18.904", "18.994",
+          "6.033", "8.06", "14.33", "18.100C", "18.200"
+        ]
+      ]
     ]
   },
 
