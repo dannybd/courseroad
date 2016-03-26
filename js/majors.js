@@ -1204,6 +1204,127 @@ window.majors = {
     ]
   },
 
+  m15_1: {
+    name: "15-1 -- Management (new)",
+    reqs: [0,
+      "15.501", "15.279",
+      [1,
+        "15.301",
+        [2,
+          [1, "15.310", "15.668"],
+          [
+            {
+              count: 1,
+              globalMatchesIgnore: 1,
+              globalMatchesSkip: 1
+            },
+            "15.417", "15.418"
+          ]
+        ]
+      ],
+      [1, "14.01", "15.0111"],
+      [1, "15.079", "6.041", "14.30", "18.600", "18.440"],
+      [1, "15.075", "14.32", "18.650", "18.443"],
+      [2,
+        [1, "15.417", "15.401"],
+        [1, "15.7611", "15.761"],
+        "15.812",
+        [1, "15.9001", "15.900"]
+      ],
+      {
+        id: "5 Concentration Elective subjects. At least 3 must be Course " +
+            "15 subjects.",
+        skip: 1
+      }
+    ]
+  },
+
+  m15_2: {
+    name: "15-2 -- Business Analytics (new)",
+    reqs: [0,
+      "15.276",
+      [1, [2, "6.0001", "6.0002"], "6.01"],
+      [1, "15.279", "15.301", "15.417", "15.418"],
+      "15.053",
+      [1, "15.079", "6.041", "186.00"],
+      "15.075", "15.78-", "6.036",
+      {
+        id: "5 Concentration Elective subjects. At least 3 must be Sloan " +
+            "subjects.",
+        skip: 1
+      }
+    ]
+  },
+
+  m15_3: {
+    name: "15-3 -- Finance (new)",
+    reqs: [0,
+      [1,
+        "15.417",
+        [0,
+          "15.401",
+          [
+            {
+              count: 1,
+              globalMatchesIgnore: 1,
+              globalMatchesSkip: 1
+            },
+            "15.418"
+          ],
+          [
+            {
+              count: 1,
+              globalMatchesIgnore: 1,
+              globalMatchesSkip: 1
+            },
+            "15.276", "15.279"
+          ]
+        ]
+      ],
+      [1,
+        "15.418",
+        [0,
+          "15.402",
+          [
+            {
+              count: 1,
+              globalMatchesIgnore: 1,
+              globalMatchesSkip: 1
+            },
+            "15.417"
+          ],
+          [
+            {
+              count: 1,
+              globalMatchesIgnore: 1,
+              globalMatchesSkip: 1
+            },
+            "15.276", "15.279"
+          ]
+        ]
+      ],
+      "15.501",
+      [1, "14.01", "15.0111"],
+      [1, "15.079", "6.041", "18.600", "14.30"],
+      [1, "15.075", "18.650", "14.32"],
+      {id: "Restricted Electives:", skip: 1},
+      [1, "15.4331", "15.4371", "15.438"],
+      [1, "15.4311", "15.4341"],
+      [3,
+        "15.4331", "15.4371", "15.438",
+        "15.4311", "15.4341",
+        "15.447", "15.450", "15.4601", "15.466", "15.467", "15.5181"
+      ],
+      [2,
+        "15.4331", "15.4371", "15.438",
+        "15.4311", "15.4341",
+        "15.447", "15.450", "15.4601", "15.466", "15.467", "15.5181",
+        "15.053", "15.7611", "15.812", "15.9001",
+        [1, "15.301", "15.310", "15.668"]
+      ]
+    ]
+  },
+
   m16_1: {
     name: "16-1 -- Aerospace Engineering (2015s ONLY)",
     reqs: [0,
@@ -2395,6 +2516,57 @@ window.majors = {
         "14.26", "14.27", "14.41", "14.42", "14.43", "14.44", "14.54", "14.64",
         "14.70", "14.73", "14.74", "14.75",
         [2, "15.411", "15.412"]
+      ]
+    ]
+  },
+
+  mi15_1: {
+    name: "Minor in 15-1: Management",
+    reqs: [0,
+      "15.501",
+      [1, "15.301", "15.310", "15.668"],
+      [1,
+        [1, "15.417", "15.401"],
+        [1, "15.7611", "15.761"],
+        "15.812",
+        [1, "15.9001", "15.900"]
+      ],
+      {
+        id: "Three full subjects (two six-unit subjects equal a full " +
+            "elective) from Course 15. UROP, Independent Study, Special " +
+            "Seminars, or general-elective transfer credit may not be used. " +
+            "14.01 may be used as an elective.",
+        skip: 1
+      }
+    ]
+  },
+
+  mi15_2: {
+    name: "Minor in 15-2: Business Analytics",
+    reqs: [0,
+      "15.053",
+      [1, "15.079", "6.041", "18.600"],
+      [1, "15.075", "18.650"],
+      {
+        id: "Three full subjects from <a href=\"" +
+            "http://mitsloan.mit.edu/uploadedFilesV9/Undergraduate/Pages/" +
+            "Majors_and_Minors/15-2%20BA%20Electives_web.pdf\">" +
+            "a list of restricted electives</a>. At least two of the " +
+            "subjects must be from Course 15.",
+        skip: 1
+      }
+    ]
+  },
+
+  mi15_3: {
+    name: "Minor in 15-3: Business Analytics",
+    reqs: [0,
+      [1, "15.417", "15.401"],
+      [1, "15.418", "15.402"],
+      "15.501",
+      [2,
+        "15.4331", "15.4371", "15.438", "15.4311", "15.4341", "15.447",
+        "15.450", "15.4601", "15.466", "15.467", "15.5181"
       ]
     ]
   },
