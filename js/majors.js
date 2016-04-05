@@ -2259,6 +2259,24 @@ window.majors = {
     reqs: [0]
   },
 
+  miComputerScience: {
+    name: "Minor in Computer Science (new!)",
+    reqs: [0,
+      "6.0001", "6.0002", "6.042",
+      [1, "6.009", "6.S04", "6.005"],
+      "6.006",
+      {id: "Elective Subjects:", skip: 1},
+      [1,
+        "6.005", "6.031", "6.033", "6.036", "6.045",
+        "6.046", "6.170"
+      ],
+      [1,
+        "6.004", "6.008", "6.034",
+        "6.033", "6.036", "6.045", "6.046", "6.170"
+      ]
+    ]
+  },
+
   miArchitecture: {
     name: "Minor in Architecture",
     reqs: [0,
