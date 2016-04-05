@@ -2255,8 +2255,42 @@ window.majors = {
 
   mWGS: {
     name: "WGS -- Women's and Gender Studies",
-    disable: 1,
-    reqs: [0]
+    reqs: [0,
+      {id: "Tier I:", skip: 1},
+      "WGS.101",
+      {id: "Tier II:", skip: 1},
+      [1,
+        "WGS.109", "WGS.110", "WGS.111", "WGS.115", "WGS.140", "WGS.141", "WGS.142",
+        "WGS.154", "WGS.161", "WGS.190", "WGS.220", "WGS.226", "WGS.231", "WGS.233",
+        "WGS.234", "WGS.235", "WGS.236", "WGS.240"
+      ],
+      [1,
+        "WGS.125", "WGS.150", "WGS.151", "WGS.170", "WGS.172", "WGS.175", "WGS.221",
+        "WGS.222", "WGS.225", "WGS.228", "WGS.270", "WGS.271", "WGS.272", "WGS.274",
+        "WGS.276"
+      ],
+      [5,
+        "WGS.109", "WGS.110", "WGS.111", "WGS.115", "WGS.140", "WGS.141", "WGS.142",
+        "WGS.154", "WGS.161", "WGS.190", "WGS.220", "WGS.226", "WGS.231", "WGS.233",
+        "WGS.234", "WGS.235", "WGS.236", "WGS.240",
+        "WGS.125", "WGS.150", "WGS.151", "WGS.170", "WGS.172", "WGS.175", "WGS.221",
+        "WGS.222", "WGS.225", "WGS.228", "WGS.270", "WGS.271", "WGS.272", "WGS.274",
+        "WGS.276",
+        {
+          id: "A subject at Harvard, Wellesley, or Cambridge " +
+              "(with permission of the director)",
+          skip: 1
+        }
+      ],
+      {id: "Tier III:", skip: 1},
+      [1,
+        "WGS.301",
+        {
+          id: "An advanced WGS subject (with permission of the director)",
+          skip: 1
+        }
+      ]
+    ]
   },
 
   miComputerScience: {
