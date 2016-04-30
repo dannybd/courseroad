@@ -2352,6 +2352,21 @@ window.majors = {
     ]
   },
 
+  miDesign: {
+    name: "Minor in Design (new!)",
+    reqs: [0,
+      "4.031", "4.032", "4.101",
+      [3,
+        "4.110", "4.411J", "4.500", "4.502", "4.520", "2.007", "CMS.634",
+        "EC.720J", "MAS.110",
+        "4.301", "4.307", "4.322",
+        [1, "4.330", "4.332"],
+        [1, "4.341", "4.344"],
+        "4.602", "4.657", "CMS.362"
+      ]
+    ]
+  },
+
   miHist_Architecture_Art: {
     name: "Minor in the History of Architecture and Art",
     reqs: [0,
