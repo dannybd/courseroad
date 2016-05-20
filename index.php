@@ -121,18 +121,30 @@ header('X-UA-Compatible: IE=edge');
         if ($loggedin) {
           echo "Hello, <strong>$athena</strong>! ";
         } else {
-          echo '<input type="button" id="userlogin" class="bubble loaders" value="Login"';
-          if ($_SESSION['triedcert']) {
-            echo ' disabled="disabled" title="Sorry, we couldn\'t log you in. Try reopening your browser."';
-          }
-          echo '>';
-        }
-      ?>
+          if (!$_SESSION['triedcert']) {
+            echo <<<EOD
+      <input
+        type="button"
+        id="userlogin"
+        class="bubble loaders"
+        value="Login">
       <input
         type="button"
         id="showusersettings"
         class="bubble loaders"
         value="User Settings">
+EOD;
+          } else {
+            echo <<<EOD
+      <input
+        type="button"
+        id="baduserlogin"
+        class="bubble loaders"
+        value="Couldn't Login :( Click here for help">
+EOD;
+          }
+        }
+      ?>
     </div>
     <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
       Class Type:&nbsp;

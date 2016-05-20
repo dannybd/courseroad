@@ -971,6 +971,22 @@ function redirectToAuth() {
   );
 }
 
+function explainBadLoginHelp() {
+  alert(
+    "Sorry you're having trouble. This happens occasionally for reasons " +
+    "outside my control: browsers do very weird things when they ask for " +
+    "your certificates, so I can't automatically reset things for you. " +
+    "Thankfully, there's a workaround: try logging in using your " +
+    "browser's private browsing/incognito mode. " +
+    "Ctrl+Shift+N on Chrome, for example, will open a new incognito " +
+    "chrome window, which has the nice property of not remembering the " +
+    "certificate weirdness in the other window. " +
+    "You should be able to navigate to CourseRoad from there and " +
+    "(hopefully) login with your certificates.\n\n" +
+    "Please email courseroad@mit.edu if this doesn't work."
+  );
+}
+
 function hideAutocomplete() {
   $('#getnewclass .ui-autocomplete').hide();
 }
@@ -1398,6 +1414,7 @@ var crSetup = function courseRoadSetup() {
     $('#rightbar').addClass('doge');
   });
   $('#userlogin').click(redirectToAuth);
+  $('#baduserlogin').click(explainBadLoginHelp);
   $('#usersettings').dialog(Defaults.modalProperties);
   $('#showusersettings').click(function showUserSettings() {
     $('#usersettings').dialog('open');
