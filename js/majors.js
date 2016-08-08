@@ -3373,6 +3373,37 @@ window.majors = {
     ]
   },
 
+  mi21_G_chinese: {
+    name: "Minor in Chinese (New, 21G)",
+    reqs: [0,
+      {id: "Tier I:", skip: 1},
+      [1,
+        [2, [1, "21G.103", "21G.173"], "21G.104"],
+        [2, [1, "21G.109", "21G.183"], "21G.110"],
+        [2, "21G.142", "21G.143"]
+      ],
+      {id: "Tier II:", skip: 1},
+      [1,
+        [2, [1, "21G.105", "21G.175"], "21G.106"],
+        [1, "21G.113", "21G.185"]
+      ],
+      {id: "Tier III:", skip: 1},
+      [1,
+        "21G.190", "21G.192", "21G.193", "21G.194", "21G.195", "21G.196",
+        {
+          id: "21G.199",
+          desc: " (if Capstone)"
+        }
+      ],
+      [1,
+        "21G.030", "21G.036", "21G.038", "21G.043", "21G.044", "21G.045",
+        "21G.046", "21G.075",
+        "21G.190", "21G.192", "21G.193", "21G.194", "21G.195", "21G.196",
+        "21H.151", "21H.152", "21H.351"
+      ]
+    ]
+  },
+
   miFrench: {
     name: "Minor in French",
     reqs: [0,
@@ -3464,7 +3495,7 @@ window.majors = {
   },
 
   mi21_G_spanish: {
-    name: "Minor in Spanish (new, 21G)",
+    name: "Minor in Spanish (New, 21G)",
     reqs: [0,
       [6,
         {id: "Tier I (2 or fewer):", skip: 1},
