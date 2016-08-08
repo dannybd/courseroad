@@ -2615,7 +2615,7 @@ window.majors = {
   },
 
   miComputerScience: {
-    name: "Minor in Computer Science (new!)",
+    name: "Minor in Computer Science (New!)",
     reqs: [0,
       "6.0001", "6.0002", "6.042",
       [1, "6.009", "6.S04", "6.005"],
@@ -2674,7 +2674,7 @@ window.majors = {
   },
 
   miDesign: {
-    name: "Minor in Design (new!)",
+    name: "Minor in Design (New!)",
     reqs: [0,
       "4.031", "4.032", "4.101",
       [3,
@@ -2685,6 +2685,39 @@ window.majors = {
         [1, "4.341", "4.344"],
         "4.602", "4.657", "CMS.362"
       ]
+    ]
+  },
+
+  miEntrepreneurship_Innovation: {
+    name: "Minor in Entrepreneurship & Innovation (New!)",
+    reqs: [0,
+      {id: "E&I Foundations:", skip: 1},
+      [2, "15.359", "15.373"],
+      {id: "E&I in Context:", skip: 1},
+      [1,
+        "3.086", "6.805", "11.005", "11.123", "11.142", "11.165", "15.031",
+        "15.364", "17.307", "17.309", "17.315", "17.33",
+        "STS.002", "STS.004", "STS.032", "STS.088", "EC.701"
+      ],
+      {id: "Leadership of Teams and Organizations:", skip: 1},
+      [1,
+        "2.96", "6.915", "10.02", "15.3941", "15.668",
+        {id: "GEL 1:", skip: 1},
+        [3, "6.902", "6.911", "6.912"]
+      ],
+      {id: "E&I Experimental:", skip: 1},
+      [1,
+        "2.009", "2.750", "2.752", "2.760", "3.042", "6.170", "6.811", "6.813",
+        "10.807", "11.127", "15.3781", "15.3901", "21W.789",
+        "CMS.610", "CMS.611", "EC.720",
+        [1,
+          {
+            id: "EC.7## (9- or 12-unit D-Lab subject, approved by advisor",
+            range: 1,
+            matchRegex: /^EC\.7\d\d/
+          }
+        ]
+      ],
     ]
   },
 
