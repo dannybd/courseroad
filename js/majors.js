@@ -3475,6 +3475,41 @@ window.majors = {
     ]
   },
 
+  mi21_G_french: {
+    name: "Minor in French (New, 21G)",
+    reqs: [0,
+      {id: "Tier I:", skip: 1},
+      [
+        {
+          count: 2,
+          desc: "(or fewer) from"
+        },
+        [1, "21G.303", "21G.373"],
+        [1, "21G.304", "21G.374"]
+      ],
+      {id: "Tier II:", skip: 1},
+      [
+        {
+          count: 2,
+          desc: "(or 3) from",
+          runinfull: 1
+        },
+        "21G.308", "21G.310", "21G.311", "21G.312", "21G.315"
+      ],
+      {id: "Tier III:", skip: 1},
+      [
+        {
+          count: 2,
+          desc: "(or 3) from",
+          runinfull: 1
+        },
+        "21G.049", "21G.052", "21G.053", "21G.054", "21G.068",
+        "21G.320", "21G.321", "21G.322", "21G.325", "21G.341",
+        "21G.346", "21G.347"
+      ]
+    ]
+  },
+
   miGerman: {
     name: "Minor in German",
     reqs: [0,
