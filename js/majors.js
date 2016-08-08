@@ -166,7 +166,7 @@ window.majors = {
   },
 
   m2_A_old: {
-    name: "2A (old) -- Engineering",
+    name: "2A (Old) -- Engineering",
     reqs: [0,
       "2.001", "2.003", "2.005", "2.009",
       [1, "2.670", "2.00", "2.00A", "2.00B", "2.678"],
@@ -421,7 +421,7 @@ window.majors = {
   },
 
   m6_1: {
-    name: "6-1 -- Electrical Science and Engineering (old curriculum)",
+    name: "6-1 -- Electrical Science and Engineering (Old)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -526,7 +526,7 @@ window.majors = {
   },
 
   m6_1_new: {
-    name: "6-1 -- Electrical Science and Engineering (new curriculum)",
+    name: "6-1 -- Electrical Science and Engineering (New, as of 09/16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -634,7 +634,7 @@ window.majors = {
   },
 
   m6_2: {
-    name: "6-2 -- Electrical Engineering and Computer Science (old curriculum)",
+    name: "6-2 -- Electrical Engineering and Computer Science (Old)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -742,7 +742,7 @@ window.majors = {
   },
 
   m6_2_new: {
-    name: "6-2 -- Electrical Engineering and Computer Science (new curriculum)",
+    name: "6-2 -- Electrical Engineering and Computer Science (New, as of 09/16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -878,7 +878,7 @@ window.majors = {
   },
 
   m6_3: {
-    name: "6-3 -- Computer Science and Engineering (old curriculum)",
+    name: "6-3 -- Computer Science and Engineering (Old)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -966,7 +966,7 @@ window.majors = {
   },
 
   m6_3_new: {
-    name: "6-3 -- Computer Science and Engineering (new curriculum)",
+    name: "6-3 -- Computer Science and Engineering (New, as of 09/16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
