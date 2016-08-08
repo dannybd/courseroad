@@ -421,7 +421,7 @@ window.majors = {
   },
 
   m6_1: {
-    name: "6-1 -- Electrical Science and Engineering",
+    name: "6-1 -- Electrical Science and Engineering (old curriculum)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -525,8 +525,116 @@ window.majors = {
     ]
   },
 
+  m6_1_new: {
+    name: "6-1 -- Electrical Science and Engineering (new curriculum)",
+    reqs: [0,
+      {
+        id: "Note: CourseRoad pulls information from the catalog and the " +
+            "Course VI website, but the Course VI requirements change " +
+            "frequently. For the most up-to-date listings please refer to " +
+            "the Course VI checklist.",
+        skip: 1
+      },
+      {
+        id: "If switching from the old curriculum, certain substitutions " +
+            "can be made. Check the description of the new curriculum " +
+            "on the EECS website and 6.AcAd on Piazza.",
+        skip: 1
+      },
+      [1, [2, [1, "6.01", "6.S08"],
+              {id: "Programming add-on (subject number pending)"}],
+          [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
+      ],
+      [1, "6.UAT", "6.UAR"],
+      [1, "18.03", "2.087"],
+      [
+        {count: 3, desc: "EE foundation subjects"},
+        "6.002", "6.003", [1, "6.004", "6.007"]
+      ],
+      [
+        {
+          count: 3,
+          desc: "EE header subjects",
+          globalMatchesSkip: 1
+        },
+        "6.011", "6.012", "6.013", "6.021", "6.036"
+      ],
+      [
+        {
+          count: 2,
+          desc: "Advanced Undergraduate Subjects (AUS2)"
+        },
+        "6.023", "6.025", "6.035", "6.047", "6.061", "6.101", "6.111", "6.115",
+        "6.131", "6.1311", "6.172", "6.175", "6.301", "6.302", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.806", "6.813", "6.814",
+        "6.815", "6.816", "6.819", "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      [
+        {
+          count: 2,
+          desc: "from any EECS course that satisfies a departmental requirement"
+        },
+        "6.01", "6.02", "6.03", "6.S08", "6.002", "6.003", "6.004", "6.006",
+        "6.007", "6.008", "6.009", "6.011", "6.012", "6.013", "6.031", "6.033",
+        "6.034", "6.036", "6.045", "6.046", "6.022", "6.023", "6.024", "6.025",
+        "6.035", [2, "6.041A", "6.041B"], "6.042J", "6.047", "6.049", "6.061",
+        "6.073", "6.101", "6.111", "6.115", "6.1151", "6.129", "6.131",
+        "6.1311", "6.141", "6.152", "6.161", "6.163", "6.170", "6.172", "6.175",
+        "6.182", "6.207", "6.301", "6.302", "6.503", "6.580", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.806", "6.807",
+        "6.809J", "6.811", "6.813", "6.814", "6.815", "6.816", "6.819", "6.835",
+        "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      {id: "Requirements below can be double counted", skip: 1},
+      [
+        {
+          count: 1,
+          desc: "advanced departmental lab (DLAB2)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.025", "6.035", "6.047", "6.073", "6.101", "6.111", "6.115", "6.1151",
+        "6.129", "6.131", "6.1311", "6.141", "6.152", "6.161", "6.163", "6.170",
+        "6.172", "6.175", "6.182", "6.302", "6.804", "6.806", "6.809", "6.813",
+        "6.816", "6.819", "6.837"
+      ],
+      [
+        {
+          count: 1,
+          desc: "independent inquiry (II)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.035", "6.047", "6.100", "6.111", "6.1151", "6.129", "6.1311",
+        "6.141", "6.161", "6.163", "6.170", "6.172", "6.182", "6.805", "6.806",
+        "6.809", "6.811", "6.819", "6.905"
+      ],
+      [
+        {
+          count: 1,
+          desc: "for probability grounding (PROB)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.008", "6.041A", "6.042", "18.05", "18.600"
+      ],
+      [
+        {
+          count: 1,
+          desc: "for CI-M",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.025", "6.033", "6.101", "6.115", "6.1151", "6.129", "6.131",
+        "6.1311", "6.141", "6.152", "6.161", "6.163", "6.182", "6.805"
+      ],
+    ]
+  },
+
   m6_2: {
-    name: "6-2 -- Electrical Engineering and Computer Science",
+    name: "6-2 -- Electrical Engineering and Computer Science (old curriculum)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -633,8 +741,144 @@ window.majors = {
     ]
   },
 
+  m6_2_new: {
+    name: "6-2 -- Electrical Engineering and Computer Science (new curriculum)",
+    reqs: [0,
+      {
+        id: "Note: CourseRoad pulls information from the catalog and the " +
+            "Course VI website, but the Course VI requirements change " +
+            "frequently. For the most up-to-date listings please refer to " +
+            "the Course VI checklist.",
+        skip: 1
+      },
+      {
+        id: "If switching from the old curriculum, certain substitutions " +
+            "can be made. Check the description of the new curriculum " +
+            "on the EECS website and 6.AcAd on Piazza.",
+        skip: 1
+      },
+      [1, [2, [1, "6.01", "6.S08"],
+              {id: "Programming add-on (subject number pending)"}],
+          [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
+      ],
+      [1, "6.UAT", "6.UAR"],
+      [1, "18.03", "2.087"],
+      [
+        {count: 3, desc: "EECS foundation subjects"},
+        "6.002", "6.003", "6.004", "6.006", "6.007", "6.008", "6.009"
+      ],
+      [
+        {
+          count: 3,
+          desc: "EECS header subjects",
+          globalMatchesSkip: 1
+        },
+        "6.011", "6.012", "6.013", "6.021", "6.031", "6.033", "6.034", "6.036",
+        "6.045", "6.046"
+      ],
+      [
+        {
+          count: 2,
+          desc: "Advanced Undergraduate Subjects (AUS2)"
+        },
+        "6.023", "6.025", "6.035", "6.047", "6.061", "6.101", "6.111", "6.115",
+        "6.131", "6.1311", "6.172", "6.175", "6.301", "6.302", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.806", "6.813", "6.814",
+        "6.815", "6.816", "6.819", "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      [
+        {
+          count: 2,
+          desc: "from any EECS course that satisfies a departmental requirement"
+        },
+        "6.01", "6.02", "6.03", "6.S08", "6.002", "6.003", "6.004", "6.006",
+        "6.007", "6.008", "6.009", "6.011", "6.012", "6.013", "6.031", "6.033",
+        "6.034", "6.036", "6.045", "6.046", "6.022", "6.023", "6.024", "6.025",
+        "6.035", [2, "6.041A", "6.041B"], "6.042J", "6.047", "6.049", "6.061",
+        "6.073", "6.101", "6.111", "6.115", "6.1151", "6.129", "6.131",
+        "6.1311", "6.141", "6.152", "6.161", "6.163", "6.170", "6.172", "6.175",
+        "6.182", "6.207", "6.301", "6.302", "6.503", "6.580", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.806", "6.807",
+        "6.809J", "6.811", "6.813", "6.814", "6.815", "6.816", "6.819", "6.835",
+        "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      {id: "Requirements below can be double counted", skip: 1},
+      [
+        {
+          count: 1,
+          desc: "advanced departmental lab (DLAB2)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.025", "6.035", "6.047", "6.073", "6.101", "6.111", "6.115", "6.1151",
+        "6.129", "6.131", "6.1311", "6.141", "6.152", "6.161", "6.163", "6.170",
+        "6.172", "6.175", "6.182", "6.302", "6.804", "6.806", "6.809", "6.813",
+        "6.816", "6.819", "6.837"
+      ],
+      [
+        {
+          count: 1,
+          desc: "independent inquiry (II)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.035", "6.047", "6.100", "6.111", "6.1151", "6.129", "6.1311",
+        "6.141", "6.161", "6.163", "6.170", "6.172", "6.182", "6.805", "6.806",
+        "6.809", "6.811", "6.819", "6.905"
+      ],
+      [
+        {
+          count: 2,
+          desc: "EE foundations/headers (EE12)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.002", "6.003", "6.007", "6.011", "6.012", "6.013", "6.021"
+      ],
+      [
+        {
+          count: 2,
+          desc: "CS foundations/headers (CS12)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.006", "6.009", "6.031", "6.033", "6.034", "6.045", "6.046"
+      ],
+      [
+        {
+          count: 1,
+          desc: "EECS foundation/header (EECS12)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.004", "6.008", "6.036"
+      ],
+      [
+        {
+          count: 1,
+          desc: "for probability grounding (PROB)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.008", "6.041A", "6.042", "18.05", "18.600"
+      ],
+      [
+        {
+          count: 1,
+          desc: "for CI-M",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.025", "6.033", "6.101", "6.115", "6.1151", "6.129", "6.131",
+        "6.1311", "6.141", "6.152", "6.161", "6.163", "6.182", "6.805"
+      ],
+    ]
+  },
+
   m6_3: {
-    name: "6-3 -- Computer Science and Engineering",
+    name: "6-3 -- Computer Science and Engineering (old curriculum)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -718,6 +962,83 @@ window.majors = {
         [{count: 2, globalMatchesIgnore: 1}, "6.UAT", "6.UAP"],
         [{count: 2, globalMatchesIgnore: 1}, "6.UAT", "6.141"]
       ]
+    ]
+  },
+
+  m6_3_new: {
+    name: "6-3 -- Computer Science and Engineering (new curriculum)",
+    reqs: [0,
+      {
+        id: "Note: CourseRoad pulls information from the catalog and the " +
+            "Course VI website, but the Course VI requirements change " +
+            "frequently. For the most up-to-date listings please refer to " +
+            "the Course VI checklist.",
+        skip: 1
+      },
+      {
+        id: "If switching from the old curriculum, certain substitutions " +
+            "can be made. Check the description of the new curriculum " +
+            "on the EECS website and 6.AcAd on Piazza.",
+        skip: 1
+      },
+      [1, [2, [1, "6.01", "6.S08"],
+              {id: "Programming add-on (subject number pending)"}],
+          [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
+      ],
+      [1, "6.UAT", "6.UAR"],
+      "6.042",
+      [
+        {count: 3, desc: "CS foundation subjects"},
+        "6.004", "6.006", "6.009"
+      ],
+      [
+        {
+          count: 4,
+          desc: "CS header subjects",
+          globalMatchesSkip: 1
+        },
+        "6.031", "6.033", [1, "6.034", "6.036"], [1, "6.045", "6.046"]
+      ],
+      [
+        {
+          count: 2,
+          desc: "Advanced Undergraduate Subjects (AUS2)"
+        },
+        "6.023", "6.025", "6.035", "6.047", "6.061", "6.101", "6.111", "6.115",
+        "6.131", "6.1311", "6.172", "6.175", "6.301", "6.302", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.806", "6.813", "6.814",
+        "6.815", "6.816", "6.819", "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      [
+        {
+          count: 1,
+          desc: "from any EECS course that satisfies a departmental requirement"
+        },
+        "6.01", "6.02", "6.03", "6.S08", "6.002", "6.003", "6.004", "6.006",
+        "6.007", "6.008", "6.009", "6.011", "6.012", "6.013", "6.031", "6.033",
+        "6.034", "6.036", "6.045", "6.046", "6.022", "6.023", "6.024", "6.025",
+        "6.035", [2, "6.041A", "6.041B"], "6.042J", "6.047", "6.049", "6.061",
+        "6.073", "6.101", "6.111", "6.115", "6.1151", "6.129", "6.131",
+        "6.1311", "6.141", "6.152", "6.161", "6.163", "6.170", "6.172", "6.175",
+        "6.182", "6.207", "6.301", "6.302", "6.503", "6.580", "6.602", "6.701",
+        "6.717", "6.801", "6.802", "6.803", "6.804", "6.805", "6.806", "6.807",
+        "6.809J", "6.811", "6.813", "6.814", "6.815", "6.816", "6.819", "6.835",
+        "6.837", "6.905",
+        {id: "Graduate courses (by petition)", skip: 1}
+      ],
+      {id: "Requirements below can be double counted", skip: 1},
+      [
+        {
+          count: 1,
+          desc: "independent inquiry (II)",
+          globalMatchesSkip: 1,
+          globalMatchesIgnore: 1
+        },
+        "6.035", "6.047", "6.100", "6.111", "6.1151", "6.129", "6.1311",
+        "6.141", "6.161", "6.163", "6.170", "6.172", "6.182", "6.805", "6.806",
+        "6.809", "6.811", "6.819", "6.905"
+      ],
     ]
   },
 
@@ -2652,7 +2973,7 @@ window.majors = {
         "18.03", "18.06"
       ],
       [1, "6.041", "14.30", "18.600"],
-      [2, "14.32", "15.075", "18.650"],
+      [1, "14.32", "15.075", "18.650"],
       [2,
         "2.086", "6.036", "6.819", "7.36", "14.36", "15.053",
         "18.642"
