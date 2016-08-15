@@ -531,7 +531,7 @@ window.majors = {
         skip: 1
       },
       [1, [2, [1, "6.01", "6.S08"],
-              {id: "Programming add-on (subject number pending)"}],
+              {id: "Programming add-on (subject number pending)", skip: 1}],
           [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
       ],
       [1, "6.UAT", "6.UAR"],
@@ -747,7 +747,7 @@ window.majors = {
         skip: 1
       },
       [1, [2, [1, "6.01", "6.S08"],
-              {id: "Programming add-on (subject number pending)"}],
+              {id: "Programming add-on (subject number pending)", skip: 1}],
           [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
       ],
       [1, "6.UAT", "6.UAR"],
@@ -971,7 +971,7 @@ window.majors = {
         skip: 1
       },
       [1, [2, [1, "6.01", "6.S08"],
-              {id: "Programming add-on (subject number pending)"}],
+              {id: "Programming add-on (subject number pending)", skip: 1}],
           [2, "6.001", [1, "6.01", "6.02", "6.03", "6.S08"]]
       ],
       [1, "6.UAT", "6.UAR"],
