@@ -104,8 +104,8 @@ header('X-UA-Compatible: IE=edge');
 <div id="leftbar" class="unhighlight">
   <div id="getnewclass" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-      <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a href="#infotabs-about">About</a></li>
-      <li class="ui-state-default ui-corner-top"><a href="#infotabs-add">Add</a></li>
+      <li class="ui-state-default ui-corner-top <?= $loggedin ? '' : 'ui-tabs-active ui-state-active' ?>"><a href="#infotabs-about">About</a></li>
+      <li class="ui-state-default ui-corner-top <?= $loggedin ? 'ui-tabs-active ui-state-active' : '' ?>"><a href="#infotabs-add">Add</a></li>
       <li class="ui-state-default ui-corner-top"><a href="#infotabs-save">Save</a></li>
     </ul>
     <div id="infotabs-about" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">

@@ -26,6 +26,9 @@ body {
   position: relative;
   top: 50%;
 }
+.ui-dialog {
+  z-index: 4096;
+}
 .ui-dialog-titlebar {
   display: none;
 }
@@ -73,8 +76,10 @@ span.newload {
   filter: alpha(opacity=40);
   left: 0;
   opacity: 0.4;
-  position: absolute;
+  position: fixed;
   top: 0;
+  height: 100%;
+  width: 100%;
 }
 #help_content {
   max-height: 500px;
