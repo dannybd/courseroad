@@ -997,7 +997,7 @@ var crSetup = function courseRoadSetup() {
   crSetup = undefined;
   $('#getnewclass').tabs({
     collapsible: false,
-    selected: (loggedin ? 1 : 0)
+    active: (loggedin ? 1 : 0)
   });
   user.supersenior = $('.year.supersenior').is(':visible') ? 1 : 0;
   // Populate the majorminor selectors
@@ -1243,12 +1243,12 @@ var crSetup = function courseRoadSetup() {
     out: function dragCheckboxOut() {
       $(this).addClass('notOKterm');
     },
-    drop: function dragCheckboxDrop() {
+    drop: function dragCheckboxDrop(event, ui) {
       $('.term').removeClass('notOKterm');
       classterm = $(this).index('.term');
       var postData = {
         getClass: 1,
-        subjectId: event.target.innerHTML,
+        subjectId: ui.draggable.html(),
         year: properYear(classterm)
       };
       fetchClassData(postData, classterm);

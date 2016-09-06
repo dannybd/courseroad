@@ -49,7 +49,7 @@ $_SESSION['wenttoindex'] = true;
 
 // We originally add add_new_term to SESSION to protect over the redirect above.
 // Now we read it into a variable and clear the SESSION version.
-$add_new_term = false;
+$add_new_term = 0;
 if (isset($_SESSION['add_new_term'])) {
   $add_new_term = $_SESSION['add_new_term'];
   unset($_SESSION['add_new_term']);
@@ -104,8 +104,8 @@ header('X-UA-Compatible: IE=edge');
 <div id="leftbar" class="unhighlight">
   <div id="getnewclass" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-      <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#infotabs-about">About</a></li>
-      <li class="ui-state-default ui-corner-top"><a href="#infotabs-add">Add</a></li>
+      <li class="ui-state-default ui-corner-top <?= $loggedin ? '' : 'ui-tabs-active ui-state-active' ?>"><a href="#infotabs-about">About</a></li>
+      <li class="ui-state-default ui-corner-top <?= $loggedin ? 'ui-tabs-active ui-state-active' : '' ?>"><a href="#infotabs-add">Add</a></li>
       <li class="ui-state-default ui-corner-top"><a href="#infotabs-save">Save</a></li>
     </ul>
     <div id="infotabs-about" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
@@ -146,7 +146,7 @@ EOD;
         }
       ?>
     </div>
-    <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+    <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
       Class Type:&nbsp;
       <input
         type="radio"
@@ -216,7 +216,7 @@ EOD;
       <br>
       <input type="button" id="getnewclasssubmit" class="bubble loaders" value="Add Class">
     </div>
-    <div id="infotabs-save" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+    <div id="infotabs-save" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
       <input type="button" id="save-courses" class="bubble loaders" value="Save Courses">
       <input type="button" id="roads-or-login-save" class="bubble loaders" value="<?= $loggedin ? "View Saved Roads" : "Save with Login (requires certs)"; ?>"><br><br>
     </div>
@@ -416,8 +416,8 @@ EOD;
   <div id="usersettings_div"><?= makeUserSettingsHTML(); ?></div>
   <input id="usersettings_save" type="button" name="save" value="Save Settings"><span id="usersettings_saved">Settings saved!</span>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/utilities/utilities.js"></script>
 <script src="js/wireit-min.js"></script>
 <script src="<?= noCacheLink('js/majors.js') ?>"></script>
@@ -439,7 +439,7 @@ EOD;
     needPermission: <?= $_SESSION['user']['need_permission'] ?>
   };
   _gaq.push(['_setCustomVar', 1, 'Class Year', user.classYear, 1]);
-  var add_new_term = $.parseJSON('<?= $add_new_term ?>') || 0;
+  var add_new_term = $.parseJSON('<?= $add_new_term ?>');
   var CSRF_token = '<?= $_SESSION['csrf_token'] ?>';
   $(crSetup);
 </script>
