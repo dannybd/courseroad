@@ -746,9 +746,12 @@ window.majors = {
             "on the EECS website and 6.AcAd on Piazza.",
         skip: 1
       },
-      [1, [2, [1, "6.01", "6.S08"],
+      [1, [2, "6.0001",
+              [ {count:1, globalMatchesIgnore:1},
+                "6.01", "6.02", "6.03", "6.S08"] ]
+          [2, [ {count:1, globalMatchesIgnore:1},
+                "6.01", "6.S08"],
               {id: "Programming add-on (subject number pending)", skip: 1}],
-          [2, "6.0001", [1, "6.01", "6.02", "6.03", "6.S08"]]
       ],
       [1, "6.UAT", "6.UAR"],
       [1, "18.03", "2.087"],
