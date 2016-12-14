@@ -159,6 +159,16 @@ function parseBoolStr($str) {
 }
 
 function parseRequisites($str) {
+  // Some of the values from the Registrar are just broken. To stop having to
+  // manually correct them, this will short-circuit and replace those.
+  $overrides = array(
+    // 18.1001, 18.1002, 18.100A, 18.100B, 18.100C, 18.100P, 18.100Q
+    'GIR:CAL2; or 18.014 and [GIR:CAL2]' =>
+      '[0,[1,"GIR:CAL2",[2,"18.014",{"id":"GIR:CAL2","coreq":1}]]]'
+  );
+  if (array_key_exists($str, $overrides)) {
+    return json_decode($overrides[$str]);
+  }
   // $str = preg_replace("/<(.*?)>/s", "", $str);
   $str = str_replace('permission', 'Permission', $str);
   $str = str_replace('; or Permission', '', $str);
