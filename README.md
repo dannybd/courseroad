@@ -29,9 +29,9 @@ Second, set values for the database credentials:
     cp settings.ini-TEMPLATE settings.ini && nano settings.ini
 
 
-At this point, you can load up your instance of CourseRoad, and it should be functioning--albeit without any course information. To fix that, edit `pull-new-classes.sh` to provide the script with your Data Warehouse credentials and sqlplus implementation, then import everything with:
+At this point, you can load up your instance of CourseRoad, and it should be functioning--albeit without any course information. To fix that, edit `pull-new-classes.sh` to provide the script with your Data Warehouse credentials and sqlplus implementation, then import a good block of classes to start with using:
 
-    bash pull-new-classes.sh -n 9999
+    bash pull-new-classes.sh -n 365
     # Script usage:
     # -n N Pulls all classes updated in the Warehouse in the last N days. Defaults to 1.
     # -t   Runs the script in test mode, and doesn't actually save the classes into your database.
@@ -67,6 +67,19 @@ There is, to some degree, an API which allows you to import classes into CourseR
         ...
         17 = Super-Senior Fall
 This defaults to 1, Freshman Fall.
+
+## Maintenance tips
+
+1) For corrections to majors or classes, try to confirm separately that they're correct. If you can't figure that out with a cursory search through the MIT Bulletin/Course Catalog, reply and ask for a source for the change, which you can keep for your records. (Don't bother to do this when course admins contact you, since they are their department's source of truth.)
+
+2) Changes to majors/minors require a code edit. They're all stored in [js/majors.js](https://github.com/dannybd/courseroad/blob/master/js/majors.js); the comment block at the top explains how the pieces go together, and [the Defaults object in js/cr.js](https://github.com/dannybd/courseroad/blob/master/js/cr.js#L10-L57) explains the extra tweaks you can give to requisites.
+
+3) Changes to classes (usually incorrect requisite parsing) require database access. There's a table in the CourseRoad DB, [`warehouse`](https://github.com/dannybd/courseroad/blob/master/setup-courseroad-db.sql#L60), which stores a crapton of data pulled from [the Data Warehouse's `CIS_COURSE_CATALOG` table](http://web.mit.edu/warehouse/metadata/fields/cis_course_catalog.html), where the Registrar stores the canonical course info dating to 2002. I have another table, `warehouse_exceptions`, which has an identical schema to `warehouse`. When a class has an issue, I copy its row from `warehouse` to `warehouse_exceptions` and make the edit in the latter, leaving warehouse untouched. (When we fetch class data, [the rows from `warehouse_exceptions` are pulled first](https://github.com/dannybd/courseroad/blob/master/CourseRoadDB.php#L202-L206).)
+
+4) When bugs in the code itself arise, I usually make them GitHub issues. The most common non-majors-or-classes issue people will have, though, is logging in. The problem is generally either:
+  a) they clicked Cancel when prompted for their certificate (thus preventing CourseRoad from asking again), or
+  b) their certificate has expired (as it does in early August each year).
+If this email is arriving within two months after August 1, I tell them to go to ca.mit.edu and try again. Otherwise, I tell people to try in an incognito window or a different browser, since either allows CourseRoad to ask for certs again.
 
 ## Contributors
 
