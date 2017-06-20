@@ -97,6 +97,7 @@ header('X-UA-Compatible: IE=edge');
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="<?= noCacheLink('css/cr.css') ?>">
   <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
