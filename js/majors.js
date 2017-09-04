@@ -31,6 +31,7 @@
 window.majors = {
   m1_A: {
     name: "1A -- Engineering (as of May '15)",
+    disable: 1,
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"],
       [1, "1.00", "1.010"], "1.101", "1.102"
@@ -39,6 +40,7 @@ window.majors = {
 
   m1_C: {
     name: "1C -- Civil Engineering (as of May '15)",
+    disable: 1,
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       "1.00", "1.010", "1.011", "1.035", "1.036", "1.041", "1.101", "1.102",
@@ -48,6 +50,7 @@ window.majors = {
 
   m1_E: {
     name: "1E -- Environmental Engineering Science (as of May '15)",
+    disable: 1,
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       [1, "1.00", "1.010"],
@@ -58,9 +61,9 @@ window.majors = {
   },
 
   m1_ENG: {
-    name: "1ENG -- Civil and Environmental Flexible Degree (as of May '15)",
+    name: "1-ENG -- Civil and Environmental Degree (as of Sep '17)",
     reqs: [0,
-      [1, "1.00", "1.000"], "1.010", [1, "1.073", "1.074"], "18.03", "1.013",
+      [1, "1.00", "1.000"], "1.010", "1.013", [1, "1.073", "1.074"], "18.03",
       [
         {
           count: 54,
@@ -72,18 +75,18 @@ window.majors = {
         {id: "Environment Core:", skip: 1},
         [
           {count: 9, globalMatchesIgnore: 1},
-          "1.060A", "1.070A", "1.080A", "1.061A", "1.018A", "1.083A", "1.092",
+          "1.060A", "1.070A", "1.080A", "1.061A", "1.018A", "1.089A", "1.092",
           "1.106", "1.107"
         ],
         {id: "Mechanics/Materials Core:", skip: 1},
         [
           {count: 6, globalMatchesIgnore: 1},
-          "1.050", "1.035", "1.060A", "1.060B", "1.101", "1.102"
+          "1.050", "1.035", "1.036", "1.060A", "1.101", "1.102"
         ],
         {id: "Systems Core:", skip: 1},
         [
           {count: 6, globalMatchesIgnore: 1},
-          "1.011", "1.020", "1.041", "1.022", "1.101", "1.102"
+          "1.011", "1.020", "1.022", "1.041", "1.075", "1.101", "1.102"
         ]
       ],
       {id: "Restricted Electives:", skip: 1},
