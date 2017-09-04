@@ -30,7 +30,7 @@
 
 window.majors = {
   m1_A: {
-    name: "1A -- Engineering",
+    name: "1A -- Engineering (as of May '15)",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"],
       [1, "1.00", "1.010"], "1.101", "1.102"
@@ -38,7 +38,7 @@ window.majors = {
   },
 
   m1_C: {
-    name: "1C -- Civil Engineering",
+    name: "1C -- Civil Engineering (as of May '15)",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       "1.00", "1.010", "1.011", "1.035", "1.036", "1.041", "1.101", "1.102",
@@ -47,7 +47,7 @@ window.majors = {
   },
 
   m1_E: {
-    name: "1E -- Environmental Engineering Science",
+    name: "1E -- Environmental Engineering Science (as of May '15)",
     reqs: [0,
       "1.018", "1.020", "1.050", "1.060", [1, "18.03", "18.034"], "1.013",
       [1, "1.00", "1.010"],
@@ -58,7 +58,7 @@ window.majors = {
   },
 
   m1_ENG: {
-    name: "1ENG -- Civil and Environmental Flexible Degree",
+    name: "1ENG -- Civil and Environmental Flexible Degree (as of May '15)",
     reqs: [0,
       [1, "1.00", "1.000"], "1.010", [1, "1.073", "1.074"], "18.03", "1.013",
       [
@@ -99,7 +99,7 @@ window.majors = {
   },
 
   m2: {
-    name: "2 -- Mechanical Engineering",
+    name: "2 -- Mechanical Engineering (as of Aug '16)",
     reqs: [0,
       "2.001", "2.002",
       [1, "2.003", [2, "2.03", "2.031"]], "2.004",
@@ -161,7 +161,7 @@ window.majors = {
   },
 
   m2_A_new: {
-    name: "2A -- Engineering",
+    name: "2A -- Engineering (as of Aug '16)",
     reqs: [0,
       [1, "2.00", "2.00A", "2.00B", "2.007"],
       "2.678", "2.086",
@@ -196,7 +196,7 @@ window.majors = {
   },
 
   m2_OE: {
-    name: "2-OE -- Ocean Engineering",
+    name: "2-OE -- Ocean Engineering (as of Aug '16)",
     reqs: [0,
       "2.001", "2.002",
       [1, "2.003", [2, "2.03", "2.031"]],
@@ -228,7 +228,7 @@ window.majors = {
   },
 
   m3: {
-    name: "3 -- Materials Science and Engineering",
+    name: "3 -- Materials Science and Engineering (as of May '15)",
     reqs: [0,
       [
         {
@@ -259,7 +259,7 @@ window.majors = {
   },
 
   m3_A: {
-    name: "3A -- Materials Science and Engineering",
+    name: "3A -- Materials Science and Engineering (as of May '15)",
     reqs: [0,
       [5,
         "3.012",
@@ -281,7 +281,7 @@ window.majors = {
   },
 
   m3_C: {
-    name: "3C -- Archaeology and Materials",
+    name: "3C -- Archaeology and Materials (as of May '15)",
     reqs: [0,
       "3.012", "3.014", [1, "3.016", "18.03", "18.034"],
       [1, "3.021", "1.00", "6.01"], "3.022", [1, "3.032", "3.044"], "3.THU",
@@ -292,7 +292,7 @@ window.majors = {
   },
 
   m4_archdesign: {
-    name: "4 -- Architecture (Architectural Design)",
+    name: "4 -- Architecture (Architectural Design) (as of May '15)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.113", "4.114", "4.115", "4.440", "4.603", "4.605",
@@ -307,7 +307,7 @@ window.majors = {
   },
 
   m4_buildingtech: {
-    name: "4 -- Architecture (Building Technology)",
+    name: "4 -- Architecture (Building Technology) (as of May '15)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401",
       "4.500", "4.411", "4.440", "4.605", "4.THT", "4.THU",
@@ -323,7 +323,7 @@ window.majors = {
   },
 
   m4_computation: {
-    name: "4 -- Architecture (Computation)",
+    name: "4 -- Architecture (Computation) (as of May '15)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.501", "4.503", "4.504", "4.505", "4.605", "4.THT", "4.THU",
@@ -335,7 +335,7 @@ window.majors = {
   },
 
   m4_history: {
-    name: "4 -- Architecture (History, Theory, and Criticism)",
+    name: "4 -- Architecture (History, Theory, and Criticism) (as of May '15)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.601", "4.605", [1, "4.602", "4.641", "4.651"],
@@ -352,7 +352,7 @@ window.majors = {
   },
 
   m4_artculture: {
-    name: "4 -- Architecture (Art, Culture, and Technology)",
+    name: "4 -- Architecture (Art, Culture, and Technology) (as of May '15)",
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.322", "4.341", "4.351", "4.601", "4.THT", "4.THU",
@@ -368,7 +368,7 @@ window.majors = {
   },
 
   m4_new: {
-    name: "4 -- Architecture (New, as of 09/14)",
+    name: "4 -- Architecture (as of Aug '16)",
     reqs: [0,
       [1, "4.021", "4.02A"],
       "4.022", "4.023", "4.024", "4.302", "4.401", "4.440", "4.500",
@@ -395,7 +395,7 @@ window.majors = {
   },
 
   m5: {
-    name: "5 -- Chemistry",
+    name: "5 -- Chemistry (as of May '15)",
     reqs: [0,
       "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36",
       "5.37", "5.38",
@@ -410,7 +410,8 @@ window.majors = {
   },
 
   m6_1: {
-    name: "6-1 -- Electrical Science and Engineering (Old)",
+    name: "6-1 -- Electrical Science and Engineering (Old) (as of Sep '15)",
+    disable: 1,
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -515,7 +516,7 @@ window.majors = {
   },
 
   m6_1_new: {
-    name: "6-1 -- Electrical Science and Engineering (New, as of 09/16)",
+    name: "6-1 -- Electrical Science and Engineering (as of Aug '16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -623,7 +624,8 @@ window.majors = {
   },
 
   m6_2: {
-    name: "6-2 -- Electrical Engineering and Computer Science (Old)",
+    name: "6-2 -- Electrical Engineering and Computer Science (Old) (as of Sep '15)",
+    disable: 1,
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -731,7 +733,7 @@ window.majors = {
   },
 
   m6_2_new: {
-    name: "6-2 -- Electrical Engineering and Computer Science (New, as of 09/16)",
+    name: "6-2 -- Electrical Engineering and Computer Science (as of Aug '16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -867,7 +869,8 @@ window.majors = {
   },
 
   m6_3: {
-    name: "6-3 -- Computer Science and Engineering (Old)",
+    name: "6-3 -- Computer Science and Engineering (Old) (as of Sep '15)",
+    disable: 1,
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -955,7 +958,7 @@ window.majors = {
   },
 
   m6_3_new: {
-    name: "6-3 -- Computer Science and Engineering (New, as of 09/16)",
+    name: "6-3 -- Computer Science and Engineering (as of Aug '16)",
     reqs: [0,
       {
         id: "Note: CourseRoad pulls information from the catalog and the " +
@@ -1032,7 +1035,8 @@ window.majors = {
   },
 
   m6_7: {
-    name: "6-7 -- Computer Science and Molecular Biology (Old)",
+    name: "6-7 -- Computer Science and Molecular Biology (Old) (as of Sep '15)",
+    disable: 1,
     reqs: [0,
       "6.01",
       "6.042",
@@ -1082,7 +1086,7 @@ window.majors = {
   },
 
   m6_7_new: {
-    name: "6-7 -- Computer Science and Molecular Biology (New, as of 09/16)",
+    name: "6-7 -- Computer Science and Molecular Biology (as of Aug '16)",
     reqs: [0,
       "6.009",
       [1, "6.00", "6.031"],
@@ -1103,7 +1107,7 @@ window.majors = {
   },
 
   m7: {
-    name: "7 -- Biology",
+    name: "7 -- Biology (as of May '15)",
     reqs: [0,
     [1, "5.111", "5.112", "3.091"],
       "5.12", [1, "20.110", "7.10", "5.60"],
@@ -1123,7 +1127,7 @@ window.majors = {
   },
 
   m7a: {
-    name: "7A -- Biology",
+    name: "7A -- Biology (as of May '15)",
     reqs: [0,
       [1, "5.111", "5.112", "3.091"],
       [1, "20.110", "7.10", "5.60"],
@@ -1149,7 +1153,7 @@ window.majors = {
   },
 
   m8_flexible: {
-    name: "8 -- Physics (Flexible)",
+    name: "8 -- Physics (Flexible) (as of Jun '15)",
     reqs: [0,
       "8.03", [1, "18.03", "18.034"], "8.04", "8.044", [1, "8.21", "8.223"],
       [1, "8.05", "8.20", "8.033"],
@@ -1198,7 +1202,7 @@ window.majors = {
   },
 
   m8_focused: {
-    name: "8 -- Physics (Focused)",
+    name: "8 -- Physics (Focused) (as of Jun '15)",
     reqs: [0,
       "8.03", [1, "18.03", "18.034"], "8.04", "8.044", "8.033",
       "8.05",
@@ -1228,7 +1232,7 @@ window.majors = {
   },
 
   m9: {
-    name: "9 -- Brain and Cognitive Sciences",
+    name: "9 -- Brain and Cognitive Sciences (as of Dec '15)",
     reqs: [0,
       [
         {count: 5, desc: "Tier 1 subjects"},
@@ -1265,7 +1269,7 @@ window.majors = {
   },
 
   m10: {
-    name: "10 -- Chemical Engineering",
+    name: "10 -- Chemical Engineering (as of Jun '15)",
     reqs: [0,
       "5.12", [1, "5.07", "7.05"], "5.310", "5.60", "10.10", "10.213",
       [1, "10.28", "10.26", "10.27", "10.29"],
@@ -1309,7 +1313,7 @@ window.majors = {
   },
 
   m10_B: {
-    name: "10B -- Chemical-Biological Engineering",
+    name: "10B -- Chemical-Biological Engineering (as of May '15)",
     reqs: [0,
       "5.12", "5.60", [1, "7.02", "10.702"], "7.03", [1, "5.07", "7.05"],
       "7.06", "10.10", "10.213", [1, "10.28", "10.26", "10.27", "10.29"],
@@ -1320,7 +1324,7 @@ window.majors = {
   },
 
   m10_ENG: {
-    name: "10-ENG -- Engineering",
+    name: "10-ENG -- Engineering (as of May '15)",
     reqs: [0,
       "5.12", [1, "18.03", "18.034"], "10.10", "10.213", "10.301", "10.302",
       "10.37", [1, "10.28", "10.26", "10.27", "10.29", "10.467"],
@@ -1370,7 +1374,7 @@ window.majors = {
   },
 
   m10_C: {
-    name: "10C -- Chemical Engineering",
+    name: "10C -- Chemical Engineering (as of May '15)",
     reqs: [0,
       "5.60", "10.10", "10.213", "10.301", "10.302", "18.03",
       [1,
@@ -1384,7 +1388,7 @@ window.majors = {
   },
 
   m11_enviro: {
-    name: "11 -- Urban and Environmental Policy and Planning",
+    name: "11 -- Urban and Environmental Policy and Planning (as of May '15)",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
       [
@@ -1401,7 +1405,7 @@ window.majors = {
   },
 
   m11_society: {
-    name: "11 -- Urban Society, History, and Politics",
+    name: "11 -- Urban Society, History, and Politics (as of May '15)",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
       [
@@ -1418,7 +1422,7 @@ window.majors = {
   },
 
   m11_international: {
-    name: "11 -- Urban and International Development",
+    name: "11 -- Urban and International Development (as of May '15)",
     reqs: [0,
       "11.001", "11.002", "11.011", "11.123", "14.01", "11.188",
       [
@@ -1436,7 +1440,7 @@ window.majors = {
   },
 
   m12: {
-    name: "12 -- Earth, Atmospheric, and Planetary Sciences",
+    name: "12 -- Earth, Atmospheric, and Planetary Sciences (as of Oct '15)",
     reqs: [0,
       "12.001", "12.002", "12.003", "12.009", [1, "18.03", "18.034"], "12.TIP",
       "12.THU",
@@ -1491,7 +1495,8 @@ window.majors = {
   },
 
   m14: {
-    name: "14 -- Economics (Old)",
+    name: "14 -- Economics (Old) (as of May '15)",
+    disable: 1,
     reqs: [0,
       "14.01", "14.02", "14.04", "14.05", "14.30", "14.32", "14.33", "14.THU",
       [
@@ -1510,7 +1515,7 @@ window.majors = {
   },
 
   m14_1: {
-    name: "14-1 -- Economics (New, as of 09/16)",
+    name: "14-1 -- Economics (as of Aug '16)",
     reqs: [0,
       "14.01", "14.02",
       [1, "14.04", "14.12", "14.15", "14.16", "14.19", "14.26"],
@@ -1543,7 +1548,7 @@ window.majors = {
   },
 
   m14_2: {
-    name: "14-2 -- Mathematical Economics (New, as of 09/16)",
+    name: "14-2 -- Mathematical Economics (as of Aug '16)",
     reqs: [0,
       [1, "14.01", {id: "14.03", desc: " (with 5 on Economics AP exam)"}],
       "14.02",
@@ -1578,7 +1583,8 @@ window.majors = {
   },
 
   m15: {
-    name: "15 -- Management / Management Science",
+    name: "15 -- Management / Management Science (as of Sep '15)",
+    disable: 1,
     reqs: [0,
       "15.501",
       [1,
@@ -1604,7 +1610,7 @@ window.majors = {
   },
 
   m15_1: {
-    name: "15-1 -- Management (new)",
+    name: "15-1 -- Management (as of Mar '16)",
     reqs: [0,
       "15.501", "15.279",
       [1,
@@ -1639,7 +1645,7 @@ window.majors = {
   },
 
   m15_2: {
-    name: "15-2 -- Business Analytics (new)",
+    name: "15-2 -- Business Analytics (as of Apr '16)",
     reqs: [0,
       "15.276",
       [1, [2, "6.0001", "6.0002"], "6.01"],
@@ -1656,7 +1662,7 @@ window.majors = {
   },
 
   m15_3: {
-    name: "15-3 -- Finance (new)",
+    name: "15-3 -- Finance (as of Mar '16)",
     reqs: [0,
       [1,
         "15.417",
@@ -1725,7 +1731,8 @@ window.majors = {
   },
 
   m16_1: {
-    name: "16-1 -- Aerospace Engineering (2015s ONLY)",
+    name: "16-1 -- Aerospace Engineering (2015s only) (as of May '15)",
+    disable: 1,
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07",
       [1, "16.09", "6.041"],
@@ -1741,7 +1748,8 @@ window.majors = {
   },
 
   m16_2: {
-    name: "16-2 -- Aerospace Engineering with IT (2015s ONLY)",
+    name: "16-2 -- Aerospace Engineering with IT (2015s only) (as of May '15)",
+    disable: 1,
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004", "1.00", "16.06", "16.07",
       [1, "16.09", "6.041"],
@@ -1757,7 +1765,7 @@ window.majors = {
   },
 
   m16: {
-    name: "16 -- Aerospace Engineering (2016s and on)",
+    name: "16 -- Aerospace Engineering (as of Sep '16)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004",
       [1,
@@ -1799,7 +1807,7 @@ window.majors = {
   },
 
   m16_ENG: {
-    name: "16-ENG -- Engineering",
+    name: "16-ENG -- Engineering (as of May '15)",
     reqs: [0,
       "16.001", "16.002", "16.003", "16.004",
       [1,
@@ -1848,7 +1856,7 @@ window.majors = {
   },
 
   m17: {
-    name: "17 -- Political Science",
+    name: "17 -- Political Science (as of May '15)",
     reqs: [0,
       "17.869", "17.871", "17.THT", "17.THU",
       [1,
@@ -1890,7 +1898,7 @@ window.majors = {
   },
 
   m18_general: {
-    name: "18 -- Mathematics (General Option)",
+    name: "18 -- Mathematics (General Option) (as of Aug '16)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [1, "18.700", "18.701", "18.06"],
@@ -1944,7 +1952,7 @@ window.majors = {
   },
 
   m18_applied: {
-    name: "18 -- Mathematics (Applied Option)",
+    name: "18 -- Mathematics (Applied Option) (as of Aug '16)",
     reqs: [0,
       [1, "18.03", "18.034", "18.152", "18.303"],
       [1, "18.04", "18.112"],
@@ -1993,7 +2001,7 @@ window.majors = {
   },
 
   m18_theoretical: {
-    name: "18 -- Mathematics (Theoretical Option)",
+    name: "18 -- Mathematics (Theoretical Option) (as of Mar '16)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [1, "18.100B", "18.100C"], "18.701", "18.702", "18.901",
@@ -2050,7 +2058,7 @@ window.majors = {
   },
 
   m18_C: {
-    name: "18-C -- Mathematics with Computer Science",
+    name: "18-C -- Mathematics with Computer Science (as of Aug '16)",
     reqs: [0,
       [1, "18.03", "18.034", "18.152", "18.303"],
       [1, "18.06", "18.700", "18.701"],
@@ -2111,7 +2119,7 @@ window.majors = {
   },
 
   m20: {
-    name: "20 -- Biological/Biomedical Engineering",
+    name: "20 -- Biological/Biomedical Engineering (as of Aug '16)",
     reqs: [0,
       [1, "5.07", "7.05"],
       "5.12",
@@ -2180,13 +2188,13 @@ window.majors = {
   },
 
   m21: {
-    name: "21 -- Russian Studies",
+    name: "21 -- Russian Studies (as of May '15)",
     disable: 1,
     reqs: [0]
   },
 
   m21_german: {
-    name: "21 -- German Studies",
+    name: "21 -- German Studies (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2203,7 +2211,7 @@ window.majors = {
   },
 
   m21_A: {
-    name: "21A -- Anthropology",
+    name: "21A -- Anthropology (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2220,13 +2228,13 @@ window.majors = {
   },
 
   m21_E: {
-    name: "21E -- Humanities and Engineering",
+    name: "21E -- Humanities and Engineering (as of May '15)",
     disable: 1,
     reqs: [0]
   },
 
   m21_F_french: {
-    name: "21F -- French Studies",
+    name: "21F -- French Studies (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2243,7 +2251,7 @@ window.majors = {
   },
 
   m21_F_spanish: {
-    name: "21F -- Spanish Studies",
+    name: "21F -- Spanish Studies (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2260,7 +2268,7 @@ window.majors = {
   },
 
   m21_G_french: {
-    name: "21G -- French Studies",
+    name: "21G -- French Studies (as of Oct '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2277,7 +2285,7 @@ window.majors = {
   },
 
   m21_G_spanish: {
-    name: "21G -- Spanish Studies",
+    name: "21G -- Spanish Studies (as of Oct '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2294,7 +2302,7 @@ window.majors = {
   },
 
   m21_H: {
-    name: "21H -- History",
+    name: "21H -- History (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2323,7 +2331,7 @@ window.majors = {
   },
 
   m21_L: {
-    name: "21L -- Literature",
+    name: "21L -- Literature (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2344,7 +2352,7 @@ window.majors = {
   },
 
   m21_M: {
-    name: "21M -- Music",
+    name: "21M -- Music (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2402,7 +2410,7 @@ window.majors = {
   },
 
   m21_M_2: {
-    name: "21M-2 -- Theater Arts (new!)",
+    name: "21M-2 -- Theater Arts (as of May '15)",
     reqs: [0,
       [
         {
@@ -2447,13 +2455,13 @@ window.majors = {
   },
 
   m21_S: {
-    name: "21S -- Humanities and Science",
+    name: "21S -- Humanities and Science (as of May '15)",
     disable: 1,
     reqs: [0]
   },
 
   m21_W_creative: {
-    name: "21W -- Writing (Creative Writing focus)",
+    name: "21W -- Writing (Creative Writing focus) (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2478,7 +2486,7 @@ window.majors = {
   },
 
   m21_W_science: {
-    name: "21W -- Writing (Science Writing focus)",
+    name: "21W -- Writing (Science Writing focus) (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2502,7 +2510,7 @@ window.majors = {
   },
 
   m21_W_digital: {
-    name: "21W -- Writing (Digital Media focus)",
+    name: "21W -- Writing (Digital Media focus) (as of May '15)",
     reqs: [0,
       {
         id: "Propose to join major " +
@@ -2523,7 +2531,7 @@ window.majors = {
   },
 
   m22: {
-    name: "22 -- Nuclear Science & Engineering",
+    name: "22 -- Nuclear Science & Engineering (as of Oct '15)",
     reqs: [0,
       "2.005",
       [1, [2, "6.0001", "6.0002"], "12.010", "2.086", "1.000"],
@@ -2551,7 +2559,7 @@ window.majors = {
   },
 
   m24_1: {
-    name: "24-1 -- Philosophy",
+    name: "24-1 -- Philosophy (as of May '15)",
     reqs: [0,
       {
         id: "CIH Philosophy subject",
@@ -2581,7 +2589,7 @@ window.majors = {
   },
 
   m24_2_linguistics: {
-    name: "24-2 -- Linguistics",
+    name: "24-2 -- Linguistics (as of May '15)",
     reqs: [0,
       "24.900", "24.901", "24.902", "24.903", "24.918",
       [1, "24.909", "24.910", "24.914"],
@@ -2596,7 +2604,7 @@ window.majors = {
   },
 
   m24_2_philosophy: {
-    name: "24-2 -- Philosophy / Linguistics",
+    name: "24-2 -- Philosophy / Linguistics (as of May '15)",
     reqs: [0,
       "24.900", "24.201", "24.241", "24.251", "24.260",
       [1, "24.08", "24.09"],
@@ -2614,7 +2622,7 @@ window.majors = {
   },
 
   mCMS: {
-    name: "CMS -- Comparative Media Studies",
+    name: "CMS -- Comparative Media Studies (as of May '15)",
     reqs: [0,
       "21L.011", "CMS.100",
       [1, "CMS.400", "CMS.403", "CMS.405", "CMS.407"],
@@ -2642,7 +2650,7 @@ window.majors = {
   },
 
   mSTS: {
-    name: "STS -- Science, Technology and Society",
+    name: "STS -- Science, Technology and Society (as of May '15)",
     reqs: [0,
       [1,
         "STS.001", "STS.003", "STS.005", "STS.006", "STS.007", "STS.008",
@@ -2664,7 +2672,7 @@ window.majors = {
   },
 
   mWGS: {
-    name: "WGS -- Women's and Gender Studies",
+    name: "WGS -- Women's and Gender Studies (as of Apr '16)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "WGS.101",
@@ -2704,7 +2712,7 @@ window.majors = {
   },
 
   miComputerScience: {
-    name: "Minor in Computer Science (New!)",
+    name: "Minor in Computer Science (New!) (as of Apr '16)",
     reqs: [0,
       "6.0001", "6.0002", "6.042",
       [1, "6.009", "6.S04", "6.005"],
@@ -2722,7 +2730,7 @@ window.majors = {
   },
 
   miArchitecture: {
-    name: "Minor in Architecture",
+    name: "Minor in Architecture (as of May '15)",
     reqs: [0,
       [1,
         {id: "Old system:", skip: 1},
@@ -2763,7 +2771,7 @@ window.majors = {
   },
 
   miDesign: {
-    name: "Minor in Design (New!)",
+    name: "Minor in Design (as of Apr '16)",
     reqs: [0,
       "4.031", "4.032", "4.101",
       [3,
@@ -2778,7 +2786,7 @@ window.majors = {
   },
 
   miEntrepreneurship_Innovation: {
-    name: "Minor in Entrepreneurship & Innovation (New!)",
+    name: "Minor in Entrepreneurship & Innovation (as of Aug '16)",
     reqs: [0,
       {id: "E&I Foundations:", skip: 1},
       [2, "15.359", "15.373"],
@@ -2811,7 +2819,7 @@ window.majors = {
   },
 
   miHist_Architecture_Art: {
-    name: "Minor in the History of Architecture and Art",
+    name: "Minor in the History of Architecture and Art (as of May '15)",
     reqs: [0,
       [1, "4.601", "4.602"],
       [1, "4.605", "4.614"],
@@ -2836,7 +2844,7 @@ window.majors = {
   },
 
   miArt_culture_tech: {
-    name: "Minor in Art, Culture and Technology",
+    name: "Minor in Art, Culture and Technology (as of May '15)",
     reqs: [0,
       {id: "Tier 1:", skip: 1},
       [1, "4.301", "4.302"],
@@ -2851,7 +2859,7 @@ window.majors = {
   },
 
   miUrban_studies_and_planning: {
-    name: "Minor in Urban Studies and Planning",
+    name: "Minor in Urban Studies and Planning (as of May '15)",
     reqs: [0,
       "11.001", "11.002",
       [3,
@@ -2864,7 +2872,7 @@ window.majors = {
   },
 
   miInternational_development: {
-    name: "Minor in International Development",
+    name: "Minor in International Development (as of May '15)",
     reqs: [0,
       [2, "11.005", "11.025", "11.140"],
       [4,
@@ -2875,7 +2883,7 @@ window.majors = {
   },
 
   miToxicology_and_enviro_health: {
-    name: "Minor in Toxicology and Environmental Health",
+    name: "Minor in Toxicology and Environmental Health (as of May '15)",
     reqs: [0,
       "20.102", "20.104", "20.106",
       [1, "20.109", "5.310", "7.02", "10.702"],
@@ -2887,14 +2895,14 @@ window.majors = {
   },
 
   miCivil_Engineering: {
-    name: "Minor in Civil Engineering",
+    name: "Minor in Civil Engineering (as of May '15)",
     reqs: [0,
       "1.050", "1.060", "1.101", "1.102", "1.035", [1, "1.041", "1.036"]
     ]
   },
 
   miEnvrio_Engineering_Science: {
-    name: "Minor in Environmental Engineering Science",
+    name: "Minor in Environmental Engineering Science (as of May '15)",
     reqs: [0,
       "1.018", "1.020", "1.101", "1.102", "1.080",
       "1.107", "1.801", "11.002", "11.122", "14.01"
@@ -2902,7 +2910,7 @@ window.majors = {
   },
 
   miAnthropology: {
-    name: "Minor in Anthropology",
+    name: "Minor in Anthropology (as of May '15)",
     reqs: [0,
       [1, "21A.00", "21A.01"],
       {
@@ -2914,7 +2922,7 @@ window.majors = {
   },
 
   miCMS: {
-    name: "Minor in Comparative Media Studies",
+    name: "Minor in Comparative Media Studies (as of May '15)",
     reqs: [0,
       [1, "21L.011", "CMS.100"],
       [1, "CMS.400", "CMS.403", "CMS.405", "CMS.407"],
@@ -2927,7 +2935,7 @@ window.majors = {
   },
 
   miBiology: {
-    name: "Minor in Biology",
+    name: "Minor in Biology (as of May '15)",
     reqs: [0,
       "5.12", "7.03", "7.05",
       [2,
@@ -2939,7 +2947,7 @@ window.majors = {
   },
 
   miBrain_Cog_Sci: {
-    name: "Minor in Brain and Cognitive Sciences",
+    name: "Minor in Brain and Cognitive Sciences (as of May '15)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "9.00", "9.01", "9.40",
@@ -2954,7 +2962,7 @@ window.majors = {
   },
 
   miChemistry: {
-    name: "Minor in Chemistry",
+    name: "Minor in Chemistry (as of May '15)",
     reqs: [0,
       "5.03", "5.12", "5.310", "5.60",
       [2,
@@ -2971,7 +2979,7 @@ window.majors = {
   },
 
   miEarth_Atmos_Planetary: {
-    name: "Minor in Earth, Atmospheric, and Planetary Sciences",
+    name: "Minor in Earth, Atmospheric, and Planetary Sciences (as of Oct '15)",
     reqs: [0,
       [2, "12.001", "12.002", "12.003", "12.006", "12.102", "12.400"],
       [1, "18.03", "18.034", "5.60"],
@@ -3000,7 +3008,7 @@ window.majors = {
   },
 
   miAtmospheric_chemistry: {
-    name: "Minor in Atmospheric Chemistry",
+    name: "Minor in Atmospheric Chemistry (as of Oct '15)",
     reqs: [0,
       {id: "Chemistry, Dynamics, and the Atmosphere:", skip: 1},
       "12.003", "5.60", "1.085", "12.306",
@@ -3012,7 +3020,7 @@ window.majors = {
   },
 
   miEcon: {
-    name: "Minor in Economics",
+    name: "Minor in Economics (as of Aug '16)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "14.01", "14.02",
@@ -3037,7 +3045,7 @@ window.majors = {
   },
 
   mi15_1: {
-    name: "Minor in 15-1: Management",
+    name: "Minor in 15-1: Management (as of Mar '16)",
     reqs: [0,
       "15.501",
       [1, "15.301", "15.310", "15.668"],
@@ -3058,7 +3066,7 @@ window.majors = {
   },
 
   mi15_2: {
-    name: "Minor in 15-2: Business Analytics",
+    name: "Minor in 15-2: Business Analytics (as of Mar '16)",
     reqs: [0,
       "15.053",
       [1, "15.079", "6.041", "18.600"],
@@ -3075,7 +3083,7 @@ window.majors = {
   },
 
   mi15_3: {
-    name: "Minor in 15-3: Finance",
+    name: "Minor in 15-3: Finance (as of Mar '16)",
     reqs: [0,
       [1, "15.417", "15.401"],
       [1, "15.418", "15.402"],
@@ -3088,7 +3096,7 @@ window.majors = {
   },
 
   miStatistics: {
-    name: "Minor in Statistics and Data Science",
+    name: "Minor in Statistics and Data Science (as of May '16)",
     reqs: [0,
       [1,
         "2.087", "6.01",
@@ -3106,7 +3114,7 @@ window.majors = {
   },
 
   miWriting: {
-    name: "Minor in Writing",
+    name: "Minor in Writing (as of Dec '15)",
     reqs: [0,
       [1,
         {id: "Writing and Rhetoric", skip: 1},
@@ -3139,7 +3147,7 @@ window.majors = {
   },
 
   miManagement: {
-    name: "Minor in Management",
+    name: "Minor in Management (as of May '15)",
     reqs: [0,
       [1, "15.301", "15.310", "15.668"], "15.501", "15.812",
       [
@@ -3177,7 +3185,7 @@ window.majors = {
   },
 
   miManagement_science: {
-    name: "Minor in Management Science",
+    name: "Minor in Management Science (as of May '15)",
     reqs: [0,
       [1, "14.01", "15.016"],
       "15.053",
@@ -3191,7 +3199,7 @@ window.majors = {
   },
 
   miSTS: {
-    name: "Minor in Science, Technology, and Society",
+    name: "Minor in Science, Technology, and Society (as of May '15)",
     reqs: [0,
       "STS.091",
       [1,
@@ -3219,7 +3227,7 @@ window.majors = {
   },
 
   miMusic: {
-    name: "Minor in Music",
+    name: "Minor in Music (as of May '15)",
     reqs: [0,
       [1, "21M.011", "21M.030", "21M.051"],
       "21M.301",
@@ -3269,7 +3277,7 @@ window.majors = {
   },
 
   miTheater_arts: {
-    name: "Minor in Theater Arts",
+    name: "Minor in Theater Arts (as of May '15)",
     reqs: [0,
       [1, "21M.611", "21M.618", "21M.703", "21M.710", "21M.711", "21M.846"],
       [4,
@@ -3291,7 +3299,7 @@ window.majors = {
   },
 
   miPhilosophy: {
-    name: "Minor in Philosophy",
+    name: "Minor in Philosophy (as of Feb '16)",
     reqs: [0,
       {
         id: "Any CIH philosophy subject",
@@ -3312,7 +3320,7 @@ window.majors = {
   },
 
   miLinguistics: {
-    name: "Minor in Linguistics",
+    name: "Minor in Linguistics (as of May '15)",
     reqs: [0,
       "24.900", "24.901", "24.902", "24.903",
       [2,
@@ -3323,7 +3331,7 @@ window.majors = {
   },
 
   miMSE: {
-    name: "Minor in Material Science and Engineering",
+    name: "Minor in Material Science and Engineering (as of May '15)",
     reqs: [0,
       [
         {
@@ -3351,7 +3359,7 @@ window.majors = {
   },
 
   miArchaeology: {
-    name: "Minor in Archaeology and Materials",
+    name: "Minor in Archaeology and Materials (as of May '15)",
     reqs: [0,
       "3.012", "3.014", "3.022", "3.986", "3.985",
       [1, "3.07", "3.14", "3.051", "3.052", "3.984"]
@@ -3359,7 +3367,7 @@ window.majors = {
   },
 
   miMathematics: {
-    name: "Minor in Mathematics",
+    name: "Minor in Mathematics (as of May '15)",
     reqs: [0,
       [
         {
@@ -3390,7 +3398,7 @@ window.majors = {
   },
 
   miMechE: {
-    name: "Minor in Mechanical Engineering",
+    name: "Minor in Mechanical Engineering (as of May '15)",
     reqs: [0,
       [
         {
@@ -3413,14 +3421,14 @@ window.majors = {
   },
 
   miNuclear_science: {
-    name: "Minor in Nuclear Science and Engineering",
+    name: "Minor in Nuclear Science and Engineering (as of May '15)",
     reqs: [0,
       "22.01", "22.02", [2, "22.05", "22.06", "22.058", "22.09"]
     ]
   },
 
   miPhysics: {
-    name: "Minor in Physics",
+    name: "Minor in Physics (as of May '15)",
     reqs: [0,
       [1, "18.03", "18.034"],
       [
@@ -3442,7 +3450,7 @@ window.majors = {
   },
 
   miPolitical_science: {
-    name: "Minor in Political Science",
+    name: "Minor in Political Science (as of May '15)",
     reqs: [0,
       [1,
         {
@@ -3470,7 +3478,8 @@ window.majors = {
   },
 
   miChinese: {
-    name: "Minor in Chinese",
+    name: "Minor in Chinese (21F) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1,
         [2, [1, "21F.103", "21F.173"], "21F.104"],
@@ -3497,7 +3506,7 @@ window.majors = {
   },
 
   mi21_G_chinese: {
-    name: "Minor in Chinese (New, 21G)",
+    name: "Minor in Chinese (as of Aug '16)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       [1,
@@ -3528,7 +3537,8 @@ window.majors = {
   },
 
   miFrench: {
-    name: "Minor in French",
+    name: "Minor in French (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "21F.303", "21F.373"],
       [1, "21F.304", "21F.374"],
@@ -3554,7 +3564,7 @@ window.majors = {
   },
 
   mi21_G_french: {
-    name: "Minor in French (New, 21G)",
+    name: "Minor in French (as of Aug '16)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       [
@@ -3589,7 +3599,7 @@ window.majors = {
   },
 
   miGerman: {
-    name: "Minor in German",
+    name: "Minor in German (as of May '15)",
     reqs: [0,
       [1, "21F.403", "21F.473"],
       [1, "21F.404", "21F.474"],
@@ -3625,7 +3635,8 @@ window.majors = {
   },
 
   miSpanish: {
-    name: "Minor in Spanish",
+    name: "Minor in Spanish (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "21F.703", "21F.773"],
       [1, "21F.704", "21F.774"],
@@ -3653,7 +3664,7 @@ window.majors = {
   },
 
   mi21_G_spanish: {
-    name: "Minor in Spanish (New, 21G)",
+    name: "Minor in Spanish (as of Mar '16)",
     reqs: [0,
       [6,
         {id: "Tier I (2 or fewer):", skip: 1},
@@ -3668,7 +3679,7 @@ window.majors = {
   },
 
   miJapanese: {
-    name: "Minor in Japanese",
+    name: "Minor in Japanese (as of May '15)",
     reqs: [0,
       [1,
         [2, [1, "21F.503", "21F.573"], "21F.504"],
@@ -3686,7 +3697,7 @@ window.majors = {
 
 
   miAsian: {
-    name: "Minor in Asian and Asian Diaspora Studies",
+    name: "Minor in Asian and Asian Diaspora Studies (as of May '15)",
     reqs: [0,
       [
         {
@@ -3733,7 +3744,7 @@ window.majors = {
 
 
   miHistory: {
-    name: "Minor in History",
+    name: "Minor in History (as of May '15)",
     reqs: [0,
       "21H.390",
       {
@@ -3754,7 +3765,7 @@ window.majors = {
   },
 
   miLiterature: {
-    name: "Minor in Literature",
+    name: "Minor in Literature (as of May '15)",
     reqs: [0,
       [1,
         {
@@ -3796,7 +3807,7 @@ window.majors = {
   },
 
   miAncient_and_medieval: {
-    name: "Minor in Ancient and Medieval Studies",
+    name: "Minor in Ancient and Medieval Studies (as of May '15)",
     reqs: [0,
       [
         {
@@ -3824,7 +3835,7 @@ window.majors = {
   },
 
   miApplied_international: {
-    name: "Minor in Applied International Studies",
+    name: "Minor in Applied International Studies (as of May '15)",
     reqs: [0,
       {
         id: "Six classes from any program in SHASS, including at least 2 " +
@@ -3855,7 +3866,7 @@ window.majors = {
   },
 
   miPremed: {
-    name: "Pre-Med Path",
+    name: "Pre-Med Path (as of Oct '15)",
     reqs: [0,
       [1, "7.02", "20.109", "10.702", "9.12"],
       "5.12",
@@ -3889,7 +3900,7 @@ window.majors = {
   },
 
   miAstronomy: {
-    name: "Minor in Astronomy",
+    name: "Minor in Astronomy (as of May '15)",
     reqs: [0,
       "8.03", "8.282",
       [1, "18.03", "18.034"],
@@ -3906,7 +3917,7 @@ window.majors = {
   },
 
   miBiomed: {
-    name: "Minor in Biomedical Engineering",
+    name: "Minor in Biomedical Engineering (as of May '15)",
     reqs: [0,
       [1, "18.03", "18.034", "3.016"],
       [1, "1.010", "2.086", "6.041", "18.05"],
@@ -3987,7 +3998,7 @@ window.majors = {
   },
 
   miEnergy_studies: {
-    name: "Minor in Energy Studies",
+    name: "Minor in Energy Studies (as of Aug '16)",
     reqs: [0,
       {id: "Science Foundations:", skip: 1},
       [1,
@@ -4028,7 +4039,7 @@ window.majors = {
   },
 
   miPsych: {
-    name: "Minor in Psychology",
+    name: "Minor in Psychology (as of May '15)",
     reqs: [0,
       "9.00",
       [2,
@@ -4063,7 +4074,7 @@ window.majors = {
   },
 
   miPublic_policy: {
-    name: "Minor in Public Policy",
+    name: "Minor in Public Policy (as of May '15)",
     reqs: [0,
       [1, "11.002", "17.30"], "14.01", [1, "11.003", "17.303"],
       {
@@ -4078,7 +4089,7 @@ window.majors = {
   },
 
   miWGS: {
-    name: "Minor in Women's & Gender Students",
+    name: "Minor in Women's & Gender Students (as of May '15)",
     reqs: [0,
       {id: "Tier I:", skip: 1},
       "WGS.101",
@@ -4098,7 +4109,7 @@ window.majors = {
   },
 
   miRussian_Eurasian_studies: {
-    name: "Minor in Russian & Eurasian Studies",
+    name: "Minor in Russian & Eurasian Studies (as of Dec '15)",
     reqs: [0,
       {id: "Note: Subjects taken at Harvard or Wellesley may count.", skip: 1},
       [1,
