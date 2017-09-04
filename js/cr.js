@@ -726,7 +726,7 @@ function checkMajor() {
   var span = $selector.prev('span.majorminor');
   span.attr('data-empty', 1).removeAttr('data-value');
   var majorData = majors[majorId];
-  if (!majorData || majorData.disable) {
+  if (!majorData) {
     $div.html('');
     // Continue checking majors and minors even if this one isn't defined
     return true;
@@ -1024,7 +1024,7 @@ var crSetup = function courseRoadSetup() {
         return false;
       }
       $('select.majorminor').each(function setMajorDropdowns(i) {
-        $(this).val(data.majors[i]).attr('selected', true);
+        $(this).val(data.majors[i]).show().attr('selected', true);
       });
       getClasses(data.classes, false);
       askBeforeLeaving(false);
@@ -1405,7 +1405,7 @@ var crSetup = function courseRoadSetup() {
   $('select.majorminor option').each(function hideDisabledMajorOptions() {
     var majorId = $(this).val();
     if (majorId in majors && majors[majorId].disable) {
-      $(this).remove();
+      $(this).hide();
     }
   });
   $(window).resize(updateWires);
