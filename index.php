@@ -274,7 +274,7 @@ EOD;
   <div id="nowreading" class="leftbarholder"></div>
 </div>
 <div id="rightbar">
-  <div style="padding:18px;background-color:#ffffae">
+  <div style="padding:18px;background-color:#ffffae" class="noprint">
 Hey all, we're really sorry that CourseRoad's info has fallen behind. All known classes through Fall 2017 should now be available, but we're still working on updating MIT major and minor cirricula, each of which has to be hardcoded and checked by hand. We'll remove this banner once we've caught back up. Apologies again for any confusion this may have caused.<br><br>
 Best,<br>
 The CourseRoad Team
