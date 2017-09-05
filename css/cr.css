@@ -307,6 +307,13 @@ div.majorminor li li {
   margin-left: 251px;
   width: auto;
 }
+#banner {
+  background-color: #FFFFAE;
+  padding: 18px;
+}
+#banner > span {
+  float: right;
+}
 .year {
   border-top: 10px solid #444;
   height: auto;
