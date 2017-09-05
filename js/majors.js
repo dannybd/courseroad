@@ -297,6 +297,7 @@ window.majors = {
 
   m4_archdesign: {
     name: "4 -- Architecture (Architectural Design) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.113", "4.114", "4.115", "4.440", "4.603", "4.605",
@@ -312,6 +313,7 @@ window.majors = {
 
   m4_buildingtech: {
     name: "4 -- Architecture (Building Technology) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401",
       "4.500", "4.411", "4.440", "4.605", "4.THT", "4.THU",
@@ -328,6 +330,7 @@ window.majors = {
 
   m4_computation: {
     name: "4 -- Architecture (Computation) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.501", "4.503", "4.504", "4.505", "4.605", "4.THT", "4.THU",
@@ -340,6 +343,7 @@ window.majors = {
 
   m4_history: {
     name: "4 -- Architecture (History, Theory, and Criticism) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.601", "4.605", [1, "4.602", "4.641", "4.651"],
@@ -357,6 +361,7 @@ window.majors = {
 
   m4_artculture: {
     name: "4 -- Architecture (Art, Culture, and Technology) (as of May '15)",
+    disable: 1,
     reqs: [0,
       [1, "4.111", "4.11A"], "4.112", "4.302", "4.401", "4.500",
       "4.322", "4.341", "4.351", "4.601", "4.THT", "4.THU",
@@ -372,7 +377,7 @@ window.majors = {
   },
 
   m4_new: {
-    name: "4 -- Architecture (as of Aug '16)",
+    name: "4 -- Architecture (as of Sep '17)",
     reqs: [0,
       [1, "4.021", "4.02A"],
       "4.022", "4.023", "4.024", "4.302", "4.401", "4.440", "4.500",
@@ -388,7 +393,7 @@ window.majors = {
           {id: "Art, Culture and Technology:", skip: 1},
           "4.307", "4.322", "4.341", "4.354", "4.368",
           {id: "Building Technology:", skip: 1},
-          "4.411", "4.42", "4.432", "4.444",
+          "4.411", "4.42", "4.432",
           {id: "Computation:", skip: 1},
           "4.504", "4.520", "4.522",
           {id: "History and Theory of Architecture", skip: 1},
@@ -399,17 +404,18 @@ window.majors = {
   },
 
   m5: {
-    name: "5 -- Chemistry (as of May '15)",
+    name: "5 -- Chemistry (as of Sep '17)",
     reqs: [0,
-      "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.35", "5.36",
-      "5.37", "5.38",
+      "5.03", "5.07", [1, "5.111", "5.112"], "5.12", "5.13", "5.60", "5.61",
+      "5.351", "5.352", "5.353", "5.361", "5.362", "5.363",
+      "5.371", "5.372", "5.373", "5.381", "5.382", "5.383",
       {
-        id: "Note: CourseRoad doesn't currently recognize the 5.35-38 module " +
-            "behavior. Try using 0-unit custom classes to mark where the " +
-            "modules <em>should</em> be.",
+        id: "Note: CourseRoad doesn't currently recognize Course V's " +
+            "concept of modules. Try using 0-unit custom classes to " +
+            "mark where the modules <em>should</em> be.",
         skip: 1
       },
-      "5.60", "5.61", [2, "5.04", "5.08", "5.43", "5.62"]
+      [2, "5.04", "5.08", "5.43", "5.62"]
     ]
   },
 
