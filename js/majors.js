@@ -1237,13 +1237,59 @@ window.majors = {
       [
         {
           count: 1,
-          desc: "from the BIORE list"
+          desc: "from the Biology Restricted Electives"
         },
         "7.08", "7.20", "7.21", "7.22", "7.23", "7.26", "7.27", "7.28", "7.29",
         [2, "7.30A", "7.30B"], "7.31", "7.32", "7.33", "7.37", "7.371", "7.38",
         "7.41", "7.45", "7.49"
       ],
       [1, "6.UAT", "6.UAR"]
+    ]
+  },
+
+  m6_14: {
+    name: "6-14: Computer Science, Economics, and Data Science (as of Sep '17)",
+    reqs: [0,
+      {
+        id: "Note: CourseRoad pulls information from the catalog and the " +
+            "Course VI website, but the Course VI requirements change " +
+            "frequently. For the most up-to-date listings please refer to " +
+            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "the Course VI checklist</a>.",
+        skip: 1
+      },
+      "18.06",
+      [1, [2, "6.041A", "6.041B"], "14.30", "18.600"],
+      "6.0001", "6.006", "6.009", "6.036", "6.042", "6.046",
+      [1, "14.01", "14.03"],
+      "14.32",
+      [1, "6.UAT", "6.UAR", "15.276"],
+      [1, "14.05", "14.18", "14.33"],
+      [1, "6.207", "6.215", "15.053"],
+      [
+        {
+          count: 1,
+          desc: "from the Economics Electives in Data Science"
+        },
+        "14.20", "14.27", "14.36", "14.41", "14.64",
+        "14.74", "14.75", "15.780"
+      ],
+      [
+        {
+          count: 1,
+          desc: "from the Economics Electives in Theory"
+        },
+        "14.04", "14.12", "14.13", "14.16", "14.19", "14.26", "14.54"
+      ],
+      [
+        {
+          count: 1,
+          desc: "from the ECONDS or ECONTH list"
+        },
+        "14.20", "14.27", "14.36", "14.41", "14.64",
+        "14.74", "14.75", "15.780",
+        "14.04", "14.12", "14.13", "14.16", "14.19", "14.26", "14.54"
+      ],
     ]
   },
 
