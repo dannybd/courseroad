@@ -403,6 +403,21 @@ window.majors = {
     ]
   },
 
+  m4_B: {
+    name: "4B -- Architecture Studies (as of Sep '17)",
+    reqs: [0,
+      [1, "4.021", "4.02A"],
+      "4.022", "4.302", "4.401", "4.500",
+      "4.THT", "4.THU",
+      [1, "4.605", "4.614", "4.635"],
+      {
+        id: "84 units of Restricted Electives, based on a proposal of "+
+            "interdisciplinary study approved by the department",
+        skip: 1
+      }
+    ]
+  },
+
   m5: {
     name: "5 -- Chemistry (as of Sep '17)",
     reqs: [0,
