@@ -1627,7 +1627,7 @@ window.majors = {
   },
 
   m12: {
-    name: "12 -- Earth, Atmospheric, and Planetary Sciences (as of Oct '15)",
+    name: "12 -- Earth, Atmospheric, and Planetary Sciences (as of Sep '17)",
     reqs: [0,
       [2, "12.001", "12.002", "12.003", "12.007"],
       "12.TIP",
