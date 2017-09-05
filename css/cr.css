@@ -374,6 +374,13 @@ input:hover, input:focus {
   margin-left: 251px;
   width: auto;
 }
+#banner {
+  background-color: #FFFFAE;
+  padding: 18px;
+}
+#banner > span {
+  float: right;
+}
 .year {
   border-top: 2px dotted #404040;
   height: auto;
