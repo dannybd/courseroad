@@ -164,7 +164,10 @@ function parseRequisites($str) {
   $overrides = array(
     // 18.1001, 18.1002, 18.100A, 18.100B, 18.100C, 18.100P, 18.100Q
     'GIR:CAL2; or 18.014 and [GIR:CAL2]' =>
-      '[0,[1,"GIR:CAL2",[2,"18.014",{"id":"GIR:CAL2","coreq":1}]]]'
+      '[0,[1,"GIR:CAL2",[2,"18.014",{"id":"GIR:CAL2","coreq":1}]]]',
+    // 1.102
+    'GIR:PHY2; or [1.060B] and permission of instructor' =>
+      '[0,"GIR:PHY2",{"id":"1.060B","coreq":1}]'
   );
   if (array_key_exists($str, $overrides)) {
     return json_decode($overrides[$str]);
