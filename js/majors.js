@@ -2755,7 +2755,7 @@ window.majors = {
     ]
   },
 
-  m22_new: {
+  m22: {
     name: "22 -- Nuclear Science & Engineering, '21 and later (as of Mar. '18)",
     reqs: [0,
       "2.005",
@@ -4355,11 +4355,35 @@ window.majors = {
     ],
   },
 
-  neLow_Carbon_Energy_Systems: {
-    name: "LCES: Low Carbon Energy Systems (as of Mar. '18)",
-    reqs: [0,
-      "1.000", "1.010", "2.009", "8.21", "14.01", "15.2191",
-     "18.03", "22.01", "22.03", "22.071"
+  neAutonomous_Machines: {
+    name: "AM - Autonomous Machines (as of Mar. '18)",
+    reqs: [0, "Coming Soon..."
+//      "1.000", "1.010", "2.009", "8.21", "14.01", "15.2191",
+//     "18.03", "22.01", "22.03", "22.071"
     ]
+  },
+
+  neLiving_Machines: {
+    name: "LM - Living Machines (as of Mar. '18)",
+    reqs: [0, "Coming Soon..."
+//      "1.000", "1.010", "2.009", "8.21", "14.01", "15.2191",
+//     "18.03", "22.01", "22.03", "22.071"
+    ]
+//  },
+
+//  neAdvanced_Materials_and_Manufacturing: {
+//    name: "AMM - Advanced Materials & Manufacturing (as of Mar. '18)",
+//    reqs: [0,
+//      "1.000", "1.010", "2.009", "8.21", "14.01", "15.2191",
+//     "18.03", "22.01", "22.03", "22.071"
+//    ]
+//  },
+
+//  neLow_Carbon_Energy_Systems: {
+//    name: "LCES - Low Carbon Energy Systems (as of Mar. '18)",
+//    reqs: [0,
+//      "1.000", "1.010", "2.009", "8.21", "14.01", "15.2191",
+//     "18.03", "22.01", "22.03", "22.071"
+//    ]
   }
 };
