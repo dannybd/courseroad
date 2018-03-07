@@ -266,11 +266,6 @@ EOD;
       <option value="m0">---Select a Minor---</option>
     </select><br>
     <div id="minorreqs2" class="majorminor"></div>
-    <span class="majorminor">-----------------<br></span>
-    <select id="chooseneet" name="chooseneet" class="majorminor chooseneet" data-div="#neetreqs">
-      <option value="m0">---Select a NEET Thread---</option>
-    </select><br>
-    <div id="neetreqs" class="majorminor"></div>
     <!--
     -----------------<br>
     <strong>Total Units: <span id="totalunits">0</span></strong>
