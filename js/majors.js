@@ -189,7 +189,7 @@ window.majors = {
       [1, "2.678", "2.674"],
       {
         id: "72 units forming a 2A Concentration, plus proposal "+
-            "<a href=\"https://course2a.wordpress.com/tracks/\" "+
+            "<a href=\"https:course2a.wordpress.com/tracks/\" "+
             "target=\"_blank\">(click here)</a>.",
         skip: 1
       }
@@ -547,7 +547,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -667,7 +667,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -868,7 +868,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -1102,7 +1102,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -1239,7 +1239,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -1272,7 +1272,7 @@ window.majors = {
         id: "Note: CourseRoad pulls information from the catalog and the " +
             "Course VI website, but the Course VI requirements change " +
             "frequently. For the most up-to-date listings please refer to " +
-            "<a href=\"https://www.eecs.mit.edu/curriculum2016\">" +
+            "<a href=\"https:www.eecs.mit.edu/curriculum2016\">" +
             "the Course VI checklist</a>.",
         skip: 1
       },
@@ -2728,17 +2728,17 @@ window.majors = {
     ]
   },
 
-  m22: {
-    name: "22 -- Nuclear Science & Engineering (as of Sep '17)",
+  m22_old: {
+    name: "22 -- Nuclear Science & Engineering, '20 and earlier (as of Mar. '18)",
     reqs: [0,
       "2.005",
-      [1, [2, "6.0001", "6.0002"], "12.010", "2.086", "1.000"],
+      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
       "8.03",
       [1, "18.03", "18.034"],
-      "22.04", "22.01", "22.071",
-      "22.02", "22.033", "22.05", "22.09", "22.06",
+      "22.01", "22.02", "22.033",
+      "22.04", "22.05", "22.06", [1, "22.061", "22.071"], [1, "8.13", "22.09"],
       "22.THT", "22.THU",
-      [1, "18.04", "6.041", "18.0751", "18.05", "18.600"],
+      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
       [
         {
           count: 24,
@@ -2747,10 +2747,36 @@ window.majors = {
           pullmatches: 1,
           special: 1
         },
-        "6.UAP", "22.054", "22.055", "22.14", "22.15", "22.212", "22.213",
+        "2.006", "3.14", "6.UAP", "22.022", "22.03", "22.039", "22.051", "22.054", "22.055",
+	"22.061", "22.072", "22.074", "22.078", "22.081", "22.14", "22.15", "22.212", "22.213",
         "22.251", "22.313", "22.315", "22.39", "22.51", "22.611", "22.615",
-        "22.62", "22.71", "22.72", "22.74", "22.76", "22.78", "22.811",
-        "22.812", "22.814", "2.006"
+        "22.62", "22.72", "22.74", "22.76", "22.78", "22.812", "22.814", "HST.563"
+      ]
+    ]
+  },
+
+  m22: {
+    name: "22 -- Nuclear Science & Engineering, '21 and later (as of Mar. '18)",
+    reqs: [0,
+      "2.005",
+      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
+      "8.03",
+      [1, "18.03", "18.034"],
+      "22.01", "22.02", "22.03", "22.033",
+      "22.04", "22.05", "22.06", "22.071", [1, "8.13", "22.09"],
+      "22.THT", "22.THU",
+      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
+      [
+        {
+          count: 12,
+          type: "total_units",
+          desc: "units",
+          pullmatches: 1,
+          special: 1
+        },
+        "2.006", "3.14", "6.UAP", "22.022", "22.03", "22.039", "22.051", "22.054", "22.055",
+	"22.071", "22.072", "22.074", "22.078", "22.081", "22.14", "22.15", "22.212", "22.213",
+        "22.313", "22.315", "22.611", "22.615", "22.62", "22.76", "22.812", "22.814", "HST.563"
       ]
     ]
   },
@@ -3270,7 +3296,7 @@ window.majors = {
       [1, "15.075", "18.650"],
       {
         id: "Three full subjects from <a href=\"" +
-            "http://mitsloan.mit.edu/uploadedFilesV9/Undergraduate/Pages/" +
+            "http:mitsloan.mit.edu/uploadedFilesV9/Undergraduate/Pages/" +
             "Majors_and_Minors/15-2%20BA%20Electives_web.pdf\">" +
             "a list of restricted electives</a>. At least two of the " +
             "subjects must be from Course 15.",
@@ -4327,5 +4353,62 @@ window.majors = {
         "21H.244"
       ]
     ],
+  },
+
+  neAutonomous_Machines: {
+    name: "AM - Autonomous Machines (as of Apr. '18)",
+    reqs: [0, 
+	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
+	{id: "<u>Programming:</u>", skip: 1}, [1, [2, "6.01", "6.S080"],
+	[2, "6.0001", "6.0002"]],
+	{id: "<u>Signals & Systems:</u>", skip: 1}, [1, "6.003", "16.002"],
+	{id: "<u>Controls:</u>", skip: 1}, [1, "2.004", "6.302", "16.06"],
+	{id: "<u>Advanced Math:</u>", skip: 1}, [
+	{
+	  count: 12,
+          type: "total_units",
+          desc: "units from",           
+          special: 1,
+          runinfull: 1
+        }, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
+	{id: "<u>Thread Projects:</u>", skip: 1}, 
+	"2.007", [1, "6.141", "16.405"], "16.AARS",
+        {id: "<u>Thread Electives:</u>", skip: 1}, [
+        {
+          count: 36,
+          type: "total_units",
+          desc: "units from",
+          special: 1,
+          runinfull: 1
+        }, "2.086", "2.12", [1, "2.14", "16.30"], [1, "2.671", "6.801"],
+	[1, "2.678", "6.115"], "6.009", [1, "6.034", "16.410"],
+	"6.036", "16.35", "16.400", "16.410"],
+    ]
+  },
+
+  neLiving_Machines: {
+    name: "LM - Living Machines (as of Apr. '18)",
+    reqs: [0, 
+	"2.00", [1, "2.086", "6.00", "10.10"], [1, "2.673", "20.309"],
+	[1, "2.772", "20.110"], "18.03", "20.05",
+    ]
+  },
+
+  neAdvanced_Materials_Machines: {
+    name: "AMM - Advanced Materials Machines (as of Apr. '18)",
+    reqs: [0,
+	"2.001", [1, "2.002", "3.032"], "2.003",
+	[1, "2.005", "3.044"], "2.008", "2.013", "2.086",
+	"2.670", "2.671", "2.853", "2.S981",
+	[1, "3.016", "18.03"], "3.012", "3.022", "3.044", "3.TBD-1", "3.TBD-2",
+    ]
+  },
+
+  neLow_Carbon_Energy_Systems: {
+    name: "LCES - Low Carbon Energy Systems (as of Apr. '18)",
+    reqs: [0,
+      [1, "1.000", "2.086"], "1.010", "8.21", "14.01", "15.2191",
+     "18.03", "22.01", "22.03", "22.033", "22.071"
+    ]
   }
 };

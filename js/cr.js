@@ -890,7 +890,8 @@ function minmajors(stringify) {
     $('#choosemajor').val(),
     $('#choosemajor2').val(),
     $('#chooseminor').val(),
-    $('#chooseminor2').val()
+    $('#chooseminor2').val(),
+    $('#chooseneet').val()
   ];
   return stringify ? JSON.stringify(minData) : minData;
 }
@@ -1005,7 +1006,7 @@ var crSetup = function courseRoadSetup() {
   user.supersenior = $('.year.supersenior').is(':visible') ? 1 : 0;
   // Populate the majorminor selectors
   Object.keys(majors).forEach(function populateMajorDropdowns(majorId) {
-    var dropdowns = !/^mi/.test(majorId) ? 'choosemajor' : 'chooseminor'
+    var dropdowns = /^mi/.test(majorId) ? 'chooseminor' : (/^ne/.test(majorId) ? 'chooseneet' : 'choosemajor')
     $('select.' + dropdowns).append(
       '<option value="' + majorId + '">' + majors[majorId].name + '</option>'
     );
