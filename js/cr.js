@@ -418,7 +418,15 @@ function addWires(div, addwires) {
   var data = div.data();
   data.terminals.wires = [];
   data.reqstatus = true;
-  if (data.reqs) {
+  if (/"\(|\)"/.test(JSON.stringify(data.reqs))) {
+    data.reqstatus = false;
+    div.find('.reqs').html('Reqs: (hover)').attr(
+      'title',
+      'The Registrar changed some requirements unexpectedly, and ' +
+      'CourseRoad is having trouble parsing ~300 classes. ' +
+      'Sorry about that. ' + data.reqstr
+    );
+  } else if (data.reqs) {
     var reqcheck = checkRequisites(
       data.reqs,
       newWire,
