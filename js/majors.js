@@ -2729,7 +2729,7 @@ window.majors = {
   },
 
   m22_old: {
-    name: "22 -- Nuclear Science & Engineering, '20 and earlier (as of Mar. '18)",
+    name: "22 -- Nuclear Science & Engineering, '20 and earlier (as of Aug. '18)",
     reqs: [0,
       "2.005",
       [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
@@ -2756,14 +2756,14 @@ window.majors = {
   },
 
   m22: {
-    name: "22 -- Nuclear Science & Engineering, '21 and later (as of Mar. '18)",
+    name: "22 -- Nuclear Science & Engineering, '21 and later (as of Aug. '18)",
     reqs: [0,
       "2.005",
       [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
       "8.03",
       [1, "18.03", "18.034"],
       "22.01", "22.02", "22.03", "22.033",
-      "22.04", "22.05", "22.06", "22.071", [1, "8.13", "22.09"],
+      "22.04", "22.05", "22.06", "22.061", [1, "8.13", "22.09"],
       "22.THT", "22.THU",
       [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
       [
@@ -4356,7 +4356,7 @@ window.majors = {
   },
 
   neAutonomous_Machines: {
-    name: "AM - Autonomous Machines (as of Apr. '18)",
+    name: "AM - Autonomous Machines (as of Aug. '18)",
     reqs: [0, 
 	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
 	{id: "<u>Programming:</u>", skip: 1}, [1, [2, "6.01", "6.S080"],
@@ -4372,7 +4372,7 @@ window.majors = {
           runinfull: 1
         }, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
 	{id: "<u>Thread Projects:</u>", skip: 1}, 
-	"2.007", [1, "6.141", "16.405"], "16.AARS",
+	"2.007", "2.670", [1, "6.141", "16.405"], "16.AARS",
         {id: "<u>Thread Electives:</u>", skip: 1}, [
         {
           count: 36,
@@ -4381,13 +4381,14 @@ window.majors = {
           special: 1,
           runinfull: 1
         }, "2.086", "2.12", [1, "2.14", "16.30"], [1, "2.671", "6.801"],
-	[1, "2.678", "6.115"], "6.009", [1, "6.034", "16.410"],
+	[1, "2.678", "6.115"], {id: "One <u>Additional</u> From:", skip: 1}, [1, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
+	 "6.009", [1, "6.034", "16.410"],
 	"6.036", "16.35", "16.400", "16.410"],
     ]
   },
 
   neLiving_Machines: {
-    name: "LM - Living Machines (as of Apr. '18)",
+    name: "LM - Living Machines (as of Aug. '18)",
     reqs: [0, 
 	"2.00", [1, "2.086", "6.00", "10.10"], [1, "2.673", "20.309"],
 	[1, "2.772", "20.110"], "18.03", "20.05",
@@ -4395,20 +4396,31 @@ window.majors = {
   },
 
   neAdvanced_Materials_Machines: {
-    name: "AMM - Advanced Materials Machines (as of Apr. '18)",
+    name: "AMM - Advanced Materials Machines (as of Aug. '18)",
     reqs: [0,
 	"2.001", [1, "2.002", "3.032"], "2.003",
-	[1, "2.005", "3.044"], "2.008", "2.013", "2.086",
-	"2.670", "2.671", "2.853", "2.S981",
-	[1, "3.016", "18.03"], "3.012", "3.022", "3.044", "3.TBD-1", "3.TBD-2",
+	"2.005", [1, "2.006", "3.044"], "2.008", "2.013", 
+	"2.670", "2.S981", [1, "2.086", "3.016", "18.03"],
+	"3.012", "3.022", "3.007", "3.TBD-2",
+	{id: "<u>Recommended (not required):</u>", skip: 1}, [
+	  "---", "2.671", "2.853",
+	],
     ]
   },
 
   neLow_Carbon_Energy_Systems: {
-    name: "LCES - Low Carbon Energy Systems (as of Apr. '18)",
+    name: "CES - Clean Energy Systems (as of Aug. '18)",
     reqs: [0,
       [1, "1.000", "2.086"], "1.010", "8.21", "14.01", "15.2191",
-     "18.03", "22.01", "22.03", "22.033", "22.071"
+     "18.03", "22.01", [1, "1.101", "22.03"], [1, "1.013", "22.033"],
+	"22.071", "NEET 3rd Yr Project TBD", 
+	{id: "<u>Recommended (not required):</u>", skip: 1}, [
+          "---", "2.006", [1, "2.60", "22.40"], "2.603",
+	  "2.626", [1, "2.650", "22.081"], "3.18", 
+	  [1, "5.00", "6.929", "10.579", "22.813"],
+	  "6.007", "6.933", "6.131", "11.165", "12.301",
+	  "15.017", "IDS.064", "IDS.521", "IDS.522"
+        ],
     ]
   }
 };
