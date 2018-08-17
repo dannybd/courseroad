@@ -4408,10 +4408,10 @@ window.majors = {
     ]
   },
 
-  neLow_Carbon_Energy_Systems: {
+  neClean_Energy_Systems: {
     name: "CES - Clean Energy Systems (as of Aug. '18)",
     reqs: [0,
-      [1, "1.000", "2.086"], "1.010", "8.21", "14.01", "15.2191",
+      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"]], "1.010", "8.21", "14.01", "15.2191",
      "18.03", "22.01", [1, "1.101", "22.03"], [1, "1.013", "22.033"],
 	"22.071", "NEET 3rd Yr Project TBD", 
 	{id: "<u>Recommended (not required):</u>", skip: 1}, [
