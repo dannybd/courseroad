@@ -3508,7 +3508,7 @@ window.majors = {
   },
 
   miMathematics: {
-    name: "Minor in Mathematics (as of May '15)",
+    name: "Minor in Mathematics (as of Aug '18)",
     reqs: [0,
       [
         {
@@ -3517,18 +3517,18 @@ window.majors = {
           desc: "units (6 classes, 12 units each) from",
           special: 1
         },
-        [4,
+        [3,
           {
             id: "18.100-999",
             range: 1,
             matchRegex: /^18\.[1-9]\d\d/
         }],
-        [2,
+        [6,
           {
             id: "18.03-999",
             range: 1,
             matchRegex: /^18\../,
-            excludeRegex: /^18\.0[0-3]/
+            excludeRegex: /^18\.0[0-2]/
         }],
         {
           id: "[Note: All classes must be of essentially different content]",
