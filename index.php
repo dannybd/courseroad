@@ -97,6 +97,7 @@ header('X-UA-Compatible: IE=edge');
   <title>CourseRoad<?= $loggedin ? ": $athena" : "" ?></title>
   <meta name="description" content="A Four-Year Planner for the MIT Undergraduate Community" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="<?= noCacheLink('css/cr.css') ?>">
   <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 </head>
@@ -147,7 +148,8 @@ EOD;
       ?>
     </div>
     <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
-      Class Type:&nbsp;
+      Class Type:
+      <br>
       <input
         type="radio"
         name="getnewclasstype"
@@ -280,7 +282,7 @@ EOD;
 </div>
 <div id="rightbar">
   <div id="banner" class="noprint" style="display: none;">
-Hey all, we're really sorry that CourseRoad's info has fallen behind. All known classes through Fall 2017 should now be available, but we're still working on updating MIT major and minor cirricula, each of which has to be hardcoded and checked by hand. We'll remove this banner once we've caught back up. Apologies again for any confusion this may have caused.<br><br>
+Hey all, we're really sorry that much of CourseRoad's info has fallen behind while we work on the new version. All known classes through Fall 2018 should now be available and this is the last batch of major updates that are likely to happen to this version so we can focus all our effort on version 2. You will be able to export your roads to the new version when it's released, so we encourage you to continue using CourseRoad and please bear with these minor errors for a little while longer, and make sure to double check our list with your department's requirements. Apologies again for any confusion this may have caused.<br><br>
 Best,<br>
 The CourseRoad Team
     <span>(Hide this)</span>

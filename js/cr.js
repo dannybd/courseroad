@@ -418,7 +418,15 @@ function addWires(div, addwires) {
   var data = div.data();
   data.terminals.wires = [];
   data.reqstatus = true;
-  if (data.reqs) {
+  if (/"\(|\)"/.test(JSON.stringify(data.reqs))) {
+    data.reqstatus = false;
+    div.find('.reqs').html('Reqs: (hover)').attr(
+      'title',
+      'The Registrar changed some requirements unexpectedly, and ' +
+      'CourseRoad is having trouble parsing ~300 classes. ' +
+      'Sorry about that. ' + data.reqstr
+    );
+  } else if (data.reqs) {
     var reqcheck = checkRequisites(
       data.reqs,
       newWire,
@@ -1006,7 +1014,13 @@ var crSetup = function courseRoadSetup() {
   user.supersenior = $('.year.supersenior').is(':visible') ? 1 : 0;
   // Populate the majorminor selectors
   Object.keys(majors).forEach(function populateMajorDropdowns(majorId) {
-    var dropdowns = /^mi/.test(majorId) ? 'chooseminor' : (/^ne/.test(majorId) ? 'chooseneet' : 'choosemajor')
+    if (/^mi/.test(majorId)) {
+      var dropdowns = 'chooseminor';
+    } else if (/^ne/.test(majorId)) {
+      var dropdowns = 'chooseneet';
+    } else {
+      var dropdowns = 'choosemajor';
+    }
     $('select.' + dropdowns).append(
       '<option value="' + majorId + '">' + majors[majorId].name + '</option>'
     );
@@ -1028,7 +1042,9 @@ var crSetup = function courseRoadSetup() {
         return false;
       }
       $('select.majorminor').each(function setMajorDropdowns(i) {
-        $(this).val(data.majors[i]).show().attr('selected', true);
+        if (data.majors[i]) {
+          $(this).val(data.majors[i]).show().attr('selected', true);
+        }
       });
       getClasses(data.classes, false);
       askBeforeLeaving(false);
