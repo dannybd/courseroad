@@ -2170,7 +2170,7 @@ window.majors = {
     ]
   },
 
-  m18_theoretical: {
+  m18_pure: {
     name: "18 -- Mathematics (Pure Option) (as of Aug '18)",
     reqs: [0,
       [1, "18.03", "18.032", "18.034", "18.152", "18.303"],
