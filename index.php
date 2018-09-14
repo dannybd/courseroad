@@ -282,7 +282,7 @@ EOD;
 </div>
 <div id="rightbar">
   <div id="banner" class="noprint" style="display: none;">
-Hey all, we're really sorry that CourseRoad's info has fallen behind. All known classes through Fall 2018 should now be available, but we're going to stop updating major and minor requirements while we work on the new and improved version. It will be Better, and will be done sometime this summer. Please bear with these minor errors for a little while longer, and make sure to double check our list with your department's requirements. Apologies again for any confusion this may have caused.<br><br>
+Hey all, we're really sorry that much of CourseRoad's info has fallen behind while we work on the new version. All known classes through Fall 2018 should now be available and this is the last batch of major updates that are likely to happen to this version so we can focus all our effort on version 2. You will be able to export your roads to the new version when it's released, so we encourage you to continue using CourseRoad and please bear with these minor errors for a little while longer, and make sure to double check our list with your department's requirements. Apologies again for any confusion this may have caused.<br><br>
 Best,<br>
 The CourseRoad Team
     <span>(Hide this)</span>
