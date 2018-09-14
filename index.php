@@ -281,7 +281,7 @@ EOD;
 </div>
 <div id="rightbar">
   <div id="banner" class="noprint" style="display: none;">
-Hey all, we're really sorry that CourseRoad's info has fallen behind. All known classes through Fall 2017 should now be available, but we're still working on updating MIT major and minor cirricula, each of which has to be hardcoded and checked by hand. We'll remove this banner once we've caught back up. Apologies again for any confusion this may have caused.<br><br>
+Hey all, we're really sorry that CourseRoad's info has fallen behind. All known classes through Fall 2018 should now be available, but we're going to stop updating major and minor requirements while we work on the new and improved version. It will be Better, and will be done sometime this summer. Please bear with these minor errors for a little while longer, and make sure to double check our list with your department's requirements. Apologies again for any confusion this may have caused.<br><br>
 Best,<br>
 The CourseRoad Team
     <span>(Hide this)</span>
