@@ -148,7 +148,8 @@ EOD;
       ?>
     </div>
     <div id="infotabs-add" class="ui-corner-all leftbarholder ui-tabs-panel ui-widget-content ui-corner-bottom">
-      Class Type:&nbsp;
+      Class Type:
+      <br>
       <input
         type="radio"
         name="getnewclasstype"
