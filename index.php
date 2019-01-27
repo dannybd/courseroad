@@ -120,7 +120,13 @@ header('X-UA-Compatible: IE=edge');
       <br>
       <?php
         if ($loggedin) {
-          echo "Hello, <strong>$athena</strong>! ";
+          echo <<<EOD
+      Hello, <strong>$athena</strong>!<br>
+      <br>
+      New:
+      <a href="download.php">click here</a>
+      to download all of your CourseRoad data.
+EOD;
         } else {
           if (!$_SESSION['triedcert']) {
             echo <<<EOD
