@@ -4341,7 +4341,7 @@ window.majors = {
     name: "REM - Renewable Energy Machines (as of Mar. '19)",
     reqs: [0,
 	{id: "<u>Foundation Subjects:</u>", skip: 1}, "8.21", "14.01", [1, "14.44", "15.2191"],
-	{id: "<u>2nd Yr REM Design Project:</u>", skip: 1}, [1, "1.101", "22.03"],
+	{id: "<u>2nd Yr REM Design Project:</u>", skip: 1}, [1, "1.101", "3.007", "22.03"],
 	{id: "<u>2nd Yr REM Discovery Project:</u>", skip: 1}, "22.071",
 	{id: "<u>3rd Yr REM PRoject:</u>", skip: 1}, [1, "TBD, 12 units", "SuperUROP in Energy"],
 	{id: "<u>4th Yr REM Capstone Project:</u>", skip: 1}, [1, "1.013", "22.033"]
