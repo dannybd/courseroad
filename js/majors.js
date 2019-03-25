@@ -4328,7 +4328,7 @@ window.majors = {
     name: "AMM - Advanced Materials Machines (as of Mar. '19)",
     reqs: [0,
 	"2.001", [1, "2.002", "3.032"],
-	[1, "2.006", "3.044"], "2.008", "2.013",
+	[1, "2.006", "3.044"], "2.008",
 	[1, "2.013", "2.014", "3.042"],
 	"3.007", {id: "<u>3.012 Structure Part Only:</u>", skip: 1}, "3.012",
 	{id: "<u>Recommended (not required):</u>", skip: 1}, [
