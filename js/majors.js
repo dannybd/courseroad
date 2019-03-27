@@ -2656,7 +2656,7 @@ window.majors = {
 	{id: "<u>Programming Elective:</u>", skip: 1},
       [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
 	{id: "<u>Advanced Math Elective:</u>", skip: 1},
-      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
+      [1, "6.041", "18.04", "18.05", "18.303", "18.600", "18.075"],
 	{id: "<u>NSE Restricted Electives:</u>", skip: 1},
       [
         {
@@ -2690,7 +2690,7 @@ window.majors = {
 	{id: "<u>Programming Elective:</u>", skip: 1},
       [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
 	{id: "<u>Advanced Math Elective:</u>", skip: 1},
-      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
+      [1, "6.041", "18.04", "18.05", "18.303", "18.600", "18.075"],
 	{id: "<u>NSE Restricted Electives:</u>", skip: 1},
       [
         {
@@ -4288,32 +4288,27 @@ window.majors = {
   neAutonomous_Machines: {
     name: "AM - Autonomous Machines (as of Mar. '19)",
     reqs: [0,
-	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
-	{id: "<u>Programming:</u>", skip: 1}, [1, [2, "6.01", "6.S080"],
-	[2, "6.0001", "6.0002"]],
+	{id: "<u>Programming:</u>", skip: 1}, [1, "6.00",
+	[2, "6.0001", "6.0002"], "2.086"],
 	{id: "<u>Signals & Systems:</u>", skip: 1}, [1, "6.003", "16.002"],
+	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
 	{id: "<u>Controls:</u>", skip: 1}, [1, "2.004", "6.302", "16.06"],
-	{id: "<u>Advanced Math:</u>", skip: 1}, [
-	{
-	  count: 12,
-          type: "total_units",
-          desc: "units from",
-          special: 1,
-          runinfull: 1
-        }, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
-	{id: "<u>Thread Projects:</u>", skip: 1},
-	"2.007", "2.670", [1, "6.141", "16.405"], "16.AARS",
-        {id: "<u>Thread Electives:</u>", skip: 1}, [
-        {
-          count: 36,
-          type: "total_units",
-          desc: "units from",
-          special: 1,
-          runinfull: 1
-        }, "2.086", "2.12", [1, "2.14", "16.30"], [1, "2.671", "6.801"],
-	[1, "2.678", "6.115"], {id: "One <u>Additional</u> From:", skip: 1}, [1, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
-	 "6.009", [1, "6.034", "16.410"],
-	"6.036", "16.35", "16.400", "16.410"],
+	{id: "<u>Seminars (Fall):</u>", skip: 1},
+	"16.XY1 (NEET-AM Sophomore Seminar, 3 units)",
+	"16.XY2 (NEET-AM Junior Seminar, 3 units)",
+	"16.XY3 (NEET-AM Senior Seminar, 3 units)",
+	{id: "<u>Projects (Spring):</u>", skip: 1}, 
+	"2.S007", [1, "6.141", "16.304"], "16.84",
+        {id: "<u>Suggested Electives (not required):</u>", skip: 1}, [
+        "---",
+	{id: "<u>Programming:</u>", skip: 1}, "6.009",
+	{id: "<u>Robot Mechanics:</u>", skip: 1}, "2.12",
+	{id: "<u>Feedback and Control:</u>", skip: 1}, "2.14", "16.30",
+	{id: "<u>AI/Machine Learning/Autonomy:</u>", skip: 1}, "6.034", "6.036", "16.410",
+	{id: "<u>Human Factors:</u>", skip: 1}, "16.400",
+	{id: "<u>Real-Time Systems:</u>", skip: 1}, "16.35",
+	{id: "<u>Electronics/Microprocessors:</u>", skip: 1}, "2.678", "6.115",
+	{id: "<u>Measurement/Instrumentation:</u>", skip: 1}, "2.671", "6.801"],
     ]
   },
 
