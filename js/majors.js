@@ -2642,16 +2642,22 @@ window.majors = {
   },
 
   m22_old: {
-    name: "22 -- Nuclear Science & Engineering, '20 and earlier (as of Aug. '18)",
+    name: "22 -- Nuclear Science & Engineering, '20 and earlier (as of Mar. '19)",
     reqs: [0,
+	{id: "<u>Foundational Subjects:</u>", skip: 1},
       "2.005",
-      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
       "8.03",
       [1, "18.03", "18.034"],
-      "22.01", "22.02", "22.033",
-      "22.04", "22.05", "22.06", [1, "22.061", "22.071"], [1, "8.13", "22.09"],
+      "22.01", "22.04", [1, "22.061", "22.071"],
+	{id: "<u>NSE Core Subjects:</u>", skip: 1}, "22.02", "22.033",
+      "22.05", "22.06", [1, "8.13", "22.09"],
+	{id: "<u>NSE Senior Thesis:</u>", skip: 1},
       "22.THT", "22.THU",
-      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
+	{id: "<u>Programming Elective:</u>", skip: 1},
+      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
+	{id: "<u>Advanced Math Elective:</u>", skip: 1},
+      [1, "6.041", "18.04", "18.05", "18.303", "18.600", "18.075"],
+	{id: "<u>NSE Restricted Electives:</u>", skip: 1},
       [
         {
           count: 24,
@@ -2663,35 +2669,42 @@ window.majors = {
         "2.006", "3.14", "6.UAP", "22.022", "22.03", "22.039", "22.051",
         "22.054", "22.055", "22.061", "22.072", "22.074", "22.078", "22.081",
         "22.14", "22.15", "22.212", "22.213", "22.251", "22.313", "22.315",
-        "22.39", "22.51", "22.611", "22.615", "22.62", "22.72", "22.74",
+        "22.39", "22.51", "22.611", "22.615", "22.62", "22.71", "22.72", "22.74",
         "22.76", "22.78", "22.812", "22.814", "HST.563"
       ]
     ]
   },
 
   m22: {
-    name: "22 -- Nuclear Science & Engineering, '21 and later (as of Aug. '18)",
+    name: "22 -- Nuclear Science & Engineering, '21 and later (as of Mar. '19)",
     reqs: [0,
+	{id: "<u>Foundational Subjects:</u>", skip: 1},
       "2.005",
-      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
       "8.03",
       [1, "18.03", "18.034"],
-      "22.01", "22.02", "22.03", "22.033",
-      "22.04", "22.05", "22.06", "22.061", [1, "8.13", "22.09"],
+      "22.01", "22.04",
+	{id: "<u>NSE Core Subjects:</u>", skip: 1}, "22.02", "22.03", "22.033",
+      "22.05", "22.06", "22.061", [1, "8.13", "22.09"],
+	{id: "<u>NSE Senior Thesis:</u>", skip: 1},
       "22.THT", "22.THU",
-      [1, "6.041", "18.04", "18.05", "18.600", "18.075"],
+	{id: "<u>Programming Elective:</u>", skip: 1},
+      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"], "12.010"],
+	{id: "<u>Advanced Math Elective:</u>", skip: 1},
+      [1, "6.041", "18.04", "18.05", "18.303", "18.600", "18.075"],
+	{id: "<u>NSE Restricted Electives:</u>", skip: 1},
       [
         {
-          count: 12,
+          count: 24,
           type: "total_units",
           desc: "units",
           pullmatches: 1,
           special: 1
         },
-        "2.006", "3.14", "6.UAP", "22.022", "22.03", "22.039", "22.051",
+        "2.006", "3.14", "6.UAP", "22.022", "22.039", "22.051",
         "22.054", "22.055", "22.071", "22.072", "22.074", "22.078", "22.081",
-        "22.14", "22.15", "22.212", "22.213", "22.313", "22.315", "22.611",
-        "22.615", "22.62", "22.76", "22.812", "22.814", "HST.563"
+        "22.14", "22.15", "22.212", "22.213", "22.251", "22.313", "22.315",
+        "22.39", "22.51", "22.611", "22.615", "22.62", "22.71", "22.72", "22.74",
+        "22.76", "22.78", "22.812", "22.814", "HST.563"
       ]
     ]
   },
@@ -4273,80 +4286,77 @@ window.majors = {
   },
 
   neAutonomous_Machines: {
-    name: "AM - Autonomous Machines (as of Aug. '18)",
+    name: "AM - Autonomous Machines (as of Mar. '19)",
     reqs: [0,
-	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
-	{id: "<u>Programming:</u>", skip: 1}, [1, [2, "6.01", "6.S080"],
-	[2, "6.0001", "6.0002"]],
+	{id: "<u>Programming:</u>", skip: 1}, [1, "6.00",
+	[2, "6.0001", "6.0002"], "2.086"],
 	{id: "<u>Signals & Systems:</u>", skip: 1}, [1, "6.003", "16.002"],
+	{id: "<u>Mechanics:</u>", skip: 1}, [1, "2.001", "16.001"],
 	{id: "<u>Controls:</u>", skip: 1}, [1, "2.004", "6.302", "16.06"],
-	{id: "<u>Advanced Math:</u>", skip: 1}, [
-	{
-	  count: 12,
-          type: "total_units",
-          desc: "units from",           
-          special: 1,
-          runinfull: 1
-        }, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
-	{id: "<u>Thread Projects:</u>", skip: 1}, 
-	"2.007", "2.670", [1, "6.141", "16.405"], "16.AARS",
-        {id: "<u>Thread Electives:</u>", skip: 1}, [
-        {
-          count: 36,
-          type: "total_units",
-          desc: "units from",
-          special: 1,
-          runinfull: 1
-        }, "2.086", "2.12", [1, "2.14", "16.30"], [1, "2.671", "6.801"],
-	[1, "2.678", "6.115"], {id: "One <u>Additional</u> From:", skip: 1}, [1, "2.087", "6.041a", "6.041b", "6.042", "18.03"],
-	 "6.009", [1, "6.034", "16.410"],
-	"6.036", "16.35", "16.400", "16.410"],
+	{id: "<u>Seminars (Fall):</u>", skip: 1},
+	"16.XY1 (NEET-AM Sophomore Seminar, 3 units)",
+	"16.XY2 (NEET-AM Junior Seminar, 3 units)",
+	"16.XY3 (NEET-AM Senior Seminar, 3 units)",
+	{id: "<u>Projects (Spring):</u>", skip: 1}, 
+	"2.S007", [1, "6.141", "16.304"], "16.84",
+        {id: "<u>Suggested Electives (not required):</u>", skip: 1}, [
+        "---",
+	{id: "<u>Programming:</u>", skip: 1}, "6.009",
+	{id: "<u>Robot Mechanics:</u>", skip: 1}, "2.12",
+	{id: "<u>Feedback and Control:</u>", skip: 1}, "2.14", "16.30",
+	{id: "<u>AI/Machine Learning/Autonomy:</u>", skip: 1}, "6.034", "6.036", "16.410",
+	{id: "<u>Human Factors:</u>", skip: 1}, "16.400",
+	{id: "<u>Real-Time Systems:</u>", skip: 1}, "16.35",
+	{id: "<u>Electronics/Microprocessors:</u>", skip: 1}, "2.678", "6.115",
+	{id: "<u>Measurement/Instrumentation:</u>", skip: 1}, "2.671", "6.801"],
     ]
   },
 
   neLiving_Machines: {
-    name: "LM - Living Machines (as of Aug. '18)",
+    name: "LM - Living Machines (as of Mar. '19)",
     reqs: [0,
-	"2.00", [1, "2.086", "6.00", "10.10"], [1, "2.673", "20.309"],
-	[1, "2.772", "20.110"], "18.03", "20.05",
+	"20.051", "20.052", "20.053", "One Intellectual Diversity Requirement"
     ]
   },
 
   neAdvanced_Materials_Machines: {
-    name: "AMM - Advanced Materials Machines (as of Aug. '18)",
+    name: "AMM - Advanced Materials Machines (as of Mar. '19)",
     reqs: [0,
-	"2.001", [1, "2.002", "3.032"], "2.003",
-	"2.005", [1, "2.006", "3.044"], "2.008", "2.013", 
-	"2.670", "2.S981", [1, "2.086", "3.016", "18.03"],
-	"3.012", "3.022", "3.007", "3.TBD-2",
+	"2.001", [1, "2.002", "3.032"],
+	[1, "2.006", "3.044"], "2.008",
+	[1, "2.013", "2.014", "3.042"],
+	"3.007", {id: "<u>3.012 Structure Part Only:</u>", skip: 1}, "3.012",
 	{id: "<u>Recommended (not required):</u>", skip: 1}, [
-	  "---", "2.671", "2.853",
+	  "---", "2.671", "2.853"
 	],
     ]
   },
 
-  neClean_Energy_Systems: {
-    name: "CES - Clean Energy Systems (as of Aug. '18)",
+  neRenewable_Energy_Machines: {
+    name: "REM - Renewable Energy Machines (as of Mar. '19)",
     reqs: [0,
-      [1, "1.000", "2.086", "6.00", [2, "6.0001", "6.0002"]], "1.010", "8.21", "14.01", "15.2191",
-     "18.03", "22.01", [1, "1.101", "22.03"], [1, "1.013", "22.033"],
-	"22.071", "NEET 3rd Yr Project TBD", 
-	{id: "<u>Recommended (not required):</u>", skip: 1}, [
-          "---", "2.006", [1, "2.60", "22.40"], "2.603",
-	  "2.626", [1, "2.650", "22.081"], "3.18", 
-	  [1, "5.00", "6.929", "10.579", "22.813"],
-	  "6.007", "6.933", "6.131", "11.165", "12.301",
-	  "15.017", "IDS.064", "IDS.521", "IDS.522"
-        ],
+	{id: "<u>Foundation Subjects:</u>", skip: 1}, "8.21", "14.01", [1, "14.44", "15.2191"],
+	{id: "<u>2nd Yr REM Design Project:</u>", skip: 1}, [1, "1.101", "3.007", "22.03"],
+	{id: "<u>2nd Yr REM Discovery Project:</u>", skip: 1}, "22.071",
+	{id: "<u>3rd Yr REM PRoject:</u>", skip: 1}, [1, "TBD, 12 units", "SuperUROP in Energy"],
+	{id: "<u>4th Yr REM Capstone Project:</u>", skip: 1}, [1, "1.013", "22.033"]
+//	{id: "<u>Recommended (not required):</u>", skip: 1}, [
+//          "---", "2.006", [1, "2.60", "22.40"], "2.603",
+//	  "2.626", [1, "2.650", "22.081"], "3.18",
+//	  [1, "5.00", "6.929", "10.579", "22.813"],
+//	  "6.007", "6.933", "6.131", "11.165", "12.301",
+//	  "15.017", "IDS.064", "IDS.521", "IDS.522"
+//        ],
     ]
-  },
+/*  },
 
-  neLow_Carbon_Energy_Systems: {
-    name: "LCES - Low Carbon Energy Systems (as of Apr. '18)",
-    disable: 1,
+  neDigital_Cities: {
+    name: "DC - Digital Cities (as of Mar. '19)",
     reqs: [0,
-      [1, "1.000", "2.086"], "1.010", "8.21", "14.01", "15.2191",
-     "18.03", "22.01", "22.03", "22.033", "22.071"
-    ]
+	{id: "<u>Foundation Subjects:</u>", skip: 1}, "11.001", "11.188",
+	[1, "6.00", [2, "6.0001", "6.0002"]], "6.009",
+	{id: "<u>Seminars (Fall):</u>", skip: 1}, "Yr 2 TBD, 3 units", "Yr 3 TBD, 3 units", "Yr 4 TBD, 3 units",
+	{id: "<u>Projects (Spring):</u>", skip: 1}, "Yr 2 TBD, 12 units", "Yr 3 TBD, 12 units", "Yr 4 TBD, 12 units"
+    ] */
   }
 };
