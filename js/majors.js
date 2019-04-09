@@ -4348,7 +4348,7 @@ window.majors = {
 //	  "15.017", "IDS.064", "IDS.521", "IDS.522"
 //        ],
     ]
-  },
+/*  },
 
   neDigital_Cities: {
     name: "DC - Digital Cities (as of Mar. '19)",
@@ -4357,6 +4357,6 @@ window.majors = {
 	[1, "6.00", [2, "6.0001", "6.0002"]], "6.009",
 	{id: "<u>Seminars (Fall):</u>", skip: 1}, "Yr 2 TBD, 3 units", "Yr 3 TBD, 3 units", "Yr 4 TBD, 3 units",
 	{id: "<u>Projects (Spring):</u>", skip: 1}, "Yr 2 TBD, 12 units", "Yr 3 TBD, 12 units", "Yr 4 TBD, 12 units"
-    ]
+    ] */
   }
 };
