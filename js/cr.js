@@ -1535,6 +1535,7 @@ var crSetup = function courseRoadSetup() {
         neRenewable_Energy_Machines: 'neetCES',
       }[m]
     });
+    console.log(road.coursesOfStudy)
     road.coursesOfStudy = road.coursesOfStudy.filter((m) => {
       return m !== undefined
     });
