@@ -1362,9 +1362,11 @@ var crSetup = function courseRoadSetup() {
       $('#save-courses').val('Save Courses').prop('disabled', false);
     }, 'json');
   });
-  $('#downloader').click(function () {
+  var temp139 = function () {
     console.log('test189')
-  })
+  }
+  $('#downloader1').click(temp139)
+  $('#downloader2').click(temp139)
   if (!loggedin && triedlogin) {
     $('#roads-or-login-save').hide();
   }
