@@ -1004,7 +1004,7 @@ function hideAutocomplete() {
 var preventUpdateWires = false;
 var crSetup = function courseRoadSetup() {
   crSetup = undefined;
-  if (!/hidebanner=1/.test(document.cookie)) {
+  if (!/hideupgradebanner=1/.test(document.cookie)) {
     $('#banner').show();
   }
   $('#getnewclass').tabs({
@@ -1214,9 +1214,9 @@ var crSetup = function courseRoadSetup() {
     }, 'json');
   }).on('click', '.dummylink', function dontFollowDummyLinks(e) {
     e.preventDefault();
-  }).on('click', '#banner > span', function hideBanner(e) {
+  }).on('click', '#banner > span', function hideUpgradeBanner(e) {
     $('#banner').hide();
-    document.cookie = 'hidebanner=1';
+    document.cookie = 'hideupgradebanner=1';
   });
   $('#overridercheck').change(function updateClassOverride() {
     $('.classdivhigh').data('override', $(this).prop('checked'));
