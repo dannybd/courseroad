@@ -123,7 +123,7 @@ header('X-UA-Compatible: IE=edge');
           echo <<<EOD
       Hello, <strong>$athena</strong>!<br>
       <br>
-      <a href="#">
+      <a>
       <div id="downloader1" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
       New:
       click here
@@ -296,7 +296,7 @@ EOD;
     <a href="https://courseroad.mit.edu/">here</a>.
     <br>
     If you're here for your old roads, login and then click here or go to the about tab:
-        <a href="#">
+        <a>
           <div id="downloader2" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em; margin: 0.5em auto 0.5em auto"><b>
           click here to download the currently displayed road
           </b></div>
