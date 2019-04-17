@@ -1364,6 +1364,14 @@ var crSetup = function courseRoadSetup() {
   });
   var temp139 = function () {
     console.log('test189')
+    $.post('download.php', {
+      fromjsflag: 1,
+      classes: minclass(true),
+      majors: minmajors(true),
+      trycert: loggedin,
+      csrf: CSRF_token,
+      sendit: JSON.stringify({test: "hope this works"})
+    })
   }
   $('#downloader1').click(temp139)
   $('#downloader2').click(temp139)
