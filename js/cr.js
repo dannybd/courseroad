@@ -1368,7 +1368,7 @@ var crSetup = function courseRoadSetup() {
 
     let road = {}
 
-    let classes = minclass(true)
+    let classes = minclass(false)
     console.log(classes)
     road.selectedSubjects = classes.map((c) => {
       return {
@@ -1382,7 +1382,7 @@ var crSetup = function courseRoadSetup() {
     }).filter((c) => {
       return c !== undefined
     })
-    let majors = minmajors(true)
+    let majors = minmajors(false)
     console.log(majors)
     road.coursesOfStudy = majors.map((m) => {
       return m
