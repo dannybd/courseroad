@@ -1370,15 +1370,15 @@ var crSetup = function courseRoadSetup() {
 
     let classes = minclass(false)
     console.log(classes)
+    let ind = -1
     road.selectedSubjects = classes.map((c) => {
+      // c looks like this: {"id":"6.147","year":"2017","term":2}
+      ind += 1;
       return {
-        real:c,
-        index:0,
-        title:"Differential Equations",
-        overrideWarnings:false,
-        semester:3,
-        units:12,
-        id:"18.03"
+        index: ind,
+        overrideWarnings: c.override === undefined ? false : c.override,
+        semester: c.term,
+        id: c.id,
       };
     }).filter((c) => {
       return c !== undefined
@@ -1386,7 +1386,7 @@ var crSetup = function courseRoadSetup() {
     let majors = minmajors(false)
     console.log(majors)
     road.coursesOfStudy = majors.map((m) => {
-      return m
+      return 'major11'
     }).filter((m) => {
       return m !== undefined
     });
