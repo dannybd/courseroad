@@ -1374,6 +1374,7 @@ var crSetup = function courseRoadSetup() {
     road.selectedSubjects = classes.map((c) => {
       // c looks like this: {"id":"6.147","year":"2017","term":2}
       ind += 1;
+      c.term -= Math.floor(c.term/4)
       return {
         index: ind,
         overrideWarnings: c.override === undefined ? false : c.override,
