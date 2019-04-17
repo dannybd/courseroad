@@ -123,9 +123,12 @@ header('X-UA-Compatible: IE=edge');
           echo <<<EOD
       Hello, <strong>$athena</strong>!<br>
       <br>
+      <a href="javascript:;">
+      <div id="downloader1" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
       New:
-      <a href="download.php">click here</a>
-      to download all of your CourseRoad data.
+      click here
+      to download the currently displayed road
+      </b></div></a>
 EOD;
         } else {
           if (!$_SESSION['triedcert']) {
@@ -287,10 +290,23 @@ EOD;
   <div id="nowreading" class="leftbarholder"></div>
 </div>
 <div id="rightbar">
-  <div id="banner" class="noprint" style="display: none;">
-Hey all, we're really sorry that much of CourseRoad's info has fallen behind while we work on the new version. All known classes through Fall 2018 should now be available and this is the last batch of major updates that are likely to happen to this version so we can focus all our effort on version 2. You will be able to export your roads to the new version when it's released, so we encourage you to continue using CourseRoad and please bear with these minor errors for a little while longer, and make sure to double check our list with your department's requirements. Apologies again for any confusion this may have caused.<br><br>
-Best,<br>
-The CourseRoad Team
+  <div id="banner" class="noprint" style="display: none; font-size: 1.3em;">
+    Hey all, there's a new version of CourseRoad in town!
+    Thanks for all of your patience during this longer-than-expected process—check it out
+    <a href="https://courseroad.mit.edu/">here</a>.
+    <br>
+    If you're here for your old roads, login and then click here or go to the about tab:
+        <a href="javascript:;">
+          <div id="downloader2" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em; margin: 0.5em auto 0.5em auto"><b>
+          click here to download the currently displayed road
+          </b></div>
+        </a>
+    Feel free to keep using the old CourseRoad (this),
+    but it's never going to be updated again,
+    so if you don't like the new one send us feedback on how to improve it!
+    <br><br>
+    Best,<br>
+    The CourseRoad Team
     <span>(Hide this)</span>
   </div>
   <div class="term credit"><div class="termname"><span>Prior<br>Credit</span></div></div>
