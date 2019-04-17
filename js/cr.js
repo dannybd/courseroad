@@ -1362,14 +1362,12 @@ var crSetup = function courseRoadSetup() {
       $('#save-courses').val('Save Courses').prop('disabled', false);
     }, 'json');
   });
-  var temp139 = function () {
-    console.log('test189');
+  var exportfunc = function () {
     var filename = 'oldCourseRoad-export.road';
 
     let road = {}
 
     let classes = minclass(false)
-    console.log(classes)
     let ind = -1
     road.selectedSubjects = classes.map((c) => {
       // c looks like this: {"id":"6.147","year":"2017","term":2}
@@ -1536,7 +1534,6 @@ var crSetup = function courseRoadSetup() {
     road.coursesOfStudy = ['girs',].concat(majors.map((m) => {
       return mapping[m]
     }));
-    console.log(road.coursesOfStudy)
     road.coursesOfStudy = road.coursesOfStudy.filter((m) => {
       return m !== undefined
     });
@@ -1556,8 +1553,8 @@ var crSetup = function courseRoadSetup() {
 
     document.body.removeChild(element);
   };
-  $('#downloader1').click(temp139);
-  $('#downloader2').click(temp139);
+  $('#downloader1').click(exportfunc);
+  $('#downloader2').click(exportfunc);
   if (!loggedin && triedlogin) {
     $('#roads-or-login-save').hide();
   }
