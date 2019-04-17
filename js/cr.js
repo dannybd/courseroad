@@ -1366,12 +1366,31 @@ var crSetup = function courseRoadSetup() {
     console.log('test189');
     var filename = 'oldCourseRoad-export.road';
 
+    let road = {}
+
     let classes = minclass(true)
+    console.log(classes)
+    road.selectedSubjects = classes.map((c) => {
+      return {
+         index:0,
+         title:"Differential Equations",
+         overrideWarnings:false,
+         semester:3,
+         units:12,
+         id:"18.03"
+      },
+    }).filter((c) => {
+      return c !== undefined
+    })
     let majors = minmajors(true)
     console.log(majors)
+    road.coursesOfStudy = majors.map((m) => {
+      return m
+    }).filter((m) => {
+      return m !== undefined
+    })
 
-
-    var text = JSON.stringify(majors);
+    var text = JSON.stringify(road);
 
     // for some reason this is the way you download files...
     //    create an element, click it, and remove it
