@@ -1362,6 +1362,9 @@ var crSetup = function courseRoadSetup() {
       $('#save-courses').val('Save Courses').prop('disabled', false);
     }, 'json');
   });
+  $('#downloader').click(function () {
+    console.log('test189')
+  })
   if (!loggedin && triedlogin) {
     $('#roads-or-login-save').hide();
   }

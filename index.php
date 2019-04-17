@@ -123,12 +123,11 @@ header('X-UA-Compatible: IE=edge');
           echo <<<EOD
       Hello, <strong>$athena</strong>!<br>
       <br>
-      <a href="download.php">
-      <div style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
+      <div id="downloader" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
       New:
       click here
       to download all of your CourseRoad data.
-      </b></div></a>
+      </b></div>
 EOD;
         } else {
           if (!$_SESSION['triedcert']) {
@@ -295,12 +294,10 @@ EOD;
     Thanks for all of your patience during this longer-than-expected process—check it out
     <a href="https://courseroad.mit.edu/">here</a>.
     <br>
-    If you're here for your old roads, click here:
-      <a href="download.php">
-        <div style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
+    If you're here for your old roads, login and then click here or go to the about tab:
+        <div id="downloader" style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em; margin: 0.5em auto 0.5em auto"><b>
           click here to download all of your CourseRoad data
         </b></div>
-      </a>
     Feel free to keep using the old CourseRoad (this),
     but it's never going to be updated again,
     so if you don't like the new one send us feedback on how to improve it!
