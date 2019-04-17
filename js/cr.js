@@ -1386,7 +1386,7 @@ var crSetup = function courseRoadSetup() {
     })
     let majors = minmajors(false)
     // FireRoad options: [ "girs", "major1", "major10", "major10-ENG", "major10b", "major10c", "major11", "major11-6", "major12", "major14-1", "major14-2", "major15-1", "major15-2", "major15-3", "major16", "major16-ENG", "major17", "major18am", "major18c", "major18gm", "major18pm", "major2", "major20", "major21L", "major21M-1", "major21M-2", "major21S", "major21WCre", "major21WDig", "major21WSci", "major21a", "major21e", "major21h", "major22", "major24-1", "major24-2Ling", "major24-2Phil", "major2a", "major2oe", "major3", "major3a", "major3c", "major4", "major4b", "major5", "major5-7", "major6-1", "major6-14", "major6-2", "major6-3", "major6-7", "major7", "major7a", "major8", "major8flex", "major9", "majorAADS", "majorAMS", "majorAS", "majorCMS", "majorFrench", "majorGerman", "majorLALS", "majorRES", "majorSTS", "majorSpanish", "majorWGS", "master6-P", "masterBAn", "minor11", "minor12", "minor14", "minor15BA", "minor15F", "minor15Mgmt", "minor17", "minor18", "minor1ce", "minor1ces", "minor1ees", "minor2", "minor20", "minor21A", "minor21H", "minor21L", "minor21M-2", "minor21W", "minor21m", "minor22", "minor24-1", "minor24-2", "minor3", "minor3c", "minor5", "minor6", "minor7", "minor8", "minor9", "minorAADS", "minorACT", "minorAIS", "minorAMS", "minorAfADS", "minorArchitecture", "minorAstro", "minorAtChem", "minorBME", "minorCMS", "minorChinese", "minorDesign", "minorEI", "minorES", "minorEnergy", "minorFrench", "minorGerman", "minorHistAAD", "minorIDev", "minorJapanese", "minorLALS", "minorMES", "minorPSM", "minorPublicPol", "minorRussian", "minorSDS", "minorSTS", "minorSpanish", "minorWGS", "neetAAM", "neetAM", "neetCES", "neetLM", "prehealth" ]
-    road.coursesOfStudy = majors.map((m) => {
+    road.coursesOfStudy = ['girs',] + majors.map((m) => {
       return {
         m1_A: 'major1',
         m1_C: 'major1',
@@ -1534,7 +1534,7 @@ var crSetup = function courseRoadSetup() {
         neAdvanced_Materials_Machines: 'neetAAM',
         neRenewable_Energy_Machines: 'neetCES',
       }[m]
-    }) + ['girs']
+    });
     road.coursesOfStudy = road.coursesOfStudy.filter((m) => {
       return m !== undefined
     });
