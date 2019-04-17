@@ -1368,6 +1368,7 @@ var crSetup = function courseRoadSetup() {
 
     let classes = minclass(true)
     let majors = minmajors(true)
+    console.log(majors)
 
 
     var text = JSON.stringify(majors);
