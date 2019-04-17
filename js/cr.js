@@ -1393,17 +1393,17 @@ var crSetup = function courseRoadSetup() {
     var text = JSON.stringify(road);
 
     // for some reason this is the way you download files...
-    //    create an element, click it, and remove it
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
+    // //    create an element, click it, and remove it
+    // var element = document.createElement('a');
+    // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    // element.setAttribute('download', filename);
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
+    // element.style.display = 'none';
+    // document.body.appendChild(element);
 
-    element.click();
+    // element.click();
 
-    document.body.removeChild(element);
+    // document.body.removeChild(element);
   };
   $('#downloader1').click(temp139);
   $('#downloader2').click(temp139);
