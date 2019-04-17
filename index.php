@@ -124,7 +124,7 @@ header('X-UA-Compatible: IE=edge');
       Hello, <strong>$athena</strong>!<br>
       <br>
       <a href="download.php">
-      <div style="padding: 0.5em; border: 3px solid white; background-color: red; font-size: 1.3em;"><b>
+      <div style="padding: 0.5em; border: 3px solid white; background-color: red; color: white; line-height: 1.1em; font-size: 1.3em;"><b>
       New:
       click here
       to download all of your CourseRoad data.
