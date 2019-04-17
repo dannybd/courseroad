@@ -1378,7 +1378,7 @@ var crSetup = function courseRoadSetup() {
          semester:3,
          units:12,
          id:"18.03"
-      },
+      };
     }).filter((c) => {
       return c !== undefined
     })
@@ -1404,9 +1404,9 @@ var crSetup = function courseRoadSetup() {
     element.click();
 
     document.body.removeChild(element);
-  }
-  $('#downloader1').click(temp139)
-  $('#downloader2').click(temp139)
+  };
+  $('#downloader1').click(temp139);
+  $('#downloader2').click(temp139);
   if (!loggedin && triedlogin) {
     $('#roads-or-login-save').hide();
   }
