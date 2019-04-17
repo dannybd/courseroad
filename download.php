@@ -2,12 +2,6 @@
 
 require 'functions.php';
 
-$fromjs = $_POST['fromjsflag']
-
-if ($fromjs == 1){
-    echo $_POST['sendit']
-} else {
-
 $athena = $_SESSION['athena'];
 isset($athena) or die('Sorry, please log in again.');
 
@@ -26,6 +20,5 @@ foreach ($roads as $road) {
 }
 
 echo json_encode($data);
-}
 
 die();

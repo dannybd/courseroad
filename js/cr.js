@@ -1363,15 +1363,27 @@ var crSetup = function courseRoadSetup() {
     }, 'json');
   });
   var temp139 = function () {
-    console.log('test189')
-    $.post('download.php', {
-      fromjsflag: 1,
-      classes: minclass(true),
-      majors: minmajors(true),
-      trycert: loggedin,
-      csrf: CSRF_token,
-      sendit: JSON.stringify({test: "hope this works"})
-    })
+    console.log('test189');
+    var filename = 'oldCourseRoad-export.road';
+
+    let classes = minclass(true)
+    let majors = minmajors(true)
+
+
+    var text = JSON.stringify(majors);
+
+    // for some reason this is the way you download files...
+    //    create an element, click it, and remove it
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
   }
   $('#downloader1').click(temp139)
   $('#downloader2').click(temp139)
