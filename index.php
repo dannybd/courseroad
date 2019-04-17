@@ -123,9 +123,11 @@ header('X-UA-Compatible: IE=edge');
           echo <<<EOD
       Hello, <strong>$athena</strong>!<br>
       <br>
+      <div style="padding: 2em; color: red; font-size: 2em;"><b>
       New:
       <a href="download.php">click here</a>
       to download all of your CourseRoad data.
+      </b></div>
 EOD;
         } else {
           if (!$_SESSION['triedcert']) {
